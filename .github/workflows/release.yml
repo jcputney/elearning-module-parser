@@ -1,0 +1,43 @@
+name: Publish package to GitHub Packages
+on:
+  release:
+    types: [ created ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  publish-jar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+          cache: 'gradle'
+
+      - name: Set up Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: '8.8'
+
+      - name: Update version in build.gradle.kts (Release only)
+        run: ./gradlew version -PnewVersion=${{ github.event.release.tag_name }}
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Publish package to GitHub Packages and Maven Central
+        run: ./gradlew publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          SIGNING_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
