@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2024. Jonathan Putney
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,7 +31,7 @@ import lombok.Data;
  * authors to restrict or enable navigation behaviors according to the instructional design of the
  * SCORM package.</p>
  *
- * <p>The available control modes include:
+ * <p>The available control modes include:</p>
  * <ul>
  *   <li><strong>Choice:</strong> Allows the learner to freely navigate between available activities.</li>
  *   <li><strong>Choice Exit:</strong> Allows the learner to exit from an activity and return to a previously accessed one.</li>
@@ -23,7 +40,6 @@ import lombok.Data;
  *   <li><strong>Use Current Attempt Objective Info:</strong> Indicates whether the current attempt's objective information is used in sequencing.</li>
  *   <li><strong>Use Current Attempt Progress Info:</strong> Indicates whether the current attempt's progress information is used in sequencing.</li>
  * </ul>
- * </p>
  *
  * <p>These attributes control navigation at the activity level, allowing for flexibility in sequencing logic
  * based on the learner's progress and interactions with the SCORM content.</p>

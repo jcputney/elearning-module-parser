@@ -1,0 +1,252 @@
+<?xml version="1.0" standalone="no" ?>
+<!--
+Sequencing example demonstrating rollup using only a post test. SCORM 2004 3rd Edition.
+
+Provided by Rustici Software - http://www.scorm.com
+
+Sequencing Strategy:
+This example maintains the sequencing strategy from the forced sequential example.
+It requires the learner to visit the SCOs in order. Once a SCO has been visited, 
+the learner can jump backwards to review material, but the learner can not jump 
+ahead beyond the next SCO.
+
+Rollup Strategy:
+The course can only be completed and satisfied by completing and satisfying the posttest.
+Because of the sequencing stragety that requires all other activities to be completed before
+the post test can be accessed, by implication, all activities must be completed for the
+course to be completed. The score for the course is entirely dependant on the score from the post
+test.
+-->
+
+<manifest identifier="com.scorm.golfsamples.sequencing.posttestrollup.20043rd" version="1"
+          xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3"
+          xmlns:adlseq="http://www.adlnet.org/xsd/adlseq_v1p3"
+          xmlns:adlnav="http://www.adlnet.org/xsd/adlnav_v1p3"
+          xmlns:imsss="http://www.imsglobal.org/xsd/imsss"
+          xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 imscp_v1p1.xsd
+                              http://www.adlnet.org/xsd/adlcp_v1p3 adlcp_v1p3.xsd
+                              http://www.adlnet.org/xsd/adlseq_v1p3 adlseq_v1p3.xsd
+                              http://www.adlnet.org/xsd/adlnav_v1p3 adlnav_v1p3.xsd
+                              http://www.imsglobal.org/xsd/imsss imsss_v1p0.xsd">
+
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>2004 3rd Edition</schemaversion>
+  </metadata>
+  
+  <organizations default="golf_sample_default_org">
+
+    <organization identifier="golf_sample_default_org" adlseq:objectivesGlobalToSystem="false">
+      <title>Golf Explained - Sequencing Post Test Rollup</title>
+
+      <item identifier="playing_item" identifierref="playing_resource">
+        <title>Playing the Game</title>
+        
+        <!-- 
+        Notice the refernce to the reusable sequencing collection (defined at the bottom).
+        Every activity except the assessment references this common set of sequencing rules
+        that indicate the activity does not count towards completion.
+        -->
+        <imsss:sequencing IDRef="content_seq_rules">
+          
+          <imsss:objectives>
+            <imsss:primaryObjective objectiveID="playing_satisfied">
+              <imsss:mapInfo targetObjectiveID = "com.scorm.golfsamples.sequencing.forcedsequential.playing_satisfied" 
+                             readSatisfiedStatus = "true" writeSatisfiedStatus = "true"/>
+            </imsss:primaryObjective>
+          </imsss:objectives>
+        </imsss:sequencing>
+      </item>
+      <item identifier="etuqiette_item" identifierref="etiquette_resource">
+        <title>Etiquette</title>
+        
+        <imsss:sequencing IDRef="content_seq_rules">
+        
+          <imsss:sequencingRules>
+
+            <imsss:preConditionRule>
+              
+              <imsss:ruleConditions conditionCombination="any">
+                <imsss:ruleCondition referencedObjective="previous_sco_satisfied" operator="not" condition="satisfied"/>
+                <imsss:ruleCondition referencedObjective="previous_sco_satisfied" operator="not" condition="objectiveStatusKnown"/>
+              </imsss:ruleConditions>
+            
+              <imsss:ruleAction action="disabled"/>
+            
+            </imsss:preConditionRule>
+            
+          </imsss:sequencingRules>
+          <imsss:objectives>
+            <imsss:primaryObjective objectiveID="etiquette_satisfied">
+              <imsss:mapInfo targetObjectiveID = "com.scorm.golfsamples.sequencing.forcedsequential.etiquette_satisfied" 
+                             readSatisfiedStatus = "true" writeSatisfiedStatus = "true"/>
+            </imsss:primaryObjective>
+
+            <imsss:objective objectiveID="previous_sco_satisfied">
+              <imsss:mapInfo targetObjectiveID="com.scorm.golfsamples.sequencing.forcedsequential.playing_satisfied" 
+                             readSatisfiedStatus="true" writeSatisfiedStatus="false"/>
+            </imsss:objective>
+            
+          </imsss:objectives>
+        </imsss:sequencing>
+      </item>
+      <item identifier="handicapping_item" identifierref="handicapping_resource">
+        <title>Handicapping</title>
+        <imsss:sequencing IDRef="content_seq_rules">
+          <imsss:sequencingRules>
+            <imsss:preConditionRule>
+              <imsss:ruleConditions conditionCombination="any">
+                <imsss:ruleCondition referencedObjective="previous_sco_satisfied" operator="not" condition="satisfied"/>
+                <imsss:ruleCondition referencedObjective="previous_sco_satisfied" operator="not" condition="objectiveStatusKnown"/>
+              </imsss:ruleConditions>
+              <imsss:ruleAction action="disabled"/>
+            </imsss:preConditionRule>
+          </imsss:sequencingRules>
+          <imsss:objectives>
+            <imsss:primaryObjective objectiveID="handicapping_satisfied">
+              <imsss:mapInfo targetObjectiveID = "com.scorm.golfsamples.sequencing.forcedsequential.handicapping_satisfied" 
+                             readSatisfiedStatus = "true" writeSatisfiedStatus = "true"/>
+            </imsss:primaryObjective>
+            <imsss:objective objectiveID="previous_sco_satisfied">
+              <imsss:mapInfo targetObjectiveID="com.scorm.golfsamples.sequencing.forcedsequential.etiquette_satisfied" 
+                             readSatisfiedStatus="true" writeSatisfiedStatus="false"/>
+            </imsss:objective>
+          </imsss:objectives>
+        </imsss:sequencing>
+      </item>
+      <item identifier="havingfun_item" identifierref="havingfun_resource">
+        <title>Having Fun</title>
+        <imsss:sequencing IDRef="content_seq_rules">
+          <imsss:sequencingRules>
+            <imsss:preConditionRule>
+              <imsss:ruleConditions conditionCombination="any">
+                <imsss:ruleCondition referencedObjective="previous_sco_satisfied" operator="not" condition="satisfied"/>
+                <imsss:ruleCondition referencedObjective="previous_sco_satisfied" operator="not" condition="objectiveStatusKnown"/>
+              </imsss:ruleConditions>
+              <imsss:ruleAction action="disabled"/>
+            </imsss:preConditionRule>
+          </imsss:sequencingRules>
+          <imsss:objectives>
+            <imsss:primaryObjective objectiveID="havingfun_satisfied">
+              <imsss:mapInfo targetObjectiveID = "com.scorm.golfsamples.sequencing.forcedsequential.havingfun_satisfied"
+                             readSatisfiedStatus = "true" writeSatisfiedStatus = "true"/>
+            </imsss:primaryObjective>
+            <imsss:objective objectiveID="previous_sco_satisfied">
+              <imsss:mapInfo targetObjectiveID="com.scorm.golfsamples.sequencing.forcedsequential.handicapping_satisfied"
+                             readSatisfiedStatus="true" writeSatisfiedStatus="false"/>
+            </imsss:objective>
+          </imsss:objectives>
+        </imsss:sequencing>
+      </item>
+      <item identifier="assessment_item" identifierref="assessment_resource">
+        <title>Quiz</title>
+        <!-- Note that the quiz does not reference the common sequencing colletion-->
+        <imsss:sequencing>
+
+          <imsss:sequencingRules>
+            <imsss:preConditionRule>
+              <imsss:ruleConditions conditionCombination="any">
+                <imsss:ruleCondition referencedObjective="previous_sco_satisfied" operator="not" condition="satisfied"/>
+                <imsss:ruleCondition referencedObjective="previous_sco_satisfied" operator="not" condition="objectiveStatusKnown"/>
+              </imsss:ruleConditions>
+              <imsss:ruleAction action="disabled"/>
+            </imsss:preConditionRule>
+          </imsss:sequencingRules>
+          
+          <!-- 
+          Set the quiz to be the only activity that counts towards rollup so that the course 
+          will receive these values. Note, these values are the defaults and don't technically need to be
+          included in the manifest, but they are listed here for purposes of illustration.
+          -->
+          <imsss:rollupRules rollupObjectiveSatisfied="true" rollupProgressCompletion="true" objectiveMeasureWeight="1"></imsss:rollupRules>
+
+          <imsss:objectives>
+            <imsss:primaryObjective objectiveID="assessment_satisfied" />
+            <imsss:objective objectiveID="previous_sco_satisfied">
+              <imsss:mapInfo targetObjectiveID="com.scorm.golfsamples.sequencing.forcedsequential.havingfun_satisfied"
+                             readSatisfiedStatus="true" writeSatisfiedStatus="false"/>
+            </imsss:objective>
+          </imsss:objectives>
+
+          <imsss:deliveryControls completionSetByContent="true" objectiveSetByContent="true"/>
+        </imsss:sequencing>
+      </item>
+      <imsss:sequencing>
+        <!--Both choice and flow navigation are allowed-->
+        <imsss:controlMode choice="true" flow="true"/>
+      </imsss:sequencing>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="playing_resource" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html?content=playing">
+      <file href="Playing/otherscoreing.jpg"/>
+      <file href="Playing/OtherScoring.html"/>
+      <file href="Playing/Par.html"/>
+      <file href="Playing/par.jpg"/>
+      <file href="Playing/Playing.html"/>
+      <file href="Playing/playing.jpg"/>
+      <file href="Playing/rules.jpg"/>
+      <file href="Playing/RulesOfGolf.html"/>
+      <file href="Playing/Scoring.html"/>
+      <file href="Playing/scoring.jpg"/>
+      <dependency identifierref="common_files"/>
+    </resource>
+    <resource identifier="etiquette_resource" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html?content=etiquette">
+      <file href="Etiquette/Course.html"/>
+      <file href="Etiquette/course.jpg"/>
+      <file href="Etiquette/Distracting.html"/>
+      <file href="Etiquette/distracting.jpg"/>
+      <file href="Etiquette/Play.html"/>
+      <file href="Etiquette/play.jpg"/>
+      <dependency identifierref="common_files"/>
+    </resource>
+    <resource identifier="handicapping_resource" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html?content=handicapping">
+      <file href="Handicapping/calchandi.jpg"/>
+      <file href="Handicapping/calcscore.jpg"/>
+      <file href="Handicapping/CalculatingHandicap.html"/>
+      <file href="Handicapping/CalculatingScore.html"/>
+      <file href="Handicapping/Example.html"/>
+      <file href="Handicapping/example.jpg"/>
+      <file href="Handicapping/Overview.html"/>
+      <file href="Handicapping/overview.jpg"/>
+      <dependency identifierref="common_files"/>
+    </resource>
+    <resource identifier="havingfun_resource" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html?content=havingfun">
+      <file href="HavingFun/friends.jpg"/>
+      <file href="HavingFun/fun.jpg"/>
+      <file href="HavingFun/HowToHaveFun.html"/>
+      <file href="HavingFun/MakeFriends.html"/>
+      <dependency identifierref="common_files"/>
+    </resource>
+    <resource identifier="assessment_resource" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html?content=assessment">
+      <file href="Playing/questions.js"/>
+      <file href="Etiquette/questions.js"/>
+      <file href="Handicapping/questions.js"/>
+      <file href="HavingFun/questions.js"/>
+      <dependency identifierref="common_files"/>
+    </resource>
+    <resource identifier="common_files" type="webcontent" adlcp:scormType="asset">
+      <file href="shared/assessmenttemplate.html"/>
+      <file href="shared/background.jpg"/>
+      <file href="shared/cclicense.png"/>
+      <file href="shared/contentfunctions.js"/>
+      <file href="shared/launchpage.html"/>
+      <file href="shared/scormfunctions.js"/>
+      <file href="shared/style.css"/>
+    </resource>
+  </resources>
+
+  <imsss:sequencingCollection>
+
+    <imsss:sequencing ID="content_seq_rules">
+      
+      <!-- Set all content SCOs to not count towards any rollup. Only the post test will count-->
+      <imsss:rollupRules rollupObjectiveSatisfied="false" rollupProgressCompletion="false" objectiveMeasureWeight="0"></imsss:rollupRules>
+
+      <imsss:deliveryControls completionSetByContent="true" objectiveSetByContent="true"/>
+
+    </imsss:sequencing>
+  </imsss:sequencingCollection>
+</manifest>

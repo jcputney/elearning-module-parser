@@ -1,12 +1,8 @@
-name: Publish Snapshot to GitHub Packages
+name: Publish Snapshot to Maven Repositories
 on:
   push:
     branches:
       - main
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   publish-snapshot:
@@ -17,25 +13,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           java-version: '17'
-          distribution: 'corretto'
-          cache: 'gradle'
+          distribution: 'temurin'
+          cache: 'maven'
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Set up Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: '8.8'
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+        env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
-      - name: Build with Gradle
-        run: ./gradlew build
-
-      - name: Publish Snapshot to GitHub Packages and Maven Central
-        run: ./gradlew publish
+      - name: Publish package to GitHub Packages
+        run: mvn deploy -P github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          SIGNING_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-          SIGNING_PASSWORD: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}

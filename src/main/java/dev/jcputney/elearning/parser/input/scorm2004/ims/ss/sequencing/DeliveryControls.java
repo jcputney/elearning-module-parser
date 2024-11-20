@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2024. Jonathan Putney
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -15,13 +32,12 @@ import lombok.Data;
  * learner's progress and achievement, allowing the activity to automatically set completion and
  * objective statuses based on predefined rules or on data provided by the content package.</p>
  *
- * <p>Key configurations include:
+ * <p>Key configurations include:</p>
  * <ul>
  *   <li>Tracking the activity – determines if learner progress should be monitored.</li>
  *   <li>Completion set by content – allows the content to control whether the activity is marked as complete.</li>
  *   <li>Objective set by content – enables the content to set whether objectives are satisfied.</li>
  * </ul>
- * </p>
  *
  * <p>The IMSSS namespace is specified by {@link IMSSS#NAMESPACE_URI}, and this class aligns with
  * SCORM 2004 standards for sequencing and navigation.</p>

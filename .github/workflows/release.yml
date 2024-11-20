@@ -1,43 +1,38 @@
-name: Publish package to GitHub Packages
+name: Release
 on:
-  release:
-    types: [ created ]
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  workflow_dispatch:
 
 jobs:
-  publish-jar:
-    runs-on: ubuntu-latest
+  release:
     permissions:
-      contents: read
-      packages: write
+      contents: write
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-java@v3
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.MAVEN_RELEASE_SSH_KEY }}
+      - uses: actions/setup-java@v4
         with:
           java-version: '17'
-          distribution: 'corretto'
-          cache: 'gradle'
+          distribution: 'temurin'
+          cache: 'maven'
+          server-id: central
+          server-username: OSSRH_USERNAME
+          server-password: OSSRH_TOKEN
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Set up Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: '8.8'
-
-      - name: Update version in build.gradle.kts (Release only)
-        run: ./gradlew version -PnewVersion=${{ github.event.release.tag_name }}
-
-      - name: Build with Gradle
-        run: ./gradlew build
-
-      - name: Publish package to GitHub Packages and Maven Central
-        run: ./gradlew publish
+      - name: Publish package to Maven Central
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mvn -B -ntp -Dstyle.color=always release:prepare
+          cat release.properties
+          VERSION=`cat release.properties | grep scm.tag= | cut -d'=' -f2`
+          mvn -B -ntp -Dstyle.color=always release:perform -DconnectionUrl=scm:git:https://github.com/${{ github.repository }}.git
+          echo "Released ${VERSION} 🚀" >> $GITHUB_STEP_SUMMARY
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          SIGNING_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-          SIGNING_PASSWORD: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}

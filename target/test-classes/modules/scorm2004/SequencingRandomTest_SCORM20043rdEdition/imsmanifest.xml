@@ -1,0 +1,367 @@
+<?xml version="1.0" standalone="no" ?>
+<!--
+Sequencing example demonstrating randomly selecting from a test bank. SCORM 2004 3rd Edition.
+
+Provided by Rustici Software - http://www.scorm.com
+
+Sequencing Strategy:
+
+-Post test cannot be accessed until the content is completed.
+-The post test is actually a test bank consisting of 4 possible tests.
+-On each attempt of the post test, one of the possible tests is randomly selected.
+-The learner gets two attempts to pass the post test.
+-After a failed test, the learner immediately retries another test.
+-Once the post test has been passed or attempted twice, the learner exits the course.
+
+Rollup Strategy:
+
+Overall course status is determined solely by the status of the post test,
+it is the only activity that contributes to rollup.
+
+Score is rolled up to the post test via a global objective. The score of the last
+post test attempted will be the overall score of the course.
+
+The post test's completion and satisfaction are determined by rollup rules.
+-->
+
+<manifest identifier="com.scorm.golfsamples.sequencing.randomtest.20043rd" version="1"
+          xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3"
+          xmlns:adlseq="http://www.adlnet.org/xsd/adlseq_v1p3"
+          xmlns:adlnav="http://www.adlnet.org/xsd/adlnav_v1p3"
+          xmlns:imsss="http://www.imsglobal.org/xsd/imsss"
+          xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 imscp_v1p1.xsd
+                              http://www.adlnet.org/xsd/adlcp_v1p3 adlcp_v1p3.xsd
+                              http://www.adlnet.org/xsd/adlseq_v1p3 adlseq_v1p3.xsd
+                              http://www.adlnet.org/xsd/adlnav_v1p3 adlnav_v1p3.xsd
+                              http://www.imsglobal.org/xsd/imsss imsss_v1p0.xsd">
+
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>2004 3rd Edition</schemaversion>
+  </metadata>
+
+  <organizations default="golf_sample_default_org">
+
+    <organization identifier="golf_sample_default_org" adlseq:objectivesGlobalToSystem="false">
+      <title>Golf Explained - Sequencing Random Test</title>
+
+      <!-- 
+        Create a dummy invisible wrapper around the content to make it easy to write a sequencing rule
+        that limits the post test's availability until all content is completed.
+        -->
+      <item identifier="content_wrapper" isvisible="false">
+        <title>Content Wrapper</title>
+
+        <item identifier="playing_item" identifierref="playing_resource">
+          <title>Playing the Game</title>
+          <imsss:sequencing>
+            <imsss:deliveryControls completionSetByContent="true" objectiveSetByContent="true"/>
+          </imsss:sequencing>
+        </item>
+        <item identifier="etuqiette_item" identifierref="etiquette_resource">
+          <title>Etiquette</title>
+          <imsss:sequencing>
+            <imsss:deliveryControls completionSetByContent="true" objectiveSetByContent="true"/>
+          </imsss:sequencing>
+        </item>
+        <item identifier="handicapping_item" identifierref="handicapping_resource">
+          <title>Handicapping</title>
+          <imsss:sequencing>
+            <imsss:deliveryControls completionSetByContent="true" objectiveSetByContent="true"/>
+          </imsss:sequencing>
+        </item>
+        <item identifier="havingfun_item" identifierref="havingfun_resource">
+          <title>Having Fun</title>
+          <imsss:sequencing>
+            <imsss:deliveryControls completionSetByContent="true" objectiveSetByContent="true"/>
+          </imsss:sequencing>
+        </item>
+
+        <imsss:sequencing>
+          <imsss:controlMode choice="true" flow="true"/>
+          <!--
+            Once all of the SCOs are completed, this dummy content wrapper is satisfied.
+            This activity doesn't count towards rollup to the dummy wrapper, just like the top level objects.
+            The content wrapper doesn't count towards rollup, only the post test rolls up data.
+            -->
+          <imsss:rollupRules objectiveMeasureWeight="0" rollupObjectiveSatisfied="false" rollupProgressCompletion="false">
+
+            <imsss:rollupRule childActivitySet="all">
+              <imsss:rollupConditions>
+                <imsss:rollupCondition condition="completed"/>
+              </imsss:rollupConditions>
+              <imsss:rollupAction action="satisfied"/>
+            </imsss:rollupRule>
+          </imsss:rollupRules>
+
+          <!-- Write this objective's satisfaction status to a global that we can use as a prerequisite for accessing the post test.-->
+          <imsss:objectives>
+            <imsss:primaryObjective objectiveID="content_completed">
+              <imsss:mapInfo targetObjectiveID="com.scorm.golfsamples.sequencing.randomtest.content_completed" writeSatisfiedStatus="true"/>
+            </imsss:primaryObjective>
+          </imsss:objectives>
+
+        </imsss:sequencing>
+      </item>
+
+      <!--The individual tests are hidden so it all just looks like one post test to the learner.-->
+      <item identifier="posttest_item" >
+        <title>Post Test</title>
+
+        <item identifier="test_1" identifierref="assessment_resource" parameters="?content=assessment1" isvisible="false">
+          <title>Test 1</title>
+          <imsss:sequencing IDRef="test_sequencing_rules"></imsss:sequencing>
+          <adlnav:presentation>
+            <adlnav:navigationInterface>
+              <adlnav:hideLMSUI>suspendAll</adlnav:hideLMSUI>
+            </adlnav:navigationInterface>
+          </adlnav:presentation>
+        </item>
+        <item identifier="test_2" identifierref="assessment_resource" parameters="?content=assessment2" isvisible="false">
+          <title>Test 2</title>
+          <imsss:sequencing IDRef="test_sequencing_rules"></imsss:sequencing>
+          <adlnav:presentation>
+            <adlnav:navigationInterface>
+              <adlnav:hideLMSUI>suspendAll</adlnav:hideLMSUI>
+            </adlnav:navigationInterface>
+          </adlnav:presentation>
+        </item>
+        <item identifier="test_3" identifierref="assessment_resource" parameters="?content=assessment3" isvisible="false">
+          <title>Test 3</title>
+          <imsss:sequencing IDRef="test_sequencing_rules"></imsss:sequencing>
+          <adlnav:presentation>
+            <adlnav:navigationInterface>
+              <adlnav:hideLMSUI>suspendAll</adlnav:hideLMSUI>
+            </adlnav:navigationInterface>
+          </adlnav:presentation>
+        </item>
+        <item identifier="test_4" identifierref="assessment_resource" parameters="?content=assessment4" isvisible="false">
+          <title>Test 4</title>
+          <imsss:sequencing IDRef="test_sequencing_rules"></imsss:sequencing>
+          <adlnav:presentation>
+            <adlnav:navigationInterface>
+              <adlnav:hideLMSUI>suspendAll</adlnav:hideLMSUI>
+            </adlnav:navigationInterface>
+          </adlnav:presentation>
+        </item>
+
+        <!-- Sequencing for the Post Test wrapper-->
+        <imsss:sequencing>
+
+          <!-- Tests can't be selected manually, only the first test in flow is delivered -->
+          <imsss:controlMode choice="false" flow="true"/>
+
+          <imsss:sequencingRules>
+
+            <!-- If the content is not completed, then don't allow access to the post test -->
+            <imsss:preConditionRule>
+              <imsss:ruleConditions conditionCombination="any">
+                <imsss:ruleCondition referencedObjective="content_completed" operator="not" condition="satisfied"/>
+                <imsss:ruleCondition referencedObjective="content_completed" operator="not" condition="objectiveStatusKnown"/>
+              </imsss:ruleConditions>
+              <imsss:ruleAction action="disabled"/>
+            </imsss:preConditionRule>
+
+
+            <!-- Once the attempt limit has been exceeded or a test has been passed, the post test is disabled-->
+            <imsss:preConditionRule>
+              <imsss:ruleConditions conditionCombination="any" >
+                <imsss:ruleCondition condition="attemptLimitExceeded"/>
+                <imsss:ruleCondition condition="satisfied"/>
+              </imsss:ruleConditions>
+              <imsss:ruleAction action="disabled"/>
+            </imsss:preConditionRule>
+
+            <!-- 
+              When a test exits, its exit will bubble up to this parent. When we 
+              detect the exit, we want to retry the activity if it was not satisfied and
+              there are attempts left. Note that we need two rules here because there is 
+              no logical grouping operator (i.e. you can't have AND and OR conditions
+              present in the same rule).
+              -->
+            <imsss:postConditionRule>
+              <imsss:ruleConditions conditionCombination="all">
+                <imsss:ruleCondition operator="not" condition="satisfied"/>
+                <imsss:ruleCondition operator="not" condition="attemptLimitExceeded"/>
+              </imsss:ruleConditions>
+              <imsss:ruleAction action="retry"/>
+            </imsss:postConditionRule>
+            <imsss:postConditionRule>
+              <imsss:ruleConditions conditionCombination="all">
+                <imsss:ruleCondition operator="not" condition="objectiveStatusKnown"/>
+                <imsss:ruleCondition operator="not" condition="attemptLimitExceeded"/>
+              </imsss:ruleConditions>
+              <imsss:ruleAction action="retry"/>
+            </imsss:postConditionRule>
+
+            <!-- Once the test is completed (either because of too many attempts or because 
+            it was passed, exit the course)-->
+            <imsss:postConditionRule>
+              <imsss:ruleConditions conditionCombination="any">
+                <imsss:ruleCondition condition="objectiveStatusKnown"/>
+                <imsss:ruleCondition condition="attemptLimitExceeded"/>
+              </imsss:ruleConditions>
+              <imsss:ruleAction action="exitAll"/>
+            </imsss:postConditionRule>
+          </imsss:sequencingRules>
+
+          <!-- The learner gets two shots at passing a test before it is considered failed -->
+          <imsss:limitConditions attemptLimit="2"/>
+
+          <imsss:rollupRules>
+
+            <!-- If one test becomes satisfied, then the post test as a whole is satisfied -->
+            <imsss:rollupRule childActivitySet="any">
+              <imsss:rollupConditions>
+                <imsss:rollupCondition condition="satisfied"/>
+              </imsss:rollupConditions>
+              <imsss:rollupAction action="satisfied"/>
+            </imsss:rollupRule>
+
+            <!-- 
+              Once a test is failed, the post test is marked as failed. It will stay that way 
+              if the attempt limit is exceeded and the test can't be attempted again.
+              -->
+            <imsss:rollupRule childActivitySet="any">
+              <imsss:rollupConditions>
+                <imsss:rollupCondition operator="not" condition="satisfied"/>
+              </imsss:rollupConditions>
+              <imsss:rollupAction action="notSatisfied"/>
+            </imsss:rollupRule>
+
+          </imsss:rollupRules>
+
+          <imsss:objectives>
+
+            <!-- 
+            Read the score from the most recently completed test. This gets rolled up to the course as a whole.
+            The satisfaction will come from the rollup so it shouldn't be read from the global.
+            -->
+            <imsss:primaryObjective objectiveID="course_score">
+              <imsss:mapInfo targetObjectiveID="com.scorm.golfsamples.sequencing.randomtest.course_score" readSatisfiedStatus="false" readNormalizedMeasure="true"/>
+            </imsss:primaryObjective>
+
+            <!-- Read from the content completed global to disable the post test until the content is completed-->
+            <imsss:objective objectiveID="content_completed">
+              <imsss:mapInfo targetObjectiveID="com.scorm.golfsamples.sequencing.randomtest.content_completed" readSatisfiedStatus="true"/>
+            </imsss:objective>
+
+          </imsss:objectives>
+
+          <!-- On every new attempt of the post test, randomize the order of the tests.-->
+          <imsss:randomizationControls randomizationTiming="onEachNewAttempt" reorderChildren="true"/>
+
+        </imsss:sequencing>
+      </item>
+
+      <imsss:sequencing>
+
+        <imsss:controlMode choice="true" flow="true"/>
+
+        <!-- The post test is the only thing that contributes to rollup. Once it has either been
+        satisfied or there are no more attempts left, mark the course as completed.-->
+        <imsss:rollupRules>
+          <imsss:rollupRule childActivitySet="any">
+            <imsss:rollupConditions conditionCombination="any">
+              <imsss:rollupCondition condition="satisfied"/>
+              <imsss:rollupCondition condition="attemptLimitExceeded"/>
+            </imsss:rollupConditions>
+            <imsss:rollupAction action="completed"/>
+          </imsss:rollupRule>
+        </imsss:rollupRules>
+
+      </imsss:sequencing>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="playing_resource" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html?content=playing">
+      <file href="Playing/otherscoreing.jpg"/>
+      <file href="Playing/OtherScoring.html"/>
+      <file href="Playing/Par.html"/>
+      <file href="Playing/par.jpg"/>
+      <file href="Playing/Playing.html"/>
+      <file href="Playing/playing.jpg"/>
+      <file href="Playing/rules.jpg"/>
+      <file href="Playing/RulesOfGolf.html"/>
+      <file href="Playing/Scoring.html"/>
+      <file href="Playing/scoring.jpg"/>
+      <dependency identifierref="common_files"/>
+    </resource>
+    <resource identifier="etiquette_resource" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html?content=etiquette">
+      <file href="Etiquette/Course.html"/>
+      <file href="Etiquette/course.jpg"/>
+      <file href="Etiquette/Distracting.html"/>
+      <file href="Etiquette/distracting.jpg"/>
+      <file href="Etiquette/Play.html"/>
+      <file href="Etiquette/play.jpg"/>
+      <dependency identifierref="common_files"/>
+    </resource>
+    <resource identifier="handicapping_resource" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html?content=handicapping">
+      <file href="Handicapping/calchandi.jpg"/>
+      <file href="Handicapping/calcscore.jpg"/>
+      <file href="Handicapping/CalculatingHandicap.html"/>
+      <file href="Handicapping/CalculatingScore.html"/>
+      <file href="Handicapping/Example.html"/>
+      <file href="Handicapping/example.jpg"/>
+      <file href="Handicapping/Overview.html"/>
+      <file href="Handicapping/overview.jpg"/>
+      <dependency identifierref="common_files"/>
+    </resource>
+    <resource identifier="havingfun_resource" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html?content=havingfun">
+      <file href="HavingFun/friends.jpg"/>
+      <file href="HavingFun/fun.jpg"/>
+      <file href="HavingFun/HowToHaveFun.html"/>
+      <file href="HavingFun/MakeFriends.html"/>
+      <dependency identifierref="common_files"/>
+    </resource>
+    <resource identifier="assessment_resource" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html">
+      <file href="Playing/questions.js"/>
+      <file href="Etiquette/questions.js"/>
+      <file href="Handicapping/questions.js"/>
+      <file href="HavingFun/questions.js"/>
+      <dependency identifierref="common_files"/>
+    </resource>
+    <resource identifier="common_files" type="webcontent" adlcp:scormType="asset">
+      <file href="shared/assessmenttemplate.html"/>
+      <file href="shared/background.jpg"/>
+      <file href="shared/cclicense.png"/>
+      <file href="shared/contentfunctions.js"/>
+      <file href="shared/launchpage.html"/>
+      <file href="shared/scormfunctions.js"/>
+      <file href="shared/style.css"/>
+    </resource>
+  </resources>
+  <imsss:sequencingCollection>
+
+    <imsss:sequencing ID="test_sequencing_rules">
+
+      <!--
+      After completing a test, bubble up an exit to the parent so it can evaluate the number of attempts
+      and overall status.
+      -->
+      <imsss:sequencingRules>
+        <imsss:postConditionRule>
+          <imsss:ruleConditions>
+            <imsss:ruleCondition condition="always"/>
+          </imsss:ruleConditions>
+          <imsss:ruleAction action="exitParent"/>
+        </imsss:postConditionRule>
+      </imsss:sequencingRules>
+
+      <!--
+      Tests write their score to a global that is read by the post test aggregation. The
+      most recently completed test counts as the course's overall score.
+      -->
+      <imsss:objectives>
+        <imsss:primaryObjective objectiveID="course_score">
+          <imsss:mapInfo targetObjectiveID="com.scorm.golfsamples.sequencing.randomtest.course_score"
+                         readSatisfiedStatus="false" readNormalizedMeasure="false" writeNormalizedMeasure="true"/>
+        </imsss:primaryObjective>
+      </imsss:objectives>
+      <imsss:deliveryControls completionSetByContent="true" objectiveSetByContent="true"/>
+    </imsss:sequencing>
+  </imsss:sequencingCollection>
+
+</manifest>

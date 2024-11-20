@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2024. Jonathan Putney
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -13,7 +30,7 @@ import lombok.Data;
  * <p>The <code>Metadata</code> element provides descriptive information about an item, resource,
  * or manifest. It can include inline metadata or reference an external metadata file.</p>
  *
- * <p>Schema Snippet:
+ * <p>Schema Snippet:</p>
  * <pre>{@code
  * <xsd:element name="metadata">
  *   <xsd:complexType>
@@ -26,9 +43,9 @@ import lombok.Data;
  *     <xsd:anyAttribute namespace="##other" processContents="lax"/>
  *   </xsd:complexType>
  * </xsd:element>
- * }</pre></p>
+ * }</pre>
  *
- * <p>Example Usage in imsmanifest.xml:
+ * <p>Example Usage in imsmanifest.xml:</p>
  * <pre>{@code
  * <metadata>
  *   <schema>ADL SCORM</schema>
@@ -41,7 +58,7 @@ import lombok.Data;
  *     </general>
  *   </lom:lom>
  * </metadata>
- * }</pre></p>
+ * }</pre>
  */
 @Data
 public class Scorm12Metadata implements LoadableMetadata {

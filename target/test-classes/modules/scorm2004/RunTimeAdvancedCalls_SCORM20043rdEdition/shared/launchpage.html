@@ -1,0 +1,554 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Course Launch Page</title>
+    <script src="scormfunctions.js" type="text/javascript"></script>
+    <script type="text/javascript">
+    
+    /*************************************/
+    //functions for sizing the iFrame
+    /*************************************/
+    function setIframeHeight(id, navWidth) {
+        if ( document.getElementById ) {
+            var theIframe = document.getElementById(id);
+            if (theIframe) {
+                var height = getWindowHeight();
+                theIframe.style.height = Math.round( height ) - navWidth + "px";
+                theIframe.style.marginTop = Math.round( ((height - navWidth) - parseInt(theIframe.style.height) )/2 ) + "px";
+            }
+        }
+    }
+
+    function getWindowHeight() {
+        var height = 0;
+        if (window.innerHeight){
+            height = window.innerHeight - 18;
+        }
+        else if (document.documentElement && document.documentElement.clientHeight){
+            height = document.documentElement.clientHeight;
+        }
+        else if (document.body && document.body.clientHeight) {
+            height = document.body.clientHeight;
+        }
+        return height;
+    }
+    
+    function SetupIFrame(){
+        //set our iFrame for the content to take up the full screen except for our navigation
+        var navWidth = 40;
+        setIframeHeight("contentFrame", navWidth);
+        //need this in a setTimeout to avoid a timing error in IE6
+        window.setTimeout('window.onresize = function() { setIframeHeight("contentFrame", ' + navWidth + '); }', 1000);
+    }
+    
+    /*************************************/
+    //content definition
+    /*************************************/
+    var pageArray = new Array(15);
+    
+    pageArray[0] = "Playing/Playing.html";
+    pageArray[1] = "Playing/Par.html";
+    pageArray[2] = "Playing/Scoring.html";
+    pageArray[3] = "Playing/OtherScoring.html";
+    pageArray[4] = "Playing/RulesOfGolf.html";
+    pageArray[5] = "Etiquette/Course.html";
+    pageArray[6] = "Etiquette/Course.html";
+    pageArray[7] = "Etiquette/Play.html";
+    pageArray[8] = "Handicapping/Overview.html";
+    pageArray[9] = "Handicapping/CalculatingHandicap.html";
+    pageArray[10] = "Handicapping/CalculatingScore.html";
+    pageArray[11] = "Handicapping/CalculatingScore.html";
+    pageArray[12] = "HavingFun/HowToHaveFun.html";
+    pageArray[13] = "HavingFun/MakeFriends.html";
+    pageArray[14] = "shared/assessmenttemplate.html?questions=Playing&questions=Etiquette&questions=Handicapping&questions=HavingFun";
+    
+    
+    /*************************************
+    Further content definition
+    -associates pages with learning objectives and tracks which pages
+    have been visited
+    -tracks the questions reported by learning objective
+    *************************************/
+    
+    var pageObjectiveArray = new Array(15);
+    
+    function ObjectiveCompletion(objective, visited){
+        this.LearningObjective = objective;
+        this.Visited = visited;
+    }
+    
+    pageObjectiveArray[0] = new ObjectiveCompletion("obj_playing", false);
+    pageObjectiveArray[1] = new ObjectiveCompletion("obj_playing", false);
+    pageObjectiveArray[2] = new ObjectiveCompletion("obj_playing", false);
+    pageObjectiveArray[3] = new ObjectiveCompletion("obj_playing", false);
+    pageObjectiveArray[4] = new ObjectiveCompletion("obj_playing", false);
+    pageObjectiveArray[5] = new ObjectiveCompletion("obj_etiquette", false);
+    pageObjectiveArray[6] = new ObjectiveCompletion("obj_etiquette", false);
+    pageObjectiveArray[7] = new ObjectiveCompletion("obj_etiquette", false);
+    pageObjectiveArray[8] = new ObjectiveCompletion("obj_handicapping", false);
+    pageObjectiveArray[9] = new ObjectiveCompletion("obj_handicapping", false);
+    pageObjectiveArray[10] = new ObjectiveCompletion("obj_handicapping", false);
+    pageObjectiveArray[11] = new ObjectiveCompletion("obj_handicapping", false);
+    pageObjectiveArray[12] = new ObjectiveCompletion("obj_havingfun", false);
+    pageObjectiveArray[13] = new ObjectiveCompletion("obj_havingfun", false);
+    pageObjectiveArray[14] = new ObjectiveCompletion("", false);  //no objective for the final test
+    
+    //Array for tracking the number of questions associated with each objective
+    var objectiveQuestionCount = new Array(4);
+    objectiveQuestionCount["obj_playing"] = 0;
+    objectiveQuestionCount["obj_etiquette"] = 0;
+    objectiveQuestionCount["obj_handicapping"] = 0;
+    objectiveQuestionCount["obj_havingfun"] = 0;
+    
+    //Array for tracking the number of correct responses for each objective
+    var objectiveCorrectCount = new Array(4);
+    objectiveCorrectCount["obj_playing"] = 0;
+    objectiveCorrectCount["obj_etiquette"] = 0;
+    objectiveCorrectCount["obj_handicapping"] = 0;
+    objectiveCorrectCount["obj_havingfun"] = 0;
+    
+    /*************************************/
+    //navigation functions
+    /*************************************/
+    
+    var currentPage = null;
+    var startTimeStamp = null;
+    var processedUnload = false;
+    var reachedEnd = false;
+    var maxPageReached = 0;
+    
+    function doStart(){
+        
+        //get the iFrame sized correctly and set up
+        SetupIFrame();
+        
+        //record the time that the learner started the SCO so that we can report the total time
+        startTimeStamp = new Date();
+        
+        //initialize communication with the LMS
+        ScormProcessInitialize();
+        
+        //it's a best practice to set the completion status to incomplete when
+        //first launching the course (if the course is not already completed)
+        var completionStatus = ScormProcessGetValue("cmi.completion_status", true);
+        if (completionStatus == "unknown"){
+            ScormProcessSetValue("cmi.completion_status", "incomplete");
+        }
+        
+        //see if the user stored a bookmark previously (don't check for errors
+        //because cmi.location may not be initialized
+        var bookmark = ScormProcessGetValue("cmi.location", false);
+        
+        //if there isn't a stored bookmark, start the user at the first page
+        if (bookmark == ""){
+            currentPage = 0;
+        }
+        else{
+            //if there is a stored bookmark, prompt the user to resume from the previous location
+            if (confirm("Would you like to resume from where you previously left off?")){
+                currentPage = parseInt(bookmark, 10);
+            }
+            else{
+                currentPage = 0;
+            }
+        }
+        
+        goToPage();
+    }
+    
+    function goToPage(){
+    
+        var theIframe = document.getElementById("contentFrame");
+        var prevButton = document.getElementById("butPrevious");
+        var nextButton = document.getElementById("butNext");
+        
+        //navigate the iFrame to the content
+        theIframe.src = "../" + pageArray[currentPage];
+        
+        //disable the prev/next buttons if we are on the first or last page.
+        if (currentPage == 0){
+            nextButton.disabled = false;
+            prevButton.disabled = true;
+        }
+        else if (currentPage == (pageArray.length - 1)){
+            nextButton.disabled = true;
+            prevButton.disabled = false;       
+        }
+        else{
+            nextButton.disabled = false;
+            prevButton.disabled = false;
+        }
+        
+        //save the current location as the bookmark
+        ScormProcessSetValue("cmi.location", currentPage);
+     
+        //in this sample course, the course is considered complete when the last page is reached
+        if (currentPage == (pageArray.length - 1)){
+            reachedEnd = true;
+            ScormProcessSetValue("cmi.completion_status", "completed");
+        }
+        
+        //mark the current page as having been visited and updates
+        //the progress status for each learning objective
+        UpdateLearningObjectivesProgress(currentPage);
+        
+        //Update the overall progress measure. Only increment progress measure in
+        //this example.
+        if (currentPage > maxPageReached){
+            maxPageReached = currentPage;
+            
+            var progressMeasure = (maxPageReached + 1) / pageArray.length;
+            progressMeasure = RoundToPrecision(progressMeasure, 2);
+            
+            ScormProcessSetValue("cmi.progress_measure", progressMeasure);
+        }
+    }
+    
+    function doUnload(pressedExit){
+        
+        //don't call this function twice
+        if (processedUnload == true){return;}
+        
+        processedUnload = true;
+        
+        //record the session time
+        var endTimeStamp = new Date();
+        var totalMilliseconds = (endTimeStamp.getTime() - startTimeStamp.getTime());
+        var scormTime = ConvertMilliSecondsIntoSCORM2004Time(totalMilliseconds);
+        
+        ScormProcessSetValue("cmi.session_time", scormTime);
+        
+        //if the user just closes the browser, we will default to saving 
+        //their progress data. If the user presses exit, he is prompted.
+        //If the user reached the end, the exit normall to submit results.
+        if (pressedExit == false && reachedEnd == false){
+            ScormProcessSetValue("cmi.exit", "suspend");
+        }
+        
+        ScormProcessTerminate();
+    }
+    
+    function doPrevious(){
+        if (currentPage > 0){
+            currentPage--;
+        }
+        goToPage();
+    }
+    
+    function doNext(){
+        if (currentPage < (pageArray.length - 1)){
+            currentPage++;
+        }
+        goToPage();
+    }
+    
+    function doExit(){
+
+        //note use of short-circuit AND. If the user reached the end, don't prompt.
+        //just exit normally and submit the results.
+        if (reachedEnd == false && confirm("Would you like to save your progress to resume later?")){
+            //set exit to suspend
+            ScormProcessSetValue("cmi.exit", "suspend");
+            
+            //issue a suspendAll navigation request
+            ScormProcessSetValue("adl.nav.request", "suspendAll");
+        }
+        else{
+            //set exit to normal
+            ScormProcessSetValue("cmi.exit", "");
+            
+            //issue an exitAll navigation request
+            ScormProcessSetValue("adl.nav.request", "exitAll");
+        }
+        
+        //process the unload handler to close out the session.
+        //the presense of an adl.nav.request will cause the LMS to 
+        //take the content away from the user.
+        doUnload(true);
+        
+    }
+    
+    //called from the assessmenttemplate.html page to record the results of a test
+    //passes in score as a percentage
+    function RecordTest(score){
+    
+        ScormProcessSetValue("cmi.score.raw", score);
+        ScormProcessSetValue("cmi.score.min", "0");
+        ScormProcessSetValue("cmi.score.max", "100");
+        
+        var scaledScore = score / 100;
+        ScormProcessSetValue("cmi.score.scaled", scaledScore);
+        
+        /*
+        In this example, the satisfaction status is derrived from
+        score's relation to the mastery score so don't explicitly
+        set a score.
+        */
+        //consider 70% to be passing
+        /*
+        if (score >= 70){
+            ScormProcessSetValue("cmi.success_status", "passed");
+        }
+        else{
+            ScormProcessSetValue("cmi.success_status", "failed");
+        }
+        */
+        
+        //record a score for each learning objective
+        for (var objId in objectiveQuestionCount){
+            
+            //scaled score is a traditional percentage
+            var score = RoundToPrecision((objectiveCorrectCount[objId] / objectiveQuestionCount[objId]), 2);
+            var objIndex = FindObjectiveIndex(objId);
+            
+            ScormProcessSetValue("cmi.objectives." + objIndex + ".score.scaled", score);
+            
+            //also report raw, min and max score as the number of questions correct and available
+            ScormProcessSetValue("cmi.objectives." + objIndex + ".score.raw", objectiveCorrectCount[objId]);
+            ScormProcessSetValue("cmi.objectives." + objIndex + ".score.min", 0);
+            ScormProcessSetValue("cmi.objectives." + objIndex + ".score.max", objectiveQuestionCount[objId]);
+            
+            //This example doesn't make any judgement about the satisfaction of each objective. That could be
+            //handled by defining a min normalized measure in the manifest or by expliciting setting satisfaction
+            //status here.
+        }
+        
+    }
+    
+    //SCORM requires time to be formatted in a specific way
+    function ConvertMilliSecondsIntoSCORM2004Time(intTotalMilliseconds){
+	
+	    var ScormTime = "";
+    	
+	    var HundredthsOfASecond;	//decrementing counter - work at the hundreths of a second level because that is all the precision that is required
+    	
+	    var Seconds;	// 100 hundreths of a seconds
+	    var Minutes;	// 60 seconds
+	    var Hours;		// 60 minutes
+	    var Days;		// 24 hours
+	    var Months;		// assumed to be an "average" month (figures a leap year every 4 years) = ((365*4) + 1) / 48 days - 30.4375 days per month
+	    var Years;		// assumed to be 12 "average" months
+    	
+	    var HUNDREDTHS_PER_SECOND = 100;
+	    var HUNDREDTHS_PER_MINUTE = HUNDREDTHS_PER_SECOND * 60;
+	    var HUNDREDTHS_PER_HOUR   = HUNDREDTHS_PER_MINUTE * 60;
+	    var HUNDREDTHS_PER_DAY    = HUNDREDTHS_PER_HOUR * 24;
+	    var HUNDREDTHS_PER_MONTH  = HUNDREDTHS_PER_DAY * (((365 * 4) + 1) / 48);
+	    var HUNDREDTHS_PER_YEAR   = HUNDREDTHS_PER_MONTH * 12;
+    	
+	    HundredthsOfASecond = Math.floor(intTotalMilliseconds / 10);
+    	
+	    Years = Math.floor(HundredthsOfASecond / HUNDREDTHS_PER_YEAR);
+	    HundredthsOfASecond -= (Years * HUNDREDTHS_PER_YEAR);
+    	
+	    Months = Math.floor(HundredthsOfASecond / HUNDREDTHS_PER_MONTH);
+	    HundredthsOfASecond -= (Months * HUNDREDTHS_PER_MONTH);
+    	
+	    Days = Math.floor(HundredthsOfASecond / HUNDREDTHS_PER_DAY);
+	    HundredthsOfASecond -= (Days * HUNDREDTHS_PER_DAY);
+    	
+	    Hours = Math.floor(HundredthsOfASecond / HUNDREDTHS_PER_HOUR);
+	    HundredthsOfASecond -= (Hours * HUNDREDTHS_PER_HOUR);
+    	
+	    Minutes = Math.floor(HundredthsOfASecond / HUNDREDTHS_PER_MINUTE);
+	    HundredthsOfASecond -= (Minutes * HUNDREDTHS_PER_MINUTE);
+    	
+	    Seconds = Math.floor(HundredthsOfASecond / HUNDREDTHS_PER_SECOND);
+	    HundredthsOfASecond -= (Seconds * HUNDREDTHS_PER_SECOND);
+    	
+	    if (Years > 0) {
+		    ScormTime += Years + "Y";
+	    }
+	    if (Months > 0){
+		    ScormTime += Months + "M";
+	    }
+	    if (Days > 0){
+		    ScormTime += Days + "D";
+	    }
+    	
+	    //check to see if we have any time before adding the "T"
+	    if ((HundredthsOfASecond + Seconds + Minutes + Hours) > 0 ){
+    		
+		    ScormTime += "T";
+    		
+		    if (Hours > 0){
+			    ScormTime += Hours + "H";
+		    }
+    		
+		    if (Minutes > 0){
+			    ScormTime += Minutes + "M";
+		    }
+    		
+		    if ((HundredthsOfASecond + Seconds) > 0){
+			    ScormTime += Seconds;
+    			
+			    if (HundredthsOfASecond > 0){
+				    ScormTime += "." + HundredthsOfASecond;
+			    }
+    			
+			    ScormTime += "S";
+		    }
+    		
+	    }
+    	
+	    if (ScormTime == ""){
+		    ScormTime = "0S";
+	    }
+    	
+	    ScormTime = "P" + ScormTime;
+    	
+	    return ScormTime;
+    }
+    
+    //called from the assessmenttemplate.html page to record the results of a question
+    function RecordQuestion(id, questionText, questionType, learnerResponse, correctAnswer, wasCorrect, objectiveId){
+        
+        //Interactions are stored in a collection. We need to find the number of items currently in
+        //the collection so we can store this question in the next bucket.
+        //Since the collection indicies are 0-based, the count will be the identifier for the next
+        //available bucket.
+        nextIndex = ScormProcessGetValue("cmi.interactions._count", true)
+        
+        //question id must be the first item set
+        ScormProcessSetValue("cmi.interactions." + nextIndex + ".id", id);
+        
+        //Use the question text as the interaction's description
+        ScormProcessSetValue("cmi.interactions." + nextIndex + ".description", questionText);
+        
+        //Associate this question with one of our four defined learning ojectives to enable
+        //the LMS to provide detailed reporting
+        ScormProcessSetValue("cmi.interactions." + nextIndex + ".objectives.0.id", objectiveId);
+        
+        //The question type should be set before detailed response information
+        ScormProcessSetValue("cmi.interactions." + nextIndex + ".type", questionType);
+        
+        //All interaction responses have a very specific format they must ahere to based
+        //on the interaction type. In this example, only multiple choice reponses need to 
+        //be massaged to adhere to that typing.
+        if (questionType == "choice"){
+            learnerResponse = FormatChoiceResponse(learnerResponse);
+            correctAnswer = FormatChoiceResponse(correctAnswer);
+        }
+        
+        if (learnerResponse != ""){
+            //Record the response the learner gave (if one was provided)
+            ScormProcessSetValue("cmi.interactions." + nextIndex + ".learner_response", learnerResponse);
+        }
+        
+        //Record the correct answer, even if it is the same as the learner response
+        ScormProcessSetValue("cmi.interactions." + nextIndex + ".correct_responses.0.pattern", correctAnswer);
+        
+        //Finally record whether or not the learner's response was correct
+        if (wasCorrect == true){
+            ScormProcessSetValue("cmi.interactions." + nextIndex + ".result", "correct");
+        }
+        else{
+            ScormProcessSetValue("cmi.interactions." + nextIndex + ".result", "incorrect");
+        }
+        
+        //increment the counters tracking the number of questions for each objective
+        objectiveQuestionCount[objectiveId]++;
+        if (wasCorrect == true){objectiveCorrectCount[objectiveId]++;}
+        
+    }
+    
+    function FormatChoiceResponse(value){
+        
+        var newValue = new String(value);
+        
+        //replace all whitespace
+        newValue = newValue.replace(/\W/g, "_");
+        
+        return newValue;
+    }
+    
+    
+    /*
+    Marks the current page as visited and updates the progress information
+    for the learning objective associated with this page.
+    */
+    function UpdateLearningObjectivesProgress(currentPage){
+        
+        //Mark the page as visited in our internal data store
+        pageObjectiveArray[currentPage].Visited = true;
+        
+        //Figure out which learning objective this page is associated with
+        var affectedObjective = pageObjectiveArray[currentPage].LearningObjective;
+        
+        if (affectedObjective != ""){   //the test doesn't have a learning objective associated with it
+            var objCompletedCount = 0;
+            var objItemTotal = 0;
+            
+            //Figure out how many pages are required for this learning objective
+            //and how many have been completed
+            for (var i in pageObjectiveArray){
+                if (pageObjectiveArray[i].LearningObjective == affectedObjective){
+                    objItemTotal++;
+                    
+                    if (pageObjectiveArray[i].Visited == true)
+                    {
+                        objCompletedCount++;
+                    }
+                }
+            }
+            
+            var objProgressMeasure = RoundToPrecision( (objCompletedCount / objItemTotal), 2);
+            
+            //Find the index of this learning objective
+            var objIndex = FindObjectiveIndex(affectedObjective);
+            
+            //Record a completion percentage for this learning objective
+            ScormProcessSetValue("cmi.objectives." + objIndex + ".progress_measure", objProgressMeasure);
+            
+            //If all pages have been completed, mark this learning objective as completed,
+            //otherwise, if it's the first time a page has been visited for this objective,
+            //change the status from unknown to incomplete.
+            if (objCompletedCount == objItemTotal){
+                ScormProcessSetValue("cmi.objectives." + objIndex + ".completion_status", "completed");
+            }
+            else if (objCompletedCount == 1){
+                ScormProcessSetValue("cmi.objectives." + objIndex + ".completion_status", "incomplete");
+            }
+        }
+    }
+    
+    function RoundToPrecision(number, significantDigits){
+
+	    number = parseFloat(number);
+        return (Math.round(number * Math.pow(10, significantDigits)) / Math.pow(10, significantDigits))
+    }
+    
+    /*
+    Search the objectives collection to find the objective with the specified id.
+    Since we declared these objectives in the manifest, the LMS should initialize
+    this collection for us. If they were not declare in the manifest, the SCO 
+    would need to initialize them through runtime calls.
+    */
+    function FindObjectiveIndex(objectiveId){
+        var objCount = ScormProcessGetValue("cmi.objectives._count", true);
+        
+        for (var i=0; i < objCount; i++){
+            var objId = ScormProcessGetValue("cmi.objectives." + i + ".id", true);
+            
+            if (objId == objectiveId){
+                return i;
+            }
+        }
+        
+        alert("ERROR - could not find objective: " + objectiveId);
+    }
+    </script>
+
+</head>
+<body onload="doStart(false);" onbeforeunload="doUnload(false);" onunload="doUnload();">
+   
+    <iframe width="100%" id="contentFrame" src=""></iframe>
+    
+    <div id="navDiv">
+        <input type="button" value="<- Previous" id="butPrevious" onclick="doPrevious();"/>
+        <input type="button" value="Next ->" id="butNext" onclick="doNext();"/>
+        <input type="button" value="Exit" id="butExit" onclick="doExit();"/>
+    </div>
+
+</body>
+</html>

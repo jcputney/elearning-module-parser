@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2024. Jonathan Putney
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,10 +29,9 @@ import lombok.Data;
  *
  * <p>The <code>organization</code> element defines the structure and hierarchy of content items
  * within a content package. It also allows for metadata to describe the organization and an
- * optional
- * <code>structure</code> attribute.</p>
+ * optional <code>structure</code> attribute.</p>
  *
- * <p>Schema Snippet:
+ * <p>Schema Snippet:</p>
  * <pre>{@code
  * <xsd:complexType name="organizationType">
  *    <xsd:sequence>
@@ -28,9 +44,9 @@ import lombok.Data;
  *    <xsd:attributeGroup ref="attr.structure.req"/>
  *    <xsd:anyAttribute namespace="##other" processContents="strict"/>
  * </xsd:complexType>
- * }</pre></p>
+ * }</pre>
  *
- * <p>Example Usage in imsmanifest.xml:
+ * <p>Example Usage in imsmanifest.xml:</p>
  * <pre>{@code
  * <organization identifier="org_1" structure="hierarchical">
  *   <title>Sample Organization</title>
@@ -42,7 +58,7 @@ import lombok.Data;
  *     <title>Sample Item</title>
  *   </item>
  * </organization>
- * }</pre></p>
+ * }</pre>
  */
 @Data
 public class Scorm12Organization {

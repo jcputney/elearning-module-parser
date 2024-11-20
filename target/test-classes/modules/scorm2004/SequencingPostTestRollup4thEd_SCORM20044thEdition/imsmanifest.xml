@@ -1,0 +1,326 @@
+<?xml version="1.0" standalone="no" ?>
+<!--
+Sequencing example that demonstrates the new features of SCORM 2004 4th Edition.
+
+The new features of 4th Edition are described at http://www.scorm.com/blog/2009/01/scorm-2004-4th-edition/
+
+This example extends the functionality of the Post Test Rollup example.
+
+Provided by Rustici Software - http://www.scorm.com
+
+Sequencing Strategy:
+This example maintains the sequencing strategy from the Forced Sequential example.
+It requires the learner to visit the SCOs in order. Once a SCO has been visited, 
+the learner can jump backwards to review material, but the learner can not jump 
+ahead beyond the next SCO.
+
+To demonstrate the new 4th Edition "jump" navigation request, the learner can now
+skip straight to the test at anytime from within a SCO, bypassing all sequencing rules.
+If the learner is taking the content though, it still must be taked in order.
+
+To demonstrate the additional data that can be stored on global objectives, this example
+uses completion status as the driver for prerequisites. In prior editions of SCORM 2004, 
+only success status was available on global objectives. In this case, we simply need the
+learner to complete the SCO not necessarily satisfy it.
+
+Rollup Strategy:
+This example maintains the sequencing strategy from the Forced Sequential example.
+It still works even though the sequencing strategy now allows for jump request because
+it is entirely dependent on the post test.
+
+To demonstrate the new rollup of progress measure, this example not includes weights on each
+SCO that represent their overall contribution to completion.
+
+Other:
+To demonstrate the value of the new shared data buckets in 4th Edition, we added a notes feature
+that allows the learner to take brief notes and have them be available in any SCO.
+-->
+
+<manifest identifier="com.scorm.golfsamples.sequencing.posttestrollup4thEd.20044th" version="1"
+                  xmlns = "http://www.imsglobal.org/xsd/imscp_v1p1"
+                  xmlns:adlcp = "http://www.adlnet.org/xsd/adlcp_v1p3"
+                  xmlns:adlseq = "http://www.adlnet.org/xsd/adlseq_v1p3"
+                  xmlns:adlnav = "http://www.adlnet.org/xsd/adlnav_v1p3"
+                  xmlns:imsss = "http://www.imsglobal.org/xsd/imsss"
+                  xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation = "http://www.imsglobal.org/xsd/imscp_v1p1 imscp_v1p1.xsd
+                                       http://www.adlnet.org/xsd/adlcp_v1p3 adlcp_v1p3.xsd
+                                       http://www.adlnet.org/xsd/adlseq_v1p3 adlseq_v1p3.xsd
+                                       http://www.adlnet.org/xsd/adlnav_v1p3 adlnav_v1p3.xsd
+                                       http://www.imsglobal.org/xsd/imsss imsss_v1p0.xsd" >
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>2004 4th Edition</schemaversion>
+  </metadata>
+  
+  <organizations default="golf_sample_default_org">
+  
+    <!-- When using shared data, be explicit about limiting the data to this course vs making it global to the system-->
+    <organization identifier="golf_sample_default_org" adlseq:objectivesGlobalToSystem="false" adlcp:sharedDataGlobalToSystem="false">
+      <title>Golf Explained - 4th Edition Features</title>
+
+      <item identifier="playing_item" identifierref="playing_resource">
+        <title>Playing the Game</title>
+        
+        <!-- Creates a map to a shared data bucket for storing notes across SCOs-->
+        <adlcp:data>
+          <adlcp:map targetID="com.scorm.golfsamples.sequencing.forcedsequential.notesStorage" readSharedData="true" writeSharedData="true"/>
+        </adlcp:data>
+        
+        <!-- 
+        We set the progress weight to the number of "slides" in each SCO. This will allow for accurate progress rollup, sometimes called
+        completion percentage...or visually, the things that drives the progress bar. Weighting the SCOs will allow a SCO that takes an
+        hour to complete to contribute more towards overall progress than a SCO that only takes 5 minutes to complete. Weights are on a 
+        scale of 0-1 and are simply relative to one another.
+        
+        In conjunction with this setting, the SCO will also report its progress measure as it progresses to indicate the completion
+        percentage of the SCO itself.
+        -->
+        <adlcp:completionThreshold progressWeight="0.5"/>
+        
+        <imsss:sequencing IDRef="content_seq_rules">
+          
+          <imsss:objectives>
+            <imsss:primaryObjective objectiveID="playing_completed"/>
+          </imsss:objectives>
+          
+          <!-- 
+          Completion status is stored on global objectives through the adlseq extensions, not imsss.
+          adlseq:objectives need to map to previously defined imssss:objectives
+          -->
+          <adlseq:objectives>
+            <adlseq:objective objectiveID="playing_completed">
+              <adlseq:mapInfo targetObjectiveID="com.scorm.golfsamples.sequencing.forcedsequential.playing_completed" readCompletionStatus="true" writeCompletionStatus="true"/>
+            </adlseq:objective>
+          </adlseq:objectives>
+        </imsss:sequencing>
+      </item>
+      <item identifier="etuqiette_item" identifierref="etiquette_resource">
+        <title>Etiquette</title>
+        <adlcp:data>
+          <adlcp:map targetID="com.scorm.golfsamples.sequencing.forcedsequential.notesStorage" readSharedData="true" writeSharedData="true"/>
+        </adlcp:data>
+
+        <adlcp:completionThreshold progressWeight="0.3"/>
+        
+        <imsss:sequencing IDRef="content_seq_rules">
+        
+          <imsss:sequencingRules>
+
+            <!-- Check it out, we can sequence off completion in 4th Edition-->
+            <imsss:preConditionRule>
+              <imsss:ruleConditions conditionCombination="any">
+                <imsss:ruleCondition referencedObjective="previous_sco_completed" operator="not" condition="completed"/>
+                <imsss:ruleCondition referencedObjective="previous_sco_completed" operator="not" condition="activityProgressKnown"/>
+              </imsss:ruleConditions>
+              <imsss:ruleAction action="disabled"/>
+            </imsss:preConditionRule>
+            
+          </imsss:sequencingRules>
+          <imsss:objectives>
+            <imsss:primaryObjective objectiveID="ettiquette_completed"/>
+            <imsss:objective objectiveID="previous_sco_completed"/>
+          </imsss:objectives>
+
+          <adlseq:objectives>
+            <adlseq:objective objectiveID="ettiquette_completed">
+              <adlseq:mapInfo targetObjectiveID="com.scorm.golfsamples.sequencing.forcedsequential.ettiquette_completed" readCompletionStatus="true" writeCompletionStatus="true"/>
+            </adlseq:objective>
+            <adlseq:objective objectiveID="previous_sco_completed">
+              <adlseq:mapInfo targetObjectiveID="com.scorm.golfsamples.sequencing.forcedsequential.playing_completed"  readCompletionStatus="true" writeCompletionStatus="false"/>
+            </adlseq:objective>
+          </adlseq:objectives>
+        </imsss:sequencing>
+      </item>
+      <item identifier="handicapping_item" identifierref="handicapping_resource">
+        <title>Handicapping</title>
+        <adlcp:data>
+          <adlcp:map targetID="com.scorm.golfsamples.sequencing.forcedsequential.notesStorage" readSharedData="true" writeSharedData="true"/>
+        </adlcp:data>
+        
+        <adlcp:completionThreshold progressWeight="0.4"/>
+        
+        <imsss:sequencing IDRef="content_seq_rules">
+          <imsss:sequencingRules>
+            <imsss:preConditionRule>
+              <imsss:ruleConditions conditionCombination="any">
+                <imsss:ruleCondition referencedObjective="previous_sco_completed" operator="not" condition="completed"/>
+                <imsss:ruleCondition referencedObjective="previous_sco_completed" operator="not" condition="activityProgressKnown"/>
+              </imsss:ruleConditions>
+              <imsss:ruleAction action="disabled"/>
+            </imsss:preConditionRule>
+          </imsss:sequencingRules>
+          <imsss:objectives>
+            <imsss:primaryObjective objectiveID="handicapping_completed"/>
+            <imsss:objective objectiveID="previous_sco_completed"/>
+          </imsss:objectives>
+
+          <adlseq:objectives>
+            <adlseq:objective objectiveID="handicapping_completed">
+              <adlseq:mapInfo targetObjectiveID="com.scorm.golfsamples.sequencing.forcedsequential.handicapping_completed" readCompletionStatus="true" writeCompletionStatus="true"/>
+            </adlseq:objective>
+            <adlseq:objective objectiveID="previous_sco_completed">
+              <adlseq:mapInfo targetObjectiveID="com.scorm.golfsamples.sequencing.forcedsequential.ettiquette_completed"  readCompletionStatus="true" writeCompletionStatus="false"/>
+            </adlseq:objective>
+          </adlseq:objectives>
+        </imsss:sequencing>
+      </item>
+      <item identifier="havingfun_item" identifierref="havingfun_resource">
+        <title>Having Fun</title>
+        <adlcp:data>
+          <adlcp:map targetID="com.scorm.golfsamples.sequencing.forcedsequential.notesStorage" readSharedData="true" writeSharedData="true"/>
+        </adlcp:data>
+        
+        <adlcp:completionThreshold progressWeight="0.3"/>
+        
+        <imsss:sequencing IDRef="content_seq_rules">
+          <imsss:sequencingRules>
+            <imsss:preConditionRule>
+              <imsss:ruleConditions conditionCombination="any">
+                <imsss:ruleCondition referencedObjective="previous_sco_completed" operator="not" condition="completed"/>
+                <imsss:ruleCondition referencedObjective="previous_sco_completed" operator="not" condition="activityProgressKnown"/>
+              </imsss:ruleConditions>
+              <imsss:ruleAction action="disabled"/>
+            </imsss:preConditionRule>
+          </imsss:sequencingRules>
+          <imsss:objectives>
+            <imsss:primaryObjective objectiveID="havingfun_completed"/>
+            <imsss:objective objectiveID="previous_sco_completed"/>
+          </imsss:objectives>
+
+          <adlseq:objectives>
+            <adlseq:objective objectiveID="havingfun_completed">
+              <adlseq:mapInfo targetObjectiveID="com.scorm.golfsamples.sequencing.forcedsequential.havingfun_completed" readCompletionStatus="true" writeCompletionStatus="true"/>
+            </adlseq:objective>
+            <adlseq:objective objectiveID="previous_sco_completed">
+              <adlseq:mapInfo targetObjectiveID="com.scorm.golfsamples.sequencing.forcedsequential.handicapping_completed"  readCompletionStatus="true" writeCompletionStatus="false"/>
+            </adlseq:objective>
+          </adlseq:objectives>
+        
+        </imsss:sequencing>
+      </item>
+      <item identifier="assessment_item" identifierref="assessment_resource">
+        <title>Quiz</title>
+        <adlcp:data>
+          <adlcp:map targetID="com.scorm.golfsamples.sequencing.forcedsequential.notesStorage" readSharedData="true" writeSharedData="true"/>
+        </adlcp:data>
+        
+        <adlcp:completionThreshold progressWeight="0.1"/>
+        
+        <imsss:sequencing>
+          <!-- 
+          Unforunately a disabled rule still trumps a jump request, so instead of disabling the quiz, we hide it
+          until either the previous sco is completed, or it is launched (attempted).
+          -->
+          <imsss:sequencingRules>
+            <imsss:preConditionRule>
+              <imsss:ruleConditions conditionCombination="all">
+                <imsss:ruleCondition referencedObjective="previous_sco_completed" operator="not" condition="completed"/>
+                <imsss:ruleCondition operator="not" condition="attempted"/>
+              </imsss:ruleConditions>
+              <imsss:ruleAction action="hiddenFromChoice"/>
+            </imsss:preConditionRule>
+            <imsss:preConditionRule>
+              <imsss:ruleConditions conditionCombination="all">
+                <imsss:ruleCondition referencedObjective="previous_sco_completed" operator="not" condition="activityProgressKnown"/>
+                <imsss:ruleCondition operator="not" condition="attempted"/>
+              </imsss:ruleConditions>
+              <imsss:ruleAction action="hiddenFromChoice"/>
+            </imsss:preConditionRule>
+          </imsss:sequencingRules>
+          
+          <imsss:rollupRules rollupObjectiveSatisfied="true" rollupProgressCompletion="true" objectiveMeasureWeight="1"></imsss:rollupRules>
+
+
+          <imsss:objectives>
+            <imsss:primaryObjective/>
+            <imsss:objective objectiveID="previous_sco_completed"/>
+          </imsss:objectives>
+          
+          <imsss:deliveryControls completionSetByContent="true" objectiveSetByContent="true"/>
+          
+          <adlseq:objectives>
+            <adlseq:objective objectiveID="previous_sco_completed">
+              <adlseq:mapInfo targetObjectiveID="com.scorm.golfsamples.sequencing.forcedsequential.havingfun_completed"  readCompletionStatus="true" writeCompletionStatus="false"/>
+            </adlseq:objective>
+          </adlseq:objectives>
+
+        </imsss:sequencing>
+      </item>
+      <imsss:sequencing>
+        <imsss:controlMode choice="true" flow="true"/>
+      </imsss:sequencing>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="playing_resource" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html?content=playing">
+      <file href="Playing/otherscoreing.jpg"/>
+      <file href="Playing/OtherScoring.html"/>
+      <file href="Playing/Par.html"/>
+      <file href="Playing/par.jpg"/>
+      <file href="Playing/Playing.html"/>
+      <file href="Playing/playing.jpg"/>
+      <file href="Playing/rules.jpg"/>
+      <file href="Playing/RulesOfGolf.html"/>
+      <file href="Playing/Scoring.html"/>
+      <file href="Playing/scoring.jpg"/>
+      <dependency identifierref="common_files"/>
+    </resource>
+    <resource identifier="etiquette_resource" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html?content=etiquette">
+      <file href="Etiquette/Course.html"/>
+      <file href="Etiquette/course.jpg"/>
+      <file href="Etiquette/Distracting.html"/>
+      <file href="Etiquette/distracting.jpg"/>
+      <file href="Etiquette/Play.html"/>
+      <file href="Etiquette/play.jpg"/>
+      <dependency identifierref="common_files"/>
+    </resource>
+    <resource identifier="handicapping_resource" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html?content=handicapping">
+      <file href="Handicapping/calchandi.jpg"/>
+      <file href="Handicapping/calcscore.jpg"/>
+      <file href="Handicapping/CalculatingHandicap.html"/>
+      <file href="Handicapping/CalculatingScore.html"/>
+      <file href="Handicapping/Example.html"/>
+      <file href="Handicapping/example.jpg"/>
+      <file href="Handicapping/Overview.html"/>
+      <file href="Handicapping/overview.jpg"/>
+      <dependency identifierref="common_files"/>
+    </resource>
+    <resource identifier="havingfun_resource" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html?content=havingfun">
+      <file href="HavingFun/friends.jpg"/>
+      <file href="HavingFun/fun.jpg"/>
+      <file href="HavingFun/HowToHaveFun.html"/>
+      <file href="HavingFun/MakeFriends.html"/>
+      <dependency identifierref="common_files"/>
+    </resource>
+    <resource identifier="assessment_resource" type="webcontent" adlcp:scormType="sco" href="shared/launchpage.html?content=assessment">
+      <file href="Playing/questions.js"/>
+      <file href="Etiquette/questions.js"/>
+      <file href="Handicapping/questions.js"/>
+      <file href="HavingFun/questions.js"/>
+      <dependency identifierref="common_files"/>
+    </resource>
+    <resource identifier="common_files" type="webcontent" adlcp:scormType="asset">
+      <file href="shared/assessmenttemplate.html"/>
+      <file href="shared/background.jpg"/>
+      <file href="shared/cclicense.png"/>
+      <file href="shared/contentfunctions.js"/>
+      <file href="shared/launchpage.html"/>
+      <file href="shared/scormfunctions.js"/>
+      <file href="shared/style.css"/>
+      <file href="shared/jquery-ui.css"/>
+      
+    </resource>
+  </resources>
+
+  <imsss:sequencingCollection>
+
+    <imsss:sequencing ID="content_seq_rules">
+  
+      <imsss:rollupRules rollupObjectiveSatisfied="false" rollupProgressCompletion="false" objectiveMeasureWeight="0"></imsss:rollupRules>
+
+      <imsss:deliveryControls completionSetByContent="true" objectiveSetByContent="true"/>
+
+    </imsss:sequencing>
+  </imsss:sequencingCollection>
+</manifest>
