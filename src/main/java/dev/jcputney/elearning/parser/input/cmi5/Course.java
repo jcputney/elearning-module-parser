@@ -17,12 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.cmi5;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
 
 /**
  * Represents the root course element in a CMI5 course structure, including metadata such as title,
@@ -45,6 +46,7 @@ import java.util.List;
  * }</pre>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Course {
 
   /**
@@ -86,5 +88,6 @@ public class Course {
    * }</pre>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("id")
   private String id;
 }

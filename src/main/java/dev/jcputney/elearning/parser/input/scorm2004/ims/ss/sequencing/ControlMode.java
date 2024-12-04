@@ -17,7 +17,9 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 
@@ -46,6 +48,7 @@ import lombok.Data;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ControlMode {
 
   /**
@@ -56,6 +59,7 @@ public class ControlMode {
    * <p>Defaults to <code>true</code>.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("choice")
   private boolean choice = true;
 
   /**
@@ -66,6 +70,7 @@ public class ControlMode {
    * <p>Defaults to <code>true</code>.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("choiceExit")
   private boolean choiceExit = true;
 
   /**
@@ -77,6 +82,7 @@ public class ControlMode {
    * <p>Defaults to <code>false</code>.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("flow")
   private boolean flow = false;
 
   /**
@@ -88,16 +94,18 @@ public class ControlMode {
    * <p>Defaults to <code>false</code>.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("forwardOnly")
   private boolean forwardOnly = false;
 
   /**
    * Indicates whether the current attempt's objective information is used in sequencing decisions.
-   * When set to <code>true</code>, the system uses information about "objectives" completed within
+   * When set to <code>true</code>, the system uses information about objectives completed within
    * the current attempt to control sequencing behavior.
    *
    * <p>Defaults to <code>true</code>.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("useCurrentAttemptObjectiveInfo")
   private boolean useCurrentAttemptObjectiveInfo = true;
 
   /**
@@ -108,5 +116,6 @@ public class ControlMode {
    * <p>Defaults to <code>true</code>.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("useCurrentAttemptProgressInfo")
   private boolean useCurrentAttemptProgressInfo = true;
 }

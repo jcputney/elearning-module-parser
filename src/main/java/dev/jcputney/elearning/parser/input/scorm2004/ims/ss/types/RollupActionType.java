@@ -18,6 +18,8 @@
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types;
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
@@ -36,7 +38,7 @@ import lombok.Getter;
  * 	</xs:simpleType>
  *  }</pre>
  */
-@Getter
+@JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum RollupActionType {
   /**
    * The "satisfied" value specifies that the activity is considered satisfied when the rule's

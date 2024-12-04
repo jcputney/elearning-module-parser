@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
@@ -42,6 +44,7 @@ import lombok.Data;
  * }</pre>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Resources {
 
   /**
@@ -49,6 +52,7 @@ public class Scorm12Resources {
    * paths for resources.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "base", namespace = "http://www.w3.org/XML/1998/namespace")
+  @JsonProperty("base")
   private String base;
 
   /**
@@ -60,6 +64,15 @@ public class Scorm12Resources {
    */
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "resource", namespace = Scorm12Manifest.NAMESPACE_URI)
-  private List<Scorm12Resource> resources;
+  private List<Scorm12Resource> resourceList;
 
+  public Scorm12Resource getResourceById(String id) {
+    if (id == null || resourceList == null) {
+      return null;
+    }
+    return resourceList.stream()
+        .filter(resource -> id.equals(resource.getIdentifier()))
+        .findFirst()
+        .orElse(null);
+  }
 }

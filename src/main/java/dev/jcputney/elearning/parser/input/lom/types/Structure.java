@@ -18,6 +18,8 @@
 package dev.jcputney.elearning.parser.input.lom.types;
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -35,6 +37,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *   </xs:simpleType>
  * }</pre>
  */
+@JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum Structure {
   /**
    * The "atomic" value specifies that the learning object is an atomic unit, not divisible into

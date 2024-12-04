@@ -17,13 +17,16 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import dev.jcputney.elearning.parser.input.lom.LOM;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004CourseMetadata;
+import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organization;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organizations;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resource;
@@ -31,7 +34,6 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resources;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.SequencingCollection;
 import java.util.Optional;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Represents the SCORM IMS Content Packaging (IMSCP) elements according to the imscp_v1p1 schema.
@@ -231,6 +233,7 @@ import org.apache.commons.lang3.StringUtils;
 @JacksonXmlRootElement(localName = "manifest", namespace = Scorm2004Manifest.NAMESPACE_URI)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Manifest implements PackageManifest {
 
   /**
@@ -243,6 +246,7 @@ public class Scorm2004Manifest implements PackageManifest {
    * package within an LMS.
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("identifier")
   private String identifier;
 
   /**
@@ -250,6 +254,7 @@ public class Scorm2004Manifest implements PackageManifest {
    * the LMS to manage content versions.
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("version")
   private String version;
 
   /**
@@ -287,11 +292,12 @@ public class Scorm2004Manifest implements PackageManifest {
    */
   @Override
   public String getTitle() {
+    //noinspection DuplicatedCode
     String organizationTitle = Optional.ofNullable(organizations)
         .map(Scorm2004Organizations::getDefaultOrganization)
         .map(Scorm2004Organization::getTitle)
         .orElse(null);
-    if (StringUtils.isNotEmpty(organizationTitle)) {
+    if (organizationTitle != null && !organizationTitle.isEmpty()) {
       return organizationTitle;
     }
 
@@ -330,5 +336,37 @@ public class Scorm2004Manifest implements PackageManifest {
         .map(resourceList -> resourceList.get(0))
         .map(Scorm2004Resource::getHref)
         .orElse(null);
+  }
+
+  /**
+   * Returns the launch URL for a specific item within the content package, which is typically the
+   * URL of the first resource associated with the item.
+   *
+   * @param itemId the unique identifier of the item
+   * @return the launch URL for the item
+   */
+  public String getLaunchUrlForItem(String itemId) {
+    // search all organizations for an item with itemId
+    Scorm2004Item resourceItem = Optional.ofNullable(organizations)
+        .map(orgs -> orgs.getItemById(itemId))
+        .orElse(null);
+
+    // get relative URL from item
+    if (resourceItem != null) {
+      String href = Optional.ofNullable(resources)
+          .map(Scorm2004Resources::getResourceList)
+          .filter(resourceList -> !resourceList.isEmpty())
+          .map(resourceList -> resourceList.get(0))
+          .map(Scorm2004Resource::getHref)
+          .orElse(null);
+      if (href != null && !href.isEmpty()) {
+        String parameters = resourceItem.getParameters();
+        if (parameters != null && !parameters.isEmpty()) {
+          return parameters.startsWith("?") ? href + parameters : href + "?" + parameters;
+        }
+        return href;
+      }
+    }
+    return null;
   }
 }

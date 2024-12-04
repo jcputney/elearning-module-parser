@@ -77,38 +77,24 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
 
       // Extract metadata fields using helper methods
       String title = manifest.getTitle();
-      String description = manifest.getDescription();
-      String identifier = manifest.getIdentifier();
       String launchUrl = manifest.getLaunchUrl();
-      String version = "SCORM 1.2";  // Default version, as SCORM 1.2 does not typically specify a version
-
-      // Extract optional fields if present
-      Double masteryScore = null;
-      List<String> customData = List.of();
 
       // Validate required fields
-      if (title.isEmpty()) {
+      if (title == null || title.isEmpty()) {
         throw new ModuleParsingException(
-            "SCORM 1.2 manifest is missing a required <title> element at path: " + manifestPath);
+            "SCORM 1.2 manifest is missing a required <title> element.");
       }
-      if (launchUrl.isEmpty()) {
+      if (launchUrl == null || launchUrl.isEmpty()) {
         throw new ModuleParsingException(
-            "SCORM 1.2 manifest is missing a required <launchUrl> in <resource> element at path: "
-                + manifestPath);
+            "SCORM 1.2 manifest is missing a required <launchUrl> in <resource> element.");
       }
 
       // Build and return ModuleMetadata using the extracted values
-      return new Scorm12Metadata.Builder()
-          .xapiEnabled(checkForXapi(modulePath))
-          .title(title)
-          .description(description)
-          .version(version)
-          .identifier(identifier)
-          .launchUrl(launchUrl)
-          .moduleType(ModuleType.SCORM_12)
-          .masteryScore(masteryScore)
-          .customData(customData)
-          .build();
+      return new Scorm12Metadata(
+          manifest,
+          ModuleType.SCORM_12,
+          checkForXapi(modulePath)
+      );
     } catch (Exception e) {
       throw new ModuleParsingException("Error parsing SCORM 1.2 module at path: " + modulePath, e);
     }
@@ -143,7 +129,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
     if (manifest != null) {
       loadExternalMetadataIntoMetadata(manifest.getMetadata(), modulePath);
 
-      List<Scorm12Resource> resources = manifest.getResources().getResources();
+      List<Scorm12Resource> resources = manifest.getResources().getResourceList();
       if (resources != null) {
         for (Scorm12Resource resource : resources) {
           loadExternalMetadataIntoMetadata(resource.getMetadata(), modulePath);

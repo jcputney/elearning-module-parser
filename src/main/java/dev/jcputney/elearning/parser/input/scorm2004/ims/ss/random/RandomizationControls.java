@@ -17,7 +17,9 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.random;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.RandomizationTiming;
@@ -46,6 +48,7 @@ import lombok.Data;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RandomizationControls {
 
   /**
@@ -57,12 +60,14 @@ public class RandomizationControls {
    * </ul>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("randomizationTiming")
   private RandomizationTiming randomizationTiming = RandomizationTiming.NEVER;
 
   /**
    * Specifies the timing of selection for child activities within the sequence.
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("selectionTiming")
   private RandomizationTiming selectionTiming = RandomizationTiming.NEVER;
 
   /**
@@ -78,6 +83,7 @@ public class RandomizationControls {
    * <p>Defaults to <code>false</code>.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("reorderChildren")
   private boolean reorderChildren = false;
 
   /**
@@ -90,5 +96,6 @@ public class RandomizationControls {
    * other randomization settings.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("selectCount")
   private Integer selectCount;
 }

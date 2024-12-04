@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.ConditionOperatorType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.RollupRuleConditionType;
@@ -28,6 +30,7 @@ import lombok.Data;
  * the associated rollup rule is applied.
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupCondition {
 
   /**
@@ -38,6 +41,7 @@ public class RollupCondition {
    * </ul>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("operator")
   private ConditionOperatorType operator = ConditionOperatorType.NO_OP;
 
   /**
@@ -45,5 +49,6 @@ public class RollupCondition {
    * include criteria related to the learner's progress or completion status of activities.
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("condition")
   private RollupRuleConditionType condition;
 }

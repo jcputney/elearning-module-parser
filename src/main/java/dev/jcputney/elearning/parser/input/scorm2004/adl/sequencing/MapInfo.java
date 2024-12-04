@@ -17,12 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 
 /**
- * Represents a mapping to a global "objective" or another objective within the LMS. Maps allow
- * tracking of "objectives" that are shared across different content items. The following schema
+ * Represents a mapping to a global objective or another objective within the LMS. Maps allow
+ * tracking of objectives that are shared across different content items. The following schema
  * shows the structure of the mapInfoType element:
  * <pre>{@code
  *   <xs:complexType name="mapInfoType">
@@ -41,82 +43,94 @@ import lombok.Data;
  * }</pre>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class MapInfo {
 
   /**
-   * The unique identifier for the target "objective" in the LMS that this "objective" is mapped to.
+   * The unique identifier for the target objective in the LMS that this objective is mapped to.
    * This enables global tracking of the objective’s completion and satisfaction status.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "targetObjectiveID")
+  @JsonProperty("targetObjectiveID")
   private String targetObjectiveID;
 
   /**
-   * Indicates whether the raw score for this "objective" should be read from the mapped global
-   * "objective".
+   * Indicates whether the raw score for this objective should be read from the mapped global
+   * objective.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "readRawScore")
+  @JsonProperty("readRawScore")
   private boolean readRawScore = true;
 
   /**
-   * Indicates whether the minimum score for this "objective" should be read from the mapped global
-   * "objective".
+   * Indicates whether the minimum score for this objective should be read from the mapped global
+   * objective.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "readMinScore")
+  @JsonProperty("readMinScore")
   private boolean readMinScore = true;
 
   /**
-   * Indicates whether the maximum score for this "objective" should be read from the mapped global
-   * "objective".
+   * Indicates whether the maximum score for this objective should be read from the mapped global
+   * objective.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "readMaxScore")
+  @JsonProperty("readMaxScore")
   private boolean readMaxScore = true;
 
   /**
-   * Indicates whether the completion status for this "objective" should be read from the mapped
-   * global "objective".
+   * Indicates whether the completion status for this objective should be read from the mapped
+   * global objective.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "readCompletionStatus")
+  @JsonProperty("readCompletionStatus")
   private boolean readCompletionStatus = true;
 
   /**
-   * Indicates whether the progress measure for this "objective" should be read from the mapped
-   * global "objective".
+   * Indicates whether the progress measure for this objective should be read from the mapped
+   * global objective.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "readProgressMeasure")
+  @JsonProperty("readProgressMeasure")
   private boolean readProgressMeasure = true;
 
   /**
-   * Indicates whether the raw score for this "objective" should be written to the mapped global
-   * "objective".
+   * Indicates whether the raw score for this objective should be written to the mapped global
+   * objective.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "writeRawScore")
+  @JsonProperty("writeRawScore")
   private boolean writeRawScore = false;
 
   /**
-   * Indicates whether the minimum score for this "objective" should be written to the mapped global
-   * "objective".
+   * Indicates whether the minimum score for this objective should be written to the mapped global
+   * objective.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "writeMinScore")
+  @JsonProperty("writeMinScore")
   private boolean writeMinScore = false;
 
   /**
-   * Indicates whether the maximum score for this "objective" should be written to the mapped global
-   * "objective".
+   * Indicates whether the maximum score for this objective should be written to the mapped global
+   * objective.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "writeMaxScore")
+  @JsonProperty("writeMaxScore")
   private boolean writeMaxScore = false;
 
   /**
-   * Indicates whether the completion status for this "objective" should be written to the mapped
-   * global "objective".
+   * Indicates whether the completion status for this objective should be written to the mapped
+   * global objective.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "writeCompletionStatus")
+  @JsonProperty("writeCompletionStatus")
   private boolean writeCompletionStatus = false;
 
   /**
-   * Indicates whether the progress measure for this "objective" should be written to the mapped
-   * global "objective".
+   * Indicates whether the progress measure for this objective should be written to the mapped
+   * global objective.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "writeProgressMeasure")
+  @JsonProperty("writeProgressMeasure")
   private boolean writeProgressMeasure = false;
 }

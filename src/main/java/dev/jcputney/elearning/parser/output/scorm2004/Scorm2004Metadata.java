@@ -17,188 +17,74 @@
 
 package dev.jcputney.elearning.parser.output.scorm2004;
 
+import dev.jcputney.elearning.parser.enums.ModuleType;
+import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
+import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
+import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004Objective;
+import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004ObjectiveMapping;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- * Represents metadata for a SCORM 2004 eLearning module, including SCORM 2004-specific fields such
+ * Represents metadata for SCORM 2004 eLearning modules, including SCORM 2004-specific fields such
  * as sequencing information, mastery score, custom data, prerequisites, and additional metadata
  * from external manifests.
  * <p>
  * This class extends the base {@link ModuleMetadata} class to provide metadata that describes the
- * structure and rules specific to SCORM 2004 modules.
+ * structure and rules that are specific to SCORM 2004 modules.
  * </p>
  */
-public class Scorm2004Metadata extends ModuleMetadata {
+public class Scorm2004Metadata extends ModuleMetadata<Scorm2004Manifest> {
 
-  private final List<SequencingInfo> sequencingInfo;
-  private final Double masteryScore;
-  private final List<String> customData;
-  private final String prerequisites;
-  private final List<AdditionalMetadata> additionalMetadataList;
-
-  private Scorm2004Metadata(Builder builder) {
-    super(builder);
-    this.sequencingInfo = builder.sequencingInfo;
-    this.masteryScore = builder.masteryScore;
-    this.customData = builder.customData;
-    this.prerequisites = builder.prerequisites;
-    this.additionalMetadataList = builder.additionalMetadataList;
+  public Scorm2004Metadata(Scorm2004Manifest manifest, ModuleType moduleType,
+      boolean xapiEnabled) {
+    super(manifest, moduleType, xapiEnabled);
   }
 
   /**
-   * Gets the sequencing information associated with the SCORM 2004 module, if specified. Sequencing
-   * rules define the navigation and completion behavior for content items.
+   * Retrieves the set of global objective IDs from the manifest.
+   * A global objective ID is defined by the presence of a targetObjectiveID in a mapInfo element.
    *
-   * @return A list of {@link SequencingInfo} objects, or an empty list if none are present.
+   * @return A set of global objective IDs.
    */
-  public List<SequencingInfo> getSequencingInfo() {
-    return sequencingInfo;
+  public Set<String> getGlobalObjectiveIds() {
+    return getManifest()
+        .getOrganizations()
+        .getOrganizationList()
+        .stream()
+        .flatMap(org -> safeStream(org.getItems())) // Null-safe stream for items
+        .flatMap(item -> safeStream(getObjectives(item))) // Null-safe stream for objectives
+        .flatMap(obj -> safeStream(obj.getMapInfo())) // Null-safe stream for mapInfo
+        .map(Scorm2004ObjectiveMapping::getTargetObjectiveID)
+        .filter(id -> id != null && !id.isEmpty()) // Filter non-null and non-empty IDs
+        .collect(Collectors.toSet());
   }
 
   /**
-   * Gets the mastery score required to complete the module.
+   * Retrieves the list of objectives from a given item in a null-safe manner.
    *
-   * @return An Optional containing the mastery score, or empty if not specified.
+   * @param item The SCORM item to retrieve objectives from.
+   * @return A list of objectives, or an empty list if null.
    */
-  public Optional<Double> getMasteryScore() {
-    return Optional.ofNullable(masteryScore);
+  private List<Scorm2004Objective> getObjectives(Scorm2004Item item) {
+    if (item.getSequencing() != null && item.getSequencing().getObjectives() != null) {
+      return item.getSequencing().getObjectives().getObjectiveList();
+    }
+    return List.of(); // Return an empty list if objectives are null
   }
 
   /**
-   * Gets the list of custom data entries associated with the module.
+   * Wraps a potentially null collection in a stream.
    *
-   * @return A list of custom data strings, or an empty list if none are present.
+   * @param collection The collection to wrap.
+   * @param <T> The type of elements in the collection.
+   * @return A stream of elements, or an empty stream if the collection is null.
    */
-  public List<String> getCustomData() {
-    return customData;
-  }
-
-  /**
-   * Gets the prerequisites for the module, if specified.
-   *
-   * @return An Optional containing the prerequisites, or empty if not specified.
-   */
-  public Optional<String> getPrerequisites() {
-    return Optional.ofNullable(prerequisites);
-  }
-
-  /**
-   * Gets the additional metadata entries from external manifests.
-   *
-   * @return A list of {@link AdditionalMetadata} objects, or an empty list if none are present.
-   */
-  public List<AdditionalMetadata> getAdditionalMetadataList() {
-    return additionalMetadataList;
-  }
-
-  /**
-   * Gets a list of global objective IDs that are used by more than one SequencingInfo object.
-   *
-   * @return A list of global objective IDs.
-   */
-  public List<String> getGlobalObjectiveIds() {
-    // global objective IDs are objective IDs that are used by more than one SequencingInfo object
-    Map<String, Integer> objectiveIdCount = new HashMap<>();
-    for (SequencingInfo info : sequencingInfo) {
-      for (String objectiveId : info.getObjectiveIds()) {
-        objectiveIdCount.put(objectiveId, objectiveIdCount.getOrDefault(objectiveId, 0) + 1);
-      }
-    }
-    return objectiveIdCount.entrySet().stream()
-        .filter(entry -> entry.getValue() > 1)
-        .map(Map.Entry::getKey)
-        .toList();
-  }
-
-  /**
-   * Builder for constructing instances of {@link Scorm2004Metadata}.
-   * <p>
-   * This builder provides methods for setting SCORM 2004-specific fields, in addition to the core
-   * fields inherited from {@link ModuleMetadata}.
-   * </p>
-   */
-  public static class Builder extends ModuleMetadata.Builder<Builder> {
-
-    private List<SequencingInfo> sequencingInfo = List.of(); // Default to an empty list
-    private Double masteryScore;
-    private List<String> customData = List.of(); // Default to an empty list
-    private String prerequisites;
-    private List<AdditionalMetadata> additionalMetadataList = List.of(); // Default to an empty list
-
-    /**
-     * Sets the sequencing information for the SCORM 2004 module.
-     *
-     * @param sequencingInfo A list of {@link SequencingInfo} objects defining navigation and
-     * completion rules.
-     * @return The builder instance.
-     */
-    public Builder sequencingInfo(List<SequencingInfo> sequencingInfo) {
-      this.sequencingInfo = sequencingInfo != null ? sequencingInfo : List.of();
-      return this;
-    }
-
-    /**
-     * Sets the mastery score for the module.
-     *
-     * @param masteryScore The mastery score required to complete the module.
-     * @return The builder instance.
-     */
-    public Builder masteryScore(Double masteryScore) {
-      this.masteryScore = masteryScore;
-      return this;
-    }
-
-    /**
-     * Sets the list of custom data entries associated with the module.
-     *
-     * @param customData A list of custom data strings.
-     * @return The builder instance.
-     */
-    public Builder customData(List<String> customData) {
-      this.customData = customData != null ? customData : List.of();
-      return this;
-    }
-
-    /**
-     * Sets the prerequisites for the module.
-     *
-     * @param prerequisites The prerequisites for the module.
-     * @return The builder instance.
-     */
-    public Builder prerequisites(String prerequisites) {
-      this.prerequisites = prerequisites;
-      return this;
-    }
-
-    /**
-     * Sets the additional metadata entries from external manifests.
-     *
-     * @param additionalMetadataList A list of {@link AdditionalMetadata} objects.
-     * @return The builder instance.
-     */
-    public Builder additionalMetadataList(List<AdditionalMetadata> additionalMetadataList) {
-      this.additionalMetadataList =
-          additionalMetadataList != null ? additionalMetadataList : List.of();
-      return this;
-    }
-
-    /**
-     * Builds and returns a {@link Scorm2004Metadata} instance with the specified properties.
-     *
-     * @return A new instance of Scorm2004Metadata.
-     */
-    @Override
-    public Scorm2004Metadata build() {
-      return new Scorm2004Metadata(this);
-    }
-
-    @Override
-    protected Builder self() {
-      return this;
-    }
+  private <T> Stream<T> safeStream(Collection<T> collection) {
+    return collection != null ? collection.stream() : Stream.empty();
   }
 }

@@ -17,17 +17,18 @@
 
 package dev.jcputney.elearning.parser.input.cmi5;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.cmi5.types.ReferencesObjectives;
 import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
 
 /**
  * Represents a block within a CMI5 course structure. Blocks can contain nested blocks or AUs
- * (Assignable Units) and have associated "objectives".
+ * (Assignable Units) and have associated objectives.
  *
  * <p>Defined in the schema as:</p>
  *
@@ -49,6 +50,7 @@ import java.util.List;
  * }</pre>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Block {
 
   /**
@@ -72,7 +74,7 @@ public class Block {
   private TextType description;
 
   /**
-   * The objectives for the block, if specified. This references existing "objectives" defined in the course.
+   * The objectives for the block, if specified. This references existing objectives defined in the course.
    *
    * <pre>{@code
    * <xs:element name="objectives" type="referencesObjectivesType" minOccurs="0"/>
@@ -111,5 +113,6 @@ public class Block {
    * }</pre>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("id")
   private String id;
 }

@@ -51,7 +51,7 @@ implementation("dev.jcputney:elearning-module-parser:0.0.1")
 
 ### Usage
 
-#### Parsing a SCORM 2004 Module
+#### Parsing SCORM 2004 Module
 
 ```java
 import dev.jcputney.elearning.parser.parsers.Scorm2004Parser;
@@ -90,19 +90,17 @@ public class Main {
 
 ## Supported Formats
 
-| Format     | Features                                                                     | Status   |
-|------------|------------------------------------------------------------------------------|----------|
-| SCORM 1.2  | Manifest parsing, resource validation                                        | ✅ Stable |
-| SCORM 2004 | Manifest parsing (all editions), sequencing, objectives                      | ✅ Stable |
-| AICC       | INI-based parsing for .crs, .des, .au, .cst, prerequisites, assignable units | ✅ Stable |
-| cmi5       | XML-based manifest parsing, objectives, blocks, and assignable units         | ✅ Stable |
+| Format     | Features                                                                     | Status         |
+|------------|------------------------------------------------------------------------------|----------------|
+| SCORM 1.2  | Manifest parsing, resource validation                                        | 🚧 In Progress |
+| SCORM 2004 | Manifest parsing (all editions), sequencing, objectives                      | 🚧 In Progress |
+| AICC       | INI-based parsing for .crs, .des, .au, .cst, prerequisites, assignable units | 🚧 In Progress |
+| cmi5       | XML-based manifest parsing, objectives, blocks, and assignable units         | 🚧 In Progress |
 
 ---
 
 ## Documentation
 
-- [User Guide](docs/user-guide.md)
-- [API Reference](docs/api-reference.md)
 - [Contributing Guidelines](CONTRIBUTING.md)
 
 ---

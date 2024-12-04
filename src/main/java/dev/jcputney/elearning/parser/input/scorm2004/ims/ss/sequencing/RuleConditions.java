@@ -17,7 +17,9 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
@@ -35,11 +37,12 @@ import lombok.Data;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RuleConditions {
 
   /**
    * A list of individual rule conditions. Each condition specifies a criterion, such as an
-   * "objective" being completed, that must be met for the rule's action to apply.
+   * objective being completed, that must be met for the rule's action to apply.
    */
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "ruleCondition", namespace = IMSSS.NAMESPACE_URI)
@@ -50,5 +53,6 @@ public class RuleConditions {
    * conditions must be met ("all") or if any single condition is sufficient ("any").
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("conditionCombination")
   private ConditionCombinationType conditionCombination = ConditionCombinationType.ANY;
 }

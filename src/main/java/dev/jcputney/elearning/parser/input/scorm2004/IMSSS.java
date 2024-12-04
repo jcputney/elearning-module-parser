@@ -17,9 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Data;
-
 /**
  * Represents the SCORM IMS Simple Sequencing (IMSSS) schema, which defines the sequencing and
  * navigation rules for SCORM-compliant content. This schema is designed to control the progression
@@ -34,8 +31,6 @@ import lombok.Data;
  *
  * @see <a href="https://www.imsglobal.org">IMS Global Learning Consortium</a>
  */
-@Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class IMSSS {
 
   /**

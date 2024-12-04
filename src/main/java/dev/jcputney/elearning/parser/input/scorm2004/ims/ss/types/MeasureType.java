@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -31,6 +32,7 @@ import lombok.Getter;
  */
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class MeasureType {
 
   private static final BigDecimal MIN_VALUE = new BigDecimal("-1");

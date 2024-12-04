@@ -18,6 +18,8 @@
 package dev.jcputney.elearning.parser.input.lom.types;
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -32,6 +34,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 	</xs:simpleType>
  *  }</pre>
  */
+@JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum Type {
   /**
    * The "operating system" value specifies that the location is an operating system.

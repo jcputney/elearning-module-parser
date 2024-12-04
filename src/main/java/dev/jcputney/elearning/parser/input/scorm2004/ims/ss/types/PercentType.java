@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import lombok.Getter;
@@ -27,6 +28,7 @@ import lombok.Getter;
  */
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class PercentType {
 
   private static final BigDecimal MIN_VALUE = BigDecimal.ZERO;
@@ -56,7 +58,7 @@ public class PercentType {
   /**
    * Parses a string as a PercentType.
    *
-   * @param value the string representation of the percentage, must be a decimal between 0 and 1.
+   * @param value the string representation of the percentage must be a decimal between 0 and 1.
    * @return a new PercentType instance.
    * @throws IllegalArgumentException if the value is out of range or not a valid decimal format.
    */

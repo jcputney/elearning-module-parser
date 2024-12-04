@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.cmi5;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.PackageManifest;
@@ -44,6 +45,7 @@ import lombok.Data;
  * </ul>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Cmi5Manifest implements PackageManifest {
 
   /**
@@ -67,7 +69,7 @@ public class Cmi5Manifest implements PackageManifest {
   private Course course;
 
   /**
-   * The "objectives" element, representing the "objectives" of the course.
+   * The 'objectives' element, representing the objectives of the course.
    *
    * <pre>{@code
    * <xs:element name="objectives" type="objectivesType" minOccurs="0"/>

@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
@@ -46,6 +47,7 @@ import lombok.Data;
  * }</pre>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Dependency {
 
   /**

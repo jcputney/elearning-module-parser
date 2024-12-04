@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -61,6 +62,7 @@ import lombok.Data;
  * }</pre>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Organization {
 
   /**
@@ -74,6 +76,7 @@ public class Scorm12Organization {
    * The structure of the organization. Common values include hierarchical or flat.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "structure")
+  @JsonProperty(value = "structure")
   private String structure = "hierarchical";
 
   /**

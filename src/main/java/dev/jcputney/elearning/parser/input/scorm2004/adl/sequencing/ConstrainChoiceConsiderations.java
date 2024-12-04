@@ -17,7 +17,9 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 
@@ -34,17 +36,20 @@ import lombok.Data;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ConstrainChoiceConsiderations {
 
   /**
    * Prevents activation when true. Default is false.
    */
   @JacksonXmlProperty(localName = "preventActivation", isAttribute = true)
+  @JsonProperty("preventActivation")
   private boolean preventActivation = false;
 
   /**
    * Constrains choice when true. Default is false.
    */
   @JacksonXmlProperty(localName = "constrainChoice", isAttribute = true)
+  @JsonProperty("constrainChoice")
   private boolean constrainChoice = false;
 }

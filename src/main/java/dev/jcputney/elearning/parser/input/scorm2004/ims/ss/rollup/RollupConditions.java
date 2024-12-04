@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
@@ -32,6 +34,7 @@ import lombok.Data;
  * allowing multiple criteria to be evaluated together.</p>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupConditions {
 
   /**
@@ -51,5 +54,6 @@ public class RollupConditions {
    * <p>Defaults to <code>any</code> if not specified.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("conditionCombination")
   private String conditionCombination = "any";
 }

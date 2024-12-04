@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLSeq;
@@ -24,9 +26,9 @@ import java.util.List;
 import lombok.Data;
 
 /**
- * Represents an objective within the SCORM sequencing model. "Objectives" define specific learning
+ * Represents an objective within the SCORM sequencing model. Objectives define specific learning
  * goals and their status and measure. The following schema snippet shows the structure of an
- * "objective" element:
+ * objective element:
  * <pre>{@code
  *   <xs:complexType name="objectiveType">
  *     <xs:sequence>
@@ -37,17 +39,19 @@ import lombok.Data;
  * }</pre>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ADLObjective {
 
   /**
-   * The unique identifier for this "objective". This is used to map the "objective" within the LMS
+   * The unique identifier for this objective. This is used to map the objective within the LMS
    * to track the learner’s progress and completion status.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "objectiveID")
+  @JsonProperty("objectiveID")
   private String objectiveID;
 
   /**
-   * List of mappings for this "objective", defining connections to global "objectives" or other
+   * List of mappings for this objective, defining connections to global objectives or other
    * objectives within the LMS.
    */
   @JacksonXmlElementWrapper(useWrapping = false)

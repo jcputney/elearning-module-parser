@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLSeq;
@@ -34,6 +35,7 @@ import lombok.Data;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Sequencing {
 
   /**
@@ -62,13 +64,13 @@ public class Sequencing {
   private AuxiliaryResources auxiliaryResources;
 
   /**
-   * Rules governing the rollup of "objectives" and completion status for this activity.
+   * Rules governing the rollup of objectives and completion status for this activity.
    */
   @JacksonXmlProperty(localName = "rollupRules", namespace = IMSSS.NAMESPACE_URI)
   private RollupRules rollupRules;
 
   /**
-   * Defines learning objectives for this activity, including primary "objectives" that contribute
+   * Defines learning objectives for this activity, including primary objectives that contribute
    * to rollup and additional objectives.
    */
   @JacksonXmlProperty(localName = "objectives", namespace = IMSSS.NAMESPACE_URI)

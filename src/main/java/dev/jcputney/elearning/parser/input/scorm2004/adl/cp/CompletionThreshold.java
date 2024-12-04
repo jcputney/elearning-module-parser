@@ -17,7 +17,9 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.cp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureType;
@@ -34,6 +36,7 @@ import lombok.Data;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class CompletionThreshold {
 
   /**
@@ -42,6 +45,7 @@ public class CompletionThreshold {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "minProgressMeasure")
   @JsonDeserialize(using = MeasureTypeDeserializer.class)
+  @JsonProperty("minProgressMeasure")
   private MeasureType minProgressMeasure = new MeasureType(BigDecimal.ONE);
 
   /**
@@ -50,12 +54,14 @@ public class CompletionThreshold {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "progressWeight")
   @JsonDeserialize(using = PercentTypeDeserializer.class)
+  @JsonProperty("progressWeight")
   private PercentType progressWeight = new PercentType(BigDecimal.ONE);
 
   /**
-   * Indicates whether completion is determined by measure. If true, completion is based on
+   * Indicates whether measure determines completion. If true, completion is based on
    * achieving the minimum progress measure defined.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "completedByMeasure")
+  @JsonProperty("completedByMeasure")
   private Boolean completedByMeasure = false;
 }

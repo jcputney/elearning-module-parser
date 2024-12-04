@@ -17,15 +17,12 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Data;
-
 /**
  * Represents the SCORM ADL Content Packaging (ADLCP) elements in the adlcp_v1p3 schema.
  *
  * <p>This class includes properties related to SCORM content packaging, such as
- * the SCORM type, data passed from the LMS, and completion threshold settings. It is used within a
- * SCORM manifest to define content and completion behaviors.</p>
+ * the SCORM type, data passed from the LMS, and completion threshold settings.</p>
+ * <p>It is used within SCORM manifests to define content and completion behaviors.</p>
  *
  * <p>The ADLCP namespace is specified by {@link #NAMESPACE_URI}, and this class
  * is designed to conform to the SCORM 2004 3rd Edition specification.</p>
@@ -111,8 +108,6 @@ import lombok.Data;
  *   </xs:schema>
  * }</pre>
  */
-@Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ADLCP {
 
   public static final String NAMESPACE_URI = "http://www.adlnet.org/xsd/adlcp_v1p3";

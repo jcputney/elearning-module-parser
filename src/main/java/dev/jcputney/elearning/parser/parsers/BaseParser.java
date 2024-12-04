@@ -30,7 +30,6 @@ import java.io.InputStream;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Abstract base class for all module parsers, providing shared functionality for common operations,
@@ -40,8 +39,8 @@ import org.apache.commons.lang3.StringUtils;
  * abstract methods to be implemented by the specific module parsers (SCORM, cmi5, LTI, etc.).
  * </p>
  */
-public abstract class BaseParser<T extends ModuleMetadata, M extends PackageManifest> implements
-    ModuleParser {
+public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageManifest> implements
+    ModuleParser<M> {
 
   public static final String XAPI_JS_FILE = "xAPI.js";
   public static final String XAPI_SEND_STATEMENT_FILE = "sendStatement.js";
@@ -84,7 +83,7 @@ public abstract class BaseParser<T extends ModuleMetadata, M extends PackageMani
    */
   protected abstract Class<M> getManifestClass();
 
-  public M parseManifest(String manifestPath) throws IOException, XMLStreamException {
+  public M parseManifest(String manifestPath) throws IOException, XMLStreamException, ModuleParsingException {
     try (InputStream manifestStream = fileAccess.getFileContents(manifestPath)) {
       return parseXmlToObject(manifestStream, getManifestClass());
     }
@@ -140,7 +139,7 @@ public abstract class BaseParser<T extends ModuleMetadata, M extends PackageMani
    */
   protected void loadExternalMetadataIntoMetadata(LoadableMetadata subMetadata, String modulePath)
       throws XMLStreamException, IOException {
-    if (subMetadata != null && StringUtils.isNotEmpty(subMetadata.getLocation())) {
+    if (subMetadata != null && subMetadata.getLocation() != null && !subMetadata.getLocation().isEmpty()) {
       String metadataPath = modulePath + "/" + subMetadata.getLocation();
       if (fileAccess.fileExists(metadataPath)) {
         try (InputStream fileContents = fileAccess.getFileContents(metadataPath)) {

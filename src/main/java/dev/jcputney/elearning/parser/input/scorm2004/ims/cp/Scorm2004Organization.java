@@ -17,7 +17,9 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLCP;
@@ -34,6 +36,7 @@ import lombok.Data;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Organization {
 
   /**
@@ -41,6 +44,7 @@ public class Scorm2004Organization {
    * within the same manifest.
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("identifier")
   private String identifier;
 
   /**
@@ -49,6 +53,7 @@ public class Scorm2004Organization {
    * used in any meaningful way.
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("structure")
   private String structure = "hierarchical";
 
   /**
@@ -68,18 +73,20 @@ public class Scorm2004Organization {
 
   /**
    * The default for the adlcp:objectivesGlobalToSystem attribute for items in this organization. If
-   * true, "objectives" defined in this organization are considered global to the system. If false,
-   * "objectives" are considered local to the organization.
+   * true, objectives defined in this organization are considered global to the system. If false,
+   * objectives are considered local to the organization.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "objectivesGlobalToSystem", namespace = ADLSeq.NAMESPACE_URI)
+  @JsonProperty("objectivesGlobalToSystem")
   private boolean objectivesGlobalToSystem = false;
 
   /**
    * The default for the adlcp:sharedDataGlobalToSystem attribute for items in this organization. If
-   * true, "sharedData" defined in this organization are considered global to the system. If false,
+   * true, "sharedData" defined in this organization is considered global to the system. If false,
    * "sharedData" is considered local to the organization.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "sharedDataGlobalToSystem", namespace = ADLCP.NAMESPACE_URI)
+  @JsonProperty("sharedDataGlobalToSystem")
   private boolean sharedDataGlobalToSystem = false;
 
   /**

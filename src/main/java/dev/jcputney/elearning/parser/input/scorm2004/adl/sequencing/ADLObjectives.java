@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLSeq;
@@ -35,10 +36,11 @@ import lombok.Data;
  * }</pre>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ADLObjectives {
 
   /**
-   * List of objectives. Each "objective" defines specific attributes for rollup.
+   * List of objectives. Each objective defines specific attributes for rollup.
    */
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "objective", namespace = ADLSeq.NAMESPACE_URI)

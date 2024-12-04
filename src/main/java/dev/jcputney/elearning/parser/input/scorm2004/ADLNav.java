@@ -17,9 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Data;
-
 /**
  * Represents the navigation control elements within the SCORM ADL Navigation schema (adlnav_v1p3).
  * This class captures data related to navigation presentation and control within an LMS context.
@@ -72,8 +69,6 @@ import lombok.Data;
  *   </xs:schema>
  * }</pre>
  */
-@Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ADLNav {
 
   public static final String NAMESPACE_URI = "http://www.adlnet.org/xsd/adlnav_v1p3";

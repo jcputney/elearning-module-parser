@@ -17,7 +17,9 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLCP;
@@ -38,18 +40,21 @@ import lombok.Data;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Item {
 
   /**
    * The unique identifier for this item within the organization.
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("identifier")
   private String identifier;
 
   /**
    * References a resource within the manifest that this item represents.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "identifierref")
+  @JsonProperty("identifierref")
   private String identifierRef;
 
   /**
@@ -58,6 +63,7 @@ public class Scorm2004Item {
    * used in any meaningful way.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "isvisible")
+  @JsonProperty("isvisible")
   private boolean isVisible = true;
 
   /**
@@ -65,6 +71,7 @@ public class Scorm2004Item {
    * for varying the behavior of shared resources based on the item from which they are referenced.
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("parameters")
   private String parameters;
 
   /**

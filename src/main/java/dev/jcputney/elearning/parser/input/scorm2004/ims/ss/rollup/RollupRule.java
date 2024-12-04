@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
@@ -31,6 +33,7 @@ import lombok.Data;
  * and an action that dictate how child activities’ statuses affect the parent activity’s rollup.
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupRule {
 
   /**
@@ -55,6 +58,7 @@ public class RollupRule {
    * activity, none, or a specific count or percentage.
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("childActivitySet")
   private ChildActivitySet childActivitySet = ChildActivitySet.ALL;
 
   /**
@@ -65,6 +69,7 @@ public class RollupRule {
    * <p>Defaults to <code>0</code>.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("minimumCount")
   private int minimumCount = 0;
 
   /**
@@ -76,5 +81,6 @@ public class RollupRule {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonDeserialize(using = PercentTypeDeserializer.class)
+  @JsonProperty("minimumPercent")
   private PercentType minimumPercent = new PercentType(BigDecimal.ZERO);
 }

@@ -18,6 +18,8 @@
 package dev.jcputney.elearning.parser.input.lom.types;
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -33,6 +35,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 	</xs:simpleType>
  *  }</pre>
  */
+@JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum RoleMeta {
   /**
    * The "creator" value specifies that the entity is the creator of the resource.

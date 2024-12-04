@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.adl;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 
@@ -25,10 +27,11 @@ import lombok.Data;
  * and an optional type attribute.
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Prerequisites {
 
   /**
-   * The string content of the prerequisites element.
+   * The string content of the "prerequisites" element.
    */
   @JacksonXmlProperty(localName = "value")
   private String value;
@@ -38,5 +41,6 @@ public class Scorm12Prerequisites {
    * "aicc_script".
    */
   @JacksonXmlProperty(isAttribute = true, localName = "type")
+  @JsonProperty("type")
   private String type;
 }

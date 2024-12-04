@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.cmi5.types;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -35,6 +37,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *   </xs:simpleType>
  * }</pre>
  */
+@JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum MoveOn {
   @JsonProperty("NotApplicable")
   NOT_APPLICABLE,

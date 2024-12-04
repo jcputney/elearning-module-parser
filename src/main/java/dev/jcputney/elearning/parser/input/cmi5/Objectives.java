@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.cmi5;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.cmi5.types.Objective;
@@ -25,7 +26,7 @@ import lombok.Data;
 
 /**
  * Represents the objectives section of a CMI5 course structure, containing a list of defined
- * "objectives".
+ * objectives.
  *
  * <p>Defined in the schema as:</p>
  *
@@ -48,10 +49,11 @@ import lombok.Data;
  * }</pre>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Objectives {
 
   /**
-   * A list of defined "objectives", each represented by an {@link Objective}.
+   * A list of defined objectives, each represented by an {@link Objective}.
    *
    * <pre>{@code
    * <xs:element name="objective" minOccurs="1" maxOccurs="unbounded">

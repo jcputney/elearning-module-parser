@@ -18,8 +18,24 @@
 package dev.jcputney.elearning.parser.input.lom.types;
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Enum representing the possible values for <code>copyrightAndOtherRestrictions</code> in a LOM
+ * element, specifying the copyright and other restrictions associated with the learning object. The
+ * following schema snippet defines the possible values:
+ * <pre>{@code
+ *  <xs:simpleType name="copyrightAndOtherRestrictions">
+ *    <xs:restriction base="xs:token">
+ *      <xs:enumeration value="yes"/>
+ *      <xs:enumeration value="no"/>
+ *    </xs:restriction>
+ *  </xs:simpleType>
+ *  }</pre>
+ */
+@JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum CopyrightAndOtherRestrictions {
   @JsonProperty("yes")
   YES,

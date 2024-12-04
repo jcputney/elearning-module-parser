@@ -18,6 +18,8 @@
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types;
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
@@ -46,7 +48,7 @@ import lombok.Getter;
  * 	</xs:simpleType>
  * }</pre>
  */
-@Getter
+@JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum SequencingRuleConditionType {
   /**
    * The condition is met if the activity or objective is marked as satisfied.
@@ -55,25 +57,25 @@ public enum SequencingRuleConditionType {
   SATISFIED,
 
   /**
-   * The condition is met if the status of the "objective" is known.
+   * The condition is met if the status of the objective is known.
    */
   @JsonProperty("objectiveStatusKnown")
   OBJECTIVE_STATUS_KNOWN,
 
   /**
-   * The condition is met if the measure of the "objective" is known.
+   * The condition is met if the measure of the objective is known.
    */
   @JsonProperty("objectiveMeasureKnown")
   OBJECTIVE_MEASURE_KNOWN,
 
   /**
-   * The condition is met if the measure of the "objective" is greater than the specified value.
+   * The condition is met if the measure of the objective is greater than the specified value.
    */
   @JsonProperty("objectiveMeasureGreaterThan")
   OBJECTIVE_MEASURE_GREATER_THAN,
 
   /**
-   * The condition is met if the measure of the "objective" is less than the specified value.
+   * The condition is met if the measure of the objective is less than the specified value.
    */
   @JsonProperty("objectiveMeasureLessThan")
   OBJECTIVE_MEASURE_LESS_THAN,

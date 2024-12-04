@@ -17,7 +17,9 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import lombok.Data;
@@ -44,13 +46,13 @@ import lombok.Data;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class DeliveryControls {
 
   /**
    * Specifies whether the learner's progress in this activity should be tracked. When set to
    * <code>true</code>, tracking information is recorded, which may include data on completion,
-   * time
-   * spent, and other progress metrics.
+   * time spent, and other progress metrics.
    *
    * <p>This attribute is typically used to enable or disable progress tracking at
    * the activity level, depending on whether the activity contributes to the overall progress
@@ -59,10 +61,11 @@ public class DeliveryControls {
    * <p>Defaults to <code>true</code>.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("tracked")
   private boolean tracked = true;
 
   /**
-   * Indicates whether the activity's completion status should be set by the content. When set to
+   * Indicates whether the content should set the activity's completion status. When set to
    * <code>true</code>, the content is responsible for determining when the activity is marked as
    * complete, based on its internal logic or learner actions.
    *
@@ -73,12 +76,13 @@ public class DeliveryControls {
    * <p>Defaults to <code>false</code>.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("completionSetByContent")
   private boolean completionSetByContent = false;
 
   /**
-   * Specifies whether the objective satisfaction status for this activity should be set by the
-   * content. When set to <code>true</code>, the content determines whether objectives are satisfied
-   * based on learner performance or other criteria.
+   * Specifies whether the content should set the objective satisfaction status for this activity.
+   * When set to <code>true</code>, the content determines whether objectives are satisfied based on
+   * learner performance or other criteria.
    *
    * <p>This attribute is typically used for activities where the content tracks and reports
    * objective achievements, such as mastery of a topic or passing a test. The LMS uses this data to
@@ -87,5 +91,6 @@ public class DeliveryControls {
    * <p>Defaults to <code>false</code>.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("objectiveSetByContent")
   private boolean objectiveSetByContent = false;
 }

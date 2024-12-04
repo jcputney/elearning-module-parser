@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.lom.types.CopyrightAndOtherRestrictions;
@@ -26,6 +27,7 @@ import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
 import lombok.Data;
 
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Rights {
 
   /**
@@ -66,7 +68,7 @@ public class Rights {
   private SourceValuePair<CopyrightAndOtherRestrictions> copyrightAndOtherRestrictions;
 
   /**
-   * Descriptions of the rights information, represented as a list of language-specific strings.
+   * Descriptions of the "rights" information, represented as a list of language-specific strings.
    *
    * <p>Schema snippet:
    * <pre>{@code

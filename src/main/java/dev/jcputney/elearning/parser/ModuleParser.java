@@ -18,9 +18,10 @@
 package dev.jcputney.elearning.parser;
 
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
+import dev.jcputney.elearning.parser.input.PackageManifest;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 
-public interface ModuleParser {
+public interface ModuleParser<M extends PackageManifest> {
 
   /**
    * Parses the module files and extracts metadata.
@@ -29,10 +30,10 @@ public interface ModuleParser {
    * @return A ModuleMetadata object containing standardized metadata.
    * @throws ModuleParsingException if parsing fails or required files are missing.
    */
-  ModuleMetadata parse(String modulePath) throws ModuleParsingException;
+  ModuleMetadata<M> parse(String modulePath) throws ModuleParsingException;
 
   /**
-   * Checks if the module at the provided path is supported by this parser.
+   * Checks if this parser supports the module at the provided path.
    *
    * @param modulePath The path to the module in the file system.
    * @return True if the module is of a type that this parser can handle; false otherwise.

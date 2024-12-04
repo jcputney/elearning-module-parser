@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.cmi5.types;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import lombok.Data;
@@ -39,15 +41,18 @@ import lombok.Data;
  * }</pre>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LangString {
 
   /**
    * The actual text content of the localized string.
    *
-   * <pre>
-   * <xs:simpleContent>
-   *   <xs:extension base="xs:string"/>
-   * </pre>
+   * <pre>{@code
+   * <xs:extension base="xs:string">
+   *   <xs:attribute name="lang" type="xs:language"/>
+   *   <xs:attributeGroup ref="anyAttribute"/>
+   * </xs:extension>
+   * }</pre>
    */
   @JacksonXmlText
   private String value;
@@ -55,10 +60,11 @@ public class LangString {
   /**
    * The language of the string, represented as an optional attribute.
    *
-   * <pre>
+   * <pre>{@code
    * <xs:attribute name="lang" type="xs:language"/>
-   * </pre>
+   * }</pre>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("lang")
   private String lang;
 }

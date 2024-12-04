@@ -17,7 +17,9 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
@@ -47,6 +49,7 @@ import lombok.Data;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupRules {
 
   /**
@@ -66,6 +69,7 @@ public class RollupRules {
    * <p>Defaults to <code>true</code>.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("rollupObjectiveSatisfied")
   private boolean rollupObjectiveSatisfied = true;
 
   /**
@@ -76,10 +80,11 @@ public class RollupRules {
    * <p>Defaults to <code>true</code>.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("rollupProgressCompletion")
   private boolean rollupProgressCompletion = true;
 
   /**
-   * Specifies the weighting applied to the measure of each child activity’s "objective" when
+   * Specifies the weighting applied to the measure of each child activity’s objective when
    * determining the rollup satisfaction of the parent activity. This value allows each child
    * activity to contribute to the parent’s satisfaction based on a weighted score, rather than a
    * simple average or completion count.
@@ -87,5 +92,6 @@ public class RollupRules {
    * <p>Defaults to <code>1.0</code> and is represented as a decimal between 0 and 1.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("objectiveMeasureWeight")
   private double objectiveMeasureWeight = 1.0;
 }

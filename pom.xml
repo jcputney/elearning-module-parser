@@ -49,6 +49,16 @@
     <version.lombok>1.18.36</version.lombok>
     <version.mockito>5.14.2</version.mockito>
     <version.org.json>20240303</version.org.json>
+    <version.plugin.central-publishing>0.6.0</version.plugin.central-publishing>
+    <version.plugin.compiler>3.13.0</version.plugin.compiler>
+    <version.plugin.failsafe>3.3.1</version.plugin.failsafe>
+    <version.plugin.gpg>3.2.7</version.plugin.gpg>
+    <version.plugin.jacoco>0.8.12</version.plugin.jacoco>
+    <version.plugin.javadoc>3.1.1</version.plugin.javadoc>
+    <version.plugin.release>3.1.1</version.plugin.release>
+    <version.plugin.site>3.12.1</version.plugin.site>
+    <version.plugin.source>3.3.1</version.plugin.source>
+    <version.plugin.surefire>3.3.1</version.plugin.surefire>
   </properties>
 
   <dependencyManagement>
@@ -82,6 +92,11 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
+      <version>${version.jackson}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-csv</artifactId>
       <version>${version.jackson}</version>
     </dependency>
     <dependency>
@@ -139,7 +154,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>${version.plugin.release}</version>
           <configuration>
             <arguments>-ntp</arguments>
             <scmCommentPrefix />
@@ -153,12 +168,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.13.0</version>
+        <version>${version.plugin.compiler}</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
-        <version>3.2.7</version>
+        <version>${version.plugin.gpg}</version>
         <executions>
           <execution>
             <id>sign-artifacts</id>
@@ -171,7 +186,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.1.1</version>
+        <version>${version.plugin.javadoc}</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -184,7 +199,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.3.1</version>
+        <version>${version.plugin.source}</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -194,8 +209,71 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${version.plugin.surefire}</version>
+        <configuration>
+          <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${version.plugin.failsafe}</version>
+        <executions>
+          <execution>
+            <id>integration-test</id>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${version.plugin.jacoco}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report-aggregate</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report-aggregate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>${version.plugin.site}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${version.plugin.jacoco}</version>
+      </plugin>
+    </plugins>
+  </reporting>
 
   <profiles>
     <profile>
@@ -215,7 +293,7 @@
           <plugin>
             <groupId>org.sonatype.central</groupId>
             <artifactId>central-publishing-maven-plugin</artifactId>
-            <version>0.6.0</version>
+            <version>${version.plugin.central-publishing}</version>
             <extensions>true</extensions>
             <configuration>
               <autoPublish>false</autoPublish>

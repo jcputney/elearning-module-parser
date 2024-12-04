@@ -17,7 +17,9 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
@@ -40,7 +42,7 @@ import lombok.Data;
  *
  * <p>Common use cases include:</p>
  * <ul>
- *   <li>Setting an attempt limit to restrict the number of times an activity can be accessed.</li>
+ *   <li>Setting an attempt limit to restrict the number of times the user can access an activity.</li>
  *   <li>Applying time limits to control the duration of an activity attempt.</li>
  *   <li>Defining start and end times to establish an available time window for an activity.</li>
  * </ul>
@@ -50,6 +52,7 @@ import lombok.Data;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LimitConditions {
 
   /**
@@ -60,6 +63,7 @@ public class LimitConditions {
    * an unlimited number of times.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("attemptLimit")
   private Integer attemptLimit;
 
   /**
@@ -74,6 +78,7 @@ public class LimitConditions {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonDeserialize(using = DurationIso8601Deserializer.class)
+  @JsonProperty("attemptAbsoluteDurationLimit")
   private Duration attemptAbsoluteDurationLimit;
 
   /**
@@ -88,6 +93,7 @@ public class LimitConditions {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonDeserialize(using = DurationIso8601Deserializer.class)
+  @JsonProperty("attemptExperiencedDurationLimit")
   private Duration attemptExperiencedDurationLimit;
 
   /**
@@ -101,6 +107,7 @@ public class LimitConditions {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonDeserialize(using = DurationIso8601Deserializer.class)
+  @JsonProperty("activityAbsoluteDurationLimit")
   private Duration activityAbsoluteDurationLimit;
 
   /**
@@ -115,6 +122,7 @@ public class LimitConditions {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonDeserialize(using = DurationIso8601Deserializer.class)
+  @JsonProperty("activityExperiencedDurationLimit")
   private Duration activityExperiencedDurationLimit;
 
   /**
@@ -129,6 +137,7 @@ public class LimitConditions {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonDeserialize(using = InstantDeserializer.class)
+  @JsonProperty("beginTimeLimit")
   private Instant beginTimeLimit;
 
   /**
@@ -142,5 +151,6 @@ public class LimitConditions {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonDeserialize(using = InstantDeserializer.class)
+  @JsonProperty("endTimeLimit")
   private Instant endTimeLimit;
 }

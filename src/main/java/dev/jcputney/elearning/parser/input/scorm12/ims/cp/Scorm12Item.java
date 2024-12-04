@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -65,6 +66,7 @@ import lombok.Data;
  * }</pre>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Item {
 
   /**
@@ -79,13 +81,23 @@ public class Scorm12Item {
    * attribute.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "identifierref")
+  @JsonProperty(value = "identifierref")
   private String identifierRef;
 
   /**
    * Specifies whether this item is visible in the navigation tree. Defaults to <code>true</code>.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "isvisible")
+  @JsonProperty(value = "isvisible")
   private Boolean isVisible;
+
+  /**
+   * Querystring parameters that should be passed to an associated SCO or Asset on launch. Useful
+   * for varying the behavior of shared resources based on the item from which they are referenced.
+   */
+  @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty(value = "parameters")
+  private String parameters;
 
   /**
    * Represents the masteryScore element, defined as a decimal with a minimum of 0 and a maximum of

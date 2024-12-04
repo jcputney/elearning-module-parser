@@ -26,9 +26,7 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organization;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resource;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004SubMetadata;
-import dev.jcputney.elearning.parser.output.scorm2004.AdditionalMetadata;
 import dev.jcputney.elearning.parser.output.scorm2004.Scorm2004Metadata;
-import dev.jcputney.elearning.parser.output.scorm2004.SequencingInfo;
 import java.io.IOException;
 import java.util.List;
 import javax.xml.stream.XMLStreamException;
@@ -68,12 +66,7 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
       loadExternalMetadata(manifest, modulePath);
 
       String title = manifest.getTitle();
-      String description = manifest.getDescription();
       String launchUrl = manifest.getLaunchUrl();
-
-      String identifier = manifest.getIdentifier();
-      String version = manifest.getVersion();
-
       if (title.isEmpty()) {
         throw new ModuleParsingException(
             "SCORM 2004 manifest is missing a required <title> element at path: " + manifestPath);
@@ -84,28 +77,11 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
                 + manifestPath);
       }
 
-      List<SequencingInfo> sequencingInfo = null;
-      List<String> customData = null;
-      String prerequisites = null;
-      Double masteryScore = null;
-
-      // Extract additional metadata from external files
-      List<AdditionalMetadata> externalMetadata = List.of();
-
-      return new Scorm2004Metadata.Builder()
-          .xapiEnabled(checkForXapi(modulePath))
-          .title(title)
-          .description(description)
-          .version(version)
-          .identifier(identifier)
-          .launchUrl(launchUrl)
-          .moduleType(ModuleType.SCORM_2004)
-          .sequencingInfo(sequencingInfo)
-          .customData(customData)
-          .prerequisites(prerequisites)
-          .masteryScore(masteryScore)
-          .additionalMetadataList(externalMetadata)
-          .build();
+      return new Scorm2004Metadata(
+          manifest,
+          ModuleType.SCORM_2004,
+          checkForXapi(modulePath)
+      );
     } catch (IOException | XMLStreamException e) {
       throw new ModuleParsingException("Error parsing SCORM 2004 module at path: " + modulePath, e);
     }

@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -39,6 +40,7 @@ import lombok.Data;
  * @param <T> the type of the value, which can be an enumeration or a string
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class SourceValuePair<T> {
 
   /**

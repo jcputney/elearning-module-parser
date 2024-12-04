@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -50,6 +51,7 @@ import lombok.Data;
  * }</pre>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Resource {
 
   /**
@@ -63,12 +65,14 @@ public class Scorm12Resource {
    * The base URL for this resource. This URL is used to resolve relative paths for resources.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "base", namespace = "http://www.w3.org/XML/1998/namespace")
+  @JsonProperty("base")
   private String base;
 
   /**
    * The URL or path to the main entry point file for this resource.
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty(value = "href")
   private String href;
 
   /**
@@ -85,6 +89,7 @@ public class Scorm12Resource {
    * </p>
    */
   @JacksonXmlProperty(isAttribute = true, namespace = Scorm12ADLCP.NAMESPACE_URI, localName = "scormType")
+  @JsonProperty("scormType")
   private ScormType scormType;
 
   /**
@@ -92,6 +97,7 @@ public class Scorm12Resource {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "maxtimeallowed", namespace = Scorm12ADLCP.NAMESPACE_URI)
   @JsonDeserialize(using = DurationHHMMSSDeserializer.class)
+  @JsonProperty("maxtimeallowed")
   private Duration maxTimeAllowed;
 
   /**

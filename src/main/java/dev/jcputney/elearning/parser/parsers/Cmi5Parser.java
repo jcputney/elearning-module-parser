@@ -18,17 +18,15 @@
 package dev.jcputney.elearning.parser.parsers;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.cmi5.Cmi5Manifest;
-import dev.jcputney.elearning.parser.output.cmi5.AssignableUnit;
 import dev.jcputney.elearning.parser.output.cmi5.Cmi5Metadata;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Cmi5Parser is responsible for parsing cmi5-specific metadata from the cmi5.xml file.
  * <p>
- * cmi5 is an xAPI-based specification that includes Assignable Units (AUs) as discrete learning
+ * The "cmi5" xAPI-based specification includes Assignable Units (AUs) as discrete learning
  * objects with metadata for LMS tracking and reporting. This parser extracts metadata such as the
  * title, launch URL, prerequisites, dependencies, detailed AU information, and custom metadata.
  * </p>
@@ -62,34 +60,24 @@ public class Cmi5Parser extends BaseParser<Cmi5Metadata, Cmi5Manifest> {
   @Override
   public Cmi5Metadata parse(String modulePath) throws ModuleParsingException {
     try {
-      // Always set xAPI enabled to true for cmi5
-      boolean isXapiEnabled = true;
-
       // Parse cmi5-specific metadata from cmi5.xml
-      Cmi5Manifest manifest = parseManifest(modulePath + "/" + CMI5_XML);
+      var manifest = parseManifest(modulePath + "/" + CMI5_XML);
 
-      String title = null;
-      String launchUrl = null;
-      List<String> prerequisites = List.of();
-      List<String> dependencies = List.of();
-
-      // Extract assignable units (AUs) - the core content pieces for cmi5
-      List<AssignableUnit> assignableUnits = List.of();
-
-      // Extract custom data from the cmi5.xml file
-      Map<String, String> customData = Map.of();
+      String title = manifest.getTitle();
+      if (title == null || title.isEmpty()) {
+        throw new ModuleParsingException("cmi5 module missing required title field");
+      }
+      String launchUrl = manifest.getLaunchUrl();
+      if (launchUrl == null || launchUrl.isEmpty()) {
+        throw new ModuleParsingException("cmi5 module missing required launch URL field");
+      }
 
       // Build and return the Cmi5Metadata
-      return new Cmi5Metadata.Builder()
-          .xapiEnabled(isXapiEnabled)
-          .title(title)
-          .launchUrl(launchUrl)
-          .prerequisites(prerequisites)
-          .dependencies(dependencies)
-          .assignableUnits(assignableUnits)
-          .customData(customData)
-          .cmi5Version("1.0") // Assuming a default version; adjust as necessary
-          .build();
+      return new Cmi5Metadata(
+          manifest,
+          ModuleType.CMI5,
+          true // cmi5 modules are always xAPI-enabled
+      );
 
     } catch (Exception e) {
       throw new ModuleParsingException("Error parsing cmi5 module at path: " + modulePath, e);

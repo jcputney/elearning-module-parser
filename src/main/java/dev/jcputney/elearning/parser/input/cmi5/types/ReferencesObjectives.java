@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.cmi5.types;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.List;
@@ -42,10 +43,11 @@ import lombok.Data;
  * }</pre>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ReferencesObjectives {
 
   /**
-   * A list of referenced "objectives", each represented by an {@link ObjectiveReference}.
+   * A list of referenced objectives, each represented by an {@link ObjectiveReference}.
    *
    * <pre>{@code
    * <xs:element name="objective" maxOccurs="unbounded">

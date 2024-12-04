@@ -17,7 +17,9 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.cp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 
@@ -26,23 +28,27 @@ import lombok.Data;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class DataMap {
 
   /**
    * Target ID URI for shared data mapping.
    */
   @JacksonXmlProperty(localName = "targetID", isAttribute = true)
+  @JsonProperty("targetID")
   private String targetID;
 
   /**
    * Indicates if shared data is readable.
    */
   @JacksonXmlProperty(localName = "readSharedData", isAttribute = true)
+  @JsonProperty("readSharedData")
   private boolean readSharedData = true;
 
   /**
    * Indicates if shared data is writable.
    */
   @JacksonXmlProperty(localName = "writeSharedData", isAttribute = true)
+  @JsonProperty("writeSharedData")
   private boolean writeSharedData = false;
 }

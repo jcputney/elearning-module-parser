@@ -19,6 +19,7 @@ package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
 import static dev.jcputney.elearning.parser.input.scorm2004.IMSSS.NAMESPACE_URI;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.List;
@@ -30,6 +31,7 @@ import lombok.Data;
  * rules, objectives, and rollup behaviors for a learning activity.
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class SequencingCollection {
 
   /**

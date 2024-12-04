@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.cmi5;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.cmi5.types.LaunchMethod;
 import dev.jcputney.elearning.parser.input.cmi5.types.MoveOn;
@@ -82,14 +84,15 @@ import lombok.Data;
  * }</pre>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class AU {
 
   /**
    * The title of the Assignable Unit (AU).
    *
-   * <pre>
+   * <pre>{@code
    * <xs:element name="title" type="textType"/>
-   * </pre>
+   * }</pre>
    */
   @JacksonXmlProperty(localName = "title")
   private TextType title;
@@ -97,9 +100,9 @@ public class AU {
   /**
    * The description of the Assignable Unit (AU).
    *
-   * <pre>
+   * <pre>{@code
    * <xs:element name="description" type="textType"/>
-   * </pre>
+   * }</pre>
    */
   @JacksonXmlProperty(localName = "description")
   private TextType description;
@@ -107,9 +110,9 @@ public class AU {
   /**
    * Objectives referenced by the Assignable Unit.
    *
-   * <pre>
+   * <pre>{@code
    * <xs:element name="objectives" type="referencesObjectivesType" minOccurs="0"/>
-   * </pre>
+   * }</pre>
    */
   @JacksonXmlProperty(localName = "objectives")
   private ReferencesObjectives objectives;
@@ -117,14 +120,14 @@ public class AU {
   /**
    * The URL for launching the Assignable Unit.
    *
-   * <pre>
+   * <pre>{@code
    * <xs:element name="url">
    *   <xs:simpleType>
    *     <xs:restriction base="xs:anyURI">
    *       <xs:minLength value="1"/>
    *     </xs:restriction>
    *   </xs:simpleType>
-   * </pre>
+   * }</pre>
    */
   @JacksonXmlProperty(localName = "url")
   private String url;
@@ -132,9 +135,9 @@ public class AU {
   /**
    * Optional launch parameters for the AU.
    *
-   * <pre>
+   * <pre>{@code
    * <xs:element name="launchParameters" minOccurs="0"/>
-   * </pre>
+   * }</pre>
    */
   @JacksonXmlProperty(localName = "launchParameters")
   private String launchParameters;
@@ -142,9 +145,9 @@ public class AU {
   /**
    * Optional entitlement key for the AU.
    *
-   * <pre>
+   * <pre>{@code
    * <xs:element name="entitlementKey" minOccurs="0"/>
-   * </pre>
+   * }</pre>
    */
   @JacksonXmlProperty(localName = "entitlementKey")
   private String entitlementKey;
@@ -152,18 +155,19 @@ public class AU {
   /**
    * The ID of the Assignable Unit, represented as an anyURI.
    *
-   * <pre>
+   * <pre>{@code
    * <xs:attribute name="id" type="xs:anyURI" use="required"/>
-   * </pre>
+   * }</pre>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("id")
   private String id;
 
   /**
    * Specifies the condition required to move on from the AU.
    * Default is "NotApplicable".
    *
-   * <pre>
+   * <pre>{@code
    * <xs:attribute name="moveOn" default="NotApplicable">
    *   <xs:simpleType>
    *     <xs:restriction base="xs:string">
@@ -174,15 +178,16 @@ public class AU {
    *       <xs:enumeration value="CompletedOrPassed"/>
    *     </xs:restriction>
    *   </xs:simpleType>
-   * </pre>
+   * }</pre>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("moveOn")
   private MoveOn moveOn;
 
   /**
    * The mastery score required for the AU, represented as a decimal between 0 and 1.
    *
-   * <pre>
+   * <pre>{@code
    * <xs:attribute name="masteryScore" use="optional">
    *   <xs:simpleType>
    *     <xs:restriction base="xs:decimal">
@@ -190,15 +195,16 @@ public class AU {
    *       <xs:maxInclusive value="1"/>
    *     </xs:restriction>
    *   </xs:simpleType>
-   * </pre>
+   * }</pre>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("masteryScore")
   private PercentType masteryScore;
 
   /**
    * Specifies the launch method for the AU, defaulting to "AnyWindow".
    *
-   * <pre>
+   * <pre>{@code
    * <xs:attribute name="launchMethod" default="AnyWindow">
    *   <xs:simpleType>
    *     <xs:restriction base="xs:string">
@@ -206,18 +212,20 @@ public class AU {
    *       <xs:enumeration value="OwnWindow"/>
    *     </xs:restriction>
    *   </xs:simpleType>
-   * </pre>
+   * }</pre>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("launchMethod")
   private LaunchMethod launchMethod;
 
   /**
    * Specifies the type of activity represented by the AU.
    *
-   * <pre>
+   * <pre>{@code
    * <xs:attribute name="activityType" use="optional" type="xs:string"/>
-   * </pre>
+   * }</pre>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("activityType")
   private String activityType;
 }

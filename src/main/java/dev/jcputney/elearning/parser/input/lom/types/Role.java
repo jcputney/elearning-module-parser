@@ -18,6 +18,8 @@
 package dev.jcputney.elearning.parser.input.lom.types;
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -46,6 +48,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 	</xs:simpleType>
  *  }</pre>
  */
+@JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum Role {
   /**
    * The "author" value specifies that the entity is the author of the resource.
@@ -138,7 +141,7 @@ public enum Role {
   INSTRUCTIONAL_DESIGNER,
 
   /**
-   * The "subject-matter expert" value specifies that the entity is a subject matter expert for the
+   * The "subject-matter expert" value specifies that the entity is a subject-matter expert for the
    * resource.
    */
   @JsonProperty("subject matter expert")

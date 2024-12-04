@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -26,7 +27,7 @@ import lombok.Data;
 
 /**
  * Represents the learning objectives for an activity within the SCORM IMS Simple Sequencing (IMSSS)
- * schema. "Objectives" define specific learning goals or criteria that are associated with a
+ * schema. Objectives define specific learning goals or criteria that are associated with a
  * learning activity and may contribute to the activity’s completion and satisfaction status.
  *
  * <p>The objectives for an activity are classified into a primary objective, which contributes
@@ -42,10 +43,11 @@ import lombok.Data;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Objectives {
 
   /**
-   * The primary objective of the activity. This "objective" typically contributes to the rollup of
+   * The primary objective of the activity. This objective typically contributes to the rollup of
    * progress and satisfaction for the activity, affecting the learner’s overall progress in the
    * sequence.
    *
@@ -56,7 +58,7 @@ public class Scorm2004Objectives {
   private Scorm2004Objective primaryObjective;
 
   /**
-   * A list of additional "objectives" for the activity. These "objectives" may serve as
+   * A list of additional objectives for the activity. These objectives may serve as
    * supplementary goals that are tracked but do not necessarily affect the rollup of progress or
    * satisfaction.
    *

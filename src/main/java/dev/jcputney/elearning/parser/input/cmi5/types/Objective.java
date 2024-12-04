@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.cmi5.types;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 
@@ -24,6 +26,7 @@ import lombok.Data;
  * Represents a single objective with a title, description, and unique identifier.
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Objective {
 
   /**
@@ -54,5 +57,6 @@ public class Objective {
    * }</pre>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("id")
   private String id;
 }

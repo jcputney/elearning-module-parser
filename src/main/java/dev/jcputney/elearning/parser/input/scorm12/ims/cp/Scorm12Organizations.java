@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
@@ -43,6 +45,7 @@ import lombok.Data;
  * }</pre>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Organizations {
 
   /**
@@ -50,6 +53,7 @@ public class Scorm12Organizations {
    * use if multiple organizations are present.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "default", namespace = Scorm12Manifest.NAMESPACE_URI)
+  @JsonProperty("default")
   private String defaultOrganization;
 
   /**

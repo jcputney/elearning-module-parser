@@ -17,9 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Data;
-
 /**
  * Represents the SCORM ADL Sequencing (ADLSeq) elements in the adlseq_v1p3 schema.
  *
@@ -97,8 +94,6 @@ import lombok.Data;
  *   </xs:schema>
  * }</pre>
  */
-@Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ADLSeq {
 
   public static final String NAMESPACE_URI = "http://www.adlnet.org/xsd/adlseq_v1p3";

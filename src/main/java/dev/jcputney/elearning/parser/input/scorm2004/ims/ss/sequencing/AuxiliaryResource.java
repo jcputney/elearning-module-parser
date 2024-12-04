@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 
@@ -26,10 +28,11 @@ import lombok.Data;
  * impact the learner's progress or completion of the activity.
  *
  * <p>Auxiliary resources could include references like PDF documents, instructional videos,
- * diagrams, or external tools that assist learners in understanding or practicing the activity
+ * diagrams, or external tools that help learners in understanding or practicing the activity
  * content.</p>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class AuxiliaryResource {
 
   /**
@@ -40,6 +43,7 @@ public class AuxiliaryResource {
    * Identifier).</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("auxiliaryResourceID")
   private String auxiliaryResourceID;
 
   /**
@@ -51,5 +55,6 @@ public class AuxiliaryResource {
    * clarify the intended use of the auxiliary resource for both learners and educators.</p>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("purpose")
   private String purpose;
 }

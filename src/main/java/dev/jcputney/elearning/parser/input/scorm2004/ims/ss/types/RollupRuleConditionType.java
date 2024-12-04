@@ -18,8 +18,9 @@
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types;
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 
 /**
  * Enum representing the possible conditions that can be evaluated within a rollup rule. Each
@@ -42,7 +43,7 @@ import lombok.Getter;
  * 	</xs:simpleType>
  * }</pre>
  */
-@Getter
+@JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum RollupRuleConditionType {
   /**
    * The condition is met if the activity or objective is marked as satisfied.
@@ -51,13 +52,13 @@ public enum RollupRuleConditionType {
   SATISFIED,
 
   /**
-   * The condition is met if the status of the "objective" is known.
+   * The condition is met if the status of the objective is known.
    */
   @JsonProperty("objectiveStatusKnown")
   OBJECTIVE_STATUS_KNOWN,
 
   /**
-   * The condition is met if the measure of the "objective" is known.
+   * The condition is met if the measure of the objective is known.
    */
   @JsonProperty("objectiveMeasureKnown")
   OBJECTIVE_MEASURE_KNOWN,

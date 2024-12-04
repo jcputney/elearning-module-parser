@@ -17,21 +17,23 @@
 
 package dev.jcputney.elearning.parser.input.scorm12;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import dev.jcputney.elearning.parser.input.PackageManifest;
-import dev.jcputney.elearning.parser.input.lom.General;
 import dev.jcputney.elearning.parser.input.lom.LOM;
-import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
+import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Item;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Metadata;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organization;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organizations;
+import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resource;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resources;
+import java.util.Collection;
 import java.util.Optional;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Represents the SCORM IMS Content Packaging (IMSCP) elements according to the imscp_rootv1p1p2
@@ -303,6 +305,8 @@ import org.apache.commons.lang3.StringUtils;
 @Data
 @JacksonXmlRootElement(localName = "manifest", namespace = Scorm12Manifest.NAMESPACE_URI)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Manifest implements PackageManifest {
 
   public static final String NAMESPACE_URI = "http://www.imsproject.org/xsd/imscp_rootv1p1p2";
@@ -320,6 +324,7 @@ public class Scorm12Manifest implements PackageManifest {
    * the LMS to manage content versions.
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty(value = "version")
   private String version;
 
   /**
@@ -327,6 +332,7 @@ public class Scorm12Manifest implements PackageManifest {
    * paths for resources.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "base", namespace = "http://www.w3.org/XML/1998/namespace")
+  @JsonProperty("base")
   private String base;
 
   /**
@@ -352,34 +358,61 @@ public class Scorm12Manifest implements PackageManifest {
 
   @Override
   public String getTitle() {
+    //noinspection DuplicatedCode
     String organizationTitle = Optional.ofNullable(organizations)
         .map(Scorm12Organizations::getDefaultOrganization)
         .map(Scorm12Organization::getTitle)
         .orElse(null);
-    if (StringUtils.isNotBlank(organizationTitle)) {
+    if (organizationTitle != null && !organizationTitle.isEmpty()) {
       return organizationTitle;
     }
-    String metadataTitle = Optional.ofNullable(metadata)
+    return Optional.ofNullable(metadata)
         .map(Scorm12Metadata::getLom)
-        .map(LOM::getGeneral)
-        .map(General::getTitle)
-        .map(UnboundLangString::getLangStrings)
-        .filter(titles -> !titles.isEmpty())
-        .map(titles -> titles.get(0).getValue())
+        .map(LOM::getTitle)
         .orElse(null);
-    if (StringUtils.isNotEmpty(metadataTitle)) {
-      return metadataTitle;
-    }
-    return "";
   }
 
   @Override
   public String getDescription() {
-    return "";
+    return Optional.ofNullable(metadata)
+        .map(Scorm12Metadata::getLom)
+        .map(LOM::getDescription)
+        .orElse(null);
   }
 
   @Override
   public String getLaunchUrl() {
-    return "";
+    // find first Scorm12Item with a non-null identifierRef
+    String resourceId = Optional.ofNullable(organizations)
+        .map(Scorm12Organizations::getDefaultOrganization)
+        .map(Scorm12Organization::getItems)
+        .stream()
+        .flatMap(Collection::stream)
+        .filter(item -> item.getIdentifierRef() != null)
+        .findFirst()
+        .map(Scorm12Item::getIdentifierRef)
+        .orElse(null);
+
+    String childResourceId = null;
+    if (resourceId == null || resourceId.isEmpty()) {
+      // check child items
+      childResourceId = Optional.ofNullable(organizations)
+          .map(Scorm12Organizations::getDefaultOrganization)
+          .map(Scorm12Organization::getItems)
+          .stream()
+          .flatMap(Collection::stream)
+          .filter(item -> item.getItems() != null)
+          .flatMap(item -> item.getItems().stream())
+          .filter(subItem -> subItem.getIdentifierRef() != null)
+          .findFirst()
+          .map(Scorm12Item::getIdentifierRef)
+          .orElse(null);
+    }
+
+    String finalResourceId = resourceId != null ? resourceId : childResourceId;
+    return Optional.ofNullable(resources)
+        .map(resources -> resources.getResourceById(finalResourceId))
+        .map(Scorm12Resource::getHref)
+        .orElse(null);
   }
 }

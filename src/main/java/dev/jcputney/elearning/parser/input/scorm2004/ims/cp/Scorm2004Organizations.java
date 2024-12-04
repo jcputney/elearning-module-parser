@@ -17,7 +17,9 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
@@ -30,6 +32,7 @@ import lombok.Data;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Organizations {
 
   /**
@@ -37,6 +40,7 @@ public class Scorm2004Organizations {
    * use if multiple organizations are present.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "default", namespace = Scorm2004Manifest.NAMESPACE_URI)
+  @JsonProperty("default")
   private String defaultOrganization;
 
   /**
@@ -67,5 +71,36 @@ public class Scorm2004Organizations {
    */
   public Scorm2004Organization getDefaultOrganization() {
     return getOrganizationById(defaultOrganization);
+  }
+
+  /**
+   * Retrieves an item by its unique identifier.
+   *
+   * @param itemId The unique identifier for the item.
+   * @return The item with the specified identifier, or null if not found.
+   */
+  public Scorm2004Item getItemById(String itemId) {
+    Scorm2004Item result = organizationList.stream()
+        .map(Scorm2004Organization::getItems)
+        .flatMap(List::stream)
+        .filter(item -> item.getIdentifier().equals(itemId))
+        .findFirst()
+        .orElse(null);
+
+    if (result == null) {
+      // search child items
+      for (Scorm2004Organization org : organizationList) {
+        result = org.getItems().stream()
+            .filter(item -> item.getIdentifier().equals(itemId))
+            .findFirst()
+            .orElse(null);
+
+        if (result != null) {
+          break;
+        }
+      }
+    }
+
+    return result;
   }
 }

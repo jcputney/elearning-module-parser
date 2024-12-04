@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.RollupActionType;
 import lombok.Data;
@@ -30,6 +32,7 @@ import lombok.Data;
  * completed, or incomplete based on the rollup rule conditions.</p>
  */
 @Data
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupAction {
 
   /**
@@ -43,5 +46,6 @@ public class RollupAction {
    * </ul>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("action")
   private RollupActionType action;
 }
