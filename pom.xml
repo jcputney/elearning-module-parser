@@ -56,7 +56,6 @@
     <version.plugin.jacoco>0.8.12</version.plugin.jacoco>
     <version.plugin.javadoc>3.1.1</version.plugin.javadoc>
     <version.plugin.release>3.1.1</version.plugin.release>
-    <version.plugin.site>3.12.1</version.plugin.site>
     <version.plugin.source>3.3.1</version.plugin.source>
     <version.plugin.surefire>3.3.1</version.plugin.surefire>
   </properties>
@@ -259,21 +258,6 @@
       </plugin>
     </plugins>
   </build>
-
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <version>${version.plugin.site}</version>
-      </plugin>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${version.plugin.jacoco}</version>
-      </plugin>
-    </plugins>
-  </reporting>
 
   <profiles>
     <profile>
