@@ -36,9 +36,9 @@ public class Scorm12ParserTest {
   @Test
   void testParseScorm12Course_ContentPackagingOneFilePerSCO_SCORM12()
       throws ModuleParsingException {
-    String modulePath = "src/test/resources/modules/scorm12/ContentPackagingOneFilePerSCO_SCORM12";
-    Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess());
-    Scorm12Metadata metadata = parser.parse(modulePath);
+    String modulePath = "src/test/resources/modules/scorm12/ContentPackagingOneFilePerSCO_SCORM12/";
+    Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
+    Scorm12Metadata metadata = parser.parse();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();
     assertCommonFields(manifest);
@@ -60,8 +60,8 @@ public class Scorm12ParserTest {
   void testParseScorm12Course_ContentPackagingSingleSCO_SCORM12()
       throws ModuleParsingException {
     String modulePath = "src/test/resources/modules/scorm12/ContentPackagingSingleSCO_SCORM12";
-    Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess());
-    Scorm12Metadata metadata = parser.parse(modulePath);
+    Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
+    Scorm12Metadata metadata = parser.parse();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();
     assertCommonFields(manifest);
@@ -77,8 +77,8 @@ public class Scorm12ParserTest {
   @Test
   void testParseScorm12Course_RuntimeBasicCalls_SCORM12() throws ModuleParsingException {
     String modulePath = "src/test/resources/modules/scorm12/RuntimeBasicCalls_SCORM12";
-    Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess());
-    Scorm12Metadata metadata = parser.parse(modulePath);
+    Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
+    Scorm12Metadata metadata = parser.parse();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();
     assertCommonFields(manifest);
@@ -94,8 +94,8 @@ public class Scorm12ParserTest {
   @Test
   void testParseScorm12Course_RuntimeMinimumCalls_SCORM12() throws ModuleParsingException {
     String modulePath = "src/test/resources/modules/scorm12/RuntimeMinimumCalls_SCORM12";
-    Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess());
-    Scorm12Metadata metadata = parser.parse(modulePath);
+    Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
+    Scorm12Metadata metadata = parser.parse();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();
     assertCommonFields(manifest);

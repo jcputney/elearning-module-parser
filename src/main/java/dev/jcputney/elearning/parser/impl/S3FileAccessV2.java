@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -36,19 +37,28 @@ import software.amazon.awssdk.services.s3.model.S3Object;
  * Implementation of FileAccess using AWS S3 SDK v2.
  */
 public class S3FileAccessV2 implements FileAccess {
+
   private final S3Client s3Client;
   private final String bucketName;
 
+  @Getter
+  private final String rootPath;
+
   /**
-   * Constructs an S3FileAccessV2 instance with the default S3 client and the specified bucket name.
+   * Constructs an S3FileAccessV2 instance with the default S3 client and the specified bucket
+   * name.
    *
    * @param bucketName The name of the S3 bucket to access.
+   * @param rootPath The root path of the S3 bucket to access.
    */
-  public S3FileAccessV2(String bucketName) {
-    this.s3Client = S3Client.builder()
-        .credentialsProvider(DefaultCredentialsProvider.create())
-        .build();
-    this.bucketName = bucketName;
+  public S3FileAccessV2(String bucketName, String rootPath) {
+    this(
+        S3Client.builder()
+            .credentialsProvider(DefaultCredentialsProvider.create())
+            .build(),
+        bucketName,
+        rootPath
+    );
   }
 
   /**
@@ -56,10 +66,17 @@ public class S3FileAccessV2 implements FileAccess {
    *
    * @param s3Client The S3 client to use for accessing files.
    * @param bucketName The name of the S3 bucket to access.
+   * @param rootPath The root path of the S3 bucket to access.
    */
-  public S3FileAccessV2(S3Client s3Client, String bucketName) {
+  public S3FileAccessV2(S3Client s3Client, String bucketName, String rootPath) {
     this.s3Client = s3Client;
     this.bucketName = bucketName;
+    if (rootPath == null) {
+      rootPath = "";
+    } else if (rootPath.endsWith("/")) {
+      rootPath = rootPath.substring(0, rootPath.length() - 1);
+    }
+    this.rootPath = rootPath;
   }
 
   /**

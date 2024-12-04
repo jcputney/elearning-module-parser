@@ -60,21 +60,18 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
    * Abstract method that parses the module and returns the corresponding metadata object. This must
    * be implemented by the child parsers (e.g., SCORM, cmi5, LTI).
    *
-   * @param modulePath The path to the module's root directory.
    * @return A ModuleMetadata object containing the parsed module metadata.
    * @throws ModuleParsingException If the module type cannot be determined or there is an error
    * parsing.
    */
-  public abstract T parse(String modulePath) throws ModuleParsingException;
+  public abstract T parse() throws ModuleParsingException;
 
-  /**
-   * Abstract method to check if the module is supported by this parser. This method should be
-   * implemented in subclasses to check for module-specific files.
-   *
-   * @param modulePath The path to the module's root directory.
-   * @return true if the module is supported by this parser, false otherwise.
-   */
-  public abstract boolean isSupported(String modulePath);
+  public M parseManifest(String manifestPath)
+      throws IOException, XMLStreamException, ModuleParsingException {
+    try (InputStream manifestStream = fileAccess.getFileContents(manifestPath)) {
+      return parseXmlToObject(manifestStream, getManifestClass());
+    }
+  }
 
   /**
    * Abstract method to return the class of the manifest object for the specific parser.
@@ -83,23 +80,15 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
    */
   protected abstract Class<M> getManifestClass();
 
-  public M parseManifest(String manifestPath) throws IOException, XMLStreamException, ModuleParsingException {
-    try (InputStream manifestStream = fileAccess.getFileContents(manifestPath)) {
-      return parseXmlToObject(manifestStream, getManifestClass());
-    }
-  }
-
   /**
    * Checks if the module contains xAPI-related files (e.g., xAPI.js, sendStatement.js). These files
    * indicate whether xAPI tracking is enabled for the module.
    *
-   * @param modulePath The path to the module's root directory.
    * @return true if xAPI is enabled, false otherwise.
    */
-  protected boolean checkForXapi(String modulePath) {
+  protected boolean checkForXapi() {
     // Check for common xAPI-related files in the module
-    return fileAccess.fileExists(modulePath + "/" + XAPI_JS_FILE) || fileAccess.fileExists(
-        modulePath + "/" + XAPI_SEND_STATEMENT_FILE);
+    return fileAccess.fileExists(XAPI_JS_FILE) || fileAccess.fileExists(XAPI_SEND_STATEMENT_FILE);
   }
 
   /**
@@ -116,7 +105,8 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
     factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, true);
     factory.setProperty(XMLInputFactory.IS_VALIDATING, false);
     XMLStreamReader reader = factory.createXMLStreamReader(stream);
-    return new XmlMapper().readValue(reader, clazz);
+    XmlMapper xmlMapper = new XmlMapper();
+    return xmlMapper.readValue(reader, clazz);
   }
 
   /**
@@ -135,12 +125,12 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
    * </p>
    *
    * @param subMetadata The LoadableMetadata object to load the external metadata into.
-   * @param modulePath The path to the module's root directory.
    */
-  protected void loadExternalMetadataIntoMetadata(LoadableMetadata subMetadata, String modulePath)
+  protected void loadExternalMetadataIntoMetadata(LoadableMetadata subMetadata)
       throws XMLStreamException, IOException {
-    if (subMetadata != null && subMetadata.getLocation() != null && !subMetadata.getLocation().isEmpty()) {
-      String metadataPath = modulePath + "/" + subMetadata.getLocation();
+    if (subMetadata != null && subMetadata.getLocation() != null && !subMetadata.getLocation()
+        .isEmpty()) {
+      String metadataPath = subMetadata.getLocation();
       if (fileAccess.fileExists(metadataPath)) {
         try (InputStream fileContents = fileAccess.getFileContents(metadataPath)) {
           LOM lom = parseXmlToObject(fileContents, LOM.class);

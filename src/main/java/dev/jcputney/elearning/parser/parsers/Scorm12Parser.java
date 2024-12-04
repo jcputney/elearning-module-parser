@@ -41,7 +41,7 @@ import javax.xml.stream.XMLStreamException;
  */
 public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> {
 
-  private static final String MANIFEST_FILE = "imsmanifest.xml";
+  public static final String MANIFEST_FILE = "imsmanifest.xml";
 
   /**
    * Constructs a Scorm12Parser with the specified FileAccess instance.
@@ -57,23 +57,21 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    * title, description, identifier, launch URL, a default version string, and optional fields like
    * mastery score and custom data.
    *
-   * @param modulePath The path to the module's root directory.
    * @return A populated ModuleMetadata object containing the extracted metadata.
    * @throws ModuleParsingException if an error occurs during parsing.
    */
   @Override
-  public Scorm12Metadata parse(String modulePath) throws ModuleParsingException {
+  public Scorm12Metadata parse() throws ModuleParsingException {
     try {
       // Define the manifest file path and verify its existence
-      String manifestPath = modulePath + "/" + MANIFEST_FILE;
-      if (!fileAccess.fileExists(manifestPath)) {
+      if (!fileAccess.fileExists(MANIFEST_FILE)) {
         throw new ModuleParsingException(
-            "SCORM 1.2 manifest file not found at path: " + manifestPath);
+            "SCORM 1.2 manifest file not found at path: " + MANIFEST_FILE);
       }
 
       // Parse the manifest XML file using a secure parser from BaseParser
-      var manifest = parseManifest(manifestPath);
-      loadExternalMetadata(manifest, modulePath);
+      var manifest = parseManifest(MANIFEST_FILE);
+      loadExternalMetadata(manifest);
 
       // Extract metadata fields using helper methods
       String title = manifest.getTitle();
@@ -93,27 +91,11 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
       return new Scorm12Metadata(
           manifest,
           ModuleType.SCORM_12,
-          checkForXapi(modulePath)
+          checkForXapi()
       );
     } catch (Exception e) {
-      throw new ModuleParsingException("Error parsing SCORM 1.2 module at path: " + modulePath, e);
+      throw new ModuleParsingException("Error parsing SCORM 1.2 module at path: " + this.fileAccess.getRootPath(), e);
     }
-  }
-
-  /**
-   * Checks if this parser can handle the module located at the specified path by verifying the
-   * presence of imsmanifest.xml.
-   * <p>
-   * SCORM 1.2 modules are identified by the presence of an imsmanifest.xml file in the root
-   * directory.
-   * </p>
-   *
-   * @param modulePath The path to the module's root directory.
-   * @return True if imsmanifest.xml is present; false otherwise.
-   */
-  @Override
-  public boolean isSupported(String modulePath) {
-    return fileAccess.fileExists(modulePath + "/" + MANIFEST_FILE);
   }
 
   @Override
@@ -121,33 +103,38 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
     return Scorm12Manifest.class;
   }
 
-  private void loadExternalMetadata(Scorm12Manifest manifest, String modulePath)
+  /**
+   * Loads external metadata files referenced in the manifest into the metadata object.
+   *
+   * @param manifest The manifest object to load metadata into.
+   */
+  private void loadExternalMetadata(Scorm12Manifest manifest)
       throws XMLStreamException, IOException {
     // Load additional metadata files referenced in the manifest
     // For each <resource> element, check for <file> elements with href attribute
     // pointing to additional metadata files
     if (manifest != null) {
-      loadExternalMetadataIntoMetadata(manifest.getMetadata(), modulePath);
+      loadExternalMetadataIntoMetadata(manifest.getMetadata());
 
       List<Scorm12Resource> resources = manifest.getResources().getResourceList();
       if (resources != null) {
         for (Scorm12Resource resource : resources) {
-          loadExternalMetadataIntoMetadata(resource.getMetadata(), modulePath);
+          loadExternalMetadataIntoMetadata(resource.getMetadata());
 
           List<Scorm12File> files = resource.getFiles();
           if (files != null) {
             for (Scorm12File file : files) {
-              file.setExists(fileAccess.fileExists(modulePath + "/" + file.getHref()));
-              loadExternalMetadataIntoMetadata(file.getMetadata(), modulePath);
+              file.setExists(fileAccess.fileExists(file.getHref()));
+              loadExternalMetadataIntoMetadata(file.getMetadata());
             }
           }
         }
       }
 
       for (Scorm12Organization organization : manifest.getOrganizations().getOrganizationList()) {
-        loadExternalMetadataIntoMetadata(organization.getMetadata(), modulePath);
+        loadExternalMetadataIntoMetadata(organization.getMetadata());
 
-        loadExternalMetadataForItems(organization.getItems(), modulePath);
+        loadExternalMetadataForItems(organization.getItems());
       }
     }
   }
@@ -156,15 +143,14 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    * Recursively loads external metadata files for each item in the organization.
    *
    * @param items The list of items to load external metadata for.
-   * @param modulePath The path to the module's root directory.
    */
-  private void loadExternalMetadataForItems(List<Scorm12Item> items, String modulePath)
+  private void loadExternalMetadataForItems(List<Scorm12Item> items)
       throws XMLStreamException, IOException {
     if (items != null) {
       for (Scorm12Item item : items) {
-        loadExternalMetadataIntoMetadata(item.getMetadata(), modulePath);
+        loadExternalMetadataIntoMetadata(item.getMetadata());
 
-        loadExternalMetadataForItems(item.getItems(), modulePath);
+        loadExternalMetadataForItems(item.getItems());
       }
     }
   }

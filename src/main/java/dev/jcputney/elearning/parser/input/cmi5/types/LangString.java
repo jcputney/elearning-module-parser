@@ -19,8 +19,10 @@ package dev.jcputney.elearning.parser.input.cmi5.types;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
+import dev.jcputney.elearning.parser.input.common.TrimAndPreserveIndentationDeserializer;
 import lombok.Data;
 
 /**
@@ -55,6 +57,7 @@ public class LangString {
    * }</pre>
    */
   @JacksonXmlText
+  @JsonDeserialize(using = TrimAndPreserveIndentationDeserializer.class)
   private String value;
 
   /**

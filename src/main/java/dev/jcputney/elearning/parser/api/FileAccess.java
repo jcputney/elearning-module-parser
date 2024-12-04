@@ -31,6 +31,13 @@ import java.util.List;
 public interface FileAccess {
 
   /**
+   * Retrieves the root path used for file access.
+   *
+   * @return The root path used for file access.
+   */
+  String getRootPath();
+
+  /**
    * Checks if a file exists at the given path.
    *
    * @param path The file path to check.

@@ -18,6 +18,7 @@
 package dev.jcputney.elearning.parser.impl;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -28,6 +29,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.Getter;
 
 /**
  * Implementation of FileAccess for local file access.
@@ -37,16 +39,31 @@ import java.util.stream.Stream;
  * @see FileAccess
  */
 public class LocalFileAccess implements FileAccess {
+  @Getter
+  private final String rootPath;
+
+  public LocalFileAccess(String rootPath) {
+    if (rootPath == null) {
+      throw new IllegalArgumentException("Root path cannot be null");
+    }
+    if (rootPath.endsWith("/")) {
+      rootPath = rootPath.substring(0, rootPath.length() - 1);
+    }
+    this.rootPath = rootPath;
+    if (!Files.isDirectory(Paths.get(rootPath))) {
+      throw new IllegalArgumentException("Provided path is not a valid directory: " + rootPath);
+    }
+  }
 
   @Override
   public boolean fileExists(String path) {
-    Path filePath = Paths.get(path);
+    Path filePath = Paths.get(rootPath + File.separator + path);
     return Files.exists(filePath);
   }
 
   @Override
   public List<String> listFiles(String directoryPath) throws IOException {
-    Path dirPath = Paths.get(directoryPath);
+    Path dirPath = Paths.get(rootPath + File.separator + directoryPath);
 
     // Validate directory
     if (!Files.exists(dirPath) || !Files.isDirectory(dirPath)) {
@@ -58,6 +75,7 @@ public class LocalFileAccess implements FileAccess {
       return paths
           .filter(Files::isRegularFile) // Only list regular files
           .map(Path::toString)
+          .map(path -> path.replace(rootPath + File.separator, "")) // Remove root path
           .collect(Collectors.toList());
     } catch (IOException e) {
       throw new IOException("Failed to list files in directory: " + directoryPath, e);
@@ -66,10 +84,10 @@ public class LocalFileAccess implements FileAccess {
 
   @Override
   public InputStream getFileContents(String path) throws IOException {
-    Path filePath = Paths.get(path);
+    Path filePath = Paths.get(rootPath + File.separator + path);
 
     // Check file existence and read permissions
-    if (!Files.exists(filePath)) {
+    if (!fileExists(path)) {
       throw new NoSuchFileException("File not found: " + path);
     }
     if (!Files.isReadable(filePath)) {

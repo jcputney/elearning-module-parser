@@ -25,6 +25,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import lombok.Getter;
 
 /**
  * An implementation of the {@link FileAccess} interface for accessing files within a ZIP archive.
@@ -32,6 +33,9 @@ import java.util.zip.ZipFile;
  * file.
  */
 public class ZipFileAccess implements FileAccess, AutoCloseable {
+
+  @Getter
+  private final String rootPath;
 
   private final ZipFile zipFile;
 
@@ -42,6 +46,7 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
    * @throws IOException If the ZIP file cannot be opened.
    */
   public ZipFileAccess(String zipFilePath) throws IOException {
+    this.rootPath = zipFilePath;
     this.zipFile = new ZipFile(zipFilePath);
   }
 

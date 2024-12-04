@@ -40,6 +40,6 @@ public enum LaunchMethod {
   @JsonProperty("AnyWindow")
   ANY_WINDOW,
 
-  @JsonProperty("NewWindow")
+  @JsonProperty("OwnWindow")
   OWN_WINDOW
 }

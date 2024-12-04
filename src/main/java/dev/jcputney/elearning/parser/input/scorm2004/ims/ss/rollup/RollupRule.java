@@ -23,8 +23,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.ChildActivitySet;
-import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.PercentType;
-import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.PercentTypeDeserializer;
+import dev.jcputney.elearning.parser.input.common.PercentType;
+import dev.jcputney.elearning.parser.input.common.PercentTypeDeserializer;
 import java.math.BigDecimal;
 import lombok.Data;
 

@@ -41,12 +41,11 @@ public class ModuleParserFactory {
   /**
    * Returns an appropriate parser for the module type detected at the given path.
    *
-   * @param modulePath The path to the module files.
    * @return A ModuleParser instance for the detected module type.
    * @throws ModuleDetectionException if the module type cannot be determined.
    */
-  public ModuleParser getParser(String modulePath) throws ModuleDetectionException {
-    ModuleType moduleType = moduleTypeDetector.detectModuleType(modulePath);
+  public ModuleParser<?> getParser() throws ModuleDetectionException {
+    ModuleType moduleType = moduleTypeDetector.detectModuleType();
 
     return switch (moduleType) {
       case SCORM_12 -> new Scorm12Parser(fileAccess);
@@ -60,13 +59,12 @@ public class ModuleParserFactory {
    * Parses the module at the specified path and returns a ModuleMetadata object containing the
    * extracted metadata.
    *
-   * @param modulePath The path to the module's root directory.
    * @return A ModuleMetadata object containing the extracted metadata.
    * @throws ModuleDetectionException if the module type cannot be determined.
    * @throws ModuleParsingException if an error occurs during parsing.
    */
-  public ModuleMetadata parseModule(String modulePath)
+  public ModuleMetadata<?> parseModule()
       throws ModuleDetectionException, ModuleParsingException {
-    return getParser(modulePath).parse(modulePath);
+    return getParser().parse();
   }
 }

@@ -32,19 +32,19 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  */
 public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
 
-  private static final String CRS_EXTENSION = ".crs";
-  private static final String DES_EXTENSION = ".des";
-  private static final String AU_EXTENSION = ".au";
-  private static final String CST_EXTENSION = ".cst";
+  public static final String CRS_EXTENSION = ".crs";
+  public static final String DES_EXTENSION = ".des";
+  public static final String AU_EXTENSION = ".au";
+  public static final String CST_EXTENSION = ".cst";
 
   public AiccParser(FileAccess fileAccess) {
     super(fileAccess);
   }
 
   @Override
-  public AiccMetadata parse(String modulePath) throws ModuleParsingException {
+  public AiccMetadata parse() throws ModuleParsingException {
     try {
-      var aiccManifest = parseManifest(modulePath);
+      var aiccManifest = parseManifest();
 
       String title = aiccManifest.getTitle();
       String launchUrl = aiccManifest.getLaunchUrl();
@@ -59,20 +59,21 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
       return new AiccMetadata(
           aiccManifest,
           ModuleType.AICC,
-          checkForXapi(modulePath)
+          checkForXapi()
       );
     } catch (Exception e) {
-      throw new ModuleParsingException("Error parsing AICC module at path: " + modulePath, e);
+      throw new ModuleParsingException(
+          "Error parsing AICC module at path: " + this.fileAccess.getRootPath(), e);
     }
   }
 
-  public AiccManifest parseManifest(String modulePath) throws IOException, ModuleParsingException {
-    AiccCourse aiccCourse = parseIniFile(AiccCourse.class, modulePath, CRS_EXTENSION);
+  public AiccManifest parseManifest() throws IOException, ModuleParsingException {
+    AiccCourse aiccCourse = parseIniFile(AiccCourse.class, CRS_EXTENSION);
 
     // Parse CSV-style course data
-    var descriptors = parseCsvFile(Descriptor.class, modulePath, DES_EXTENSION);
-    var assignableUnits = parseCsvFile(AssignableUnit.class, modulePath, AU_EXTENSION);
-    var courseStructure = parseCsvFile(CourseStructure.class, modulePath, CST_EXTENSION);
+    var descriptors = parseCsvFile(Descriptor.class, DES_EXTENSION);
+    var assignableUnits = parseCsvFile(AssignableUnit.class, AU_EXTENSION);
+    var courseStructure = parseCsvFile(CourseStructure.class, CST_EXTENSION);
 
     return new AiccManifest(
         aiccCourse,
@@ -83,23 +84,13 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
   }
 
   @Override
-  public boolean isSupported(String modulePath) {
-    try {
-      return findFileByExtension(modulePath, CRS_EXTENSION) != null
-          && findFileByExtension(modulePath, AU_EXTENSION) != null;
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  @Override
   protected Class<AiccManifest> getManifestClass() {
     return AiccManifest.class;
   }
 
-  private <T> List<T> parseCsvFile(Class<T> clazz, String modulePath, String extension)
+  private <T> List<T> parseCsvFile(Class<T> clazz, String extension)
       throws IOException {
-    String fileName = findFileByExtension(modulePath, extension);
+    String fileName = findFileByExtension(extension);
     if (fileName == null) {
       throw new IOException("CSV file with extension " + extension + " not found.");
     }
@@ -113,9 +104,9 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
     }
   }
 
-  private <T> T parseIniFile(Class<T> clazz, String modulePath, String extension)
+  private <T> T parseIniFile(Class<T> clazz, String extension)
       throws IOException {
-    String fileName = findFileByExtension(modulePath, extension);
+    String fileName = findFileByExtension(extension);
     if (fileName == null) {
       throw new IOException("INI file with extension " + extension + " not found.");
     }
@@ -143,8 +134,8 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
     }
   }
 
-  private String findFileByExtension(String modulePath, String extension) throws IOException {
-    return fileAccess.listFiles(modulePath).stream()
+  private String findFileByExtension(String extension) throws IOException {
+    return fileAccess.listFiles("").stream()
         .filter(fileName -> fileName.endsWith(extension))
         .findFirst()
         .orElse(null);

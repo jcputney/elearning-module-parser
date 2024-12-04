@@ -34,8 +34,8 @@ public class AiccParserTest {
   @Test
   void testParseAiccCourse() throws ModuleParsingException {
     String modulePath = "src/test/resources/modules/aicc/package";
-    AiccParser parser = new AiccParser(new LocalFileAccess());
-    AiccMetadata metadata = parser.parse(modulePath);
+    AiccParser parser = new AiccParser(new LocalFileAccess(modulePath));
+    AiccMetadata metadata = parser.parse();
     assertNotNull(metadata);
     AiccManifest manifest = metadata.getManifest();
     assertNotNull(manifest);

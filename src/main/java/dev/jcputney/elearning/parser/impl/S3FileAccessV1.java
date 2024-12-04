@@ -25,6 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Getter;
 
 /**
  * Implementation of FileAccess using AWS S3 SDK v1.
@@ -33,14 +34,17 @@ public class S3FileAccessV1 implements FileAccess {
   private final AmazonS3 s3Client;
   private final String bucketName;
 
+  @Getter
+  private final String rootPath;
+
   /**
    * Constructs an S3FileAccessV1 instance with the default S3 client and the specified bucket name.
    *
    * @param bucketName The name of the S3 bucket to access.
+   * @param rootPath The root path of the S3 bucket to access.
    */
-  public S3FileAccessV1(String bucketName) {
-    this.s3Client = AmazonS3ClientBuilder.defaultClient();
-    this.bucketName = bucketName;
+  public S3FileAccessV1(String bucketName, String rootPath) {
+    this(AmazonS3ClientBuilder.defaultClient(), bucketName, rootPath);
   }
 
   /**
@@ -48,10 +52,17 @@ public class S3FileAccessV1 implements FileAccess {
    *
    * @param s3Client The S3 client to use for accessing files.
    * @param bucketName The name of the S3 bucket to access.
+   * @param rootPath The root path of the S3 bucket to access.
    */
-  public S3FileAccessV1(AmazonS3 s3Client, String bucketName) {
+  public S3FileAccessV1(AmazonS3 s3Client, String bucketName, String rootPath) {
     this.s3Client = s3Client;
     this.bucketName = bucketName;
+    if (rootPath == null) {
+      rootPath = "";
+    } else if (rootPath.endsWith("/")) {
+      rootPath = rootPath.substring(0, rootPath.length() - 1);
+    }
+    this.rootPath = rootPath;
   }
 
   /**
@@ -62,7 +73,7 @@ public class S3FileAccessV1 implements FileAccess {
    */
   @Override
   public boolean fileExists(String path) {
-    return s3Client.doesObjectExist(bucketName, path);
+    return s3Client.doesObjectExist(bucketName, this.rootPath + "/" + path);
   }
 
   /**
@@ -73,7 +84,7 @@ public class S3FileAccessV1 implements FileAccess {
    */
   @Override
   public List<String> listFiles(String directoryPath) {
-    return s3Client.listObjects(bucketName, directoryPath).getObjectSummaries().stream()
+    return s3Client.listObjects(bucketName, this.rootPath + "/" + directoryPath).getObjectSummaries().stream()
         .map(S3ObjectSummary::getKey)
         .collect(Collectors.toList());
   }
@@ -86,7 +97,7 @@ public class S3FileAccessV1 implements FileAccess {
    */
   @Override
   public InputStream getFileContents(String path) {
-    String content = s3Client.getObjectAsString(bucketName, path);
+    String content = s3Client.getObjectAsString(bucketName, this.rootPath + "/" + path);
     return new ByteArrayInputStream(content.getBytes());
   }
 }

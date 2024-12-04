@@ -27,12 +27,19 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import lombok.Getter;
 
 /**
  * Implementation of {@link FileAccess} that reads files from the classpath, allowing testing of
  * modules stored in the resources directory without needing actual filesystem access.
  */
 public class ClasspathFileAccess implements FileAccess {
+  @Getter
+  private final String rootPath;
+
+  public ClasspathFileAccess(String rootPath) {
+    this.rootPath = rootPath;
+  }
 
   /**
    * Checks if a file exists on the classpath at the given path.

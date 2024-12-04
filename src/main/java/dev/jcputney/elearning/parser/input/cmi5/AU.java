@@ -19,12 +19,14 @@ package dev.jcputney.elearning.parser.input.cmi5;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.cmi5.types.LaunchMethod;
 import dev.jcputney.elearning.parser.input.cmi5.types.MoveOn;
 import dev.jcputney.elearning.parser.input.cmi5.types.ReferencesObjectives;
 import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
-import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.PercentType;
+import dev.jcputney.elearning.parser.input.common.PercentType;
+import dev.jcputney.elearning.parser.input.common.PercentTypeDeserializer;
 import lombok.Data;
 
 /**
@@ -198,6 +200,7 @@ public class AU {
    * }</pre>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonDeserialize(using = PercentTypeDeserializer.class)
   @JsonProperty("masteryScore")
   private PercentType masteryScore;
 

@@ -26,17 +26,8 @@ public interface ModuleParser<M extends PackageManifest> {
   /**
    * Parses the module files and extracts metadata.
    *
-   * @param modulePath The path to the module in the file system.
    * @return A ModuleMetadata object containing standardized metadata.
    * @throws ModuleParsingException if parsing fails or required files are missing.
    */
-  ModuleMetadata<M> parse(String modulePath) throws ModuleParsingException;
-
-  /**
-   * Checks if this parser supports the module at the provided path.
-   *
-   * @param modulePath The path to the module in the file system.
-   * @return True if the module is of a type that this parser can handle; false otherwise.
-   */
-  boolean isSupported(String modulePath);
+  ModuleMetadata<M> parse() throws ModuleParsingException;
 }

@@ -49,41 +49,40 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
    * title, description, identifier, launch URL, version, sequencing information, custom data,
    * prerequisites, mastery score, and additional metadata from external files.
    *
-   * @param modulePath The path to the module's root directory.
    * @return A populated ModuleMetadata object containing the extracted metadata.
    * @throws ModuleParsingException if an error occurs during parsing.
    */
   @Override
-  public Scorm2004Metadata parse(String modulePath) throws ModuleParsingException {
+  public Scorm2004Metadata parse() throws ModuleParsingException {
     try {
-      String manifestPath = modulePath + "/" + MANIFEST_FILE;
-      if (!fileAccess.fileExists(manifestPath)) {
+      if (!fileAccess.fileExists(MANIFEST_FILE)) {
         throw new ModuleParsingException(
-            "SCORM 2004 manifest file not found at path: " + manifestPath);
+            "SCORM 2004 manifest file not found at path: " + MANIFEST_FILE);
       }
 
-      var manifest = parseManifest(manifestPath);
-      loadExternalMetadata(manifest, modulePath);
+      var manifest = parseManifest(MANIFEST_FILE);
+      loadExternalMetadata(manifest);
 
       String title = manifest.getTitle();
       String launchUrl = manifest.getLaunchUrl();
       if (title.isEmpty()) {
         throw new ModuleParsingException(
-            "SCORM 2004 manifest is missing a required <title> element at path: " + manifestPath);
+            "SCORM 2004 manifest is missing a required <title> element at path: " + MANIFEST_FILE);
       }
       if (launchUrl == null || launchUrl.isEmpty()) {
         throw new ModuleParsingException(
             "SCORM 2004 manifest is missing a required <launchUrl> in <resource> element at path: "
-                + manifestPath);
+                + MANIFEST_FILE);
       }
 
       return new Scorm2004Metadata(
           manifest,
           ModuleType.SCORM_2004,
-          checkForXapi(modulePath)
+          checkForXapi()
       );
     } catch (IOException | XMLStreamException e) {
-      throw new ModuleParsingException("Error parsing SCORM 2004 module at path: " + modulePath, e);
+      throw new ModuleParsingException(
+          "Error parsing SCORM 2004 module at path: " + this.fileAccess.getRootPath(), e);
     }
   }
 
@@ -93,43 +92,31 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
   }
 
   /**
-   * Determines if the SCORM 2004 parser supports the module located at the specified modulePath.
-   *
-   * @param modulePath The path to the module's root directory.
-   * @return true if the module is supported by the SCORM 2004 parser, false otherwise.
-   */
-  @Override
-  public boolean isSupported(String modulePath) {
-    return fileAccess.fileExists(modulePath + "/" + MANIFEST_FILE);
-  }
-
-  /**
    * Loads additional metadata files referenced in the manifest into the metadata object.
    *
    * @param manifest The SCORM 2004 manifest object.
-   * @param modulePath The path to the module's root directory.
    */
-  public void loadExternalMetadata(Scorm2004Manifest manifest, String modulePath)
+  public void loadExternalMetadata(Scorm2004Manifest manifest)
       throws XMLStreamException, IOException {
     // Load additional metadata files referenced in the manifest
     // For each <resource> element, check for <file> elements with href attribute
     // pointing to additional metadata files
     if (manifest != null) {
       var courseMetadata = manifest.getMetadata();
-      loadExternalMetadataIntoMetadata(courseMetadata, modulePath);
+      loadExternalMetadataIntoMetadata(courseMetadata);
 
       List<Scorm2004Resource> resources = manifest.getResources().getResourceList();
       if (resources != null) {
         for (Scorm2004Resource resource : resources) {
           var resourceMetadata = resource.getMetadata();
-          loadExternalMetadataIntoMetadata(resourceMetadata, modulePath);
+          loadExternalMetadataIntoMetadata(resourceMetadata);
 
           List<Scorm2004File> files = resource.getFiles();
           if (files != null) {
             for (Scorm2004File file : files) {
-              file.setExists(fileAccess.fileExists(modulePath + "/" + file.getHref()));
+              file.setExists(fileAccess.fileExists(file.getHref()));
               Scorm2004SubMetadata subMetadata = file.getMetadata();
-              loadExternalMetadataIntoMetadata(subMetadata, modulePath);
+              loadExternalMetadataIntoMetadata(subMetadata);
             }
           }
         }
@@ -137,9 +124,9 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
 
       for (Scorm2004Organization organization : manifest.getOrganizations().getOrganizationList()) {
         var organizationMetadata = organization.getMetadata();
-        loadExternalMetadataIntoMetadata(organizationMetadata, modulePath);
+        loadExternalMetadataIntoMetadata(organizationMetadata);
 
-        loadExternalMetadataForItems(organization.getItems(), modulePath);
+        loadExternalMetadataForItems(organization.getItems());
       }
     }
   }
@@ -148,16 +135,15 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
    * Recursively loads external metadata files for each item in the organization.
    *
    * @param items The list of items to load external metadata for.
-   * @param modulePath The path to the module's root directory.
    */
-  private void loadExternalMetadataForItems(List<Scorm2004Item> items, String modulePath)
+  private void loadExternalMetadataForItems(List<Scorm2004Item> items)
       throws XMLStreamException, IOException {
     if (items != null) {
       for (Scorm2004Item item : items) {
         var itemMetadata = item.getMetadata();
-        loadExternalMetadataIntoMetadata(itemMetadata, modulePath);
+        loadExternalMetadataIntoMetadata(itemMetadata);
 
-        loadExternalMetadataForItems(item.getItems(), modulePath);
+        loadExternalMetadataForItems(item.getItems());
       }
     }
   }
