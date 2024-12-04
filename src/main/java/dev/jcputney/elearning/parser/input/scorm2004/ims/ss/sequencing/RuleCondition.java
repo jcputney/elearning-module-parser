@@ -32,9 +32,6 @@ import lombok.Data;
  * Represents an individual condition within a set of rule conditions. Each condition specifies a
  * specific criterion that must be met, such as an objective being completed, a minimum measure
  * threshold, or a defined attempt status.
- *
- * <p>Conditions are combined based on the logic defined in
- * {@link dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.RuleConditions#getConditionCombination()}.</p>
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
