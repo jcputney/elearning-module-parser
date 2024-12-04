@@ -34,7 +34,7 @@ import lombok.Data;
  * threshold, or a defined attempt status.
  *
  * <p>Conditions are combined based on the logic defined in
- * {@link RuleConditions#getConditionCombination()}.</p>
+ * {@link dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.RuleConditions#getConditionCombination()}.</p>
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
