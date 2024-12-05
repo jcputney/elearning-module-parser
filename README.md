@@ -1,6 +1,6 @@
 # eLearning Module Parser
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/jcputney/elearning-module-parser/build.yml)](https://github.com/jcputney/elearning-module-parser/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/jcputney/elearning-module-parser/snapshot.yml)](https://github.com/jcputney/elearning-module-parser/actions)
 [![License: LGPL-3.0](https://img.shields.io/badge/license-LGPL%203.0-blue.svg)](https://opensource.org/license/lgpl-3-0)
 [![Version](https://img.shields.io/maven-central/v/dev.jcputney/elearning-module-parser)](https://search.maven.org/search?q=g:dev.jcputney%20a:elearning-module-parser)
 
