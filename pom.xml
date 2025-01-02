@@ -48,7 +48,7 @@
     <version.junit>5.11.3</version.junit>
     <version.lombok>1.18.36</version.lombok>
     <version.mockito>5.14.2</version.mockito>
-    <version.org.json>20240303</version.org.json>
+    <version.org.json>20241224</version.org.json>
     <version.plugin.central-publishing>0.6.0</version.plugin.central-publishing>
     <version.plugin.compiler>3.13.0</version.plugin.compiler>
     <version.plugin.failsafe>3.3.1</version.plugin.failsafe>
