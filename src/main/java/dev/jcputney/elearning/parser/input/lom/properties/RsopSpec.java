@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024. Jonathan Putney
+ * Copyright (c) 2025. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,32 +15,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.jcputney.elearning.parser.input.lom.types;
+package dev.jcputney.elearning.parser.input.lom.properties;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Feature;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 
 /**
- * Represents a single language string in LOM metadata. This type is used for fields that only
- * require a single string value with a language attribute.
+ * <p>Represents the <strong>rsopSpec</strong> complex type.</p>
  *
+ * <p>The following schema snippet specifies its contents:</p>
  * <pre>{@code
- * <xs:complexType name="singleLangString">
- *   <xs:sequence>
- *     <xs:element name="string" type="langString"/>
- *   </xs:sequence>
+ * <xs:complexType name="rsopSpec">
+ *   <xs:all>
+ *     <xs:element name="offlineSynchMode" type="offlineSynchModeType" minOccurs="0" maxOccurs="1" />
+ *   </xs:all>
  * </xs:complexType>
  * }</pre>
  */
 @Data
-@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class SingleLangString {
-  /**
-   * The string value for a given language.
-   */
-  @JacksonXmlProperty(localName = "string")
-  @JsonAlias("langstring")
-  private LangString langString;
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
+public class RsopSpec {
+
+  @JacksonXmlProperty(localName = "offlineSynchMode")
+  private OfflineSynchModeType offlineSynchMode;
 }

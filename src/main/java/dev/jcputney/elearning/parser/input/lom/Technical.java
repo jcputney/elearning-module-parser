@@ -25,6 +25,7 @@ import dev.jcputney.elearning.parser.input.lom.types.LomDuration;
 import dev.jcputney.elearning.parser.input.lom.types.OrComposite;
 import dev.jcputney.elearning.parser.input.lom.types.Requirement;
 import dev.jcputney.elearning.parser.input.lom.types.SingleLangString;
+import dev.jcputney.elearning.parser.input.lom.properties.PackageProperties;
 import java.util.List;
 import lombok.Data;
 
@@ -177,6 +178,9 @@ public class Technical {
    */
   @JacksonXmlProperty(localName = "duration")
   private LomDuration duration;
+
+  @JacksonXmlProperty(localName = "ScormEnginePackageProperties", namespace = PackageProperties.NAMESPACE_URI)
+  private PackageProperties packageProperties;
 
   /**
    * A placeholder for custom elements that extend the technical information. This allows for

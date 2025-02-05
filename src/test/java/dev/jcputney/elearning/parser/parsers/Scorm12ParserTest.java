@@ -24,6 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.LocalFileAccess;
+import dev.jcputney.elearning.parser.input.lom.LOM;
+import dev.jcputney.elearning.parser.input.lom.properties.YesNoType;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.output.scorm12.Scorm12Metadata;
 import org.junit.jupiter.api.Test;
@@ -111,6 +113,26 @@ public class Scorm12ParserTest {
         .filter(item -> item.getTitle() != null && !item.getTitle().isEmpty())
         .count());
     assertEquals(19, manifest.getResources().getResourceList().size());
+  }
+
+  @Test
+  void testParseScorm12Course_ContentPackagingWithMetadata_SCORM12() throws ModuleParsingException {
+    String modulePath = "src/test/resources/modules/scorm12/ContentPackagingWithMetadata_SCORM12";
+    Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
+    Scorm12Metadata metadata = parser.parse();
+    assertNotNull(metadata);
+    Scorm12Manifest manifest = metadata.getManifest();
+    assertCommonFields(manifest);
+
+    LOM lom = manifest.getMetadata().getLom();
+    assertNotNull(lom);
+
+    assertEquals("Catalog", lom.getGeneral().getCatalogEntries().get(0).getCatalog());
+    assertEquals(YesNoType.YES, lom.getTechnical().getPackageProperties().getBehavior().getAlwaysFlowToFirstSco());
+    assertEquals("SCORM 1.2 With Metadata", manifest.getTitle());
+    assertEquals("index.html", manifest.getLaunchUrl());
+    assertEquals(1, manifest.getOrganizations().getDefaultOrganization().getItems().size());
+    assertEquals(1, manifest.getResources().getResourceList().size());
   }
 
   private void assertCommonFields(Scorm12Manifest manifest) {

@@ -80,6 +80,18 @@ public class Resource {
   private UnboundLangString descriptions;
 
   /**
+   * A list of catalog entries for the resource.
+   *
+   * <p>Schema snippet:</p>
+   * <pre>{@code
+   * <xsd:element ref="catalogentry" minOccurs="0" maxOccurs="unbounded"/>
+   * }</pre>
+   */
+  @JacksonXmlElementWrapper(localName = "catalogentry", useWrapping = false)
+  @JacksonXmlProperty(localName = "catalogentry")
+  private List<CatalogEntry> catalogEntries;
+
+  /**
    * A placeholder for custom elements that extend the resource information. This allows for
    * additional metadata to be included that is not part of the standard schema.
    *

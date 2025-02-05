@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -43,5 +44,6 @@ public class UnboundLangString {
    */
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "string")
+  @JsonAlias("langstring")
   private List<LangString> langStrings;
 }

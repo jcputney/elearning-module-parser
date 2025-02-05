@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<manifest identifier="fJU8REiVoX6uu6A5DhYHbf0qTVtaaGLVsqg4WUor" version="1"
+  xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd
+                      http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>1.2</schemaversion>
+    <adlcp:location>metadata.xml</adlcp:location>
+  </metadata>
+  <organizations default="default">
+      <organization identifier="default">
+      <title>SCORM 1.2 With Metadata</title>
+      <item identifier="i1" identifierref="r1" isvisible="true">
+        <title>SCORM 1.2 With Metadata</title>
+        <adlcp:datafromlms>RANDOM</adlcp:datafromlms>
+      </item>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="r1" type="webcontent" adlcp:scormtype="sco" href="index.html">
+      <file href="index.html" />
+
+    </resource>
+  </resources>
+</manifest>

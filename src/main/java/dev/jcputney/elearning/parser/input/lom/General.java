@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.lom.types.AggregationLevel;
+import dev.jcputney.elearning.parser.input.lom.types.CatalogEntry;
 import dev.jcputney.elearning.parser.input.lom.types.Identifier;
 import dev.jcputney.elearning.parser.input.lom.types.SingleLangString;
 import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
@@ -80,6 +81,19 @@ public class General {
    */
   @JacksonXmlProperty(localName = "title")
   private UnboundLangString title;
+
+  /**
+   * A list of catalog entries for the learning object. Catalog entries provide information about the
+   * learning object in a structured format.
+   *
+   * <p>Schema snippet:</p>
+   * <pre>{@code
+   * <xsd:element ref="catalogentry" minOccurs="0" maxOccurs="unbounded"/>
+   * }</pre>
+   */
+  @JacksonXmlElementWrapper(localName = "catalogentry", useWrapping = false)
+  @JacksonXmlProperty(localName = "catalogentry")
+  private List<CatalogEntry> catalogEntries;
 
   /**
    * The primary language of the learning object. This can also indicate the absence of a language.

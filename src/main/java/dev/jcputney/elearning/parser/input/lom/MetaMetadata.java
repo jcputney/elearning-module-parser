@@ -17,9 +17,11 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import dev.jcputney.elearning.parser.input.lom.types.CatalogEntry;
 import dev.jcputney.elearning.parser.input.lom.types.ContributeMeta;
 import dev.jcputney.elearning.parser.input.lom.types.Identifier;
 import java.util.List;
@@ -69,6 +71,18 @@ public class MetaMetadata {
   private List<Identifier> identifier;
 
   /**
+   * A list of catalog entries for the metadata.
+   *
+   * <p>Schema snippet:</p>
+   * <pre>{@code
+   * <xsd:element ref="catalogentry" minOccurs="0" maxOccurs="unbounded"/>
+   * }</pre>
+   */
+  @JacksonXmlElementWrapper(localName = "catalogentry", useWrapping = false)
+  @JacksonXmlProperty(localName = "catalogentry")
+  private List<CatalogEntry> catalogEntries;
+
+  /**
    * The list of contributors to the metadata, including their roles, entities, and contribution
    * dates.
    *
@@ -105,6 +119,7 @@ public class MetaMetadata {
    */
   @JacksonXmlElementWrapper(localName = "metadataSchema", useWrapping = false)
   @JacksonXmlProperty(localName = "metadataSchema")
+  @JsonAlias("metadatascheme")
   private List<String> metadataSchema;
 
   /**
