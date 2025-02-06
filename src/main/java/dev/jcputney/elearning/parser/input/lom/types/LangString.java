@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -55,6 +56,7 @@ public class LangString {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("language")
+  @JsonAlias("lang")
   private String language;
 
   /**

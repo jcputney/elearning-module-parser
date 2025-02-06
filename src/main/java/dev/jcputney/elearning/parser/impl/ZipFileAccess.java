@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import lombok.Getter;
@@ -37,6 +39,9 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
   @Getter
   private final String rootPath;
 
+  @Getter
+  private final String internalRoot;
+
   private final ZipFile zipFile;
 
   /**
@@ -48,6 +53,41 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
   public ZipFileAccess(String zipFilePath) throws IOException {
     this.rootPath = zipFilePath;
     this.zipFile = new ZipFile(zipFilePath);
+    this.internalRoot = getInternalRootDirectory();
+  }
+
+  private String getInternalRootDirectory() throws IOException {
+    // We'll keep track of all distinct top-level folders we encounter.
+    Set<String> topLevelDirs = new HashSet<>();
+
+    Enumeration<? extends ZipEntry> entries = this.zipFile.entries();
+    while (entries.hasMoreElements()) {
+      ZipEntry entry = entries.nextElement();
+      String entryName = entry.getName();
+
+      // Split on '/', the first part is the top-level "directory"
+      // unless the file is directly in the root (no slash).
+      int slashIndex = entryName.indexOf('/');
+
+      if (slashIndex > 0) {
+        // The substring up to the first slash is the top-level directory
+        String topLevel = entryName.substring(0, slashIndex);
+        topLevelDirs.add(topLevel);
+
+        // If we ever end up with more than one distinct name, break early
+        if (topLevelDirs.size() > 1) {
+          return "";
+        }
+      } else {
+        // If slashIndex == -1, means no slash in name (e.g. "file.txt"),
+        // so there's a file right at the root. That means NOT single-dir.
+        return "";
+      }
+    }
+
+    // If we get here, either we have exactly one top-level directory or none.
+    // "None" should not happen in a typical ZIP but handle the edge case.
+    return topLevelDirs.size() == 1 ? topLevelDirs.iterator().next() + "/" : "";
   }
 
   /**
@@ -58,7 +98,7 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
    */
   @Override
   public boolean fileExists(String path) {
-    return zipFile.getEntry(path) != null;
+    return zipFile.getEntry(internalRoot + path) != null;
   }
 
   /**
@@ -77,7 +117,7 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
       String entryName = entry.getName();
 
       // Check if the entry is within the specified directory
-      if (entryName.startsWith(directoryPath) && !entry.isDirectory()) {
+      if (entryName.startsWith(internalRoot + directoryPath) && !entry.isDirectory()) {
         fileList.add(entryName);
       }
     }
@@ -93,7 +133,7 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
    */
   @Override
   public InputStream getFileContents(String path) throws IOException {
-    ZipEntry entry = zipFile.getEntry(path);
+    ZipEntry entry = zipFile.getEntry(internalRoot + path);
 
     if (entry == null) {
       throw new IOException("File not found in ZIP archive: " + path);

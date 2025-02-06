@@ -20,7 +20,6 @@ package dev.jcputney.elearning.parser.input.aicc;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import dev.jcputney.elearning.parser.exception.ManifestParseException;
 import java.util.Map;
 import lombok.Data;
 
@@ -39,11 +38,11 @@ public class AiccCourse {
   private Map<String, String> courseDescription;
 
   public String getCourseDescription() {
-    return courseDescription != null ? courseDescription.entrySet()
+    return courseDescription == null || courseDescription.isEmpty() ? null : courseDescription.entrySet()
         .stream()
         .findFirst()
-        .orElseThrow(() -> new ManifestParseException("Course description is empty"))
-        .getKey() : null;
+        .get()
+        .getKey();
   }
 
   @Data

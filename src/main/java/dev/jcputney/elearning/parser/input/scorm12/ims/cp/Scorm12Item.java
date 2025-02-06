@@ -19,12 +19,15 @@ package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12ADLCP;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.input.scorm12.adl.Scorm12Prerequisites;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.TimeLimitAction;
+import dev.jcputney.elearning.parser.util.DurationHHMMSSDeserializer;
+import java.time.Duration;
 import java.util.List;
 import lombok.Data;
 
@@ -98,6 +101,14 @@ public class Scorm12Item {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty(value = "parameters")
   private String parameters;
+
+  /**
+   * The maximum amount of time allowed for this resource to be completed.
+   */
+  @JacksonXmlProperty(isAttribute = true, localName = "maxtimeallowed", namespace = Scorm12ADLCP.NAMESPACE_URI)
+  @JsonDeserialize(using = DurationHHMMSSDeserializer.class)
+  @JsonProperty("maxtimeallowed")
+  private Duration maxTimeAllowed;
 
   /**
    * Represents the masteryScore element, defined as a decimal with a minimum of 0 and a maximum of

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.List;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Represents a requirement for a learning object in a Learning Object Metadata (LOM) document. A
@@ -39,12 +40,13 @@ import lombok.Data;
  * }</pre>
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Requirement {
+public class Requirement extends OrComposite {
 
   /**
    * The list of OR-composite elements representing a set of alternative conditions that must be met
-   * to use the learning object.
+   * to use the learning object. This is for SCORM 2004 compatibility.
    * <p>Schema snippet:</p>
    * <pre>{@code
    * <xs:group ref="orComposite">

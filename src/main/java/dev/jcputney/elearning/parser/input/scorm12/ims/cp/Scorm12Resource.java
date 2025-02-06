@@ -93,14 +93,6 @@ public class Scorm12Resource {
   private ScormType scormType;
 
   /**
-   * The maximum amount of time allowed for this resource to be completed.
-   */
-  @JacksonXmlProperty(isAttribute = true, localName = "maxtimeallowed", namespace = Scorm12ADLCP.NAMESPACE_URI)
-  @JsonDeserialize(using = DurationHHMMSSDeserializer.class)
-  @JsonProperty("maxtimeallowed")
-  private Duration maxTimeAllowed;
-
-  /**
    * The unique identifier for this resource, used to distinguish it from other resources within the
    * same manifest.
    */

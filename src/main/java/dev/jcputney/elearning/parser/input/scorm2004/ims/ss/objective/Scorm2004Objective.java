@@ -43,6 +43,18 @@ public class Scorm2004Objective {
   private String objectiveID;
 
   /**
+   * satisfiedByMeasure is a boolean value that indicates whether the objective is satisfied based
+   * on the measure value.
+   * <p>If `true`, the objective is satisfied when the measure value is greater than or equal to the
+   * minNormalizedMeasure.</p>
+   * <p>If `false`, the objective is satisfied when the learner has completed the objective,
+   * regardless of the measure value.</p>
+   */
+  @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("satisfiedByMeasure")
+  private Boolean satisfiedByMeasure = false;
+
+  /**
    * The minimum normalized measure required to consider this objective as satisfied. This value
    * represents the minimum level of achievement, typically as a decimal between 0 and 1, where 1.0
    * represents full satisfaction.

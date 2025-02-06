@@ -22,7 +22,12 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.Period;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
+import org.apache.commons.lang3.StringUtils;
+import org.threeten.extra.PeriodDuration;
 
 /**
  * Custom deserializer for {@link Duration} objects, allowing ISO 8601 duration strings to be parsed
@@ -38,9 +43,15 @@ public class DurationIso8601Deserializer extends JsonDeserializer<Duration> {
   public Duration deserialize(JsonParser parser, DeserializationContext context)
       throws IOException {
     String durationString = parser.getText();
+    if (StringUtils.isEmpty(durationString)) {
+      return Duration.ZERO;
+    }
     try {
-      return Duration.parse(durationString);
-    } catch (DateTimeParseException e) {
+      if (!durationString.startsWith("P")) {
+        return DurationHHMMSSDeserializer.parseDuration(durationString);
+      }
+      return PeriodDuration.parse(durationString).getDuration();
+    } catch (NumberFormatException | DateTimeParseException e) {
       throw new IOException(
           "Invalid ISO 8601 duration format for java.time.Duration: " + durationString, e);
     }

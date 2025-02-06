@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -60,6 +61,7 @@ public class LomDuration {
    * The duration of the resource in ISO 8601 format (e.g., "PT10M").
    */
   @JacksonXmlProperty(localName = "duration")
+  @JsonAlias("datetime")
   @JsonDeserialize(using = DurationIso8601Deserializer.class)
   private Duration duration;
 

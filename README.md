@@ -33,7 +33,7 @@ integrate eLearning content into Learning Management Systems (LMS) and other pla
 #### Gradle
 
 ```kotlin
-implementation("dev.jcputney:elearning-module-parser:0.0.4")
+implementation("dev.jcputney:elearning-module-parser:0.0.5")
 ```
 
 #### Maven
@@ -43,7 +43,7 @@ implementation("dev.jcputney:elearning-module-parser:0.0.4")
 <dependency>
   <groupId>dev.jcputney</groupId>
   <artifactId>elearning-module-parser</artifactId>
-  <version>0.0.4</version>
+  <version>0.0.5</version>
 </dependency>
 ```
 

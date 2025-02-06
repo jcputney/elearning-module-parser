@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -110,6 +111,22 @@ public class Contribute {
   @JacksonXmlElementWrapper(localName = "entity", useWrapping = false)
   @JacksonXmlProperty(localName = "entity")
   private List<String> entities;
+
+  /**
+   * A list of entities contributing to the learning object, typically represented as vCard data.
+   *
+   * <p>Schema Definition:
+   * <pre>{@code
+   * <xsd:complexType name="centityType">
+   * 		<xsd:sequence>
+   * 			<xsd:element ref="vcard"/>
+   * 		</xsd:sequence>
+   * 	</xsd:complexType>
+   * }</pre>
+   */
+  @JacksonXmlElementWrapper(localName = "centity", useWrapping = false)
+  @JacksonXmlProperty(localName = "centity")
+  private List<ContributeEntity> cEntities;
 
   /**
    * The date associated with the contribution, such as when the contribution was made or its
