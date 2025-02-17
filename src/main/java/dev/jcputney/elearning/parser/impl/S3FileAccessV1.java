@@ -73,7 +73,7 @@ public class S3FileAccessV1 implements FileAccess {
    */
   @Override
   public boolean fileExists(String path) {
-    return s3Client.doesObjectExist(bucketName, this.rootPath + "/" + path);
+    return s3Client.doesObjectExist(bucketName, fullPath(path));
   }
 
   /**
@@ -84,7 +84,7 @@ public class S3FileAccessV1 implements FileAccess {
    */
   @Override
   public List<String> listFiles(String directoryPath) {
-    return s3Client.listObjects(bucketName, this.rootPath + "/" + directoryPath).getObjectSummaries().stream()
+    return s3Client.listObjects(bucketName, fullPath(directoryPath)).getObjectSummaries().stream()
         .map(S3ObjectSummary::getKey)
         .collect(Collectors.toList());
   }
@@ -97,7 +97,7 @@ public class S3FileAccessV1 implements FileAccess {
    */
   @Override
   public InputStream getFileContents(String path) {
-    String content = s3Client.getObjectAsString(bucketName, this.rootPath + "/" + path);
+    String content = s3Client.getObjectAsString(bucketName, fullPath(path));
     return new ByteArrayInputStream(content.getBytes());
   }
 }

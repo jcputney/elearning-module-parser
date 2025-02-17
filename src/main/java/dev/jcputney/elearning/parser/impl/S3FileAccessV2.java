@@ -90,7 +90,7 @@ public class S3FileAccessV2 implements FileAccess {
     try {
       s3Client.headObject(HeadObjectRequest.builder()
           .bucket(bucketName)
-          .key(path)
+          .key(fullPath(path))
           .build());
       return true;
     } catch (NoSuchKeyException e) {
@@ -110,7 +110,7 @@ public class S3FileAccessV2 implements FileAccess {
     try {
       return s3Client.listObjectsV2(ListObjectsV2Request.builder()
               .bucket(bucketName)
-              .prefix(directoryPath)
+              .prefix(fullPath(directoryPath))
               .build())
           .contents()
           .stream()
@@ -133,7 +133,7 @@ public class S3FileAccessV2 implements FileAccess {
     try {
       var response = s3Client.getObjectAsBytes(builder -> {
         builder.bucket(bucketName);
-        builder.key(path);
+        builder.key(fullPath(path));
       });
       return new ByteArrayInputStream(response.asByteArray());
     } catch (S3Exception e) {

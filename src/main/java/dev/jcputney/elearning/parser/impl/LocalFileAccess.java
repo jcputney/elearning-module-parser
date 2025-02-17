@@ -57,13 +57,13 @@ public class LocalFileAccess implements FileAccess {
 
   @Override
   public boolean fileExists(String path) {
-    Path filePath = Paths.get(rootPath + File.separator + path);
+    Path filePath = Paths.get(fullPath(path));
     return Files.exists(filePath);
   }
 
   @Override
   public List<String> listFiles(String directoryPath) throws IOException {
-    Path dirPath = Paths.get(rootPath + File.separator + directoryPath);
+    Path dirPath = Paths.get(fullPath(directoryPath));
 
     // Validate directory
     if (!Files.exists(dirPath) || !Files.isDirectory(dirPath)) {
@@ -84,7 +84,7 @@ public class LocalFileAccess implements FileAccess {
 
   @Override
   public InputStream getFileContents(String path) throws IOException {
-    Path filePath = Paths.get(rootPath + File.separator + path);
+    Path filePath = Paths.get(fullPath(path));
 
     // Check file existence and read permissions
     if (!fileExists(path)) {

@@ -39,9 +39,6 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
   @Getter
   private final String rootPath;
 
-  @Getter
-  private final String internalRoot;
-
   private final ZipFile zipFile;
 
   /**
@@ -51,14 +48,17 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
    * @throws IOException If the ZIP file cannot be opened.
    */
   public ZipFileAccess(String zipFilePath) throws IOException {
-    this.rootPath = zipFilePath;
+    this.rootPath = getInternalRootDirectory();
     this.zipFile = new ZipFile(zipFilePath);
-    this.internalRoot = getInternalRootDirectory();
   }
 
-  private String getInternalRootDirectory() throws IOException {
+  private String getInternalRootDirectory() {
     // We'll keep track of all distinct top-level folders we encounter.
     Set<String> topLevelDirs = new HashSet<>();
+
+    if (this.zipFile == null) {
+      return "";
+    }
 
     Enumeration<? extends ZipEntry> entries = this.zipFile.entries();
     while (entries.hasMoreElements()) {
@@ -98,7 +98,7 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
    */
   @Override
   public boolean fileExists(String path) {
-    return zipFile.getEntry(internalRoot + path) != null;
+    return zipFile.getEntry(fullPath(path)) != null;
   }
 
   /**
@@ -117,7 +117,7 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
       String entryName = entry.getName();
 
       // Check if the entry is within the specified directory
-      if (entryName.startsWith(internalRoot + directoryPath) && !entry.isDirectory()) {
+      if (entryName.startsWith(fullPath(directoryPath)) && !entry.isDirectory()) {
         fileList.add(entryName);
       }
     }
@@ -133,7 +133,7 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
    */
   @Override
   public InputStream getFileContents(String path) throws IOException {
-    ZipEntry entry = zipFile.getEntry(internalRoot + path);
+    ZipEntry entry = zipFile.getEntry(fullPath(path));
 
     if (entry == null) {
       throw new IOException("File not found in ZIP archive: " + path);

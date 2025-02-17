@@ -61,4 +61,22 @@ public interface FileAccess {
    * @throws IOException if the file cannot be read.
    */
   InputStream getFileContents(String path) throws IOException;
+
+
+
+  /**
+   * Constructs the full path for the given relative or absolute path.
+   *
+   * @param path The relative or absolute path for which the full path is to be generated.
+   *             If the path starts with a "/", it is treated as an absolute path and the
+   *             leading "/" is removed. Otherwise, the path is treated as relative and
+   *             the rootPath is prefixed to form the full path.
+   * @return The constructed full path as a string.
+   */
+  default String fullPath(String path) {
+    if (path.startsWith("/")) {
+      return path.substring(1);
+    }
+    return getRootPath() + "/" + path;
+  }
 }
