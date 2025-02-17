@@ -144,6 +144,12 @@
       <version>${version.junit}</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>com.github.freva</groupId>
+      <artifactId>ascii-table</artifactId>
+      <version>1.8.0</version>
+    </dependency>
   </dependencies>
 
   <build>
