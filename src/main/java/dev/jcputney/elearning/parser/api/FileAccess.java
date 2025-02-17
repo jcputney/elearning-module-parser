@@ -20,6 +20,7 @@ package dev.jcputney.elearning.parser.api;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * An interface for accessing files within a package or directory. Implementations of this interface
@@ -77,6 +78,6 @@ public interface FileAccess {
     if (path.startsWith("/")) {
       return path.substring(1);
     }
-    return getRootPath() + "/" + path;
+    return StringUtils.isEmpty(getRootPath()) ? path : getRootPath() + "/" + path;
   }
 }

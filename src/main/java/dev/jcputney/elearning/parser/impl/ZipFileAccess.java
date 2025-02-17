@@ -48,8 +48,8 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
    * @throws IOException If the ZIP file cannot be opened.
    */
   public ZipFileAccess(String zipFilePath) throws IOException {
-    this.rootPath = getInternalRootDirectory();
     this.zipFile = new ZipFile(zipFilePath);
+    this.rootPath = getInternalRootDirectory();
   }
 
   private String getInternalRootDirectory() {
@@ -87,7 +87,7 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
 
     // If we get here, either we have exactly one top-level directory or none.
     // "None" should not happen in a typical ZIP but handle the edge case.
-    return topLevelDirs.size() == 1 ? topLevelDirs.iterator().next() + "/" : "";
+    return topLevelDirs.size() == 1 ? topLevelDirs.iterator().next() : "";
   }
 
   /**
