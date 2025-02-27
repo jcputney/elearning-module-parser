@@ -18,12 +18,15 @@
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the {@code <resources>} element in a SCORM 1.2 manifest file.
@@ -43,7 +46,9 @@ import lombok.Data;
  * </xsd:complexType>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Resources {
 
@@ -66,6 +71,7 @@ public class Scorm12Resources {
   @JacksonXmlProperty(localName = "resource", namespace = Scorm12Manifest.NAMESPACE_URI)
   private List<Scorm12Resource> resourceList;
 
+  @JsonIgnore
   public Scorm12Resource getResourceById(String id) {
     if (id == null || resourceList == null) {
       return null;

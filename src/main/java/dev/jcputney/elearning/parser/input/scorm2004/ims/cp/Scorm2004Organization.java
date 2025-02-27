@@ -28,13 +28,18 @@ import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.Sequencing;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents a single organization within the content package. Each organization may contain
  * multiple items structured hierarchically.
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Organization {
@@ -54,6 +59,7 @@ public class Scorm2004Organization {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("structure")
+  @Default
   private String structure = "hierarchical";
 
   /**
@@ -78,6 +84,7 @@ public class Scorm2004Organization {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "objectivesGlobalToSystem", namespace = ADLSeq.NAMESPACE_URI)
   @JsonProperty("objectivesGlobalToSystem")
+  @Default
   private boolean objectivesGlobalToSystem = false;
 
   /**
@@ -87,6 +94,7 @@ public class Scorm2004Organization {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "sharedDataGlobalToSystem", namespace = ADLCP.NAMESPACE_URI)
   @JsonProperty("sharedDataGlobalToSystem")
+  @Default
   private boolean sharedDataGlobalToSystem = false;
 
   /**

@@ -20,7 +20,10 @@ package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents a mapping from a local objective to a global objective within the SCORM IMS Simple
@@ -29,7 +32,9 @@ import lombok.Data;
  * information with global objectives, providing consistency in tracking and reporting across
  * different activities.</p>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004ObjectiveMapping {
 
@@ -54,6 +59,7 @@ public class Scorm2004ObjectiveMapping {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("readSatisfiedStatus")
+  @Default
   private boolean readSatisfiedStatus = true;
 
   /**
@@ -66,6 +72,7 @@ public class Scorm2004ObjectiveMapping {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("readNormalizedMeasure")
+  @Default
   private boolean readNormalizedMeasure = true;
 
   /**
@@ -79,6 +86,7 @@ public class Scorm2004ObjectiveMapping {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("writeSatisfiedStatus")
+  @Default
   private boolean writeSatisfiedStatus = false;
 
   /**
@@ -91,5 +99,6 @@ public class Scorm2004ObjectiveMapping {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("writeNormalizedMeasure")
+  @Default
   private boolean writeNormalizedMeasure = false;
 }

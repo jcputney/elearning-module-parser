@@ -20,7 +20,9 @@ package dev.jcputney.elearning.parser.input.lom.types;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import lombok.Data;
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents an <code>orComposite</code> element in the LOM schema, defining a set of conditions
@@ -41,7 +43,9 @@ import lombok.Data;
  * </xs:complexType>
  * }</pre>
  */
-@Data
+@SuperBuilder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class OrComposite {
 

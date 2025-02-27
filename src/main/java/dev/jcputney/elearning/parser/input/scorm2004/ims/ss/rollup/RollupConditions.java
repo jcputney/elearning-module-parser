@@ -23,7 +23,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents a set of conditions that control when a rollup rule should apply. Rollup conditions
@@ -33,7 +36,9 @@ import lombok.Data;
  * <p>Conditions can be combined based on the logic defined in {@link #conditionCombination},
  * allowing multiple criteria to be evaluated together.</p>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupConditions {
 
@@ -55,5 +60,6 @@ public class RollupConditions {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("conditionCombination")
+  @Default
   private String conditionCombination = "any";
 }

@@ -21,7 +21,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the action to perform if the conditions specified in a sequencing rule are met. Rule
@@ -31,7 +33,9 @@ import lombok.Data;
  * <p>Actions are only executed if the conditions in the rule's {@link RuleConditions} are
  * met.</p>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RuleAction {

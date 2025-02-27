@@ -23,7 +23,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.util.DurationIso8601Deserializer;
 import java.time.Duration;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the duration metadata of a resource, including the duration value in ISO 8601 format
@@ -53,7 +55,9 @@ import lombok.Data;
  * </duration>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LomDuration {
 

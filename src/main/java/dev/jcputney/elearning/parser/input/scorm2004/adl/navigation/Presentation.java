@@ -21,14 +21,18 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLNav;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the presentation settings for the navigation controls. This class contains additional
  * settings that may define whether the navigation interface should be shown or hidden under certain
  * conditions.
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Presentation {

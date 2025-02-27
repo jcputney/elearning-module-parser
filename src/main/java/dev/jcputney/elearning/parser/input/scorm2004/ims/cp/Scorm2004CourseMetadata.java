@@ -24,7 +24,10 @@ import dev.jcputney.elearning.parser.api.LoadableMetadata;
 import dev.jcputney.elearning.parser.input.lom.LOM;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLCP;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents metadata information about the content package in SCORM manifest.
@@ -40,7 +43,9 @@ import lombok.Data;
  * </metadata>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004CourseMetadata implements LoadableMetadata {
@@ -81,5 +86,6 @@ public class Scorm2004CourseMetadata implements LoadableMetadata {
    * course, such as the title, description, and other relevant details.
    */
   @JacksonXmlProperty(localName = "lom", namespace = LOM.NAMESPACE_URI)
+  @Setter
   private LOM lom;
 }

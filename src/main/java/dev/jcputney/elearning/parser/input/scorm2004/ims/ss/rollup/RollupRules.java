@@ -24,7 +24,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents a set of rollup rules within the SCORM IMS Simple Sequencing (IMSSS) schema. Rollup
@@ -47,7 +50,9 @@ import lombok.Data;
  * <p>The IMSSS namespace is specified by {@link IMSSS#NAMESPACE_URI}, following the SCORM 2004 standards
  * for sequencing and navigation.</p>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupRules {
@@ -70,6 +75,7 @@ public class RollupRules {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("rollupObjectiveSatisfied")
+  @Default
   private boolean rollupObjectiveSatisfied = true;
 
   /**
@@ -81,6 +87,7 @@ public class RollupRules {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("rollupProgressCompletion")
+  @Default
   private boolean rollupProgressCompletion = true;
 
   /**
@@ -93,5 +100,6 @@ public class RollupRules {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("objectiveMeasureWeight")
+  @Default
   private double objectiveMeasureWeight = 1.0;
 }

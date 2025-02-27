@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.output.scorm2004;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.NoArgsConstructor;
 
 /**
  * Represents metadata for SCORM 2004 eLearning modules, including SCORM 2004-specific fields such
@@ -38,6 +40,7 @@ import java.util.stream.Stream;
  * structure and rules that are specific to SCORM 2004 modules.
  * </p>
  */
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Scorm2004Metadata extends ModuleMetadata<Scorm2004Manifest> {
 
   public Scorm2004Metadata(Scorm2004Manifest manifest, ModuleType moduleType,
@@ -51,6 +54,7 @@ public class Scorm2004Metadata extends ModuleMetadata<Scorm2004Manifest> {
    *
    * @return A set of global objective IDs.
    */
+  @JsonIgnore
   public Set<String> getGlobalObjectiveIds() {
     return getManifest()
         .getOrganizations()

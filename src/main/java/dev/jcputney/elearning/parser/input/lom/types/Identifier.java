@@ -20,7 +20,9 @@ package dev.jcputney.elearning.parser.input.lom.types;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents an identifier for a related resource.
@@ -34,7 +36,9 @@ import lombok.Data;
  * </xs:complexType>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Identifier {

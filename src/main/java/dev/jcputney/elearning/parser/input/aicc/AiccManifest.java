@@ -19,10 +19,17 @@ package dev.jcputney.elearning.parser.input.aicc;
 
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.PackageManifest;
+import java.time.Duration;
 import java.util.List;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Builder
+@Getter
+@Jacksonized
+@AllArgsConstructor
 public class AiccManifest implements PackageManifest {
 
   private AiccCourse course;
@@ -94,5 +101,10 @@ public class AiccManifest implements PackageManifest {
   @Override
   public String getVersion() {
     return this.course.getCourse().getVersion();
+  }
+
+  @Override
+  public Duration getDuration() {
+    return Duration.ZERO;
   }
 }

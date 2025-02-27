@@ -22,10 +22,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 import java.time.Duration;
-import java.time.Period;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.threeten.extra.PeriodDuration;
 

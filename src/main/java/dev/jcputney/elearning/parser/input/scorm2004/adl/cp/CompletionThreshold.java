@@ -22,19 +22,24 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureType;
-import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureTypeDeserializer;
 import dev.jcputney.elearning.parser.input.common.PercentType;
 import dev.jcputney.elearning.parser.input.common.PercentTypeDeserializer;
+import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureType;
+import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureTypeDeserializer;
 import java.math.BigDecimal;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the completion threshold element, which specifies the minimum progress required to
  * mark the content as complete. Includes attributes for progress weight and a boolean indicating if
  * completion is by measure.
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class CompletionThreshold {
@@ -46,6 +51,7 @@ public class CompletionThreshold {
   @JacksonXmlProperty(isAttribute = true, localName = "minProgressMeasure")
   @JsonDeserialize(using = MeasureTypeDeserializer.class)
   @JsonProperty("minProgressMeasure")
+  @Default
   private MeasureType minProgressMeasure = new MeasureType(BigDecimal.ONE);
 
   /**
@@ -55,6 +61,7 @@ public class CompletionThreshold {
   @JacksonXmlProperty(isAttribute = true, localName = "progressWeight")
   @JsonDeserialize(using = PercentTypeDeserializer.class)
   @JsonProperty("progressWeight")
+  @Default
   private PercentType progressWeight = new PercentType(BigDecimal.ONE);
 
   /**
@@ -63,5 +70,6 @@ public class CompletionThreshold {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "completedByMeasure")
   @JsonProperty("completedByMeasure")
+  @Default
   private Boolean completedByMeasure = false;
 }

@@ -19,16 +19,15 @@ package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12ADLCP;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.ScormType;
-import dev.jcputney.elearning.parser.util.DurationHHMMSSDeserializer;
-import java.time.Duration;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the {@code <resource>} element in SCORM 1.2 manifest file.
@@ -50,7 +49,9 @@ import lombok.Data;
  * </xsd:complexType>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Resource {
 

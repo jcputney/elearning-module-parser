@@ -23,7 +23,9 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents a set of sequencing rules within the SCORM IMS Simple Sequencing (IMSSS) schema.
@@ -50,7 +52,9 @@ import lombok.Data;
  * <p>The IMSSS namespace is specified by {@link IMSSS#NAMESPACE_URI}, and this class
  * aligns with the SCORM 2004 standards for sequencing and navigation.</p>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class SequencingRules {

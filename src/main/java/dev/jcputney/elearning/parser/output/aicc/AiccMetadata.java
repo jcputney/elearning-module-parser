@@ -20,6 +20,7 @@ package dev.jcputney.elearning.parser.output.aicc;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.aicc.AiccManifest;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
+import lombok.NoArgsConstructor;
 
 /**
  * Represents metadata for an AICC eLearning module, including AICC-specific fields such as course
@@ -30,6 +31,7 @@ import dev.jcputney.elearning.parser.output.ModuleMetadata;
  * modules, enabling structured storage of AICC format details.
  * </p>
  */
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class AiccMetadata extends ModuleMetadata<AiccManifest> {
 
   public AiccMetadata(AiccManifest manifest, ModuleType moduleType,

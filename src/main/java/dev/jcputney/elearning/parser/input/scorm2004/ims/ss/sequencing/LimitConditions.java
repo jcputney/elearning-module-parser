@@ -27,7 +27,9 @@ import dev.jcputney.elearning.parser.util.DurationIso8601Deserializer;
 import dev.jcputney.elearning.parser.util.InstantDeserializer;
 import java.time.Duration;
 import java.time.Instant;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the limit conditions for a learning activity within the SCORM IMS Simple Sequencing
@@ -50,7 +52,9 @@ import lombok.Data;
  * <p>The IMSSS namespace is specified by {@link IMSSS#NAMESPACE_URI}, and this class aligns with
  * SCORM 2004 standards for sequencing and navigation.</p>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LimitConditions {

@@ -21,7 +21,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the constrainedChoiceConsiderationsType complex type, defining choice and activation
@@ -34,7 +37,9 @@ import lombok.Data;
  *   </xs:complexType>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ConstrainChoiceConsiderations {
@@ -44,6 +49,7 @@ public class ConstrainChoiceConsiderations {
    */
   @JacksonXmlProperty(localName = "preventActivation", isAttribute = true)
   @JsonProperty("preventActivation")
+  @Default
   private boolean preventActivation = false;
 
   /**
@@ -51,5 +57,6 @@ public class ConstrainChoiceConsiderations {
    */
   @JacksonXmlProperty(localName = "constrainChoice", isAttribute = true)
   @JsonProperty("constrainChoice")
+  @Default
   private boolean constrainChoice = false;
 }

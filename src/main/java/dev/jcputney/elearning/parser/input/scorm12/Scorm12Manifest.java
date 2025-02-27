@@ -31,9 +31,12 @@ import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organization;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organizations;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resource;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resources;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Optional;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the SCORM IMS Content Packaging (IMSCP) elements according to the imscp_rootv1p1p2
@@ -302,7 +305,9 @@ import lombok.Data;
  * </xsd:schema>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JacksonXmlRootElement(localName = "manifest", namespace = Scorm12Manifest.NAMESPACE_URI)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -360,7 +365,7 @@ public class Scorm12Manifest implements PackageManifest {
   public String getTitle() {
     //noinspection DuplicatedCode
     String organizationTitle = Optional.ofNullable(organizations)
-        .map(Scorm12Organizations::getDefaultOrganization)
+        .map(Scorm12Organizations::getDefault)
         .map(Scorm12Organization::getTitle)
         .orElse(null);
     if (organizationTitle != null && !organizationTitle.isEmpty()) {
@@ -384,7 +389,7 @@ public class Scorm12Manifest implements PackageManifest {
   public String getLaunchUrl() {
     // find first Scorm12Item with a non-null identifierRef
     String resourceId = Optional.ofNullable(organizations)
-        .map(Scorm12Organizations::getDefaultOrganization)
+        .map(Scorm12Organizations::getDefault)
         .map(Scorm12Organization::getItems)
         .stream()
         .flatMap(Collection::stream)
@@ -397,7 +402,7 @@ public class Scorm12Manifest implements PackageManifest {
     if (resourceId == null || resourceId.isEmpty()) {
       // check child items
       childResourceId = Optional.ofNullable(organizations)
-          .map(Scorm12Organizations::getDefaultOrganization)
+          .map(Scorm12Organizations::getDefault)
           .map(Scorm12Organization::getItems)
           .stream()
           .flatMap(Collection::stream)
@@ -414,5 +419,14 @@ public class Scorm12Manifest implements PackageManifest {
         .map(resources -> resources.getResourceById(finalResourceId))
         .map(Scorm12Resource::getHref)
         .orElse(null);
+  }
+
+  @Override
+  public Duration getDuration() {
+    return Optional.ofNullable(metadata)
+        .filter(m -> m.getLom() != null && m.getLom().getTechnical() != null && m.getLom().getTechnical().getDuration() != null)
+        .map(Scorm12Metadata::getLom)
+        .map(lom -> lom.getTechnical().getDuration().getDuration())
+        .orElse(Duration.ZERO);
   }
 }

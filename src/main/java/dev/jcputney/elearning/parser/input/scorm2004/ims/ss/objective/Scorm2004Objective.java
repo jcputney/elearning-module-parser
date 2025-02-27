@@ -23,14 +23,19 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents an individual learning objective within the SCORM IMS Simple Sequencing schema.
  * Objectives specify criteria such as minimum required performance, satisfaction requirements,
  * and mappings to global objectives for tracking learner progress.
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Objective {
 
@@ -52,6 +57,7 @@ public class Scorm2004Objective {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("satisfiedByMeasure")
+  @Default
   private Boolean satisfiedByMeasure = false;
 
   /**

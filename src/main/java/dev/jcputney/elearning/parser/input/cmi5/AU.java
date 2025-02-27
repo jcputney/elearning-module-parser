@@ -27,7 +27,9 @@ import dev.jcputney.elearning.parser.input.cmi5.types.ReferencesObjectives;
 import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
 import dev.jcputney.elearning.parser.input.common.PercentType;
 import dev.jcputney.elearning.parser.input.common.PercentTypeDeserializer;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents an Assignable Unit (AU) in a CMI5 course structure.
@@ -85,7 +87,9 @@ import lombok.Data;
  * </xs:complexType>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class AU {
 

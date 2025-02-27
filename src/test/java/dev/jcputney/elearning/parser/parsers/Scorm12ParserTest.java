@@ -47,8 +47,8 @@ public class Scorm12ParserTest {
 
     assertEquals("Golf Explained - CP One File Per SCO", manifest.getTitle());
     assertEquals("Playing/Playing.html", manifest.getLaunchUrl());
-    assertEquals(4, manifest.getOrganizations().getDefaultOrganization().getItems().size());
-    assertEquals(4, manifest.getOrganizations().getDefaultOrganization().getItems()
+    assertEquals(4, manifest.getOrganizations().getDefault().getItems().size());
+    assertEquals(4, manifest.getOrganizations().getDefault().getItems()
         .stream()
         .filter(item -> item.getItems() != null && !item.getItems().isEmpty())
         .filter(item -> !item.getIdentifier().isEmpty())
@@ -70,7 +70,7 @@ public class Scorm12ParserTest {
 
     assertEquals("Golf Explained - CP Single SCO", manifest.getTitle());
     assertEquals("shared/launchpage.html", manifest.getLaunchUrl());
-    assertEquals(1, manifest.getOrganizations().getDefaultOrganization().getItems().size());
+    assertEquals(1, manifest.getOrganizations().getDefault().getItems().size());
     assertEquals(1, manifest.getResources().getResourceList().size());
     assertEquals(39, manifest.getResources().getResourceList().get(0).getFiles().stream()
         .filter(file -> file.getHref() != null && !file.getHref().isEmpty()).count());
@@ -87,7 +87,7 @@ public class Scorm12ParserTest {
 
     assertEquals("Golf Explained - Run-time Basic Calls", manifest.getTitle());
     assertEquals("shared/launchpage.html", manifest.getLaunchUrl());
-    assertEquals(1, manifest.getOrganizations().getDefaultOrganization().getItems().size());
+    assertEquals(1, manifest.getOrganizations().getDefault().getItems().size());
     assertEquals(1, manifest.getResources().getResourceList().size());
     assertEquals(39, manifest.getResources().getResourceList().get(0).getFiles().stream()
         .filter(file -> file.getHref() != null && !file.getHref().isEmpty()).count());
@@ -104,8 +104,8 @@ public class Scorm12ParserTest {
 
     assertEquals("Golf Explained - Minimum Run-time Calls", manifest.getTitle());
     assertEquals("Playing/Playing.html", manifest.getLaunchUrl());
-    assertEquals(4, manifest.getOrganizations().getDefaultOrganization().getItems().size());
-    assertEquals(4, manifest.getOrganizations().getDefaultOrganization().getItems()
+    assertEquals(4, manifest.getOrganizations().getDefault().getItems().size());
+    assertEquals(4, manifest.getOrganizations().getDefault().getItems()
         .stream()
         .filter(item -> item.getItems() != null && !item.getItems().isEmpty())
         .filter(item -> !item.getIdentifier().isEmpty())
@@ -131,7 +131,7 @@ public class Scorm12ParserTest {
     assertEquals(YesNoType.YES, lom.getTechnical().getPackageProperties().getBehavior().getAlwaysFlowToFirstSco());
     assertEquals("SCORM 1.2 With Metadata", manifest.getTitle());
     assertEquals("index.html", manifest.getLaunchUrl());
-    assertEquals(1, manifest.getOrganizations().getDefaultOrganization().getItems().size());
+    assertEquals(1, manifest.getOrganizations().getDefault().getItems().size());
     assertEquals(1, manifest.getResources().getResourceList().size());
   }
 

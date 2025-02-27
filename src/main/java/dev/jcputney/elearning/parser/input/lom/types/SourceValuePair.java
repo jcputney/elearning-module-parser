@@ -19,7 +19,9 @@ package dev.jcputney.elearning.parser.input.lom.types;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents a source-value pair, commonly used in the LOM schema to describe a value and its
@@ -39,7 +41,9 @@ import lombok.Data;
  *
  * @param <T> the type of the value, which can be an enumeration or a string
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class SourceValuePair<T> {
 

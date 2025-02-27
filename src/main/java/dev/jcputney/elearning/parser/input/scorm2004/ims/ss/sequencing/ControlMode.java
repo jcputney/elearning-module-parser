@@ -21,7 +21,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the control mode settings for a learning activity within the SCORM IMS Simple
@@ -46,7 +49,9 @@ import lombok.Data;
  * <p>These attributes control navigation at the activity level, allowing for flexibility in sequencing logic
  * based on the learner's progress and interactions with the SCORM content.</p>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ControlMode {
@@ -60,6 +65,7 @@ public class ControlMode {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("choice")
+  @Default
   private boolean choice = true;
 
   /**
@@ -71,6 +77,7 @@ public class ControlMode {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("choiceExit")
+  @Default
   private boolean choiceExit = true;
 
   /**
@@ -83,6 +90,7 @@ public class ControlMode {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("flow")
+  @Default
   private boolean flow = false;
 
   /**
@@ -95,6 +103,7 @@ public class ControlMode {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("forwardOnly")
+  @Default
   private boolean forwardOnly = false;
 
   /**
@@ -106,6 +115,7 @@ public class ControlMode {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("useCurrentAttemptObjectiveInfo")
+  @Default
   private boolean useCurrentAttemptObjectiveInfo = true;
 
   /**
@@ -117,5 +127,6 @@ public class ControlMode {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("useCurrentAttemptProgressInfo")
+  @Default
   private boolean useCurrentAttemptProgressInfo = true;
 }

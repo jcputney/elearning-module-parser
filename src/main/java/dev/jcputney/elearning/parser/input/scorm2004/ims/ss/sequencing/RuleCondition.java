@@ -26,14 +26,19 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.ConditionOpera
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureTypeDeserializer;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.SequencingRuleConditionType;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents an individual condition within a set of rule conditions. Each condition specifies a
  * specific criterion that must be met, such as an objective being completed, a minimum measure
  * threshold, or a defined attempt status.
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RuleCondition {
@@ -64,6 +69,7 @@ public class RuleCondition {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("operator")
+  @Default
   private ConditionOperatorType operator = ConditionOperatorType.NO_OP;
 
   /**

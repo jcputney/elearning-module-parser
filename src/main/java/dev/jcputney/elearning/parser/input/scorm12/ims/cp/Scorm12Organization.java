@@ -23,7 +23,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the <code>organization</code> element in SCORM 1.2.
@@ -61,7 +64,9 @@ import lombok.Data;
  * </organization>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Organization {
 
@@ -77,6 +82,7 @@ public class Scorm12Organization {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "structure")
   @JsonProperty(value = "structure")
+  @Default
   private String structure = "hierarchical";
 
   /**

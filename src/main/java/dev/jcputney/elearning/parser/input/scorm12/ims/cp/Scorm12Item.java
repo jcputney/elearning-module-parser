@@ -29,7 +29,9 @@ import dev.jcputney.elearning.parser.input.scorm2004.adl.types.TimeLimitAction;
 import dev.jcputney.elearning.parser.util.DurationHHMMSSDeserializer;
 import java.time.Duration;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents an item within a SCORM 1.2 organization.
@@ -68,7 +70,9 @@ import lombok.Data;
  * </item>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Item {
 

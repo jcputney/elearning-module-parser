@@ -24,7 +24,9 @@ import dev.jcputney.elearning.parser.input.lom.types.Kind;
 import dev.jcputney.elearning.parser.input.lom.types.Resource;
 import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the relationship information about a learning object in a Learning Object Metadata
@@ -43,7 +45,9 @@ import lombok.Data;
  * </complexType>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Relation {
 

@@ -32,8 +32,11 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organizatio
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resource;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resources;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.SequencingCollection;
+import java.time.Duration;
 import java.util.Optional;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the SCORM IMS Content Packaging (IMSCP) elements according to the imscp_v1p1 schema.
@@ -229,7 +232,9 @@ import lombok.Data;
  *   </xsd:schema>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JacksonXmlRootElement(localName = "manifest", namespace = Scorm2004Manifest.NAMESPACE_URI)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -294,7 +299,7 @@ public class Scorm2004Manifest implements PackageManifest {
   public String getTitle() {
     //noinspection DuplicatedCode
     String organizationTitle = Optional.ofNullable(organizations)
-        .map(Scorm2004Organizations::getDefaultOrganization)
+        .map(Scorm2004Organizations::getDefault)
         .map(Scorm2004Organization::getTitle)
         .orElse(null);
     if (organizationTitle != null && !organizationTitle.isEmpty()) {
@@ -368,5 +373,14 @@ public class Scorm2004Manifest implements PackageManifest {
       }
     }
     return null;
+  }
+
+  @Override
+  public Duration getDuration() {
+    return Optional.ofNullable(metadata)
+        .filter(m -> m.getLom() != null && m.getLom().getTechnical() != null && m.getLom().getTechnical().getDuration() != null)
+        .map(Scorm2004CourseMetadata::getLom)
+        .map(lom -> lom.getTechnical().getDuration().getDuration())
+        .orElse(Duration.ZERO);
   }
 }

@@ -23,7 +23,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.RandomizationTiming;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the randomization controls for a learning activity within the SCORM IMS Simple
@@ -46,7 +49,9 @@ import lombok.Data;
  * <p>The IMSSS namespace is specified by {@link IMSSS#NAMESPACE_URI}, following the SCORM 2004 standards
  * for sequencing and navigation.</p>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RandomizationControls {
@@ -61,6 +66,7 @@ public class RandomizationControls {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("randomizationTiming")
+  @Default
   private RandomizationTiming randomizationTiming = RandomizationTiming.NEVER;
 
   /**
@@ -68,6 +74,7 @@ public class RandomizationControls {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("selectionTiming")
+  @Default
   private RandomizationTiming selectionTiming = RandomizationTiming.NEVER;
 
   /**
@@ -84,6 +91,7 @@ public class RandomizationControls {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("reorderChildren")
+  @Default
   private boolean reorderChildren = false;
 
   /**

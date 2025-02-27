@@ -22,7 +22,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.RollupConsiderationType;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the rollupConsiderationsType complex type, defining attributes for rollup conditions.
@@ -37,7 +40,9 @@ import lombok.Data;
  *   </xs:complexType>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupConsiderations {
@@ -47,6 +52,7 @@ public class RollupConsiderations {
    */
   @JacksonXmlProperty(localName = "requiredForSatisfied", isAttribute = true)
   @JsonProperty("requiredForSatisfied")
+  @Default
   private RollupConsiderationType requiredForSatisfied = RollupConsiderationType.ALWAYS;
 
   /**
@@ -54,6 +60,7 @@ public class RollupConsiderations {
    */
   @JacksonXmlProperty(localName = "requiredForNotSatisfied", isAttribute = true)
   @JsonProperty("requiredForNotSatisfied")
+  @Default
   private RollupConsiderationType requiredForNotSatisfied = RollupConsiderationType.ALWAYS;
 
   /**
@@ -61,6 +68,7 @@ public class RollupConsiderations {
    */
   @JacksonXmlProperty(localName = "requiredForCompleted", isAttribute = true)
   @JsonProperty("requiredForCompleted")
+  @Default
   private RollupConsiderationType requiredForCompleted = RollupConsiderationType.ALWAYS;
 
   /**
@@ -68,6 +76,7 @@ public class RollupConsiderations {
    */
   @JacksonXmlProperty(localName = "requiredForIncomplete", isAttribute = true)
   @JsonProperty("requiredForIncomplete")
+  @Default
   private RollupConsiderationType requiredForIncomplete = RollupConsiderationType.ALWAYS;
 
   /**
@@ -75,5 +84,6 @@ public class RollupConsiderations {
    */
   @JacksonXmlProperty(localName = "measureSatisfactionIfActive", isAttribute = true)
   @JsonProperty("measureSatisfactionIfActive")
+  @Default
   private boolean measureSatisfactionIfActive = true;
 }

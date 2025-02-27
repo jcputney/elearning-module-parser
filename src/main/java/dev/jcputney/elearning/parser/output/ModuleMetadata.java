@@ -17,10 +17,13 @@
 
 package dev.jcputney.elearning.parser.output;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.PackageManifest;
+import java.time.Duration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * Represents the core metadata for an eLearning module, providing common fields shared across
@@ -31,34 +34,46 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public abstract class ModuleMetadata<M extends PackageManifest> implements PackageManifest {
 
-  private final M manifest;
-  private final ModuleType moduleType;
-  private final boolean xapiEnabled;
+  private M manifest;
+  private ModuleType moduleType;
+  private boolean xapiEnabled;
 
   @Override
+  @JsonIgnore
   public String getTitle() {
     return manifest.getTitle();
   }
 
   @Override
+  @JsonIgnore
   public String getDescription() {
     return manifest.getDescription();
   }
 
   @Override
+  @JsonIgnore
   public String getLaunchUrl() {
     return manifest.getLaunchUrl();
   }
 
   @Override
+  @JsonIgnore
   public String getIdentifier() {
     return manifest.getIdentifier();
   }
 
   @Override
+  @JsonIgnore
   public String getVersion() {
     return manifest.getVersion();
+  }
+
+  @Override
+  @JsonIgnore
+  public Duration getDuration() {
+    return manifest.getDuration();
   }
 }

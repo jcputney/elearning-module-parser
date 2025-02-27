@@ -23,9 +23,12 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import dev.jcputney.elearning.parser.input.cmi5.types.LangString;
 import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the root element of a CMI5 course structure manifest. Implements the
@@ -44,7 +47,9 @@ import lombok.Data;
  *   <li>A sequence of <code>Block</code> and <code>AU</code> (Assignable Unit) elements defining the course structure.</li>
  * </ul>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Cmi5Manifest implements PackageManifest {
 
@@ -167,5 +172,10 @@ public class Cmi5Manifest implements PackageManifest {
   @Override
   public String getVersion() {
     return null;
+  }
+
+  @Override
+  public Duration getDuration() {
+    return Duration.ZERO;
   }
 }

@@ -33,7 +33,7 @@ public class Scorm2004ParserTest {
     assertNotNull(manifest.getMetadata().getLom().getGeneral());
     assertEquals(manifest.getMetadata().getLom().getGeneral().getTitle().getLangStrings().size(), 2);
     assertEquals(manifest.getMetadata().getLom().getGeneral().getKeywords().size(), 3);
-    assertEquals("Golf Explained - Metadata Example", manifest.getOrganizations().getDefaultOrganization().getTitle());
+    assertEquals("Golf Explained - Metadata Example", manifest.getOrganizations().getDefault().getTitle());
     assertEquals("Golf Explained", manifest.getMetadata().getLom().getGeneral().getTitle().getLangStrings().get(0).getValue());
     assertEquals("Explicó Golf", manifest.getMetadata().getLom().getGeneral().getTitle().getLangStrings().get(1).getValue());
     assertEquals("Golf Explained - Metadata Example", manifest.getTitle());
@@ -48,6 +48,6 @@ public class Scorm2004ParserTest {
     Scorm2004Manifest manifest = parser.parseManifest(Scorm2004Parser.MANIFEST_FILE);
     parser.loadExternalMetadata(manifest);
     assertNull(manifest.getMetadata().getLom());
-    assertEquals("Golf Explained - CP One File Per SCO", manifest.getOrganizations().getDefaultOrganization().getTitle());
+    assertEquals("Golf Explained - CP One File Per SCO", manifest.getOrganizations().getDefault().getTitle());
   }
 }

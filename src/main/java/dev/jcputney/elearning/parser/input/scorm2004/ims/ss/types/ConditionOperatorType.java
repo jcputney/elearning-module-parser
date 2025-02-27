@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 
 /**
  * Enum representing the possible operators for evaluating a rollup condition. These operators

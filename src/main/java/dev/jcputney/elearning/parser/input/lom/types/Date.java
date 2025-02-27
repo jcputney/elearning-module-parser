@@ -19,7 +19,9 @@ package dev.jcputney.elearning.parser.input.lom.types;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents a date element in LOM metadata, including the date value and an optional description.
@@ -33,7 +35,9 @@ import lombok.Data;
  * </xs:complexType>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Date {
 

@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input;
 
+import java.time.Duration;
+
 public interface PackageManifest {
   String getTitle();
 
@@ -27,4 +29,6 @@ public interface PackageManifest {
   String getIdentifier();
 
   String getVersion();
+
+  Duration getDuration();
 }

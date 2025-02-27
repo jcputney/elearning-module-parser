@@ -21,7 +21,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.RollupActionType;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the action to perform if the conditions specified in a rollup rule are met. The rollup
@@ -31,7 +33,9 @@ import lombok.Data;
  * <p>Common actions include marking the parent activity as satisfied, not satisfied,
  * completed, or incomplete based on the rollup rule conditions.</p>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupAction {
 
