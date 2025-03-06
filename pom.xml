@@ -41,7 +41,7 @@
     <!-- Dependency Versions -->
 
     <version.aws.sdk.v1>1.12.781</version.aws.sdk.v1>
-    <version.aws.sdk.v2>2.30.21</version.aws.sdk.v2>
+    <version.aws.sdk.v2>2.30.34</version.aws.sdk.v2>
     <version.commons-configuration2>2.11.0</version.commons-configuration2>
     <version.jackson>2.18.2</version.jackson>
     <version.jakarta.xml.bind>4.0.2</version.jakarta.xml.bind>
