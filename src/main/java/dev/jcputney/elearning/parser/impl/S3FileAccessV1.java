@@ -18,34 +18,23 @@
 package dev.jcputney.elearning.parser.impl;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import dev.jcputney.elearning.parser.api.FileAccess;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Getter;
 
 /**
  * Implementation of FileAccess using AWS S3 SDK v1.
  */
+@SuppressWarnings("unused")
 public class S3FileAccessV1 implements FileAccess {
   private final AmazonS3 s3Client;
   private final String bucketName;
 
   @Getter
   private final String rootPath;
-
-  /**
-   * Constructs an S3FileAccessV1 instance with the default S3 client and the specified bucket name.
-   *
-   * @param bucketName The name of the S3 bucket to access.
-   * @param rootPath The root path of the S3 bucket to access.
-   */
-  public S3FileAccessV1(String bucketName, String rootPath) {
-    this(AmazonS3ClientBuilder.defaultClient(), bucketName, rootPath);
-  }
 
   /**
    * Constructs an S3FileAccessV1 instance with the specified S3 client and bucket name.
@@ -59,7 +48,11 @@ public class S3FileAccessV1 implements FileAccess {
     this.bucketName = bucketName;
     if (rootPath == null) {
       rootPath = "";
-    } else if (rootPath.endsWith("/")) {
+    }
+
+    rootPath = getInternalRootDirectory(rootPath);
+
+    if (rootPath.endsWith("/")) {
       rootPath = rootPath.substring(0, rootPath.length() - 1);
     }
     this.rootPath = rootPath;
@@ -86,7 +79,7 @@ public class S3FileAccessV1 implements FileAccess {
   public List<String> listFiles(String directoryPath) {
     return s3Client.listObjects(bucketName, fullPath(directoryPath)).getObjectSummaries().stream()
         .map(S3ObjectSummary::getKey)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   /**
@@ -99,5 +92,13 @@ public class S3FileAccessV1 implements FileAccess {
   public InputStream getFileContents(String path) {
     String content = s3Client.getObjectAsString(bucketName, fullPath(path));
     return new ByteArrayInputStream(content.getBytes());
+  }
+
+  public String getInternalRootDirectory(String rootPath) {
+    List<String> commonPrefixes = s3Client.listObjects(bucketName, fullPath(rootPath)).getCommonPrefixes();
+    if (commonPrefixes.size() != 1) {
+      return rootPath;
+    }
+    return commonPrefixes.get(0);
   }
 }
