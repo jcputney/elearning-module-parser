@@ -40,16 +40,16 @@
 
     <!-- Dependency Versions -->
 
-    <version.aws.sdk.v1>1.12.781</version.aws.sdk.v1>
-    <version.aws.sdk.v2>2.30.21</version.aws.sdk.v2>
+    <version.aws.sdk.v1>1.12.782</version.aws.sdk.v1>
+    <version.aws.sdk.v2>2.31.2</version.aws.sdk.v2>
     <version.commons-configuration2>2.11.0</version.commons-configuration2>
-    <version.jackson>2.18.2</version.jackson>
+    <version.jackson>2.18.3</version.jackson>
     <version.jakarta.xml.bind>4.0.2</version.jakarta.xml.bind>
-    <version.junit>5.11.4</version.junit>
+    <version.junit>5.12.1</version.junit>
     <version.lombok>1.18.36</version.lombok>
     <version.org.json>20250107</version.org.json>
     <version.plugin.central-publishing>0.7.0</version.plugin.central-publishing>
-    <version.plugin.compiler>3.13.0</version.plugin.compiler>
+    <version.plugin.compiler>3.14.0</version.plugin.compiler>
     <version.plugin.failsafe>3.5.2</version.plugin.failsafe>
     <version.plugin.gpg>3.2.7</version.plugin.gpg>
     <version.plugin.jacoco>0.8.12</version.plugin.jacoco>

@@ -22,11 +22,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Getter;
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.CommonPrefix;
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
@@ -36,6 +35,7 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 /**
  * Implementation of FileAccess using AWS S3 SDK v2.
  */
+@SuppressWarnings("unused")
 public class S3FileAccessV2 implements FileAccess {
 
   private final S3Client s3Client;
@@ -43,23 +43,6 @@ public class S3FileAccessV2 implements FileAccess {
 
   @Getter
   private final String rootPath;
-
-  /**
-   * Constructs an S3FileAccessV2 instance with the default S3 client and the specified bucket
-   * name.
-   *
-   * @param bucketName The name of the S3 bucket to access.
-   * @param rootPath The root path of the S3 bucket to access.
-   */
-  public S3FileAccessV2(String bucketName, String rootPath) {
-    this(
-        S3Client.builder()
-            .credentialsProvider(DefaultCredentialsProvider.create())
-            .build(),
-        bucketName,
-        rootPath
-    );
-  }
 
   /**
    * Constructs an S3FileAccessV2 instance with the specified S3 client and bucket name.
@@ -73,7 +56,11 @@ public class S3FileAccessV2 implements FileAccess {
     this.bucketName = bucketName;
     if (rootPath == null) {
       rootPath = "";
-    } else if (rootPath.endsWith("/")) {
+    }
+
+    rootPath = getInternalRootDirectory(rootPath);
+
+    if (rootPath.endsWith("/")) {
       rootPath = rootPath.substring(0, rootPath.length() - 1);
     }
     this.rootPath = rootPath;
@@ -115,7 +102,7 @@ public class S3FileAccessV2 implements FileAccess {
           .contents()
           .stream()
           .map(S3Object::key)
-          .collect(Collectors.toList());
+          .toList();
     } catch (SdkException e) {
       throw new IOException("Failed to list files in directory: " + directoryPath, e);
     }
@@ -139,5 +126,18 @@ public class S3FileAccessV2 implements FileAccess {
     } catch (S3Exception e) {
       throw new IOException("Failed to get file contents for path: " + path, e);
     }
+  }
+
+  public String getInternalRootDirectory(String rootPath) {
+    List<CommonPrefix> commonPrefixes = s3Client.listObjectsV2(ListObjectsV2Request.builder()
+            .bucket(bucketName)
+            .prefix(rootPath)
+            .delimiter("/")
+            .build())
+        .commonPrefixes();
+    if (commonPrefixes.size() != 1) {
+      return rootPath;
+    }
+    return commonPrefixes.get(0).prefix();
   }
 }

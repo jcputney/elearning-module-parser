@@ -18,10 +18,7 @@
 package dev.jcputney.elearning.parser.exception;
 
 /**
- * Exception thrown when a module cannot be detected.
- *
- * @author jcputney
- * @since 1.0.0
+ * Exception thrown when a module can't be detected.
  */
 public class ModuleDetectionException extends Exception {
 
