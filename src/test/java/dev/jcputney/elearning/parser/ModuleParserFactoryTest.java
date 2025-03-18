@@ -34,6 +34,7 @@ import dev.jcputney.elearning.parser.parsers.Scorm2004Parser;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -56,18 +57,20 @@ class ModuleParserFactoryTest {
     final String filename;  // relative path of the zip file
     final String title;
     final String description;
+    final Duration duration;
     final String moduleTypeOrError;
 
-    RowData(String result, String filename, String title, String description, String moduleTypeOrError) {
+    RowData(String result, String filename, String title, String description, Duration duration, String moduleTypeOrError) {
       this.result = result;
       this.filename = filename;
       this.title = title;
       this.description = description;
       this.moduleTypeOrError = moduleTypeOrError;
+      this.duration = duration;
     }
 
     RowData(String result, String filename, String moduleTypeOrError) {
-      this(result, filename, "", "", moduleTypeOrError);
+      this(result, filename, "", "", Duration.ZERO, moduleTypeOrError);
     }
   }
 
@@ -117,6 +120,7 @@ class ModuleParserFactoryTest {
               shortFileName,
               metadata.getTitle(),
               metadata.getDescription(),
+              metadata.getDuration(),
               metadata.getModuleType().name()
           ));
 
@@ -164,7 +168,9 @@ class ModuleParserFactoryTest {
                 new Column().header("TITLE")
                     .with(r -> r.title),
                 new Column().header("DESCRIPTION")
-                    .with(r -> r.description)
+                    .with(r -> r.description),
+                new Column().header("DURATION")
+                    .with(r -> r.duration.toString())
             )
         )
         .writeTo(System.out);

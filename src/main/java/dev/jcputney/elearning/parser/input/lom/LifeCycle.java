@@ -25,7 +25,9 @@ import dev.jcputney.elearning.parser.input.lom.types.SingleLangString;
 import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import dev.jcputney.elearning.parser.input.lom.types.Status;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the lifecycle information about a learning object in a Learning Object Metadata (LOM)
@@ -48,7 +50,9 @@ import lombok.Data;
  * </complexType>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LifeCycle {
 

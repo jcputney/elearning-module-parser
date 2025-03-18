@@ -18,19 +18,24 @@
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the hierarchical structure of organizations in the content package. Organizations
  * define the arrangement of items within the package.
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Organizations {
@@ -39,7 +44,7 @@ public class Scorm2004Organizations {
    * The default organization identifier within the content package. Defines which organization to
    * use if multiple organizations are present.
    */
-  @JacksonXmlProperty(isAttribute = true, localName = "default", namespace = Scorm2004Manifest.NAMESPACE_URI)
+  @JacksonXmlProperty(isAttribute = true, localName = "default")
   @JsonProperty("default")
   private String defaultOrganization;
 
@@ -57,6 +62,7 @@ public class Scorm2004Organizations {
    * @param id The unique identifier for the organization.
    * @return The organization with the specified identifier, or null if not found.
    */
+  @JsonIgnore
   public Scorm2004Organization getOrganizationById(String id) {
     return organizationList.stream()
         .filter(org -> org.getIdentifier().equals(id))
@@ -69,7 +75,8 @@ public class Scorm2004Organizations {
    *
    * @return The default organization, or null if not found.
    */
-  public Scorm2004Organization getDefaultOrganization() {
+  @JsonIgnore
+  public Scorm2004Organization getDefault() {
     return getOrganizationById(defaultOrganization);
   }
 
@@ -79,6 +86,7 @@ public class Scorm2004Organizations {
    * @param itemId The unique identifier for the item.
    * @return The item with the specified identifier, or null if not found.
    */
+  @JsonIgnore
   public Scorm2004Item getItemById(String itemId) {
     Scorm2004Item result = organizationList.stream()
         .map(Scorm2004Organization::getItems)

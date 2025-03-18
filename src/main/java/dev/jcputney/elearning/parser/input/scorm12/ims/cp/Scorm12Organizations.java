@@ -18,12 +18,15 @@
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the {@code <organizations>} element in the SCORM 1.2 manifest file.
@@ -44,7 +47,9 @@ import lombok.Data;
  * </xsd:complexType>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Organizations {
 
@@ -70,6 +75,7 @@ public class Scorm12Organizations {
    * @param id The unique identifier for the organization.
    * @return The organization with the specified identifier, or null if not found.
    */
+  @JsonIgnore
   public Scorm12Organization getOrganizationById(String id) {
     return organizationList.stream()
         .filter(org -> org.getIdentifier().equals(id))
@@ -82,7 +88,8 @@ public class Scorm12Organizations {
    *
    * @return The default organization, or null if not found.
    */
-  public Scorm12Organization getDefaultOrganization() {
+  @JsonIgnore
+  public Scorm12Organization getDefault() {
     return getOrganizationById(defaultOrganization);
   }
 

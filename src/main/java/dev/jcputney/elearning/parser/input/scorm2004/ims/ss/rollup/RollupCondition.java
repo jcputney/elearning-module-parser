@@ -22,14 +22,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.ConditionOperatorType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.RollupRuleConditionType;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents an individual rollup condition within a set of rollup conditions. Each condition
  * specifies a specific criterion, such as completion or satisfaction status, that affects whether
  * the associated rollup rule is applied.
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupCondition {
 
@@ -42,6 +47,7 @@ public class RollupCondition {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("operator")
+  @Default
   private ConditionOperatorType operator = ConditionOperatorType.NO_OP;
 
   /**

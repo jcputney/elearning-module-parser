@@ -27,13 +27,17 @@ import dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing.RollupConsid
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004Objectives;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.random.RandomizationControls;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup.RollupRules;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents a top-level sequencing configuration, containing elements that define the sequencing
  * rules and objectives for SCORM content.
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Sequencing {

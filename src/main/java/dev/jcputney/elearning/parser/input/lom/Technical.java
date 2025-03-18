@@ -20,14 +20,16 @@ package dev.jcputney.elearning.parser.input.lom;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import dev.jcputney.elearning.parser.input.lom.properties.PackageProperties;
 import dev.jcputney.elearning.parser.input.lom.types.LangString;
 import dev.jcputney.elearning.parser.input.lom.types.LomDuration;
 import dev.jcputney.elearning.parser.input.lom.types.OrComposite;
 import dev.jcputney.elearning.parser.input.lom.types.Requirement;
 import dev.jcputney.elearning.parser.input.lom.types.SingleLangString;
-import dev.jcputney.elearning.parser.input.lom.properties.PackageProperties;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the technical information about a learning object in a Learning Object Metadata (LOM)
@@ -51,7 +53,9 @@ import lombok.Data;
  * </complexType>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Technical {
 

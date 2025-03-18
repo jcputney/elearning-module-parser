@@ -20,6 +20,7 @@ package dev.jcputney.elearning.parser.output.scorm12;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
+import lombok.NoArgsConstructor;
 
 /**
  * Represents metadata for SCORM 1.2 eLearning modules, including SCORM 1.2-specific fields such as
@@ -29,6 +30,7 @@ import dev.jcputney.elearning.parser.output.ModuleMetadata;
  * 1.2, providing metadata that describes the learning module content and requirements.
  * </p>
  */
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Scorm12Metadata extends ModuleMetadata<Scorm12Manifest> {
 
   public Scorm12Metadata(Scorm12Manifest manifest, ModuleType moduleType, boolean xapiEnabled) {

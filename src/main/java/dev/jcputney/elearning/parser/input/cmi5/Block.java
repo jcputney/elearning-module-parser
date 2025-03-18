@@ -24,7 +24,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.cmi5.types.ReferencesObjectives;
 import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
 /**
  * Represents a block within a CMI5 course structure. Blocks can contain nested blocks or AUs
@@ -49,7 +50,8 @@ import lombok.Data;
  * </xs:complexType>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Block {
 

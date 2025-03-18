@@ -22,13 +22,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents a file element within a resource, specifying a particular physical file in the content
  * package.
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004File {
@@ -51,5 +57,7 @@ public class Scorm2004File {
    * Specifies whether the file exists in the content package. This is not parsed from the manifest
    * but is set during processing.
    */
+  @Default
+  @Setter
   private boolean exists = false;
 }

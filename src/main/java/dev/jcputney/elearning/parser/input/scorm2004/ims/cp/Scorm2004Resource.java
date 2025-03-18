@@ -26,13 +26,18 @@ import dev.jcputney.elearning.parser.input.scorm2004.ADLCP;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.ScormType;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents a single resource within the content package, typically corresponding to a physical
  * file or collection of files that can be delivered within an LMS.
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Resource {
@@ -49,6 +54,7 @@ public class Scorm2004Resource {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("type")
+  @Default
   private String type = "webcontent";
 
   /**

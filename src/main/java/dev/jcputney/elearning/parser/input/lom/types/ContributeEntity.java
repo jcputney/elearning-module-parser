@@ -19,7 +19,9 @@ package dev.jcputney.elearning.parser.input.lom.types;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents an entity contributing to the lifecycle of the learning object in the Learning Object
@@ -45,7 +47,9 @@ import lombok.Data;
  * END:VCARD"/>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ContributeEntity {
   /**

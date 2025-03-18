@@ -42,10 +42,10 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
   private final ZipFile zipFile;
 
   /**
-   * Constructs a new {@link ZipFileAccess} instance for the specified ZIP file path.
+   * Constructs a new {@link ZipFileAccess} instance for the specified ZIP path.
    *
    * @param zipFilePath The path to the ZIP file.
-   * @throws IOException If the ZIP file cannot be opened.
+   * @throws IOException If the ZIP file can't be opened.
    */
   public ZipFileAccess(String zipFilePath) throws IOException {
     this.zipFile = new ZipFile(zipFilePath);
@@ -53,7 +53,7 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
   }
 
   private String getInternalRootDirectory() {
-    // We'll keep track of all distinct top-level folders we encounter.
+    // Keep track of all distinct top-level folders encountered.
     Set<String> topLevelDirs = new HashSet<>();
 
     if (this.zipFile == null) {
@@ -66,7 +66,7 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
       String entryName = entry.getName();
 
       // Split on '/', the first part is the top-level "directory"
-      // unless the file is directly in the root (no slash).
+      // unless the file is directly in the root and has no slash.
       int slashIndex = entryName.indexOf('/');
 
       if (slashIndex > 0) {
@@ -74,26 +74,27 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
         String topLevel = entryName.substring(0, slashIndex);
         topLevelDirs.add(topLevel);
 
-        // If we ever end up with more than one distinct name, break early
+        // If more than one distinct name, break early
         if (topLevelDirs.size() > 1) {
           return "";
         }
       } else {
-        // If slashIndex == -1, means no slash in name (e.g. "file.txt"),
-        // so there's a file right at the root. That means NOT single-dir.
+        // If slashIndex == -1, means no slash in name, for example, "file.txt",
+        // so there's a file right at the root.
+        // That means it isn't a single-dir.
         return "";
       }
     }
 
-    // If we get here, either we have exactly one top-level directory or none.
-    // "None" should not happen in a typical ZIP but handle the edge case.
+    // If it gets here, either have exactly one top-level directory or none.
+    // "None" shouldn't happen in a typical ZIP but handle the edge case.
     return topLevelDirs.size() == 1 ? topLevelDirs.iterator().next() : "";
   }
 
   /**
    * Checks if a file exists within the ZIP archive.
    *
-   * @param path The file path to check.
+   * @param path The path to check.
    * @return True if the file exists in the ZIP archive, false otherwise.
    */
   @Override
@@ -104,7 +105,7 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
   /**
    * Lists all files within a specified directory in the ZIP archive.
    *
-   * @param directoryPath The directory to list files from (e.g., "folder/").
+   * @param directoryPath The directory to list files from, for example, "folder/".
    * @return A list of file paths within the directory.
    */
   @Override
@@ -127,9 +128,9 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
   /**
    * Retrieves the contents of a file within the ZIP archive as an InputStream.
    *
-   * @param path The file path to retrieve contents from.
+   * @param path The path to retrieve contents from.
    * @return An InputStream of the file contents.
-   * @throws IOException if the file cannot be read.
+   * @throws IOException if the file can't be read.
    */
   @Override
   public InputStream getFileContents(String path) throws IOException {

@@ -25,7 +25,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.ConditionCombinationType;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents a set of conditions that must be met for a sequencing rule to apply. Rule conditions
@@ -35,7 +38,9 @@ import lombok.Data;
  * <p>The rule conditions are combined based on the specified combination logic,
  * such as "all" (all conditions must be met) or "any" (at least one condition must be met).</p>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RuleConditions {
@@ -54,5 +59,6 @@ public class RuleConditions {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("conditionCombination")
+  @Default
   private ConditionCombinationType conditionCombination = ConditionCombinationType.ANY;
 }

@@ -18,6 +18,7 @@
 package dev.jcputney.elearning.parser.input.lom;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -25,7 +26,9 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
 import java.util.List;
 import java.util.Optional;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * The root element of a Learning Object Metadata (LOM) document. This is the entry point for
@@ -51,7 +54,9 @@ import lombok.Data;
  * </xs:complexType>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JacksonXmlRootElement(localName = "lom", namespace = LOM.NAMESPACE_URI)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -229,6 +234,7 @@ public class LOM {
    *
    * @return the title of the learning object
    */
+  @JsonIgnore
   public String getTitle() {
     return Optional.ofNullable(general)
         .map(General::getTitle)
@@ -243,6 +249,7 @@ public class LOM {
    *
    * @return the description of the learning object
    */
+  @JsonIgnore
   public String getDescription() {
     return Optional.ofNullable(general)
         .map(General::getDescription)

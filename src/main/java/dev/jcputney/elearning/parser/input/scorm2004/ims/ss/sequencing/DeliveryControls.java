@@ -22,7 +22,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the delivery controls for a learning activity within the SCORM IMS Simple Sequencing
@@ -44,7 +47,9 @@ import lombok.Data;
  * <p>The IMSSS namespace is specified by {@link IMSSS#NAMESPACE_URI}, and this class aligns with
  * SCORM 2004 standards for sequencing and navigation.</p>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class DeliveryControls {
@@ -62,6 +67,7 @@ public class DeliveryControls {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("tracked")
+  @Default
   private boolean tracked = true;
 
   /**
@@ -77,6 +83,7 @@ public class DeliveryControls {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("completionSetByContent")
+  @Default
   private boolean completionSetByContent = false;
 
   /**
@@ -92,5 +99,6 @@ public class DeliveryControls {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("objectiveSetByContent")
+  @Default
   private boolean objectiveSetByContent = false;
 }

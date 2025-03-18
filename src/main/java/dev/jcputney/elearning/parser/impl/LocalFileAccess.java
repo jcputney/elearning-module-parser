@@ -27,17 +27,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Getter;
 
 /**
  * Implementation of FileAccess for local file access.
- *
- * @author jcputney
- * @version 1.0
- * @see FileAccess
  */
+@SuppressWarnings("ClassCanBeRecord")
 public class LocalFileAccess implements FileAccess {
   @Getter
   private final String rootPath;
@@ -75,8 +71,8 @@ public class LocalFileAccess implements FileAccess {
       return paths
           .filter(Files::isRegularFile) // Only list regular files
           .map(Path::toString)
-          .map(path -> path.replace(rootPath + File.separator, "")) // Remove root path
-          .collect(Collectors.toList());
+          .map(path -> path.replace(rootPath + File.separator, ""))
+          .toList();
     } catch (IOException e) {
       throw new IOException("Failed to list files in directory: " + directoryPath, e);
     }
@@ -94,7 +90,6 @@ public class LocalFileAccess implements FileAccess {
       throw new IOException("File is not readable: " + path);
     }
 
-    // Use try-with-resources when returning InputStream (assume caller will close it)
     return Files.newInputStream(filePath, StandardOpenOption.READ);
   }
 }

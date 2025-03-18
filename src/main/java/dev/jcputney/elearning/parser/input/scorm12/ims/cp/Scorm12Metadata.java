@@ -23,7 +23,10 @@ import dev.jcputney.elearning.parser.api.LoadableMetadata;
 import dev.jcputney.elearning.parser.input.lom.LOM;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12ADLCP;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the metadata element in SCORM 1.2.
@@ -61,7 +64,9 @@ import lombok.Data;
  * </metadata>
  * }</pre>
  */
-@Data
+@SuperBuilder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Metadata implements LoadableMetadata {
 
@@ -82,6 +87,7 @@ public class Scorm12Metadata implements LoadableMetadata {
    * optional.
    */
   @JacksonXmlProperty(localName = "lom", namespace = LOM.NAMESPACE_URI)
+  @Setter
   private LOM lom;
 
   /**

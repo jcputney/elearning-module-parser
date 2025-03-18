@@ -41,7 +41,7 @@ public interface FileAccess {
   /**
    * Checks if a file exists at the given path.
    *
-   * @param path The file path to check.
+   * @param path The path to check.
    * @return True if the file exists, false otherwise.
    */
   boolean fileExists(String path);
@@ -57,9 +57,9 @@ public interface FileAccess {
   /**
    * Retrieves the contents of a file as an InputStream.
    *
-   * @param path The file path to retrieve contents from.
+   * @param path The path to retrieve contents from.
    * @return An InputStream of the file contents.
-   * @throws IOException if the file cannot be read.
+   * @throws IOException if the file can't be read.
    */
   InputStream getFileContents(String path) throws IOException;
 
@@ -69,7 +69,7 @@ public interface FileAccess {
    * Constructs the full path for the given relative or absolute path.
    *
    * @param path The relative or absolute path for which the full path is to be generated.
-   *             If the path starts with a "/", it is treated as an absolute path and the
+   *             If the path starts with a forward slash, it is treated as an absolute path and the
    *             leading "/" is removed. Otherwise, the path is treated as relative and
    *             the rootPath is prefixed to form the full path.
    * @return The constructed full path as a string.

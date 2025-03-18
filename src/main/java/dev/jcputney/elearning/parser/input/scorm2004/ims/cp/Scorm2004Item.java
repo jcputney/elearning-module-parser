@@ -32,13 +32,18 @@ import dev.jcputney.elearning.parser.input.scorm2004.adl.navigation.Presentation
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.TimeLimitAction;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.Sequencing;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents a single item within an organization, typically mapping to a learning object or
  * resource. Items define the hierarchical structure within an organization.
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Item {
@@ -64,6 +69,7 @@ public class Scorm2004Item {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "isvisible")
   @JsonProperty("isvisible")
+  @Default
   private boolean isVisible = true;
 
   /**

@@ -20,7 +20,9 @@ package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents an individual auxiliary resource within the SCORM IMS Simple Sequencing schema. An
@@ -31,7 +33,9 @@ import lombok.Data;
  * diagrams, or external tools that help learners in understanding or practicing the activity
  * content.</p>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class AuxiliaryResource {
 

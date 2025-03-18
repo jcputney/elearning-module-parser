@@ -25,7 +25,9 @@ import dev.jcputney.elearning.parser.input.lom.types.CatalogEntry;
 import dev.jcputney.elearning.parser.input.lom.types.ContributeMeta;
 import dev.jcputney.elearning.parser.input.lom.types.Identifier;
 import java.util.List;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the meta-metadata information about a learning object in a Learning Object Metadata
@@ -46,7 +48,9 @@ import lombok.Data;
  * </complexType>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class MetaMetadata {
 

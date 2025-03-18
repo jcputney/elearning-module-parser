@@ -21,12 +21,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents the map element, specifying shared data configuration.
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class DataMap {
@@ -43,6 +48,7 @@ public class DataMap {
    */
   @JacksonXmlProperty(localName = "readSharedData", isAttribute = true)
   @JsonProperty("readSharedData")
+  @Default
   private boolean readSharedData = true;
 
   /**
@@ -50,5 +56,6 @@ public class DataMap {
    */
   @JacksonXmlProperty(localName = "writeSharedData", isAttribute = true)
   @JsonProperty("writeSharedData")
+  @Default
   private boolean writeSharedData = false;
 }

@@ -20,7 +20,10 @@ package dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Builder.Default;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents a mapping to a global objective or another objective within the LMS. Maps allow
@@ -42,7 +45,9 @@ import lombok.Data;
  *   </xs:complexType>
  * }</pre>
  */
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class MapInfo {
 
@@ -60,6 +65,7 @@ public class MapInfo {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "readRawScore")
   @JsonProperty("readRawScore")
+  @Default
   private boolean readRawScore = true;
 
   /**
@@ -68,6 +74,7 @@ public class MapInfo {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "readMinScore")
   @JsonProperty("readMinScore")
+  @Default
   private boolean readMinScore = true;
 
   /**
@@ -76,6 +83,7 @@ public class MapInfo {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "readMaxScore")
   @JsonProperty("readMaxScore")
+  @Default
   private boolean readMaxScore = true;
 
   /**
@@ -84,6 +92,7 @@ public class MapInfo {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "readCompletionStatus")
   @JsonProperty("readCompletionStatus")
+  @Default
   private boolean readCompletionStatus = true;
 
   /**
@@ -92,6 +101,7 @@ public class MapInfo {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "readProgressMeasure")
   @JsonProperty("readProgressMeasure")
+  @Default
   private boolean readProgressMeasure = true;
 
   /**
@@ -100,6 +110,7 @@ public class MapInfo {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "writeRawScore")
   @JsonProperty("writeRawScore")
+  @Default
   private boolean writeRawScore = false;
 
   /**
@@ -108,6 +119,7 @@ public class MapInfo {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "writeMinScore")
   @JsonProperty("writeMinScore")
+  @Default
   private boolean writeMinScore = false;
 
   /**
@@ -116,6 +128,7 @@ public class MapInfo {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "writeMaxScore")
   @JsonProperty("writeMaxScore")
+  @Default
   private boolean writeMaxScore = false;
 
   /**
@@ -124,6 +137,7 @@ public class MapInfo {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "writeCompletionStatus")
   @JsonProperty("writeCompletionStatus")
+  @Default
   private boolean writeCompletionStatus = false;
 
   /**
@@ -132,5 +146,6 @@ public class MapInfo {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "writeProgressMeasure")
   @JsonProperty("writeProgressMeasure")
+  @Default
   private boolean writeProgressMeasure = false;
 }

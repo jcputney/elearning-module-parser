@@ -18,12 +18,17 @@
 package dev.jcputney.elearning.parser.input.aicc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
-@Data
+@Builder
+@Getter
+@Jacksonized
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class AiccCourse {
@@ -37,6 +42,7 @@ public class AiccCourse {
   @JsonProperty(value = "Course_Description", required = true)
   private Map<String, String> courseDescription;
 
+  @JsonIgnore
   public String getCourseDescription() {
     return courseDescription == null || courseDescription.isEmpty() ? null : courseDescription.entrySet()
         .stream()
@@ -45,7 +51,9 @@ public class AiccCourse {
         .getKey();
   }
 
-  @Data
+  @Builder
+  @Getter
+  @Jacksonized
   @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
   public static class Course {
 
@@ -86,7 +94,9 @@ public class AiccCourse {
     private String totalObjectives;
   }
 
-  @Data
+  @Builder
+  @Getter
+  @Jacksonized
   @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
   public static class CourseBehavior {
 

@@ -20,6 +20,7 @@ package dev.jcputney.elearning.parser.output.cmi5;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.cmi5.Cmi5Manifest;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
+import lombok.NoArgsConstructor;
 
 /**
  * Represents metadata for a cmi5 module, including cmi5-specific fields such as prerequisites,
@@ -29,6 +30,7 @@ import dev.jcputney.elearning.parser.output.ModuleMetadata;
  * LMS tracking and reporting, including a list of Assignable Units (AUs) and custom data fields.
  * </p>
  */
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Cmi5Metadata extends ModuleMetadata<Cmi5Manifest> {
 
   public Cmi5Metadata(Cmi5Manifest manifest, ModuleType moduleType,

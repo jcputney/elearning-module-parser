@@ -3,7 +3,7 @@
 
   <groupId>dev.jcputney</groupId>
   <artifactId>elearning-module-parser</artifactId>
-  <version>0.0.6-SNAPSHOT</version>
+  <version>0.0.8-SNAPSHOT</version>
 
   <description>A library for parsing eLearning module configuration files and packages</description>
   <url>https://github.com/jcputney/elearning-module-parser</url>
@@ -40,12 +40,12 @@
 
     <!-- Dependency Versions -->
 
-    <version.aws.sdk.v1>1.12.781</version.aws.sdk.v1>
-    <version.aws.sdk.v2>2.30.21</version.aws.sdk.v2>
+    <version.aws.sdk.v1>1.12.782</version.aws.sdk.v1>
+    <version.aws.sdk.v2>2.31.2</version.aws.sdk.v2>
     <version.commons-configuration2>2.11.0</version.commons-configuration2>
-    <version.jackson>2.18.2</version.jackson>
+    <version.jackson>2.18.3</version.jackson>
     <version.jakarta.xml.bind>4.0.2</version.jakarta.xml.bind>
-    <version.junit>5.11.4</version.junit>
+    <version.junit>5.12.1</version.junit>
     <version.lombok>1.18.36</version.lombok>
     <version.org.json>20250107</version.org.json>
     <version.plugin.central-publishing>0.7.0</version.plugin.central-publishing>
