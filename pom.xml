@@ -50,7 +50,7 @@
     <version.org.json>20250107</version.org.json>
     <version.plugin.central-publishing>0.7.0</version.plugin.central-publishing>
     <version.plugin.compiler>3.14.0</version.plugin.compiler>
-    <version.plugin.failsafe>3.5.2</version.plugin.failsafe>
+    <version.plugin.failsafe>3.5.3</version.plugin.failsafe>
     <version.plugin.gpg>3.2.7</version.plugin.gpg>
     <version.plugin.jacoco>0.8.12</version.plugin.jacoco>
     <version.plugin.javadoc>3.11.2</version.plugin.javadoc>
