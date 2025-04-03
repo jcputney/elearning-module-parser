@@ -52,7 +52,7 @@
     <version.plugin.compiler>3.14.0</version.plugin.compiler>
     <version.plugin.failsafe>3.5.2</version.plugin.failsafe>
     <version.plugin.gpg>3.2.7</version.plugin.gpg>
-    <version.plugin.jacoco>0.8.12</version.plugin.jacoco>
+    <version.plugin.jacoco>0.8.13</version.plugin.jacoco>
     <version.plugin.javadoc>3.11.2</version.plugin.javadoc>
     <version.plugin.release>3.1.1</version.plugin.release>
     <version.plugin.source>3.3.1</version.plugin.source>
