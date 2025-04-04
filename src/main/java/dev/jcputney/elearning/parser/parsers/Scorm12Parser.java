@@ -178,51 +178,86 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
   /**
    * Loads external metadata files referenced in the manifest into the metadata object.
    *
-   * @param manifest The manifest object to load metadata into.
+   * @param manifest The SCORM 1.2 manifest object.
    * @throws XMLStreamException If an error occurs while parsing the XML.
    * @throws IOException If an error occurs while reading the file.
    */
   private void loadExternalMetadata(Scorm12Manifest manifest)
       throws XMLStreamException, IOException {
-    // Load additional metadata files referenced in the manifest
-    // For each <resource> element, check for <file> elements with href attribute
-    // pointing to additional metadata files
-    if (manifest != null) {
-      log.debug("Loading external metadata for SCORM 1.2 manifest");
-      loadExternalMetadataIntoMetadata(manifest.getMetadata());
+    if (manifest == null) {
+      return;
+    }
 
-      List<Scorm12Resource> resources = manifest.getResources().getResourceList();
-      if (resources != null) {
-        log.debug("Processing {} resources for external metadata", resources.size());
-        for (Scorm12Resource resource : resources) {
-          loadExternalMetadataIntoMetadata(resource.getMetadata());
+    log.debug("Loading external metadata for SCORM 1.2 manifest");
+    loadExternalMetadataIntoMetadata(manifest.getMetadata());
 
-          List<Scorm12File> files = resource.getFiles();
-          if (files != null) {
-            log.debug("Processing {} files in resource for external metadata", files.size());
-            for (Scorm12File file : files) {
-              boolean exists = moduleFileProvider.fileExists(file.getHref());
-              file.setExists(exists);
-              if (exists) {
-                log.debug("File exists: {}", file.getHref());
-              } else {
-                log.warn("File does not exist: {}", file.getHref());
-              }
-              loadExternalMetadataIntoMetadata(file.getMetadata());
-            }
-          }
-        }
+    loadResourcesMetadata(manifest.getResources().getResourceList());
+    loadOrganizationsMetadata(manifest.getOrganizations().getOrganizationList());
+  }
+
+  /**
+   * Loads external metadata files for resources in the manifest.
+   *
+   * @param resources The list of resources to load metadata for.
+   * @throws XMLStreamException If an error occurs while parsing the XML.
+   * @throws IOException If an error occurs while reading the file.
+   */
+  private void loadResourcesMetadata(List<Scorm12Resource> resources)
+      throws XMLStreamException, IOException {
+    if (resources == null) {
+      return;
+    }
+
+    log.debug("Processing {} resources for external metadata", resources.size());
+    for (Scorm12Resource resource : resources) {
+      loadExternalMetadataIntoMetadata(resource.getMetadata());
+      loadFilesMetadata(resource.getFiles());
+    }
+  }
+
+  /**
+   * Loads external metadata files for files in the manifest.
+   *
+   * @param files The list of files to load metadata for.
+   * @throws XMLStreamException If an error occurs while parsing the XML.
+   * @throws IOException If an error occurs while reading the file.
+   */
+  private void loadFilesMetadata(List<Scorm12File> files)
+      throws XMLStreamException, IOException {
+    if (files == null) {
+      return;
+    }
+
+    log.debug("Processing {} files in resource for external metadata", files.size());
+    for (Scorm12File file : files) {
+      boolean exists = moduleFileProvider.fileExists(file.getHref());
+      file.setExists(exists);
+      if (exists) {
+        log.debug("File exists: {}", file.getHref());
+      } else {
+        log.warn("File does not exist: {}", file.getHref());
       }
+      loadExternalMetadataIntoMetadata(file.getMetadata());
+    }
+  }
 
-      List<Scorm12Organization> organizations = manifest.getOrganizations().getOrganizationList();
-      if (organizations != null) {
-        log.debug("Processing {} organizations for external metadata", organizations.size());
-        for (Scorm12Organization organization : organizations) {
-          loadExternalMetadataIntoMetadata(organization.getMetadata());
+  /**
+   * Loads external metadata files for organizations in the manifest.
+   *
+   * @param organizations The list of organizations to load metadata for.
+   * @throws XMLStreamException If an error occurs while parsing the XML.
+   * @throws IOException If an error occurs while reading the file.
+   */
+  private void loadOrganizationsMetadata(List<Scorm12Organization> organizations)
+      throws XMLStreamException, IOException {
+    if (organizations == null) {
+      return;
+    }
 
-          loadExternalMetadataForItems(organization.getItems());
-        }
-      }
+    log.debug("Processing {} organizations for external metadata", organizations.size());
+    for (Scorm12Organization organization : organizations) {
+      loadExternalMetadataIntoMetadata(organization.getMetadata());
+      loadExternalMetadataForItems(organization.getItems());
     }
   }
 

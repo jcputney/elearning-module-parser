@@ -40,9 +40,9 @@ public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
   // Matches up to three groups of digits separated by optional colons.
   private static final Pattern HMS_REGEX = Pattern.compile(
       "^"                // start of string
-          + "(\\d*)?"        // hours (group 1) - zero or more digits, optional
-          + "(?::(\\d*))?"   // optional colon, then minutes (group 2) - zero or more digits
-          + "(?::(\\d*))?"   // optional colon, then seconds (group 3) - zero or more digits
+          + "(\\d+)"         // hours (group 1) - one or more digits
+          + "(?::(\\d+))?"   // optional colon, then minutes (group 2) - one or more digits
+          + "(?::(\\d+))?"   // optional colon, then seconds (group 3) - one or more digits
           + "$"              // end of string
   );
 

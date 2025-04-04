@@ -25,7 +25,6 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004File;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organization;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resource;
-import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004SubMetadata;
 import dev.jcputney.elearning.parser.output.metadata.scorm2004.Scorm2004Metadata;
 import java.io.IOException;
 import java.util.List;
@@ -114,36 +113,69 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
    */
   public void loadExternalMetadata(Scorm2004Manifest manifest)
       throws XMLStreamException, IOException {
-    // Load additional metadata files referenced in the manifest
-    // For each <resource> element, check for <file> elements with href attribute
-    // pointing to additional metadata files
-    if (manifest != null) {
-      var courseMetadata = manifest.getMetadata();
-      loadExternalMetadataIntoMetadata(courseMetadata);
+    if (manifest == null) {
+      return;
+    }
 
-      List<Scorm2004Resource> resources = manifest.getResources().getResourceList();
-      if (resources != null) {
-        for (Scorm2004Resource resource : resources) {
-          var resourceMetadata = resource.getMetadata();
-          loadExternalMetadataIntoMetadata(resourceMetadata);
+    loadExternalMetadataIntoMetadata(manifest.getMetadata());
+    loadResourcesMetadata(manifest.getResources().getResourceList());
+    loadOrganizationsMetadata(manifest.getOrganizations().getOrganizationList());
+  }
 
-          List<Scorm2004File> files = resource.getFiles();
-          if (files != null) {
-            for (Scorm2004File file : files) {
-              file.setExists(moduleFileProvider.fileExists(file.getHref()));
-              Scorm2004SubMetadata subMetadata = file.getMetadata();
-              loadExternalMetadataIntoMetadata(subMetadata);
-            }
-          }
-        }
-      }
+  /**
+   * Loads resources metadata files referenced in the manifest into the metadata object.
+   *
+   * @param resources The list of resources to load metadata for.
+   * @throws XMLStreamException If an error occurs while parsing the XML.
+   * @throws IOException If an error occurs while reading the file.
+   */
+  private void loadResourcesMetadata(List<Scorm2004Resource> resources)
+      throws XMLStreamException, IOException {
+    if (resources == null) {
+      return;
+    }
 
-      for (Scorm2004Organization organization : manifest.getOrganizations().getOrganizationList()) {
-        var organizationMetadata = organization.getMetadata();
-        loadExternalMetadataIntoMetadata(organizationMetadata);
+    for (Scorm2004Resource resource : resources) {
+      loadExternalMetadataIntoMetadata(resource.getMetadata());
+      loadFilesMetadata(resource.getFiles());
+    }
+  }
 
-        loadExternalMetadataForItems(organization.getItems());
-      }
+  /**
+   * Loads files metadata files referenced in the manifest into the metadata object.
+   *
+   * @param files The list of files to load metadata for.
+   * @throws XMLStreamException If an error occurs while parsing the XML.
+   * @throws IOException If an error occurs while reading the file.
+   */
+  private void loadFilesMetadata(List<Scorm2004File> files)
+      throws XMLStreamException, IOException {
+    if (files == null) {
+      return;
+    }
+
+    for (Scorm2004File file : files) {
+      file.setExists(moduleFileProvider.fileExists(file.getHref()));
+      loadExternalMetadataIntoMetadata(file.getMetadata());
+    }
+  }
+
+  /**
+   * Loads organizations metadata files referenced in the manifest into the metadata object.
+   *
+   * @param organizations The list of organizations to load metadata for.
+   * @throws XMLStreamException If an error occurs while parsing the XML.
+   * @throws IOException If an error occurs while reading the file.
+   */
+  private void loadOrganizationsMetadata(List<Scorm2004Organization> organizations)
+      throws XMLStreamException, IOException {
+    if (organizations == null) {
+      return;
+    }
+
+    for (Scorm2004Organization organization : organizations) {
+      loadExternalMetadataIntoMetadata(organization.getMetadata());
+      loadExternalMetadataForItems(organization.getItems());
     }
   }
 

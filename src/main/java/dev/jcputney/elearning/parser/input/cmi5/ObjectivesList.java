@@ -58,7 +58,7 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Objectives {
+public class ObjectivesList {
 
   /**
    * A list of defined objectives, each represented by an {@link Objective}.
@@ -81,7 +81,8 @@ public class Objectives {
   /**
    * Default constructor for the Objectives class.
    */
-  public Objectives() {
+  @SuppressWarnings("unused")
+  public ObjectivesList() {
     // Default constructor
   }
 

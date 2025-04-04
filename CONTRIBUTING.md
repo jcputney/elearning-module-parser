@@ -32,6 +32,7 @@ This project adheres to the [Code of Conduct](CODE_OF_CONDUCT.md). By participat
 ### Reporting Issues
 
 If you find a bug or have a problem using the library, please [create an issue](https://github.com/jcputney/elearning-module-parser/issues/new). Include as much detail as possible:
+
 - Steps to reproduce the problem.
 - Expected vs. actual behavior.
 - Version of the library, Java, and any other relevant environment details.
@@ -39,6 +40,7 @@ If you find a bug or have a problem using the library, please [create an issue](
 ### Feature Requests
 
 Have an idea for a new feature? [Submit a feature request](https://github.com/jcputney/elearning-module-parser/issues/new?labels=enhancement) and describe:
+
 - The problem the feature solves.
 - A high-level description of the proposed solution.
 - Examples or use cases, if possible.
@@ -46,6 +48,7 @@ Have an idea for a new feature? [Submit a feature request](https://github.com/jc
 ### Submitting Code Changes
 
 If you’re ready to contribute code, follow these steps:
+
 1. Fork the repository.
 2. Create a feature branch (`git checkout -b feature/my-feature`).
 3. Commit your changes (`git commit -m "Add my feature"`).
@@ -57,17 +60,20 @@ If you’re ready to contribute code, follow these steps:
 ## Setting Up Your Development Environment
 
 1. Clone your forked repository:
+
    ```bash
    git clone https://github.com/your-username/elearning-module-parser.git
    cd elearning-module-parser
    ```
 
 2. Build the project:
+
    ```bash
    mvn clean compile
    ```
 
 3. Run the tests:
+
    ```bash
    mvn test
    ```
@@ -79,6 +85,7 @@ If you’re ready to contribute code, follow these steps:
 ### Code Style
 
 Follow these practices:
+
 - Use Java 17 language features where appropriate.
 - Maintain consistency with the existing codebase.
 - Ensure your IDE is configured to use the `.editorconfig` file.
@@ -91,6 +98,7 @@ Follow these practices:
 - Mock external dependencies using the appropriate tools (e.g., Mockito).
 
 Run tests locally before submitting:
+
 ```bash
 mvn test
 ```
@@ -116,6 +124,7 @@ Pull requests will be reviewed by the maintainers. Feedback may be provided for 
 ## Community Support
 
 If you need help or have questions, feel free to:
+
 - [Open a discussion](https://github.com/jcputney/elearning-module-parser/discussions).
 - Join the conversation on relevant issues or pull requests.
 

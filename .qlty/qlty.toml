@@ -26,6 +26,10 @@ exclude_patterns = [
   "**/testdata/**",
   "**/vendor/**",
   "**/assets/**",
+  "**/test/**",
+  "**/docs/**",
+  "**/.github/**",
+  "**/.junie/**",
 ]
 
 test_patterns = [
@@ -46,19 +50,7 @@ name = "actionlint"
 name = "checkov"
 
 [[plugin]]
-name = "golangci-lint"
-mode = "comment"
-
-[[plugin]]
-name = "markdownlint"
-version = "0.41.0"
-mode = "comment"
-
-[[plugin]]
 name = "osv-scanner"
-
-[[plugin]]
-name = "prettier"
 
 [[plugin]]
 name = "radarlint-java"

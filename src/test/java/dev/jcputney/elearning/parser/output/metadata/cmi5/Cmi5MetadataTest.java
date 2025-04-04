@@ -27,7 +27,7 @@ import dev.jcputney.elearning.parser.input.cmi5.AU;
 import dev.jcputney.elearning.parser.input.cmi5.Block;
 import dev.jcputney.elearning.parser.input.cmi5.Cmi5Manifest;
 import dev.jcputney.elearning.parser.input.cmi5.Course;
-import dev.jcputney.elearning.parser.input.cmi5.Objectives;
+import dev.jcputney.elearning.parser.input.cmi5.ObjectivesList;
 import dev.jcputney.elearning.parser.input.cmi5.types.LangString;
 import dev.jcputney.elearning.parser.input.cmi5.types.Objective;
 import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
@@ -130,7 +130,7 @@ class Cmi5MetadataTest {
     Course course = createCourse("course-id", "Test Course", "Test Description");
     Objective objective1 = createObjective("objective1");
     Objective objective2 = createObjective("objective2");
-    Objectives objectives = Objectives.builder()
+    ObjectivesList objectives = ObjectivesList.builder()
         .objectives(List.of(objective1, objective2))
         .build();
     Cmi5Manifest manifest = Cmi5Manifest.builder()
@@ -195,7 +195,7 @@ class Cmi5MetadataTest {
   void create_withEmptyLists_addsNoMetadata() {
     // Arrange
     Course course = createCourse("course-id", "Test Course", "Test Description");
-    Objectives objectives = Objectives.builder()
+    ObjectivesList objectives = ObjectivesList.builder()
         .objectives(Collections.emptyList())
         .build();
     Cmi5Manifest manifest = Cmi5Manifest.builder()

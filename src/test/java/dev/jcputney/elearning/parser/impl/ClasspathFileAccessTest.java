@@ -46,31 +46,31 @@ class ClasspathFileAccessTest {
   }
 
   @Test
-  void constructor_withValidPath_createsInstance() {
+  void constructorWithValidPathCreatesInstance() {
     assertNotNull(classpathFileAccess);
     assertEquals(TEST_ROOT_PATH, classpathFileAccess.getRootPath());
   }
 
   @Test
-  void constructor_withNullPath_createsInstanceWithNullPath() {
+  void constructorWithNullPathCreatesInstanceWithNullPath() {
     ClasspathFileAccess access = new ClasspathFileAccess(null);
     assertNull(access.getRootPath());
   }
 
   @Test
-  void fileExists_withExistingFile_returnsTrue() {
+  void fileExistsWithExistingFileReturnsTrue() {
     // Check for a file that should exist in the test resources
     assertTrue(classpathFileAccess.fileExists(
         "modules/scorm12/ContentPackagingOneFilePerSCO_SCORM12/imsmanifest.xml"));
   }
 
   @Test
-  void fileExists_withNonExistingFile_returnsFalse() {
+  void fileExistsWithNonExistingFileReturnsFalse() {
     assertFalse(classpathFileAccess.fileExists("modules/scorm12/nonexistent.txt"));
   }
 
   @Test
-  void fileExists_withNullPath_throwsIllegalArgumentException() {
+  void fileExistsWithNullPathThrowsIllegalArgumentException() {
     assertThrows(IllegalArgumentException.class, () -> classpathFileAccess.fileExists(null));
   }
 

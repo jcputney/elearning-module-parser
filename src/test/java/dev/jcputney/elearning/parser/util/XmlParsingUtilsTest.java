@@ -40,8 +40,11 @@ import org.junit.jupiter.api.Test;
  */
 class XmlParsingUtilsTest {
 
+  public static final String ROOT_PATH = "root/path";
+  public static final String METADATA_XML = "metadata.xml";
+
   @Test
-  void parseXmlToObject_withValidXml_returnsObject() throws Exception {
+  void parseXmlToObjectWithValidXmlReturnsObject() throws Exception {
     String xml = "<TestXmlClass><name>Test</name><value>42</value></TestXmlClass>";
     InputStream stream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
 
@@ -52,13 +55,13 @@ class XmlParsingUtilsTest {
   }
 
   @Test
-  void parseXmlToObject_withNullInputStream_throwsIllegalArgumentException() {
+  void parseXmlToObjectWithNullInputStreamThrowsIllegalArgumentException() {
     assertThrows(IllegalArgumentException.class,
         () -> XmlParsingUtils.parseXmlToObject(null, TestXmlClass.class));
   }
 
   @Test
-  void parseXmlToObject_withNullClass_throwsIllegalArgumentException() {
+  void parseXmlToObjectWithNullClassThrowsIllegalArgumentException() {
     String xml = "<TestXmlClass><name>Test</name><value>42</value></TestXmlClass>";
     InputStream stream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
 
@@ -67,27 +70,27 @@ class XmlParsingUtilsTest {
   }
 
   @Test
-  void loadExternalMetadataIntoMetadata_withFileAccess_nullLoadableMetadata_throwsIllegalArgumentException() {
-    MockFileAccess fileAccess = new MockFileAccess("root/path");
+  void loadExternalMetadataIntoMetadataWithFileAccessNullLoadableMetadataThrowsIllegalArgumentException() {
+    MockFileAccess fileAccess = new MockFileAccess(ROOT_PATH);
 
     assertThrows(IllegalArgumentException.class,
         () -> XmlParsingUtils.loadExternalMetadataIntoMetadata(null, fileAccess));
   }
 
   @Test
-  void loadExternalMetadataIntoMetadata_withFileAccess_nullFileAccess_throwsIllegalArgumentException() {
-    MockLoadableMetadata metadata = new MockLoadableMetadata("metadata.xml");
+  void loadExternalMetadataIntoMetadataWithFileAccessNullFileAccessThrowsIllegalArgumentException() {
+    MockLoadableMetadata metadata = new MockLoadableMetadata(METADATA_XML);
 
     assertThrows(IllegalArgumentException.class,
         () -> XmlParsingUtils.loadExternalMetadataIntoMetadata(metadata, (FileAccess) null));
   }
 
   @Test
-  void loadExternalMetadataIntoMetadata_withFileAccess_validFile_setsLom() throws Exception {
-    MockLoadableMetadata metadata = new MockLoadableMetadata("metadata.xml");
-    MockFileAccess fileAccess = new MockFileAccess("root/path");
-    fileAccess.setFileExists("metadata.xml", true);
-    fileAccess.setFileContents("metadata.xml", "<lom></lom>");
+  void loadExternalMetadataIntoMetadataWithFileAccessValidFileSetsLom() throws Exception {
+    MockLoadableMetadata metadata = new MockLoadableMetadata(METADATA_XML);
+    MockFileAccess fileAccess = new MockFileAccess(ROOT_PATH);
+    fileAccess.setFileExists(METADATA_XML, true);
+    fileAccess.setFileContents(METADATA_XML, "<lom></lom>");
 
     XmlParsingUtils.loadExternalMetadataIntoMetadata(metadata, fileAccess);
 
@@ -95,16 +98,16 @@ class XmlParsingUtilsTest {
   }
 
   @Test
-  void loadExternalMetadataIntoMetadata_withModuleFileProvider_nullLoadableMetadata_throwsIllegalArgumentException() {
-    MockModuleFileProvider moduleFileProvider = new MockModuleFileProvider("root/path");
+  void loadExternalMetadataIntoMetadataWithModuleFileProviderNullLoadableMetadataThrowsIllegalArgumentException() {
+    MockModuleFileProvider moduleFileProvider = new MockModuleFileProvider(ROOT_PATH);
 
     assertThrows(IllegalArgumentException.class,
         () -> XmlParsingUtils.loadExternalMetadataIntoMetadata(null, moduleFileProvider));
   }
 
   @Test
-  void loadExternalMetadataIntoMetadata_withModuleFileProvider_nullModuleFileProvider_throwsIllegalArgumentException() {
-    MockLoadableMetadata metadata = new MockLoadableMetadata("metadata.xml");
+  void loadExternalMetadataIntoMetadataWithModuleFileProviderNullModuleFileProviderThrowsIllegalArgumentException() {
+    MockLoadableMetadata metadata = new MockLoadableMetadata(METADATA_XML);
 
     assertThrows(IllegalArgumentException.class,
         () -> XmlParsingUtils.loadExternalMetadataIntoMetadata(metadata,
@@ -112,12 +115,12 @@ class XmlParsingUtilsTest {
   }
 
   @Test
-  void loadExternalMetadataIntoMetadata_withModuleFileProvider_validFile_setsLom()
+  void loadExternalMetadataIntoMetadataWithModuleFileProviderValidFileSetsLom()
       throws Exception {
-    MockLoadableMetadata metadata = new MockLoadableMetadata("metadata.xml");
-    MockModuleFileProvider moduleFileProvider = new MockModuleFileProvider("root/path");
-    moduleFileProvider.setFileExists("metadata.xml", true);
-    moduleFileProvider.setFileContents("metadata.xml", "<lom></lom>");
+    MockLoadableMetadata metadata = new MockLoadableMetadata(METADATA_XML);
+    MockModuleFileProvider moduleFileProvider = new MockModuleFileProvider(ROOT_PATH);
+    moduleFileProvider.setFileExists(METADATA_XML, true);
+    moduleFileProvider.setFileContents(METADATA_XML, "<lom></lom>");
 
     XmlParsingUtils.loadExternalMetadataIntoMetadata(metadata, moduleFileProvider);
 

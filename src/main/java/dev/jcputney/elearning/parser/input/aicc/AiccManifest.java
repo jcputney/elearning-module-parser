@@ -49,16 +49,19 @@ public class AiccManifest implements PackageManifest {
   /**
    * List of assignable units in the AICC manifest.
    */
+  @SuppressWarnings("unused")
   private List<AssignableUnit> assignableUnits;
 
   /**
    * List of descriptors in the AICC manifest.
    */
+  @SuppressWarnings("unused")
   private List<Descriptor> descriptors;
 
   /**
    * List of course structures in the AICC manifest.
    */
+  @SuppressWarnings("unused")
   private List<CourseStructure> courseStructures;
 
   /**

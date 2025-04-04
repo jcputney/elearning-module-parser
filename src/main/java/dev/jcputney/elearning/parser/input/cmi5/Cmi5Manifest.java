@@ -84,7 +84,7 @@ public class Cmi5Manifest implements PackageManifest {
    * }</pre>
    */
   @JacksonXmlProperty(localName = "objectives")
-  private Objectives objectives;
+  private ObjectivesList objectives;
   /**
    * A list of blocks within the course structure. Each block can contain nested blocks or
    * assignable units (AUs).
@@ -147,8 +147,8 @@ public class Cmi5Manifest implements PackageManifest {
   }
 
   /**
-   * Returns the launch URL for the course. First checks for assignable units at the root level,
-   * and if none are found, looks for assignable units inside the first block.
+   * Returns the launch URL for the course. First checks for assignable units at the root level, and
+   * if none are found, looks for assignable units inside the first block.
    *
    * @return the launch URL for the course, or null if no assignable units are found
    */

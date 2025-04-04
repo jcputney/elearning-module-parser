@@ -21,7 +21,7 @@ import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.cmi5.AU;
 import dev.jcputney.elearning.parser.input.cmi5.Block;
 import dev.jcputney.elearning.parser.input.cmi5.Cmi5Manifest;
-import dev.jcputney.elearning.parser.input.cmi5.Objectives;
+import dev.jcputney.elearning.parser.input.cmi5.ObjectivesList;
 import dev.jcputney.elearning.parser.input.cmi5.types.Objective;
 import dev.jcputney.elearning.parser.output.metadata.BaseModuleMetadata;
 import dev.jcputney.elearning.parser.output.metadata.SimpleMetadata;
@@ -96,7 +96,7 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
 
     // Add objectives if available
     Optional.ofNullable(manifest.getObjectives())
-        .map(Objectives::getObjectives)
+        .map(ObjectivesList::getObjectives)
         .filter(objectiveList -> !objectiveList.isEmpty())
         .ifPresent(objectiveList -> {
           // Add objective IDs

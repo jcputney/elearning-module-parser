@@ -56,12 +56,12 @@ class CachedFileAccessTest {
   }
 
   @Test
-  void constructor_withNullDelegate_throwsIllegalArgumentException() {
+  void constructorWithNullDelegateThrowsIllegalArgumentException() {
     assertThrows(IllegalArgumentException.class, () -> new CachedFileAccess(null));
   }
 
   @Test
-  void getRootPath_delegatesToUnderlyingImplementation() {
+  void getRootPathDelegatesToUnderlyingImplementation() {
     String rootPath = cachedFileAccess.getRootPath();
 
     assertEquals("root/path", rootPath);
@@ -69,7 +69,7 @@ class CachedFileAccessTest {
   }
 
   @Test
-  void fileExists_cachesMisses() {
+  void fileExistsCachesMisses() {
     mockFileAccess.setFileExistsResponse("file1.txt", true);
 
     // First call should miss the cache
@@ -84,7 +84,7 @@ class CachedFileAccessTest {
   }
 
   @Test
-  void listFiles_cachesMisses() throws IOException {
+  void listFilesCachesMisses() throws IOException {
     List<String> files = Arrays.asList("file1.txt", "file2.txt");
     mockFileAccess.setListFilesResponse("dir", files);
 
@@ -100,7 +100,7 @@ class CachedFileAccessTest {
   }
 
   @Test
-  void getFileContents_cachesMisses() throws IOException {
+  void getFileContentsCachesMisses() throws IOException {
     byte[] contents = "file contents".getBytes();
     mockFileAccess.setFileContentsResponse("file.txt", contents);
 
@@ -118,7 +118,7 @@ class CachedFileAccessTest {
   }
 
   @Test
-  void clearCache_clearsAllCaches() throws IOException {
+  void clearCacheClearsAllCaches() throws IOException {
     // Set up responses
     mockFileAccess.setFileExistsResponse("file.txt", true);
     List<String> files = Arrays.asList("file1.txt", "file2.txt");
@@ -146,7 +146,7 @@ class CachedFileAccessTest {
   }
 
   @Test
-  void clearCache_withPath_clearsCacheForSpecificPath() throws IOException {
+  void clearCacheWithPathClearsCacheForSpecificPath() {
     // Set up responses
     mockFileAccess.setFileExistsResponse("file1.txt", true);
     mockFileAccess.setFileExistsResponse("file2.txt", true);
@@ -168,12 +168,12 @@ class CachedFileAccessTest {
   }
 
   @Test
-  void clearCache_withNullPath_throwsIllegalArgumentException() {
+  void clearCacheWithNullPathThrowsIllegalArgumentException() {
     assertThrows(IllegalArgumentException.class, () -> cachedFileAccess.clearCache(null));
   }
 
   @Test
-  void listFiles_handlesIOException() throws IOException {
+  void listFilesHandlesIOException() {
     // Set up the mock to throw an IOException
     mockFileAccess = new TrackingMockFileAccess("root/path") {
       @Override
@@ -198,7 +198,7 @@ class CachedFileAccessTest {
   }
 
   @Test
-  void getFileContents_handlesIOException() throws IOException {
+  void getFileContentsHandlesIOException() {
     // Set up the mock to throw an IOException
     mockFileAccess = new TrackingMockFileAccess("root/path") {
       @Override
@@ -223,37 +223,37 @@ class CachedFileAccessTest {
   }
 
   @Test
-  void fileExists_withNullPath_throwsIllegalArgumentException() {
+  void fileExistsWithNullPathThrowsIllegalArgumentException() {
     assertThrows(IllegalArgumentException.class, () -> cachedFileAccess.fileExists(null));
   }
 
   @Test
-  void listFiles_withNullPath_throwsIllegalArgumentException() {
+  void listFilesWithNullPathThrowsIllegalArgumentException() {
     assertThrows(IllegalArgumentException.class, () -> cachedFileAccess.listFiles(null));
   }
 
   @Test
-  void getFileContents_withNullPath_throwsIllegalArgumentException() {
+  void getFileContentsWithNullPathThrowsIllegalArgumentException() {
     assertThrows(IllegalArgumentException.class, () -> cachedFileAccess.getFileContents(null));
   }
 
   @Test
-  void fullPath_withRelativePath_returnsPathWithRootPrefix() {
+  void fullPathWithRelativePathReturnsPathWithRootPrefix() {
     assertEquals("root/path/file.txt", cachedFileAccess.fullPath("file.txt"));
   }
 
   @Test
-  void fullPath_withAbsolutePath_returnsPathWithoutLeadingSlash() {
+  void fullPathWithAbsolutePathReturnsPathWithoutLeadingSlash() {
     assertEquals("file.txt", cachedFileAccess.fullPath("/file.txt"));
   }
 
   @Test
-  void fullPath_withNullPath_throwsIllegalArgumentException() {
+  void fullPathWithNullPathThrowsIllegalArgumentException() {
     assertThrows(IllegalArgumentException.class, () -> cachedFileAccess.fullPath(null));
   }
 
   @Test
-  void fullPath_withEmptyRootPath_returnsPathAsIs() {
+  void fullPathWithEmptyRootPathReturnsPathAsIs() {
     // Set up a mock with empty root path
     mockFileAccess = new TrackingMockFileAccess("");
     cachedFileAccess = new CachedFileAccess(mockFileAccess);
@@ -262,7 +262,7 @@ class CachedFileAccessTest {
   }
 
   @Test
-  void fullPath_withMultipleSlashes_handlesPathCorrectly() {
+  void fullPathWithMultipleSlashesHandlesPathCorrectly() {
     // Test with path containing multiple slashes
     // Note: fullPath() doesn't normalize multiple slashes in the middle of the path
     assertEquals("root/path/dir//file.txt", cachedFileAccess.fullPath("dir//file.txt"));
@@ -271,21 +271,21 @@ class CachedFileAccessTest {
   }
 
   @Test
-  void fullPath_withParentDirectoryReferences_returnsPathAsIs() {
+  void fullPathWithParentDirectoryReferencesReturnsPathAsIs() {
     // Note: fullPath() doesn't resolve parent directory references
     assertEquals("root/path/../file.txt", cachedFileAccess.fullPath("../file.txt"));
     assertEquals("root/path/dir/../file.txt", cachedFileAccess.fullPath("dir/../file.txt"));
   }
 
   @Test
-  void fullPath_withCurrentDirectoryReferences_returnsPathAsIs() {
+  void fullPathWithCurrentDirectoryReferencesReturnsPathAsIs() {
     // Note: fullPath() doesn't resolve current directory references
     assertEquals("root/path/./file.txt", cachedFileAccess.fullPath("./file.txt"));
     assertEquals("root/path/dir/./file.txt", cachedFileAccess.fullPath("dir/./file.txt"));
   }
 
   @Test
-  void fullPath_withMixedPathElements_handlesPathCorrectly() {
+  void fullPathWithMixedPathElementsHandlesPathCorrectly() {
     // Test with a path containing both relative and absolute elements
     assertEquals("dir/subdir/file.txt", cachedFileAccess.fullPath("/dir/subdir/file.txt"));
     assertEquals("root/path/dir/../subdir/./file.txt",
@@ -293,7 +293,7 @@ class CachedFileAccessTest {
   }
 
   @Test
-  void fullPath_withSpecialCharacters_handlesPathCorrectly() {
+  void fullPathWithSpecialCharactersHandlesPathCorrectly() {
     // Test with a path containing spaces and special characters
     assertEquals("root/path/my file.txt", cachedFileAccess.fullPath("my file.txt"));
     assertEquals("root/path/file-with-dashes.txt",
@@ -305,7 +305,7 @@ class CachedFileAccessTest {
   }
 
   @Test
-  void fullPath_withVeryLongPath_handlesPathCorrectly() {
+  void fullPathWithVeryLongPathHandlesPathCorrectly() {
     // Create a very long path (over 255 characters)
     StringBuilder longPathBuilder = new StringBuilder();
     for (int i = 0; i < 20; i++) {
@@ -318,20 +318,20 @@ class CachedFileAccessTest {
   }
 
   @Test
-  void fullPath_withPathEndingWithSlash_handlesPathCorrectly() {
+  void fullPathWithPathEndingWithSlashHandlesPathCorrectly() {
     // Test with a path ending with a slash
     assertEquals("root/path/directory/", cachedFileAccess.fullPath("directory/"));
     assertEquals("directory/", cachedFileAccess.fullPath("/directory/"));
   }
 
   @Test
-  void fullPath_withEmptyPath_returnsRootPath() {
+  void fullPathWithEmptyPathReturnsRootPath() {
     // Test with an empty path
     assertEquals("root/path/", cachedFileAccess.fullPath(""));
   }
 
   @Test
-  void concurrentAccess_ensuresThreadSafety() throws InterruptedException {
+  void concurrentAccessEnsuresThreadSafety() throws InterruptedException {
     // Set up responses
     mockFileAccess.setFileExistsResponse("file.txt", true);
     byte[] contents = "file contents".getBytes();
@@ -393,7 +393,7 @@ class CachedFileAccessTest {
   }
 
   @Test
-  void largeFileHandling_cachesContentCorrectly() throws IOException {
+  void largeFileHandlingCachesContentCorrectly() throws IOException {
     // Create a large file content (1MB)
     byte[] largeContent = new byte[1024 * 1024];
     for (int i = 0; i < largeContent.length; i++) {

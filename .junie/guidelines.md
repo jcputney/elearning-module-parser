@@ -35,12 +35,15 @@ codebase.
 
 ```java
 // Good
-if (condition) {
-  doSomething();
+if(condition){
+
+doSomething();
 }
 
-// Avoid
-if (condition) doSomething();
+    // Avoid
+    if(condition)
+
+doSomething();
 ```
 
 ### Imports
@@ -93,6 +96,7 @@ public interface FileAccess {
   InputStream getFileContents(String path) throws IOException;
 }
 
+
 // Implementation
 public class ZipFileAccess implements FileAccess {
   @Override
@@ -136,18 +140,21 @@ public class ZipFileAccess implements FileAccess {
 
 ```java
 // Good
-try {
-  // Code that might throw an exception
-} catch (IOException e) {
-  throw new ModuleParsingException("Failed to parse module", e);
+try{
+    // Code that might throw an exception
+    }catch(IOException e){
+    throw new
+
+ModuleParsingException("Failed to parse module",e);
 }
 
-// Avoid
-try {
-  // Code that might throw an exception
-} catch (Exception e) {
-  // Generic catch block with no specific handling
-}
+    // Avoid
+    try{
+    // Code that might throw an exception
+    }catch(
+Exception e){
+    // Generic catch block with no specific handling
+    }
 ```
 
 ### Null Handling
