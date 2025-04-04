@@ -102,14 +102,4 @@ public class Scorm12Organizations {
   public Scorm12Organization getDefault() {
     return getOrganizationById(defaultOrganization);
   }
-
-  /**
-   * Manually added getter for organizationList to ensure it's available. This should be generated
-   * by Lombok's @Getter annotation, but adding it explicitly to fix compilation issues.
-   *
-   * @return The list of organizations within the content package.
-   */
-  public List<Scorm12Organization> getOrganizationList() {
-    return organizationList;
-  }
 }
