@@ -36,12 +36,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum LaunchType {
+  /**
+   * The learning object is launched in a frameset.
+   */
   @JsonProperty("frameset")
   FRAMESET,
+
+  /**
+   * The learning object is launched in a new window.
+   */
   @JsonProperty("new window")
   NEW_WINDOW,
+
+  /**
+   * The learning object is launched in a new window after a click.
+   */
   @JsonProperty("new window,after click")
   NEW_WINDOW_AFTER_CLICK,
+
+  /**
+   * The learning object is launched in a new window without the browser toolbar.
+   */
   @JsonProperty("new window without browser toolbar")
   NEW_WINDOW_WITHOUT_BROWSER_TOOLBAR
 }

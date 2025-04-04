@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025. Jonathan Putney
+ * Copyright (c) 2024. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,11 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.math.BigInteger;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -42,16 +45,29 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class AppearanceSpec {
 
+  /**
+   * The display stage element of the appearance specification. Per XSD, this is a complex type, so
+   * we map it to DisplayStageSpec.
+   */
   @JacksonXmlProperty(localName = "displayStage")
   private DisplayStageSpec displayStage;
-
   /**
-   * Per XSD, this is xs:nonNegativeInteger, so we map it to BigInteger.
+   * The course structure width element of the appearance specification. Per XSD, this is
+   * xs:nonNegativeInteger, so we map it to BigInteger.
    */
   @JacksonXmlProperty(localName = "courseStructureWidth")
   private BigInteger courseStructureWidth;
+
+  /**
+   * Default constructor for the AppearanceSpec class.
+   */
+  @SuppressWarnings("unused")
+  public AppearanceSpec() {
+    // Default constructor
+  }
 }

@@ -17,10 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -47,28 +50,47 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class PackageProperties {
 
+  /**
+   * The namespace URI for the ScormEnginePackageProperties XML.
+   */
   public static final String NAMESPACE_URI = "http://www.scorm.com/xsd/ScormEnginePackageProperties";
-
+  /**
+   * The controls specification.
+   */
   @JacksonXmlProperty(localName = "controls", namespace = NAMESPACE_URI)
   private ControlsSpec controls;
-
   /**
    * Single field handling both "appearance" and the misspelled "appearence".
    */
   @JacksonXmlProperty(localName = "appearance", namespace = NAMESPACE_URI)
-  @JsonAlias("appearence")
+  @JsonAlias("appearence") // Handle the misspelled "appearence" element
   private AppearanceSpec appearance;
-
+  /**
+   * The behavior specification.
+   */
   @JacksonXmlProperty(localName = "behavior", namespace = NAMESPACE_URI)
   private BehaviorSpec behavior;
-
+  /**
+   * The RSOP (Run-Time State of the Package) specification.
+   */
   @JacksonXmlProperty(localName = "rsop", namespace = NAMESPACE_URI)
   private RsopSpec rsop;
-
+  /**
+   * The heuristics specification.
+   */
   @JacksonXmlProperty(localName = "heuristics", namespace = NAMESPACE_URI)
   private HeuristicSpec heuristics;
+
+  /**
+   * Default constructor for the PackageProperties class.
+   */
+  @SuppressWarnings("unused")
+  public PackageProperties() {
+    // Default constructor
+  }
 }

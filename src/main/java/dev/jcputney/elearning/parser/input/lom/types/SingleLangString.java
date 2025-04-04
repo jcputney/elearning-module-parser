@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * Represents a single language string in LOM metadata. This type is used for fields that only
@@ -38,13 +37,20 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-@NoArgsConstructor
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class SingleLangString {
+
   /**
    * The string value for a given language.
    */
   @JacksonXmlProperty(localName = "string")
   @JsonAlias("langstring")
   private LangString langString;
+
+  /**
+   * Default constructor for SingleLangString.
+   */
+  public SingleLangString() {
+    // Default constructor
+  }
 }

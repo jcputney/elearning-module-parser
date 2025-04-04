@@ -122,6 +122,9 @@ public enum SequencingRuleConditionType {
   @JsonProperty("always")
   ALWAYS,
 
+  /**
+   * The condition is met if the activity's status is unknown or not specified.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

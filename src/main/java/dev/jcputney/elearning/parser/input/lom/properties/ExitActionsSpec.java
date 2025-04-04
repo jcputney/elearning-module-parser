@@ -17,10 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -41,13 +44,27 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ExitActionsSpec {
 
+  /**
+   * The exit action for the intermediate SCO.
+   */
   @JacksonXmlProperty(localName = "intermediateSco")
   private ScoExitActionSpec intermediateSco;
-
+  /**
+   * The exit action for the final SCO.
+   */
   @JacksonXmlProperty(localName = "finalSco")
   private ScoExitActionSpec finalSco;
+
+  /**
+   * Default constructor for the ExitActionsSpec class.
+   */
+  @SuppressWarnings("unused")
+  public ExitActionsSpec() {
+    // Default constructor
+  }
 }

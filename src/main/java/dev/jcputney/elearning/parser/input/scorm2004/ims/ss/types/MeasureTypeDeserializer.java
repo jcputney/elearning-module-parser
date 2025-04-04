@@ -29,6 +29,22 @@ import java.math.BigDecimal;
  */
 public class MeasureTypeDeserializer extends JsonDeserializer<MeasureType> {
 
+  /**
+   * Default constructor for the MeasureTypeDeserializer class.
+   */
+  @SuppressWarnings("unused")
+  public MeasureTypeDeserializer() {
+    // Default constructor
+  }
+
+  /**
+   * Deserialize a JSON string into a MeasureType object.
+   *
+   * @param p the JsonParser
+   * @param context the DeserializationContext
+   * @return a MeasureType object
+   * @throws IOException if the value is not valid
+   */
   @Override
   public MeasureType deserialize(JsonParser p, DeserializationContext context)
       throws IOException {

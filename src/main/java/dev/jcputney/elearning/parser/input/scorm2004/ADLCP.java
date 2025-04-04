@@ -110,6 +110,16 @@ package dev.jcputney.elearning.parser.input.scorm2004;
  */
 public class ADLCP {
 
+  /**
+   * The namespace URI for the ADLCP schema.
+   */
   public static final String NAMESPACE_URI = "http://www.adlnet.org/xsd/adlcp_v1p3";
+
+  /**
+   * Default constructor for ADLCP.
+   */
+  private ADLCP() {
+    // Default constructor
+  }
 
 }

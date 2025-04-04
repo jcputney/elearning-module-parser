@@ -17,8 +17,11 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -38,6 +41,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Date {
 
@@ -46,10 +50,16 @@ public class Date {
    */
   @JacksonXmlProperty(localName = "dateTime")
   private String dateTime;
-
   /**
    * A description of the date, typically a LangString.
    */
   @JacksonXmlProperty(localName = "description")
   private UnboundLangString description;
+
+  /**
+   * Default constructor for the Date class.
+   */
+  public Date() {
+    // Default constructor
+  }
 }

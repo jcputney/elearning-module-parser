@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,6 +26,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -35,6 +38,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Resources {
@@ -46,7 +50,6 @@ public class Scorm2004Resources {
   @JacksonXmlProperty(isAttribute = true, localName = "base", namespace = "http://www.w3.org/XML/1998/namespace")
   @JsonProperty("base")
   private String base;
-
   /**
    * A list of resources in the content package, each representing a specific learning object or
    * asset.
@@ -54,4 +57,12 @@ public class Scorm2004Resources {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "resource", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private List<Scorm2004Resource> resourceList;
+
+  /**
+   * Default constructor for the Scorm2004Resources class.
+   */
+  @SuppressWarnings("unused")
+  public Scorm2004Resources() {
+    // Default constructor
+  }
 }

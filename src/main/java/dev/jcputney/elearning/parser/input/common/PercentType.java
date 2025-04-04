@@ -31,13 +31,28 @@ import lombok.Getter;
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class PercentType {
 
+  /**
+   * The minimum and maximum values for the percentage.
+   */
   private static final BigDecimal MIN_VALUE = BigDecimal.ZERO;
+
+  /**
+   * The maximum value for the percentage.
+   */
   private static final BigDecimal MAX_VALUE = BigDecimal.ONE;
 
   /**
    * The decimal value for the percentage must be between 0 and 1.
    */
   private final BigDecimal value;
+
+  /**
+   * Default constructor for the PercentType class.
+   */
+  @SuppressWarnings("unused")
+  public PercentType() {
+    this.value = MIN_VALUE;
+  }
 
   /**
    * Constructs a PercentType instance with the specified value.

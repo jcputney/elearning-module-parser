@@ -17,9 +17,12 @@
 
 package dev.jcputney.elearning.parser.input.cmi5.types;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -30,6 +33,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ObjectiveReference {
 
@@ -43,4 +47,11 @@ public class ObjectiveReference {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("idref")
   private String idref;
+
+  /**
+   * Default constructor for the ObjectiveReference class.
+   */
+  public ObjectiveReference() {
+    // Default constructor
+  }
 }

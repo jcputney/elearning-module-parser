@@ -18,11 +18,13 @@
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
 import static dev.jcputney.elearning.parser.input.scorm2004.IMSSS.NAMESPACE_URI;
+import static lombok.AccessLevel.PRIVATE;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -35,6 +37,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class SequencingCollection {
 
@@ -48,4 +51,12 @@ public class SequencingCollection {
   @JacksonXmlElementWrapper(localName = "sequencing", useWrapping = false)
   @JacksonXmlProperty(localName = "sequencing", namespace = NAMESPACE_URI)
   private List<Sequencing> sequencingList;
+
+  /**
+   * Default constructor for the SequencingCollection class.
+   */
+  @SuppressWarnings("unused")
+  public SequencingCollection() {
+    // Default constructor
+  }
 }

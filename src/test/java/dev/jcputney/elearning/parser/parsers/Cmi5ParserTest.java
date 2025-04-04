@@ -23,10 +23,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.LocalFileAccess;
+import dev.jcputney.elearning.parser.input.cmi5.AU;
+import dev.jcputney.elearning.parser.input.cmi5.Block;
 import dev.jcputney.elearning.parser.input.cmi5.Cmi5Manifest;
+import dev.jcputney.elearning.parser.input.cmi5.types.LangString;
 import dev.jcputney.elearning.parser.input.cmi5.types.LaunchMethod;
 import dev.jcputney.elearning.parser.input.cmi5.types.MoveOn;
-import dev.jcputney.elearning.parser.output.cmi5.Cmi5Metadata;
+import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
+import dev.jcputney.elearning.parser.output.metadata.cmi5.Cmi5Metadata;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -44,9 +48,13 @@ public class Cmi5ParserTest {
     assertNotNull(manifest);
 
     assertEquals("Introduction to Geology - Framed Style - Mastery Score", manifest.getTitle());
-    assertEquals("This course will introduce you into the basics of geology. This includes subjects such as\nplate tectonics, geological materials and the history of the Earth.", manifest.getDescription());
+    assertEquals(
+        "This course will introduce you into the basics of geology. This includes subjects such as\nplate tectonics, geological materials and the history of the Earth.",
+        manifest.getDescription());
     assertEquals("index.html", manifest.getLaunchUrl());
-    assertEquals("https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-single-au-mastery-score-framed", manifest.getCourse().getId());
+    assertEquals(
+        "https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-single-au-mastery-score-framed",
+        manifest.getCourse().getId());
     assertEquals(1, manifest.getAssignableUnits().size());
     assertEquals(MoveOn.COMPLETED_OR_PASSED, manifest.getAssignableUnits().get(0).getMoveOn());
     assertEquals(LaunchMethod.OWN_WINDOW, manifest.getAssignableUnits().get(0).getLaunchMethod());
@@ -62,9 +70,13 @@ public class Cmi5ParserTest {
     assertNotNull(manifest);
 
     assertEquals("Introduction to Geology - Responsive Style - Mastery Score", manifest.getTitle());
-    assertEquals("This course will introduce you into the basics of geology. This includes subjects such as\nplate tectonics, geological materials and the history of the Earth.", manifest.getDescription());
+    assertEquals(
+        "This course will introduce you into the basics of geology. This includes subjects such as\nplate tectonics, geological materials and the history of the Earth.",
+        manifest.getDescription());
     assertEquals("index.html", manifest.getLaunchUrl());
-    assertEquals("https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-single-au-mastery-score-responsive", manifest.getCourse().getId());
+    assertEquals(
+        "https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-single-au-mastery-score-responsive",
+        manifest.getCourse().getId());
     assertEquals(1, manifest.getAssignableUnits().size());
     assertEquals(MoveOn.COMPLETED_OR_PASSED, manifest.getAssignableUnits().get(0).getMoveOn());
     assertEquals(LaunchMethod.OWN_WINDOW, manifest.getAssignableUnits().get(0).getLaunchMethod());
@@ -80,9 +92,12 @@ public class Cmi5ParserTest {
     assertNotNull(manifest);
 
     assertEquals("Introduction to Geology - Multi AU at Root", manifest.getTitle());
-    assertEquals("This course will introduce you into the basics of geology. This includes subjects such as\nplate tectonics, geological materials and the history of the Earth.", manifest.getDescription());
+    assertEquals(
+        "This course will introduce you into the basics of geology. This includes subjects such as\nplate tectonics, geological materials and the history of the Earth.",
+        manifest.getDescription());
     assertEquals("index.html?pages=1&complete=launch", manifest.getLaunchUrl());
-    assertEquals("https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-multi-au-framed", manifest.getCourse().getId());
+    assertEquals("https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-multi-au-framed",
+        manifest.getCourse().getId());
     assertEquals(8, manifest.getAssignableUnits().size());
     assertEquals(MoveOn.COMPLETED_OR_PASSED, manifest.getAssignableUnits().get(0).getMoveOn());
     assertNull(manifest.getAssignableUnits().get(0).getLaunchMethod());

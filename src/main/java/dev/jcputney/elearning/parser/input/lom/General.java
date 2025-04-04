@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -29,6 +31,7 @@ import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import dev.jcputney.elearning.parser.input.lom.types.Structure;
 import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -59,6 +62,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class General {
@@ -74,7 +78,6 @@ public class General {
   @JacksonXmlElementWrapper(localName = "identifier", useWrapping = false)
   @JacksonXmlProperty(localName = "identifier")
   private List<Identifier> identifiers;
-
   /**
    * A list of titles for the learning object. Titles are represented as language-specific strings.
    *
@@ -85,10 +88,9 @@ public class General {
    */
   @JacksonXmlProperty(localName = "title")
   private UnboundLangString title;
-
   /**
-   * A list of catalog entries for the learning object. Catalog entries provide information about the
-   * learning object in a structured format.
+   * A list of catalog entries for the learning object. Catalog entries provide information about
+   * the learning object in a structured format.
    *
    * <p>Schema snippet:</p>
    * <pre>{@code
@@ -98,7 +100,6 @@ public class General {
   @JacksonXmlElementWrapper(localName = "catalogentry", useWrapping = false)
   @JacksonXmlProperty(localName = "catalogentry")
   private List<CatalogEntry> catalogEntries;
-
   /**
    * The primary language of the learning object. This can also indicate the absence of a language.
    *
@@ -109,14 +110,12 @@ public class General {
    */
   @JacksonXmlProperty(localName = "language")
   private String language;
-
   /**
    * A wrapper for a list of descriptions for the learning object, represented as language-specific
    * strings.
    */
   @JacksonXmlProperty(localName = "description")
   private UnboundLangString description;
-
   /**
    * A wrapper for a list of keywords or phrases describing the content of the learning object,
    * represented as language-specific strings.
@@ -124,14 +123,12 @@ public class General {
   @JacksonXmlElementWrapper(localName = "keyword", useWrapping = false)
   @JacksonXmlProperty(localName = "keyword")
   private List<SingleLangString> keywords;
-
   /**
    * A wrapper for a list of coverage statements for the learning object, represented as
    * language-specific strings. Coverage defines the extent or scope of the content.
    */
   @JacksonXmlProperty(localName = "coverage")
   private UnboundLangString coverage;
-
   /**
    * The structure of the learning object, such as hierarchical or linear. Represented as a
    * source-value pair.
@@ -144,7 +141,6 @@ public class General {
   @JacksonXmlElementWrapper(localName = "structure", useWrapping = false)
   @JacksonXmlProperty(localName = "structure")
   private SourceValuePair<Structure> structure;
-
   /**
    * The aggregation level of the learning object, indicating its granularity or size. Represented
    * as a source-value pair.
@@ -157,4 +153,11 @@ public class General {
   @JacksonXmlElementWrapper(localName = "aggregationLevel", useWrapping = false)
   @JacksonXmlProperty(localName = "aggregationLevel")
   private SourceValuePair<AggregationLevel> aggregationLevel;
+
+  /**
+   * Default constructor for the General class.
+   */
+  public General() {
+    // Default constructor
+  }
 }

@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -25,6 +27,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -36,6 +39,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Organizations {
@@ -47,7 +51,6 @@ public class Scorm2004Organizations {
   @JacksonXmlProperty(isAttribute = true, localName = "default")
   @JsonProperty("default")
   private String defaultOrganization;
-
   /**
    * A list of organizations within the content package, each representing a structured hierarchy of
    * learning items.
@@ -55,6 +58,14 @@ public class Scorm2004Organizations {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "organization", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private List<Scorm2004Organization> organizationList;
+
+  /**
+   * Default constructor for the Scorm2004Organizations class.
+   */
+  @SuppressWarnings("unused")
+  public Scorm2004Organizations() {
+    // Default constructor
+  }
 
   /**
    * Retrieves an organization by its unique identifier.

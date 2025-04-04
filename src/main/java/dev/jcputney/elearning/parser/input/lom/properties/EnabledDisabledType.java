@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025. Jonathan Putney
+ * Copyright (c) 2024. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -37,9 +37,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum EnabledDisabledType {
 
+  /**
+   * The lookahead sequencer mode is enabled.
+   */
   @JsonProperty("enabled")
   ENABLED,
 
+  /**
+   * The lookahead sequencer mode is disabled.
+   */
   @JsonProperty("disabled")
   DISABLED
 }

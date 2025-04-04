@@ -19,16 +19,51 @@ package dev.jcputney.elearning.parser.input;
 
 import java.time.Duration;
 
+/**
+ * Represents the manifest of a package, containing metadata about the package. This interface
+ * defines methods to retrieve various attributes of the package manifest.
+ */
 public interface PackageManifest {
+
+  /**
+   * The title of the package, which is a human-readable name.
+   *
+   * @return the title of the package
+   */
   String getTitle();
 
+  /**
+   * The description of the package, which provides additional information about it.
+   *
+   * @return the description of the package
+   */
   String getDescription();
 
+  /**
+   * The launch URL of the package, which is the URL to start the package.
+   *
+   * @return the launch URL of the package
+   */
   String getLaunchUrl();
 
+  /**
+   * The identifier of the package, which is a unique string that identifies the package.
+   *
+   * @return the identifier of the package
+   */
   String getIdentifier();
 
+  /**
+   * The version of the package.
+   *
+   * @return the version of the package
+   */
   String getVersion();
 
+  /**
+   * The duration of the package, which indicates how long the package is expected to take.
+   *
+   * @return the duration of the package
+   */
   Duration getDuration();
 }

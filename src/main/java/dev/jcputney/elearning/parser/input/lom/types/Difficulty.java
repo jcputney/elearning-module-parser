@@ -39,21 +39,39 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum Difficulty {
+  /**
+   * The learning object is very easy.
+   */
   @JsonProperty("very easy")
   VERY_EASY,
 
+  /**
+   * The learning object is easy.
+   */
   @JsonProperty("easy")
   EASY,
 
+  /**
+   * The learning object is of medium difficulty.
+   */
   @JsonProperty("medium")
   MEDIUM,
 
+  /**
+   * The learning object is difficult.
+   */
   @JsonProperty("difficult")
   DIFFICULT,
 
+  /**
+   * The learning object is very difficult.
+   */
   @JsonProperty("very difficult")
   VERY_DIFFICULT,
 
+  /**
+   * The difficulty of the learning object is unknown.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

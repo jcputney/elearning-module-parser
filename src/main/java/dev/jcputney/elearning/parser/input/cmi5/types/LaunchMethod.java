@@ -37,9 +37,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum LaunchMethod {
+
+  /**
+   * The activity can be launched in any window.
+   */
   @JsonProperty("AnyWindow")
   ANY_WINDOW,
 
+  /**
+   * The activity must be launched in a new window.
+   */
   @JsonProperty("OwnWindow")
   OWN_WINDOW
 }

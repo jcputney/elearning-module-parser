@@ -39,15 +39,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum StatusRollupType {
 
+  /**
+   * The status rollup type is provided by the course.
+   */
   @JsonProperty("status provided by course")
   STATUS_PROVIDED_BY_COURSE,
 
+  /**
+   * The status rollup type is complete when all units complete.
+   */
   @JsonProperty("complete when all units complete")
   COMPLETE_WHEN_ALL_UNITS_COMPLETE,
 
+  /**
+   * The status rollup type is complete when all units satisfactorily complete.
+   */
   @JsonProperty("complete when all units satisfactorily complete")
   COMPLETE_WHEN_ALL_UNITS_SATISFACTORILY_COMPLETE,
 
+  /**
+   * The status rollup type is complete when the threshold score is met.
+   */
   @JsonProperty("complete when threshold score is met")
   COMPLETE_WHEN_THRESHOLD_SCORE_IS_MET
 }

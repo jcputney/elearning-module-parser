@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -28,6 +30,7 @@ import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.Sequencing;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -40,6 +43,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Organization {
@@ -51,7 +55,6 @@ public class Scorm2004Organization {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("identifier")
   private String identifier;
-
   /**
    * The structure of this organization, defining the hierarchical arrangement of items within the
    * organization. The structure is typically a tree-like arrangement of items, but is not typically
@@ -61,14 +64,12 @@ public class Scorm2004Organization {
   @JsonProperty("structure")
   @Default
   private String structure = "hierarchical";
-
   /**
    * The title of this organization, providing a descriptive label for the learning structure it
    * represents.
    */
   @JacksonXmlProperty(localName = "title", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private String title;
-
   /**
    * A list of items within this organization, representing a hierarchical structure of learning
    * objects.
@@ -76,7 +77,6 @@ public class Scorm2004Organization {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "item", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private List<Scorm2004Item> items;
-
   /**
    * The default for the adlcp:objectivesGlobalToSystem attribute for items in this organization. If
    * true, objectives defined in this organization are considered global to the system. If false,
@@ -86,7 +86,6 @@ public class Scorm2004Organization {
   @JsonProperty("objectivesGlobalToSystem")
   @Default
   private boolean objectivesGlobalToSystem = false;
-
   /**
    * The default for the adlcp:sharedDataGlobalToSystem attribute for items in this organization. If
    * true, "sharedData" defined in this organization is considered global to the system. If false,
@@ -96,18 +95,24 @@ public class Scorm2004Organization {
   @JsonProperty("sharedDataGlobalToSystem")
   @Default
   private boolean sharedDataGlobalToSystem = false;
-
   /**
    * Metadata associated with this organization, providing details such as creation date, and other
    * descriptive information relevant to the organization.
    */
   @JacksonXmlProperty(localName = "metadata", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private Scorm2004SubMetadata metadata;
-
   /**
    * The sequencing element for this organization, defining control modes, delivery controls, and
    * sequencing rules.
    */
   @JacksonXmlProperty(localName = "sequencing", namespace = IMSSS.NAMESPACE_URI)
   private Sequencing sequencing;
+
+  /**
+   * Default constructor for the Scorm2004Organization class.
+   */
+  @SuppressWarnings("unused")
+  public Scorm2004Organization() {
+    // Default constructor
+  }
 }

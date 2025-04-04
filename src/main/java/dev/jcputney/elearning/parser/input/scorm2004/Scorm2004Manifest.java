@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -34,6 +36,7 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resources;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.SequencingCollection;
 import java.time.Duration;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -235,6 +238,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JacksonXmlRootElement(localName = "manifest", namespace = Scorm2004Manifest.NAMESPACE_URI)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -245,7 +249,6 @@ public class Scorm2004Manifest implements PackageManifest {
    * The XML namespace URI for SCORM IMS Content Packaging (imscp_v1p1).
    */
   public static final String NAMESPACE_URI = "http://www.imsglobal.org/xsd/imscp_v1p1";
-
   /**
    * The unique identifier for the manifest. This attribute is used to uniquely identify the content
    * package within an LMS.
@@ -253,7 +256,6 @@ public class Scorm2004Manifest implements PackageManifest {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("identifier")
   private String identifier;
-
   /**
    * The version of the manifest. Specifies the version of the content package, which may be used by
    * the LMS to manage content versions.
@@ -261,34 +263,38 @@ public class Scorm2004Manifest implements PackageManifest {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("version")
   private String version;
-
   /**
    * Metadata associated with the manifest, typically including schema and version information,
    * which provide context for the content package.
    */
   @JacksonXmlProperty(localName = "metadata", namespace = NAMESPACE_URI)
   private Scorm2004CourseMetadata metadata;
-
   /**
    * Contains the set of organizations that represent the structure of the content. Each
    * organization defines a hierarchical structure of learning resources.
    */
   @JacksonXmlProperty(localName = "organizations", namespace = NAMESPACE_URI)
   private Scorm2004Organizations organizations;
-
   /**
    * Contains the list of resources within the content package, each representing a learning object
    * or asset to be delivered within the LMS.
    */
   @JacksonXmlProperty(localName = "resources", namespace = NAMESPACE_URI)
   private Scorm2004Resources resources;
-
   /**
    * Contains the sequencing collection for the content package, which defines rules, objectives,
    * and rollup behaviors for the content.
    */
   @JacksonXmlProperty(localName = "sequencingCollection", namespace = IMSSS.NAMESPACE_URI)
   private SequencingCollection sequencingCollection;
+
+  /**
+   * Default constructor for the Scorm2004Manifest class.
+   */
+  @SuppressWarnings("unused")
+  public Scorm2004Manifest() {
+    // Default constructor
+  }
 
   /**
    * Returns the title of the content package, which is typically the name or title of the course.
@@ -327,8 +333,8 @@ public class Scorm2004Manifest implements PackageManifest {
   }
 
   /**
-   * Returns the launch URL for the content package, which is typically the URL of the first resource
-   * in the package.
+   * Returns the launch URL for the content package, which is typically the URL of the first
+   * resource in the package.
    *
    * @return the launch URL for the content package
    */
@@ -348,37 +354,46 @@ public class Scorm2004Manifest implements PackageManifest {
    * URL of the first resource associated with the item.
    *
    * @param itemId the unique identifier of the item
-   * @return the launch URL for the item
+   * @return an Optional containing the launch URL for the item, or empty if no URL is available
    */
-  public String getLaunchUrlForItem(String itemId) {
+  public Optional<String> getLaunchUrlForItem(String itemId) {
     // search all organizations for an item with itemId
-    Scorm2004Item resourceItem = Optional.ofNullable(organizations)
-        .map(orgs -> orgs.getItemById(itemId))
-        .orElse(null);
+    Optional<Scorm2004Item> resourceItemOpt = Optional.ofNullable(organizations)
+        .map(orgs -> orgs.getItemById(itemId));
+
+    if (resourceItemOpt.isEmpty()) {
+      return Optional.empty();
+    }
+
+    Scorm2004Item resourceItem = resourceItemOpt.get();
 
     // get relative URL from item
-    if (resourceItem != null) {
-      String href = Optional.ofNullable(resources)
-          .map(Scorm2004Resources::getResourceList)
-          .filter(resourceList -> !resourceList.isEmpty())
-          .map(resourceList -> resourceList.get(0))
-          .map(Scorm2004Resource::getHref)
-          .orElse(null);
-      if (href != null && !href.isEmpty()) {
-        String parameters = resourceItem.getParameters();
-        if (parameters != null && !parameters.isEmpty()) {
-          return parameters.startsWith("?") ? href + parameters : href + "?" + parameters;
-        }
-        return href;
-      }
+    Optional<String> hrefOpt = Optional.ofNullable(resources)
+        .map(Scorm2004Resources::getResourceList)
+        .filter(resourceList -> !resourceList.isEmpty())
+        .map(resourceList -> resourceList.get(0))
+        .map(Scorm2004Resource::getHref)
+        .filter(href -> !href.isEmpty());
+
+    if (hrefOpt.isEmpty()) {
+      return Optional.empty();
     }
-    return null;
+
+    String href = hrefOpt.get();
+    String parameters = resourceItem.getParameters();
+
+    if (parameters != null && !parameters.isEmpty()) {
+      return Optional.of(parameters.startsWith("?") ? href + parameters : href + "?" + parameters);
+    }
+
+    return Optional.of(href);
   }
 
   @Override
   public Duration getDuration() {
     return Optional.ofNullable(metadata)
-        .filter(m -> m.getLom() != null && m.getLom().getTechnical() != null && m.getLom().getTechnical().getDuration() != null)
+        .filter(m -> m.getLom() != null && m.getLom().getTechnical() != null
+            && m.getLom().getTechnical().getDuration() != null)
         .map(Scorm2004CourseMetadata::getLom)
         .map(lom -> lom.getTechnical().getDuration().getDuration())
         .orElse(Duration.ZERO);

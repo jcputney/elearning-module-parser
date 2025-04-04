@@ -17,10 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.cmi5.types;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -47,6 +50,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ReferencesObjectives {
 
@@ -63,5 +67,12 @@ public class ReferencesObjectives {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "objective")
   private List<ObjectiveReference> objectives;
+
+  /**
+   * Default constructor for the ReferencesObjectives class.
+   */
+  public ReferencesObjectives() {
+    // Default constructor
+  }
 
 }

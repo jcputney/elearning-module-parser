@@ -17,11 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -39,9 +42,9 @@ import lombok.extern.jackson.Jacksonized;
  *
  * <p>Key configurations include:</p>
  * <ul>
- *   <li>Tracking the activity – determines if learner progress should be monitored.</li>
- *   <li>Completion set by content – allows the content to control whether the activity is marked as complete.</li>
- *   <li>Objective set by content – enables the content to set whether objectives are satisfied.</li>
+ *   <li>Tracking the activity –- determines if learner progress should be monitored.</li>
+ *   <li>Completion set by content –- allows the content to control whether the activity is marked as complete.</li>
+ *   <li>Objective set by content –- enables the content to set whether objectives are satisfied.</li>
  * </ul>
  *
  * <p>The IMSSS namespace is specified by {@link IMSSS#NAMESPACE_URI}, and this class aligns with
@@ -50,6 +53,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class DeliveryControls {
@@ -59,7 +63,7 @@ public class DeliveryControls {
    * <code>true</code>, tracking information is recorded, which may include data on completion,
    * time spent, and other progress metrics.
    *
-   * <p>This attribute is typically used to enable or disable progress tracking at
+   * <p>This attribute is typically used to enable or turn off progress tracking at
    * the activity level, depending on whether the activity contributes to the overall progress
    * rollup.</p>
    *
@@ -69,7 +73,6 @@ public class DeliveryControls {
   @JsonProperty("tracked")
   @Default
   private boolean tracked = true;
-
   /**
    * Indicates whether the content should set the activity's completion status. When set to
    * <code>true</code>, the content is responsible for determining when the activity is marked as
@@ -85,7 +88,6 @@ public class DeliveryControls {
   @JsonProperty("completionSetByContent")
   @Default
   private boolean completionSetByContent = false;
-
   /**
    * Specifies whether the content should set the objective satisfaction status for this activity.
    * When set to <code>true</code>, the content determines whether objectives are satisfied based on
@@ -101,4 +103,12 @@ public class DeliveryControls {
   @JsonProperty("objectiveSetByContent")
   @Default
   private boolean objectiveSetByContent = false;
+
+  /**
+   * Default constructor for the DeliveryControls class.
+   */
+  @SuppressWarnings("unused")
+  public DeliveryControls() {
+    // Default constructor
+  }
 }

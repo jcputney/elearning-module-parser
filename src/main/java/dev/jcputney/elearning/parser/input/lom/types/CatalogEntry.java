@@ -17,8 +17,11 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -40,12 +43,30 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class CatalogEntry {
 
+  /**
+   * The catalog of the entry.
+   *
+   * <p>Example: "IEEE LOM" or "Dublin Core".
+   */
   @JacksonXmlProperty(localName = "catalog")
   private String catalog;
-
+  /**
+   * The entry in the catalog.
+   *
+   * <p>Example: "LOMv1.0" or "Dublin Core v1.0".
+   */
   @JacksonXmlProperty(localName = "entry")
   private SingleLangString entry;
+
+  /**
+   * Default constructor for the CatalogEntry class.
+   */
+  @SuppressWarnings("unused")
+  public CatalogEntry() {
+    // Default constructor
+  }
 }

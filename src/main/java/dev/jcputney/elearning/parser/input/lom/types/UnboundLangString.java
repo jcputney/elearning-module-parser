@@ -17,11 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -41,8 +44,10 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class UnboundLangString {
+
   /**
    * The string values for multiple languages.
    */
@@ -50,4 +55,11 @@ public class UnboundLangString {
   @JacksonXmlProperty(localName = "string")
   @JsonAlias("langstring")
   private List<LangString> langStrings;
+
+  /**
+   * Default constructor for the UnboundLangString class.
+   */
+  public UnboundLangString() {
+    // Default constructor
+  }
 }

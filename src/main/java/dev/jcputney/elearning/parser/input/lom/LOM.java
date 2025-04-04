@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -26,6 +28,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -57,13 +60,16 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JacksonXmlRootElement(localName = "lom", namespace = LOM.NAMESPACE_URI)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LOM {
 
+  /**
+   * The namespace URI for the LOM schema.
+   */
   public static final String NAMESPACE_URI = "http://ltsc.ieee.org/xsd/LOM";
-
   /**
    * The general information about the learning object.
    *
@@ -84,7 +90,6 @@ public class LOM {
    */
   @JacksonXmlProperty(localName = "general", namespace = NAMESPACE_URI)
   private General general;
-
   /**
    * The lifecycle information about the learning object.
    *
@@ -100,7 +105,6 @@ public class LOM {
    */
   @JacksonXmlProperty(localName = "lifeCycle", namespace = NAMESPACE_URI)
   private LifeCycle lifecycle;
-
   /**
    * The meta-metadata information about the learning object.
    *
@@ -117,7 +121,6 @@ public class LOM {
    */
   @JacksonXmlProperty(localName = "metaMetadata", namespace = NAMESPACE_URI)
   private MetaMetadata metaMetadata;
-
   /**
    * The technical information about the learning object.
    *
@@ -137,7 +140,6 @@ public class LOM {
    */
   @JacksonXmlProperty(localName = "technical", namespace = NAMESPACE_URI)
   private Technical technical;
-
   /**
    * The educational information about the learning object.
    *
@@ -161,7 +163,6 @@ public class LOM {
    */
   @JacksonXmlProperty(localName = "educational", namespace = NAMESPACE_URI)
   private Educational educational;
-
   /**
    * Represents the rights information about the learning object.
    * <pre>{@code
@@ -177,7 +178,6 @@ public class LOM {
    */
   @JacksonXmlProperty(localName = "rights", namespace = NAMESPACE_URI)
   private Rights rights;
-
   /**
    * Represents a related resource in the context of a relation.
    * <pre>{@code
@@ -193,7 +193,6 @@ public class LOM {
   @JacksonXmlElementWrapper(localName = "relation", useWrapping = false, namespace = NAMESPACE_URI)
   @JacksonXmlProperty(localName = "relation")
   private List<Relation> relations;
-
   /**
    * Represents an annotation about the learning object.
    * <pre>{@code
@@ -210,7 +209,6 @@ public class LOM {
   @JacksonXmlElementWrapper(localName = "annotation", useWrapping = false, namespace = NAMESPACE_URI)
   @JacksonXmlProperty(localName = "annotation")
   private List<Annotation> annotations;
-
   /**
    * Represents a classification of the learning object.
    * <pre>{@code
@@ -228,6 +226,13 @@ public class LOM {
   @JacksonXmlElementWrapper(localName = "classification", useWrapping = false, namespace = NAMESPACE_URI)
   @JacksonXmlProperty(localName = "classification")
   private List<Classification> classifications;
+
+  /**
+   * Default constructor for the LOM class.
+   */
+  public LOM() {
+    // Default constructor
+  }
 
   /**
    * Get the title of the learning object.

@@ -40,18 +40,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum ExitActionType {
 
+  /**
+   * The exit action is to exit without confirmation.
+   */
   @JsonProperty("exit,no confirmation")
   EXIT_NO_CONFIRMATION,
 
+  /**
+   * The exit action is to exit with confirmation.
+   */
   @JsonProperty("exit,confirmation")
   EXIT_CONFIRMATION,
 
+  /**
+   * The exit action is to continue.
+   */
   @JsonProperty("continue")
   CONTINUE,
 
+  /**
+   * The exit action is to display a message page.
+   */
   @JsonProperty("message page")
   MESSAGE_PAGE,
 
+  /**
+   * The exit action is to do nothing.
+   */
   @JsonProperty("do nothing")
   DO_NOTHING
 }

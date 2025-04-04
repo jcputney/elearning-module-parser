@@ -74,6 +74,9 @@ public enum Structure {
   @JsonProperty("linear")
   LINEAR,
 
+  /**
+   * The "unknown" value specifies that the structure of the learning object is unknown.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

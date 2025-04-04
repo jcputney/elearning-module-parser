@@ -17,8 +17,11 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -44,6 +47,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class SourceValuePair<T> {
 
@@ -57,7 +61,6 @@ public class SourceValuePair<T> {
    */
   @JsonProperty("source")
   private String source;
-
   /**
    * The value associated with the source, representing the specific term or definition.
    * <p>
@@ -68,4 +71,11 @@ public class SourceValuePair<T> {
    */
   @JsonProperty("value")
   private T value;
+
+  /**
+   * Default constructor for SourceValuePair.
+   */
+  public SourceValuePair() {
+    // Default constructor
+  }
 }

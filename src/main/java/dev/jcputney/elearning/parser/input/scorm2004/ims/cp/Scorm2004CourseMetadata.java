@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -24,6 +26,7 @@ import dev.jcputney.elearning.parser.api.LoadableMetadata;
 import dev.jcputney.elearning.parser.input.lom.LOM;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLCP;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,6 +49,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004CourseMetadata implements LoadableMetadata {
@@ -59,7 +63,6 @@ public class Scorm2004CourseMetadata implements LoadableMetadata {
    */
   @JacksonXmlProperty(localName = "schema", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private String schema;
-
   /**
    * The version of the schema used. This helps LMS systems interpret the specific content structure
    * and requirements.
@@ -69,7 +72,6 @@ public class Scorm2004CourseMetadata implements LoadableMetadata {
    */
   @JacksonXmlProperty(localName = "schemaversion", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private String schemaVersion;
-
   /**
    * The location of the external metadata file, referenced using the <code>adlcp:location</code>
    * element. This allows the manifest to link to a separate file that contains detailed metadata
@@ -80,7 +82,6 @@ public class Scorm2004CourseMetadata implements LoadableMetadata {
    */
   @JacksonXmlProperty(localName = "location", namespace = ADLCP.NAMESPACE_URI)
   private String location;
-
   /**
    * Inline metadata represented as a LOM element. This provides detailed information about the
    * course, such as the title, description, and other relevant details.
@@ -88,4 +89,12 @@ public class Scorm2004CourseMetadata implements LoadableMetadata {
   @JacksonXmlProperty(localName = "lom", namespace = LOM.NAMESPACE_URI)
   @Setter
   private LOM lom;
+
+  /**
+   * Default constructor for the Scorm2004CourseMetadata class.
+   */
+  @SuppressWarnings("unused")
+  public Scorm2004CourseMetadata() {
+    // Default constructor
+  }
 }

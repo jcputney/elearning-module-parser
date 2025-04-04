@@ -71,6 +71,16 @@ package dev.jcputney.elearning.parser.input.scorm2004;
  */
 public class ADLNav {
 
+  /**
+   * Default constructor for the ADLNav class.
+   */
   public static final String NAMESPACE_URI = "http://www.adlnet.org/xsd/adlnav_v1p3";
 
+  /**
+   * Default constructor for the ADLNav class.
+   */
+  @SuppressWarnings("unused")
+  private ADLNav() {
+    // Default constructor
+  }
 }

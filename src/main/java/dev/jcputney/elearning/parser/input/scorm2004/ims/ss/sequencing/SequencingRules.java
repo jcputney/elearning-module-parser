@@ -17,12 +17,15 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -55,6 +58,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class SequencingRules {
@@ -67,7 +71,6 @@ public class SequencingRules {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "preConditionRule", namespace = IMSSS.NAMESPACE_URI)
   private List<SequencingRule> preConditionRules;
-
   /**
    * A list of exit-condition rules that are evaluated when the learner exits an activity. These
    * rules define actions that control sequencing upon exit, such as retrying the current activity,
@@ -76,7 +79,6 @@ public class SequencingRules {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "exitConditionRule", namespace = IMSSS.NAMESPACE_URI)
   private List<SequencingRule> exitConditionRules;
-
   /**
    * A list of post-condition rules that are evaluated after an activity has been attempted. These
    * rules can specify actions like skipping certain activities, marking an activity as complete, or
@@ -85,4 +87,12 @@ public class SequencingRules {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "postConditionRule", namespace = IMSSS.NAMESPACE_URI)
   private List<SequencingRule> postConditionRules;
+
+  /**
+   * Default constructor for the SequencingRules class.
+   */
+  @SuppressWarnings("unused")
+  public SequencingRules() {
+    // Default constructor
+  }
 }

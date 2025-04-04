@@ -17,12 +17,15 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.api.LoadableMetadata;
 import dev.jcputney.elearning.parser.input.lom.LOM;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLCP;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,6 +56,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004SubMetadata implements LoadableMetadata {
@@ -63,11 +67,18 @@ public class Scorm2004SubMetadata implements LoadableMetadata {
    */
   @JacksonXmlProperty(localName = "location", namespace = ADLCP.NAMESPACE_URI)
   private String location;
-
   /**
    * Inline metadata represented as a LOM element.
    */
   @JacksonXmlProperty(localName = "lom", namespace = LOM.NAMESPACE_URI)
   @Setter
   private LOM lom;
+
+  /**
+   * Default constructor for the Scorm2004SubMetadata class.
+   */
+  @SuppressWarnings("unused")
+  public Scorm2004SubMetadata() {
+    // Default constructor
+  }
 }

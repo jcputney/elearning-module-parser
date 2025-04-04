@@ -49,6 +49,9 @@ public enum RoleMeta {
   @JsonProperty("validator")
   VALIDATOR,
 
+  /**
+   * The "unknown" value specifies that the role of the entity is unknown.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

@@ -17,10 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.lom.types.Date;
 import dev.jcputney.elearning.parser.input.lom.types.SingleLangString;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -46,6 +49,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Annotation {
 
@@ -65,7 +69,6 @@ public class Annotation {
    */
   @JacksonXmlProperty(localName = "entity")
   private String entity;
-
   /**
    * The date when the annotation was created or last modified.
    *
@@ -82,7 +85,6 @@ public class Annotation {
    */
   @JacksonXmlProperty(localName = "date")
   private Date date;
-
   /**
    * A description of the annotation, represented as a language-specific string.
    *
@@ -99,4 +101,11 @@ public class Annotation {
    */
   @JacksonXmlProperty(localName = "description")
   private SingleLangString description;
+
+  /**
+   * Default constructor for the Annotation class.
+   */
+  public Annotation() {
+    // Default constructor
+  }
 }

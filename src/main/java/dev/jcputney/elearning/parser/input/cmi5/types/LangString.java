@@ -17,12 +17,15 @@
 
 package dev.jcputney.elearning.parser.input.cmi5.types;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import dev.jcputney.elearning.parser.input.common.TrimAndPreserveIndentationDeserializer;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -47,6 +50,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LangString {
 
@@ -63,7 +67,6 @@ public class LangString {
   @JacksonXmlText
   @JsonDeserialize(using = TrimAndPreserveIndentationDeserializer.class)
   private String value;
-
   /**
    * The language of the string, represented as an optional attribute.
    *
@@ -74,4 +77,11 @@ public class LangString {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("lang")
   private String lang;
+
+  /**
+   * Default constructor for the LangString class.
+   */
+  public LangString() {
+    // Default constructor
+  }
 }

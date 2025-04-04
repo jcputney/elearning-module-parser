@@ -17,10 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -42,16 +45,31 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LaunchSpec {
 
+  /**
+   * The SCO (Sharable Content Object) launch type.
+   */
   @JacksonXmlProperty(localName = "sco")
   private LaunchType sco;
-
+  /**
+   * The player launch type.
+   */
   @JacksonXmlProperty(localName = "player")
   private LaunchType player;
-
+  /**
+   * Indicates whether to wrap the SCO window with API.
+   */
   @JacksonXmlProperty(localName = "wrapScoWindowWithApi")
   private YesNoType wrapScoWindowWithApi;
+
+  /**
+   * Default constructor for the LaunchSpec class.
+   */
+  public LaunchSpec() {
+    // Default constructor
+  }
 }

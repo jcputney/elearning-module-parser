@@ -38,4 +38,11 @@ public class IMSSS {
    */
   public static final String NAMESPACE_URI = "http://www.imsglobal.org/xsd/imsss";
 
+  /**
+   * Default constructor for IMSSS. This constructor is private to prevent instantiation.
+   */
+  private IMSSS() {
+    // Prevent instantiation
+  }
+
 }

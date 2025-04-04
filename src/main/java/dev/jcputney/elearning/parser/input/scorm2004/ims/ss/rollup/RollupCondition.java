@@ -17,11 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.ConditionOperatorType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.RollupRuleConditionType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -35,6 +38,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupCondition {
 
@@ -49,7 +53,6 @@ public class RollupCondition {
   @JsonProperty("operator")
   @Default
   private ConditionOperatorType operator = ConditionOperatorType.NO_OP;
-
   /**
    * Specifies the specific condition being evaluated in this rollup condition. The condition may
    * include criteria related to the learner's progress or completion status of activities.
@@ -57,4 +60,12 @@ public class RollupCondition {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("condition")
   private RollupRuleConditionType condition;
+
+  /**
+   * Default constructor for the RollupCondition class.
+   */
+  @SuppressWarnings("unused")
+  public RollupCondition() {
+    // Default constructor
+  }
 }

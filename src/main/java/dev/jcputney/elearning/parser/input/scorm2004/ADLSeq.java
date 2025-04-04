@@ -96,5 +96,16 @@ package dev.jcputney.elearning.parser.input.scorm2004;
  */
 public class ADLSeq {
 
+  /**
+   * The namespace URI for the ADLSeq schema.
+   */
   public static final String NAMESPACE_URI = "http://www.adlnet.org/xsd/adlseq_v1p3";
+
+  /**
+   * Default constructor for the ADLSeq class.
+   */
+  @SuppressWarnings("unused")
+  private ADLSeq() {
+    // Default constructor
+  }
 }

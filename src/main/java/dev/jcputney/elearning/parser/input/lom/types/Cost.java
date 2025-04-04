@@ -35,12 +35,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum Cost {
+  /**
+   * The learning object has a cost associated with it.
+   */
   @JsonProperty("yes")
   YES,
 
+  /**
+   * The learning object does not have a cost associated with it.
+   */
   @JsonProperty("no")
   NO,
 
+  /**
+   * The cost of the learning object is unknown.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

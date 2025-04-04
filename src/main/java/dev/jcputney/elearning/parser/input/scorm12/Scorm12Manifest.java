@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm12;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -32,8 +34,9 @@ import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organizations;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resource;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resources;
 import java.time.Duration;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -308,14 +311,18 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JacksonXmlRootElement(localName = "manifest", namespace = Scorm12Manifest.NAMESPACE_URI)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Manifest implements PackageManifest {
 
+  /**
+   * The namespace URI for the SCORM 1.2 manifest, as defined in the IMS Content Packaging
+   * specification.
+   */
   public static final String NAMESPACE_URI = "http://www.imsproject.org/xsd/imscp_rootv1p1p2";
-
   /**
    * The unique identifier for the manifest. This attribute is used to uniquely identify the content
    * package within an LMS.
@@ -323,7 +330,6 @@ public class Scorm12Manifest implements PackageManifest {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty(value = "identifier", required = true)
   private String identifier;
-
   /**
    * The version of the manifest. Specifies the version of the content package, which may be used by
    * the LMS to manage content versions.
@@ -331,7 +337,6 @@ public class Scorm12Manifest implements PackageManifest {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty(value = "version")
   private String version;
-
   /**
    * The base URL for all resources in the content package. This URL is used to resolve relative
    * paths for resources.
@@ -339,27 +344,32 @@ public class Scorm12Manifest implements PackageManifest {
   @JacksonXmlProperty(isAttribute = true, localName = "base", namespace = "http://www.w3.org/XML/1998/namespace")
   @JsonProperty("base")
   private String base;
-
   /**
    * Metadata associated with the manifest, typically including schema and version information,
    * which provide context for the content package.
    */
   @JacksonXmlProperty(localName = "metadata", namespace = NAMESPACE_URI)
   private Scorm12Metadata metadata;
-
   /**
    * Contains the set of organizations that represent the structure of the content. Each
    * organization defines a hierarchical structure of learning resources.
    */
   @JacksonXmlProperty(localName = "organizations", namespace = NAMESPACE_URI)
   private Scorm12Organizations organizations;
-
   /**
    * Contains the list of resources within the content package, each representing a learning object
    * or asset to be delivered within the LMS.
    */
   @JacksonXmlProperty(localName = "resources", namespace = NAMESPACE_URI)
   private Scorm12Resources resources;
+
+  /**
+   * Default constructor for the {@code Scorm12Manifest} class.
+   */
+  @SuppressWarnings("unused")
+  public Scorm12Manifest() {
+    // Default constructor
+  }
 
   @Override
   public String getTitle() {
@@ -387,46 +397,76 @@ public class Scorm12Manifest implements PackageManifest {
 
   @Override
   public String getLaunchUrl() {
-    // find first Scorm12Item with a non-null identifierRef
-    String resourceId = Optional.ofNullable(organizations)
+    // Find all items with non-null identifierRef at any level
+    List<String> resourceIds = Optional.ofNullable(organizations)
         .map(Scorm12Organizations::getDefault)
         .map(Scorm12Organization::getItems)
-        .stream()
-        .flatMap(Collection::stream)
-        .filter(item -> item.getIdentifierRef() != null)
-        .findFirst()
-        .map(Scorm12Item::getIdentifierRef)
-        .orElse(null);
+        .map(items -> findAllItemsWithIdentifierRef(items))
+        .orElse(List.of());
 
-    String childResourceId = null;
-    if (resourceId == null || resourceId.isEmpty()) {
-      // check child items
-      childResourceId = Optional.ofNullable(organizations)
-          .map(Scorm12Organizations::getDefault)
-          .map(Scorm12Organization::getItems)
-          .stream()
-          .flatMap(Collection::stream)
-          .filter(item -> item.getItems() != null)
-          .flatMap(item -> item.getItems().stream())
-          .filter(subItem -> subItem.getIdentifierRef() != null)
-          .findFirst()
-          .map(Scorm12Item::getIdentifierRef)
+    // Find the first resource that exists
+    for (String resourceId : resourceIds) {
+      String href = Optional.ofNullable(resources)
+          .flatMap(r -> r.getResourceById(resourceId))
+          .map(Scorm12Resource::getHref)
           .orElse(null);
+
+      if (href != null && !href.isEmpty()) {
+        return href;
+      }
     }
 
-    String finalResourceId = resourceId != null ? resourceId : childResourceId;
-    return Optional.ofNullable(resources)
-        .map(resources -> resources.getResourceById(finalResourceId))
-        .map(Scorm12Resource::getHref)
-        .orElse(null);
+    return null;
   }
 
   @Override
   public Duration getDuration() {
     return Optional.ofNullable(metadata)
-        .filter(m -> m.getLom() != null && m.getLom().getTechnical() != null && m.getLom().getTechnical().getDuration() != null)
+        .filter(m -> m.getLom() != null && m.getLom().getTechnical() != null
+            && m.getLom().getTechnical().getDuration() != null)
         .map(Scorm12Metadata::getLom)
         .map(lom -> lom.getTechnical().getDuration().getDuration())
         .orElse(Duration.ZERO);
+  }
+
+  /**
+   * Manually added getter for organizations to ensure it's available. This should be generated by
+   * Lombok's @Getter annotation, but adding it explicitly to fix compilation issues.
+   *
+   * @return The organizations associated with this manifest.
+   */
+  public Scorm12Organizations getOrganizations() {
+    return organizations;
+  }
+
+  /**
+   * Recursively searches for all items with a non-null identifierRef.
+   *
+   * @param items The list of items to search.
+   * @return A list of identifierRefs from all items with a non-null identifierRef, in the order
+   * they were found.
+   */
+  private List<String> findAllItemsWithIdentifierRef(List<Scorm12Item> items) {
+    if (items == null || items.isEmpty()) {
+      return List.of();
+    }
+
+    List<String> result = new java.util.ArrayList<>();
+
+    // First, check if any top-level items have an identifierRef
+    for (Scorm12Item item : items) {
+      if (item.getIdentifierRef() != null && !item.getIdentifierRef().isEmpty()) {
+        result.add(item.getIdentifierRef());
+      }
+    }
+
+    // Then, recursively check child items
+    for (Scorm12Item item : items) {
+      if (item.getItems() != null && !item.getItems().isEmpty()) {
+        result.addAll(findAllItemsWithIdentifierRef(item.getItems()));
+      }
+    }
+
+    return result;
   }
 }

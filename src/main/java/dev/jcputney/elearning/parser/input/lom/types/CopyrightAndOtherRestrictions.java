@@ -37,12 +37,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum CopyrightAndOtherRestrictions {
+  /**
+   * The learning object has copyright and other restrictions.
+   */
   @JsonProperty("yes")
   YES,
 
+  /**
+   * The learning object does not have copyright and other restrictions.
+   */
   @JsonProperty("no")
   NO,
 
+  /**
+   * The copyright and other restrictions of the learning object are unknown.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

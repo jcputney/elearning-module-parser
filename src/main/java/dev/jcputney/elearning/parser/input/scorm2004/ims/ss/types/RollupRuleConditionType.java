@@ -100,6 +100,9 @@ public enum RollupRuleConditionType {
   @JsonProperty("outsideAvailableTimeRange")
   OUTSIDE_AVAILABLE_TIME_RANGE,
 
+  /**
+   * The condition is met if the activity's status is unknown or not specified.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

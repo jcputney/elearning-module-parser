@@ -17,9 +17,12 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -51,6 +54,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Dependency {
 
@@ -61,4 +65,12 @@ public class Scorm12Dependency {
   @JacksonXmlProperty(isAttribute = true, localName = "identifierref")
   @JsonProperty(value = "identifierref", required = true)
   private String identifierRef;
+
+  /**
+   * Default constructor for the Scorm12Dependency class.
+   */
+  @SuppressWarnings("unused")
+  public Scorm12Dependency() {
+    // Default constructor
+  }
 }

@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -25,6 +27,7 @@ import dev.jcputney.elearning.parser.input.lom.types.CatalogEntry;
 import dev.jcputney.elearning.parser.input.lom.types.ContributeMeta;
 import dev.jcputney.elearning.parser.input.lom.types.Identifier;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -51,6 +54,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class MetaMetadata {
 
@@ -73,7 +77,6 @@ public class MetaMetadata {
   @JacksonXmlElementWrapper(localName = "identifier", useWrapping = false)
   @JacksonXmlProperty(localName = "identifier")
   private List<Identifier> identifier;
-
   /**
    * A list of catalog entries for the metadata.
    *
@@ -85,7 +88,6 @@ public class MetaMetadata {
   @JacksonXmlElementWrapper(localName = "catalogentry", useWrapping = false)
   @JacksonXmlProperty(localName = "catalogentry")
   private List<CatalogEntry> catalogEntries;
-
   /**
    * The list of contributors to the metadata, including their roles, entities, and contribution
    * dates.
@@ -106,7 +108,6 @@ public class MetaMetadata {
   @JacksonXmlElementWrapper(localName = "contribute", useWrapping = false)
   @JacksonXmlProperty(localName = "contribute")
   private List<ContributeMeta> contribute;
-
   /**
    * The metadata schema or standard being used. Typically represented as a list of strings.
    *
@@ -125,7 +126,6 @@ public class MetaMetadata {
   @JacksonXmlProperty(localName = "metadataSchema")
   @JsonAlias("metadatascheme")
   private List<String> metadataSchema;
-
   /**
    * The language used for the metadata content.
    *
@@ -142,7 +142,6 @@ public class MetaMetadata {
    */
   @JacksonXmlProperty(localName = "language")
   private String language;
-
   /**
    * A placeholder for custom elements that extend the meta-metadata information. This allows for
    * additional metadata to be included that is not part of the standard schema.
@@ -159,4 +158,12 @@ public class MetaMetadata {
   @JacksonXmlElementWrapper(localName = "customElements", useWrapping = false)
   @JacksonXmlProperty(localName = "customElements")
   private List<Object> customElements;
+
+  /**
+   * Default constructor for the MetaMetadata class.
+   */
+  @SuppressWarnings("unused")
+  public MetaMetadata() {
+    // Default constructor
+  }
 }

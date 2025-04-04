@@ -31,13 +31,24 @@ import java.util.stream.Stream;
 import lombok.Getter;
 
 /**
- * Implementation of FileAccess for local file access.
+ * Implementation of FileAccess for local file access. This class provides methods to check file
+ * existence, list files in a directory, and read file contents.
  */
 @SuppressWarnings("ClassCanBeRecord")
 public class LocalFileAccess implements FileAccess {
+
+  /**
+   * The root path for file access. This is the base directory where files are accessed from.
+   */
   @Getter
   private final String rootPath;
 
+  /**
+   * Constructs a LocalFileAccess instance with the specified root path.
+   *
+   * @param rootPath The root path for file access.
+   * @throws IllegalArgumentException if the root path is null or not a valid directory.
+   */
   public LocalFileAccess(String rootPath) {
     if (rootPath == null) {
       throw new IllegalArgumentException("Root path cannot be null");
@@ -51,14 +62,24 @@ public class LocalFileAccess implements FileAccess {
     }
   }
 
+  /**
+   * Checks if a file exists at the specified path.
+   */
   @Override
-  public boolean fileExists(String path) {
+  public boolean fileExistsInternal(String path) {
     Path filePath = Paths.get(fullPath(path));
     return Files.exists(filePath);
   }
 
+  /**
+   * Lists all files in the specified directory.
+   *
+   * @param directoryPath The path of the directory to list files from.
+   * @return A list of file paths relative to the root path.
+   * @throws IOException if an error occurs while listing files.
+   */
   @Override
-  public List<String> listFiles(String directoryPath) throws IOException {
+  public List<String> listFilesInternal(String directoryPath) throws IOException {
     Path dirPath = Paths.get(fullPath(directoryPath));
 
     // Validate directory
@@ -78,12 +99,19 @@ public class LocalFileAccess implements FileAccess {
     }
   }
 
+  /**
+   * Gets the contents of a file as an InputStream.
+   *
+   * @param path The path of the file to read.
+   * @return An InputStream for reading the file contents.
+   * @throws IOException if an error occurs while reading the file.
+   */
   @Override
-  public InputStream getFileContents(String path) throws IOException {
+  public InputStream getFileContentsInternal(String path) throws IOException {
     Path filePath = Paths.get(fullPath(path));
 
     // Check file existence and read permissions
-    if (!fileExists(path)) {
+    if (!fileExistsInternal(path)) {
       throw new NoSuchFileException("File not found: " + path);
     }
     if (!Files.isReadable(filePath)) {

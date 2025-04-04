@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -26,6 +28,7 @@ import dev.jcputney.elearning.parser.input.common.PercentTypeDeserializer;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.ChildActivitySet;
 import java.math.BigDecimal;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -38,6 +41,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupRule {
 
@@ -48,7 +52,6 @@ public class RollupRule {
    */
   @JacksonXmlProperty(localName = "rollupConditions", namespace = IMSSS.NAMESPACE_URI)
   private RollupConditions rollupConditions;
-
   /**
    * The action to perform if the rule’s conditions are met. The rollup action determines how the
    * child activities' statuses impact the parent activity’s rollup status, such as marking the
@@ -56,7 +59,6 @@ public class RollupRule {
    */
   @JacksonXmlProperty(localName = "rollupAction", namespace = IMSSS.NAMESPACE_URI)
   private RollupAction rollupAction;
-
   /**
    * Specifies the set of child activities to consider when evaluating this rollup rule. This
    * attribute controls whether the rollup rule should apply to all child activities, any child
@@ -66,7 +68,6 @@ public class RollupRule {
   @JsonProperty("childActivitySet")
   @Default
   private ChildActivitySet childActivitySet = ChildActivitySet.ALL;
-
   /**
    * Specifies the minimum number of child activities that must meet the rollup conditions for this
    * rule to apply. This attribute is only relevant when <code>childActivitySet</code> is set to
@@ -78,7 +79,6 @@ public class RollupRule {
   @JsonProperty("minimumCount")
   @Default
   private int minimumCount = 0;
-
   /**
    * Specifies the minimum percentage of child activities that must meet the rollup conditions for
    * this rule to apply. This attribute is only relevant when <code>childActivitySet</code> is set
@@ -91,4 +91,12 @@ public class RollupRule {
   @JsonProperty("minimumPercent")
   @Default
   private PercentType minimumPercent = new PercentType(BigDecimal.ZERO);
+
+  /**
+   * Default constructor for the RollupRule class.
+   */
+  @SuppressWarnings("unused")
+  public RollupRule() {
+    // Default constructor
+  }
 }

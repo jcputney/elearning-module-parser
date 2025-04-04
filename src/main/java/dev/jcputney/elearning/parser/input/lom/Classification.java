@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -26,6 +28,7 @@ import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import dev.jcputney.elearning.parser.input.lom.types.TaxonPath;
 import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -52,6 +55,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Classification {
 
@@ -72,7 +76,6 @@ public class Classification {
   @JacksonXmlElementWrapper(localName = "purpose", useWrapping = false)
   @JacksonXmlProperty(localName = "purpose")
   private SourceValuePair<Purpose> purpose;
-
   /**
    * The taxonomy paths associated with this classification, allowing for hierarchical
    * categorization.
@@ -92,7 +95,6 @@ public class Classification {
   @JacksonXmlElementWrapper(localName = "taxonPath", useWrapping = false)
   @JacksonXmlProperty(localName = "taxonPath")
   private List<TaxonPath> taxonPaths;
-
   /**
    * A description of this classification, represented as a language-specific string.
    *
@@ -109,7 +111,6 @@ public class Classification {
    */
   @JacksonXmlProperty(localName = "description")
   private SingleLangString description;
-
   /**
    * Keywords associated with this classification, represented as a list of language-specific
    * strings.
@@ -127,4 +128,11 @@ public class Classification {
    */
   @JacksonXmlProperty(localName = "keyword")
   private UnboundLangString keywords;
+
+  /**
+   * Default constructor for the Classification class.
+   */
+  public Classification() {
+    // Default constructor
+  }
 }

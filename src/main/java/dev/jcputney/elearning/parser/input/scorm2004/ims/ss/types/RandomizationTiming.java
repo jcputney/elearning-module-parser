@@ -57,6 +57,10 @@ public enum RandomizationTiming {
   @JsonProperty("onEachNewAttempt")
   ON_EACH_NEW_ATTEMPT,
 
+  /**
+   * The "unknown" value is used when the randomization timing type is not specified or is not
+   * recognized.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

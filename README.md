@@ -25,6 +25,7 @@ integrate eLearning content into Learning Management Systems (LMS) and other pla
 
 - **Java 17** or higher
 - **Gradle 7.0+** (or Maven equivalent)
+  - *Note: Maven is not required to be installed when using the included Maven Wrapper*
 
 ---
 
@@ -119,13 +120,21 @@ cd elearning-module-parser
 Build the project:
 
 ```bash
-mvn clean compile
+# Using Maven Wrapper (recommended)
+./mvnw clean compile
+
+# On Windows
+mvnw.cmd clean compile
 ```
 
 Run tests:
 
 ```bash
-mvn test
+# Using Maven Wrapper (recommended)
+./mvnw test
+
+# On Windows
+mvnw.cmd test
 ```
 
 ### Running Example Modules

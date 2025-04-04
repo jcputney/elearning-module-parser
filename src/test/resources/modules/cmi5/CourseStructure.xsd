@@ -1,6 +1,7 @@
-<xs:schema xmlns="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  targetNamespace="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd" elementFormDefault="qualified"
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd"
+  targetNamespace="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd"
+  elementFormDefault="qualified"
   id="cmi5CourseStructure">
   <xs:element name="courseStructure" type="courseType"/>
   <xs:complexType name="courseType">

@@ -17,10 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -44,22 +47,41 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class HeuristicSpec {
 
+  /**
+   * Indicates whether completion is tracked.
+   */
   @JacksonXmlProperty(localName = "isCompletionTracked")
   private YesNoType isCompletionTracked;
-
+  /**
+   * Indicates whether satisfaction is tracked.
+   */
   @JacksonXmlProperty(localName = "isSatisfactionTracked")
   private YesNoType isSatisfactionTracked;
-
+  /**
+   * Indicates whether score is tracked.
+   */
   @JacksonXmlProperty(localName = "isScoreTracked")
   private YesNoType isScoreTracked;
-
+  /**
+   * Indicates whether incomplete score is meaningful.
+   */
   @JacksonXmlProperty(localName = "isIncompleteScoreMeaningful")
   private YesNoType isIncompleteScoreMeaningful;
-
+  /**
+   * Indicates whether incomplete satisfaction is meaningful.
+   */
   @JacksonXmlProperty(localName = "isIncompleteSatisfactionMeaningful")
   private YesNoType isIncompleteSatisfactionMeaningful;
+
+  /**
+   * Default constructor for the HeuristicSpec class.
+   */
+  public HeuristicSpec() {
+    // Default constructor
+  }
 }

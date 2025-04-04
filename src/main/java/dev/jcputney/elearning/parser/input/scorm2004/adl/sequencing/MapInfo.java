@@ -17,9 +17,12 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -27,8 +30,8 @@ import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents a mapping to a global objective or another objective within the LMS. Maps allow
- * tracking of objectives that are shared across different content items. The following schema
- * shows the structure of the mapInfoType element:
+ * tracking of objectives that are shared across different content items. The following schema shows
+ * the structure of the mapInfoType element:
  * <pre>{@code
  *   <xs:complexType name="mapInfoType">
  *      <xs:attribute name="targetObjectiveID" use="required" type="xs:anyURI" />
@@ -48,6 +51,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class MapInfo {
 
@@ -58,7 +62,6 @@ public class MapInfo {
   @JacksonXmlProperty(isAttribute = true, localName = "targetObjectiveID")
   @JsonProperty("targetObjectiveID")
   private String targetObjectiveID;
-
   /**
    * Indicates whether the raw score for this objective should be read from the mapped global
    * objective.
@@ -67,7 +70,6 @@ public class MapInfo {
   @JsonProperty("readRawScore")
   @Default
   private boolean readRawScore = true;
-
   /**
    * Indicates whether the minimum score for this objective should be read from the mapped global
    * objective.
@@ -76,7 +78,6 @@ public class MapInfo {
   @JsonProperty("readMinScore")
   @Default
   private boolean readMinScore = true;
-
   /**
    * Indicates whether the maximum score for this objective should be read from the mapped global
    * objective.
@@ -85,7 +86,6 @@ public class MapInfo {
   @JsonProperty("readMaxScore")
   @Default
   private boolean readMaxScore = true;
-
   /**
    * Indicates whether the completion status for this objective should be read from the mapped
    * global objective.
@@ -94,16 +94,14 @@ public class MapInfo {
   @JsonProperty("readCompletionStatus")
   @Default
   private boolean readCompletionStatus = true;
-
   /**
-   * Indicates whether the progress measure for this objective should be read from the mapped
-   * global objective.
+   * Indicates whether the progress measure for this objective should be read from the mapped global
+   * objective.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "readProgressMeasure")
   @JsonProperty("readProgressMeasure")
   @Default
   private boolean readProgressMeasure = true;
-
   /**
    * Indicates whether the raw score for this objective should be written to the mapped global
    * objective.
@@ -112,7 +110,6 @@ public class MapInfo {
   @JsonProperty("writeRawScore")
   @Default
   private boolean writeRawScore = false;
-
   /**
    * Indicates whether the minimum score for this objective should be written to the mapped global
    * objective.
@@ -121,7 +118,6 @@ public class MapInfo {
   @JsonProperty("writeMinScore")
   @Default
   private boolean writeMinScore = false;
-
   /**
    * Indicates whether the maximum score for this objective should be written to the mapped global
    * objective.
@@ -130,7 +126,6 @@ public class MapInfo {
   @JsonProperty("writeMaxScore")
   @Default
   private boolean writeMaxScore = false;
-
   /**
    * Indicates whether the completion status for this objective should be written to the mapped
    * global objective.
@@ -139,7 +134,6 @@ public class MapInfo {
   @JsonProperty("writeCompletionStatus")
   @Default
   private boolean writeCompletionStatus = false;
-
   /**
    * Indicates whether the progress measure for this objective should be written to the mapped
    * global objective.
@@ -148,4 +142,12 @@ public class MapInfo {
   @JsonProperty("writeProgressMeasure")
   @Default
   private boolean writeProgressMeasure = false;
+
+  /**
+   * Default constructor for the MapInfo class.
+   */
+  @SuppressWarnings("unused")
+  public MapInfo() {
+    // Default constructor
+  }
 }

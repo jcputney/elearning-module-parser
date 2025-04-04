@@ -39,18 +39,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum AggregationLevel {
+  /**
+   * The aggregation level is 1.
+   */
   @JsonProperty("1")
   LEVEL_1,
 
+  /**
+   * The aggregation level is 2.
+   */
   @JsonProperty("2")
   LEVEL_2,
 
+  /**
+   * The aggregation level is 3.
+   */
   @JsonProperty("3")
   LEVEL_3,
 
+  /**
+   * The aggregation level is 4.
+   */
   @JsonProperty("4")
   LEVEL_4,
 
+  /**
+   * The aggregation level is unknown.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 

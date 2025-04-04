@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.cp;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,6 +29,7 @@ import dev.jcputney.elearning.parser.input.common.PercentTypeDeserializer;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureTypeDeserializer;
 import java.math.BigDecimal;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -40,6 +43,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class CompletionThreshold {
@@ -53,7 +57,6 @@ public class CompletionThreshold {
   @JsonProperty("minProgressMeasure")
   @Default
   private MeasureType minProgressMeasure = new MeasureType(BigDecimal.ONE);
-
   /**
    * Specifies the relative weight of this content item towards overall progress. The value is
    * between 0.0 and 1.0, where 1.0 indicates the full weight.
@@ -63,13 +66,20 @@ public class CompletionThreshold {
   @JsonProperty("progressWeight")
   @Default
   private PercentType progressWeight = new PercentType(BigDecimal.ONE);
-
   /**
-   * Indicates whether measure determines completion. If true, completion is based on
-   * achieving the minimum progress measure defined.
+   * Indicates whether measure determines completion. If true, completion is based on achieving the
+   * minimum progress measure defined.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "completedByMeasure")
   @JsonProperty("completedByMeasure")
   @Default
   private Boolean completedByMeasure = false;
+
+  /**
+   * Default constructor for the CompletionThreshold class.
+   */
+  @SuppressWarnings("unused")
+  public CompletionThreshold() {
+    // Default constructor
+  }
 }

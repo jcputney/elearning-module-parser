@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025. Jonathan Putney
+ * Copyright (c) 2024. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,8 +17,11 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -50,8 +53,10 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ContributeEntity {
+
   /**
    * The VCARD representation of the entity contributing to the lifecycle of the learning object.
    * Example:
@@ -66,4 +71,12 @@ public class ContributeEntity {
    */
   @JacksonXmlProperty(localName = "vcard")
   private String vCard;
+
+  /**
+   * Default constructor for the ContributeEntity class.
+   */
+  @SuppressWarnings("unused")
+  public ContributeEntity() {
+    // Default constructor
+  }
 }

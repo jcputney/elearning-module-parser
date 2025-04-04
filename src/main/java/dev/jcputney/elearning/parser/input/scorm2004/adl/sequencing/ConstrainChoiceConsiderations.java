@@ -17,10 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -40,6 +43,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ConstrainChoiceConsiderations {
@@ -51,7 +55,6 @@ public class ConstrainChoiceConsiderations {
   @JsonProperty("preventActivation")
   @Default
   private boolean preventActivation = false;
-
   /**
    * Constrains choice when true. Default is false.
    */
@@ -59,4 +62,12 @@ public class ConstrainChoiceConsiderations {
   @JsonProperty("constrainChoice")
   @Default
   private boolean constrainChoice = false;
+
+  /**
+   * Default constructor for the ConstrainChoiceConsiderations class.
+   */
+  @SuppressWarnings("unused")
+  public ConstrainChoiceConsiderations() {
+    // Default constructor
+  }
 }

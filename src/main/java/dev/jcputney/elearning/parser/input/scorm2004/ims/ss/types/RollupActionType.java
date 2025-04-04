@@ -67,6 +67,9 @@ public enum RollupActionType {
   @JsonProperty("incomplete")
   INCOMPLETE,
 
+  /**
+   * The "unknown" value is used when the rollup action type is not specified or is not recognized.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

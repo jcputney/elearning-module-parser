@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.cmi5;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -24,8 +26,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.cmi5.types.ReferencesObjectives;
 import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * Represents a block within a CMI5 course structure. Blocks can contain nested blocks or AUs
@@ -52,6 +56,8 @@ import lombok.Getter;
  */
 @Builder
 @Getter
+@Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Block {
 
@@ -64,7 +70,6 @@ public class Block {
    */
   @JacksonXmlProperty(localName = "title")
   private TextType title;
-
   /**
    * The description of the block, represented as a localized text type.
    *
@@ -74,9 +79,9 @@ public class Block {
    */
   @JacksonXmlProperty(localName = "description")
   private TextType description;
-
   /**
-   * The objectives for the block, if specified. This references existing objectives defined in the course.
+   * The objectives for the block, if specified. This references existing objectives defined in the
+   * course.
    *
    * <pre>{@code
    * <xs:element name="objectives" type="referencesObjectivesType" minOccurs="0"/>
@@ -84,7 +89,6 @@ public class Block {
    */
   @JacksonXmlProperty(localName = "objectives")
   private ReferencesObjectives objectives;
-
   /**
    * Nested assignable units (AUs) within the block.
    *
@@ -95,7 +99,6 @@ public class Block {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "au")
   private List<AU> assignableUnits;
-
   /**
    * Nested blocks within this block, allowing for hierarchical structure.
    *
@@ -106,7 +109,6 @@ public class Block {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "block")
   private List<Block> nestedBlocks;
-
   /**
    * The unique identifier for the block, represented as an anyURI.
    *
@@ -117,4 +119,11 @@ public class Block {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("id")
   private String id;
+
+  /**
+   * Default constructor for the Block class.
+   */
+  public Block() {
+    // Default constructor
+  }
 }

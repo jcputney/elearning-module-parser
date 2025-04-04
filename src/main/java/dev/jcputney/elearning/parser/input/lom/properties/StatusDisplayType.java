@@ -40,18 +40,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum StatusDisplayType {
 
+  /**
+   * The status display type is success only.
+   */
   @JsonProperty("success only")
   SUCCESS_ONLY,
 
+  /**
+   * The status display type is completion only.
+   */
   @JsonProperty("completion only")
   COMPLETION_ONLY,
 
+  /**
+   * The status display type is separate.
+   */
   @JsonProperty("separate")
   SEPARATE,
 
+  /**
+   * The status display type is combined.
+   */
   @JsonProperty("combined")
   COMBINED,
 
+  /**
+   * The status display type is none.
+   */
   @JsonProperty("none")
   NONE
 }

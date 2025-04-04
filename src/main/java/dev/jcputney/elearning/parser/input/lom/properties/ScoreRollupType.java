@@ -39,15 +39,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum ScoreRollupType {
 
+  /**
+   * The score rollup type is provided by the course.
+   */
   @JsonProperty("score provided by course")
   SCORE_PROVIDED_BY_COURSE,
 
+  /**
+   * The score rollup type is the average score of all units.
+   */
   @JsonProperty("average score of all units")
   AVERAGE_SCORE_OF_ALL_UNITS,
 
+  /**
+   * The score rollup type is the average score of all units with scores.
+   */
   @JsonProperty("average score of all units with scores")
   AVERAGE_SCORE_OF_ALL_UNITS_WITH_SCORES,
 
+  /**
+   * The score rollup type is a fixed average.
+   */
   @JsonProperty("fixed average")
   FIXED_AVERAGE
 }

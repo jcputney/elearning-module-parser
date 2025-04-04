@@ -17,10 +17,21 @@
 
 package dev.jcputney.elearning.parser.input.scorm12;
 
+/**
+ * This class contains constants and utility methods for handling SCORM 1.2 ADLCP elements. It isn't
+ * intended to be instantiated.
+ */
 public class Scorm12ADLCP {
 
+  /**
+   * The namespace URI for SCORM 1.2 ADLCP elements.
+   */
   public static final String NAMESPACE_URI = "http://www.adlnet.org/xsd/adlcp_rootv1p2";
 
+  /**
+   * Default constructor for the Scorm12ADLCP class. This constructor is private to prevent
+   * instantiation.
+   */
   private Scorm12ADLCP() {
     throw new IllegalStateException("Utility class");
   }

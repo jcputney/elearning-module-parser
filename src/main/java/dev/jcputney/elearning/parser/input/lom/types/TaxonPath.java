@@ -17,11 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.lom.LOM;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -46,6 +49,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class TaxonPath {
 
@@ -62,7 +66,6 @@ public class TaxonPath {
    */
   @JacksonXmlProperty(localName = "source")
   private SingleLangString source;
-
   /**
    * A list of taxon elements representing nodes or concepts in the hierarchical classification.
    * Each taxon specifies a unique concept within the taxonomy.
@@ -77,7 +80,6 @@ public class TaxonPath {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "taxon")
   private List<Taxon> taxons;
-
   /**
    * Any custom elements or extensions defined within the taxon path, allowing for schema
    * extensibility.
@@ -90,4 +92,11 @@ public class TaxonPath {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "customElement", namespace = LOM.NAMESPACE_URI + "/extend")
   private List<Object> customElements;
+
+  /**
+   * Default constructor for the TaxonPath class.
+   */
+  public TaxonPath() {
+    // Default constructor
+  }
 }

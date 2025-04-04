@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -24,6 +26,7 @@ import dev.jcputney.elearning.parser.input.lom.types.Kind;
 import dev.jcputney.elearning.parser.input.lom.types.Resource;
 import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -48,6 +51,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Relation {
 
@@ -68,7 +72,6 @@ public class Relation {
    */
   @JacksonXmlProperty(localName = "kind")
   private SourceValuePair<Kind> kind;
-
   /**
    * The resource information that describes the target of the relationship. A resource can include
    * identifiers and descriptions for the related learning object.
@@ -88,4 +91,12 @@ public class Relation {
   @JacksonXmlElementWrapper(localName = "resource", useWrapping = false)
   @JacksonXmlProperty(localName = "resource")
   private List<Resource> resource;
+
+  /**
+   * Default constructor for the Relation class.
+   */
+  @SuppressWarnings("unused")
+  public Relation() {
+    // Default constructor
+  }
 }

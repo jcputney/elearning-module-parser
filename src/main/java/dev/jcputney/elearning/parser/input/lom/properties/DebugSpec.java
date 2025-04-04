@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025. Jonathan Putney
+ * Copyright (c) 2024. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,17 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/*
-
-...
- */
-
 package dev.jcputney.elearning.parser.input.lom.properties;
+
+import static lombok.AccessLevel.PRIVATE;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -54,37 +52,67 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class DebugSpec {
 
+  /**
+   * The audit level for control.
+   */
   @JacksonXmlProperty(localName = "controlAudit")
   private YesNoType controlAudit;
-
+  /**
+   * The detailed level for control.
+   */
   @JacksonXmlProperty(localName = "controlDetailed")
   private YesNoType controlDetailed;
-
+  /**
+   * The audit level for runtime.
+   */
   @JacksonXmlProperty(localName = "runtimeAudit")
   private YesNoType runtimeAudit;
-
+  /**
+   * The detailed level for runtime.
+   */
   @JacksonXmlProperty(localName = "runtimeDetailed")
   private YesNoType runtimeDetailed;
-
+  /**
+   * The audit level for sequencing.
+   */
   @JacksonXmlProperty(localName = "sequencingAudit")
   private YesNoType sequencingAudit;
-
+  /**
+   * The detailed level for sequencing.
+   */
   @JacksonXmlProperty(localName = "sequencingDetailed")
   private YesNoType sequencingDetailed;
-
+  /**
+   * The simple level for sequencing.
+   */
   @JacksonXmlProperty(localName = "sequencingSimple")
   private YesNoType sequencingSimple;
-
+  /**
+   * The audit level for lookahead.
+   */
   @JacksonXmlProperty(localName = "lookaheadAudit")
   private YesNoType lookaheadAudit;
-
+  /**
+   * The detailed level for lookahead.
+   */
   @JacksonXmlProperty(localName = "lookaheadDetailed")
   private YesNoType lookaheadDetailed;
-
+  /**
+   * Indicates whether to include timestamps.
+   */
   @JacksonXmlProperty(localName = "includeTimestamps")
   private YesNoType includeTimestamps;
+
+  /**
+   * Default constructor for the DebugSpec class.
+   */
+  @SuppressWarnings("unused")
+  public DebugSpec() {
+    // Default constructor
+  }
 }

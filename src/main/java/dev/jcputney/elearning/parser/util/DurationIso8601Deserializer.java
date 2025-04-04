@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.format.DateTimeParseException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.threeten.extra.PeriodDuration;
 
 /**
@@ -31,18 +32,52 @@ import org.threeten.extra.PeriodDuration;
  * into {@link java.time.Duration} instances.
  *
  * <p>This deserializer supports durations in the format PnDTnHnMnS, where n represents
- * days, hours, minutes, or seconds. It does not support months or years, as these are not
- * compatible with {@link java.time.Duration}.</p>
+ * days, hours, minutes, or seconds. It doesn't support months or years, as these aren't compatible
+ * with {@link java.time.Duration}.</p>
  */
 public class DurationIso8601Deserializer extends JsonDeserializer<Duration> {
 
+  /**
+   * Default constructor for the deserializer.
+   */
+  public DurationIso8601Deserializer() {
+    // Default constructor
+  }
+
+  /**
+   * Deserializes a JSON value into a {@link Duration} object.
+   *
+   * <p>This method supports multiple duration formats:
+   * <ul>
+   *   <li>Empty string or null, returns <code>Duration.ZERO</code></li>
+   *   <li>Numeric values, interpreted as seconds</li>
+   *   <li>ISO 8601 duration format, for example, "PT1H30M45S"</li>
+   *   <li>HH:MM:SS format, delegated to {@link DurationHHMMSSDeserializer#parseDuration}</li>
+   * </ul>
+   *
+   * @param parser the JsonParser to read the value from
+   * @param context context for the deserialization process
+   * @return the deserialized {@link Duration} object
+   * @throws IOException if the value can't be parsed as a duration, or if there's an issue with the
+   * parser
+   * @throws IllegalArgumentException if the parser is null
+   */
   @Override
   public Duration deserialize(JsonParser parser, DeserializationContext context)
       throws IOException {
+    if (parser == null) {
+      throw new IllegalArgumentException("JsonParser cannot be null");
+    }
+
     String durationString = parser.getText();
     if (StringUtils.isEmpty(durationString)) {
       return Duration.ZERO;
     }
+
+    if (NumberUtils.isParsable(durationString)) {
+      return Duration.ofSeconds((long) Double.parseDouble(durationString));
+    }
+
     try {
       if (!durationString.startsWith("P")) {
         return DurationHHMMSSDeserializer.parseDuration(durationString);
@@ -50,7 +85,8 @@ public class DurationIso8601Deserializer extends JsonDeserializer<Duration> {
       return PeriodDuration.parse(durationString).getDuration();
     } catch (NumberFormatException | DateTimeParseException e) {
       throw new IOException(
-          "Invalid ISO 8601 duration format for java.time.Duration: " + durationString, e);
+          "Invalid ISO 8601 duration format for java.time.Duration: " + durationString +
+              ". Expected format: ISO 8601 (e.g., PT1H30M45S) or HH:MM:SS.", e);
     }
   }
 }

@@ -17,12 +17,15 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.cp;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLCP;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -33,6 +36,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ADLData {
@@ -43,4 +47,12 @@ public class ADLData {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "map", namespace = ADLCP.NAMESPACE_URI)
   private List<DataMap> mapList;
+
+  /**
+   * Default constructor for the ADLData class.
+   */
+  @SuppressWarnings("unused")
+  public ADLData() {
+    // Default constructor
+  }
 }

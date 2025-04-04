@@ -17,11 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.RollupConsiderationType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -43,6 +46,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupConsiderations {
@@ -54,7 +58,6 @@ public class RollupConsiderations {
   @JsonProperty("requiredForSatisfied")
   @Default
   private RollupConsiderationType requiredForSatisfied = RollupConsiderationType.ALWAYS;
-
   /**
    * Specifies when not satisfaction is required for rollup. Default is "always".
    */
@@ -62,7 +65,6 @@ public class RollupConsiderations {
   @JsonProperty("requiredForNotSatisfied")
   @Default
   private RollupConsiderationType requiredForNotSatisfied = RollupConsiderationType.ALWAYS;
-
   /**
    * Specifies when completion is required for rollup. Default is "always".
    */
@@ -70,7 +72,6 @@ public class RollupConsiderations {
   @JsonProperty("requiredForCompleted")
   @Default
   private RollupConsiderationType requiredForCompleted = RollupConsiderationType.ALWAYS;
-
   /**
    * Specifies when incompletion is required for rollup. Default is "always".
    */
@@ -78,7 +79,6 @@ public class RollupConsiderations {
   @JsonProperty("requiredForIncomplete")
   @Default
   private RollupConsiderationType requiredForIncomplete = RollupConsiderationType.ALWAYS;
-
   /**
    * Indicates if satisfaction is measured only when active. Default is true.
    */
@@ -86,4 +86,12 @@ public class RollupConsiderations {
   @JsonProperty("measureSatisfactionIfActive")
   @Default
   private boolean measureSatisfactionIfActive = true;
+
+  /**
+   * Default constructor for the RollupConsiderations class.
+   */
+  @SuppressWarnings("unused")
+  public RollupConsiderations() {
+    // Default constructor
+  }
 }

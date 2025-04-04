@@ -19,11 +19,33 @@ package dev.jcputney.elearning.parser.api;
 
 import dev.jcputney.elearning.parser.input.lom.LOM;
 
+/**
+ * Interface representing metadata that can be loaded.
+ * <p>
+ * This interface provides methods to get the location of the metadata and to get and set the LOM
+ * (Learning Object Metadata) object associated with it.
+ * </p>
+ */
 public interface LoadableMetadata {
 
+  /**
+   * Gets the location of the metadata.
+   *
+   * @return the location of the metadata as a String.
+   */
   String getLocation();
 
+  /**
+   * Gets the LOM (Learning Object Metadata) object associated with this metadata.
+   *
+   * @return the LOM object.
+   */
   LOM getLom();
 
+  /**
+   * Sets the LOM (Learning Object Metadata) object associated with this metadata.
+   *
+   * @param lom the LOM object to set.
+   */
   void setLom(LOM lom);
 }

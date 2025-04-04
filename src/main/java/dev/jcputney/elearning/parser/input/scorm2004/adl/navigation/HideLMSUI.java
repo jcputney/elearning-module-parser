@@ -85,6 +85,9 @@ public enum HideLMSUI {
   @JsonProperty("abandonAll")
   ABANDON_ALL,
 
+  /**
+   * The "unknown" option indicates that the LMS UI element is not specified or recognized.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

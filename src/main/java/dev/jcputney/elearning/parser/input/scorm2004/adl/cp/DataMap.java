@@ -17,10 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.cp;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -32,6 +35,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class DataMap {
@@ -42,7 +46,6 @@ public class DataMap {
   @JacksonXmlProperty(localName = "targetID", isAttribute = true)
   @JsonProperty("targetID")
   private String targetID;
-
   /**
    * Indicates if shared data is readable.
    */
@@ -50,7 +53,6 @@ public class DataMap {
   @JsonProperty("readSharedData")
   @Default
   private boolean readSharedData = true;
-
   /**
    * Indicates if shared data is writable.
    */
@@ -58,4 +60,12 @@ public class DataMap {
   @JsonProperty("writeSharedData")
   @Default
   private boolean writeSharedData = false;
+
+  /**
+   * Default constructor for the DataMap class.
+   */
+  @SuppressWarnings("unused")
+  public DataMap() {
+    // Default constructor
+  }
 }

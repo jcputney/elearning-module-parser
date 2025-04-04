@@ -17,12 +17,15 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.random;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.RandomizationTiming;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -52,6 +55,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RandomizationControls {
@@ -68,7 +72,6 @@ public class RandomizationControls {
   @JsonProperty("randomizationTiming")
   @Default
   private RandomizationTiming randomizationTiming = RandomizationTiming.NEVER;
-
   /**
    * Specifies the timing of selection for child activities within the sequence.
    */
@@ -76,7 +79,6 @@ public class RandomizationControls {
   @JsonProperty("selectionTiming")
   @Default
   private RandomizationTiming selectionTiming = RandomizationTiming.NEVER;
-
   /**
    * Indicates whether the order of child activities within the sequence can be changed. When set
    * to
@@ -93,7 +95,6 @@ public class RandomizationControls {
   @JsonProperty("reorderChildren")
   @Default
   private boolean reorderChildren = false;
-
   /**
    * Specifies the number of child activities to be selected from the available set. This attribute
    * enables partial selection from a larger pool, allowing only a subset of activities to be
@@ -106,4 +107,12 @@ public class RandomizationControls {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("selectCount")
   private Integer selectCount;
+
+  /**
+   * Default constructor for the RandomizationControls class.
+   */
+  @SuppressWarnings("unused")
+  public RandomizationControls() {
+    // Default constructor
+  }
 }

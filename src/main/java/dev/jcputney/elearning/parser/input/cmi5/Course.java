@@ -17,12 +17,15 @@
 
 package dev.jcputney.elearning.parser.input.cmi5;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -50,6 +53,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Course {
 
@@ -62,7 +66,6 @@ public class Course {
    */
   @JacksonXmlProperty(localName = "title")
   private TextType title;
-
   /**
    * The description of the course, represented as a localized text type.
    *
@@ -72,7 +75,6 @@ public class Course {
    */
   @JacksonXmlProperty(localName = "description")
   private TextType description;
-
   /**
    * A list of additional custom elements (extensions) included in the course definition.
    *
@@ -83,7 +85,6 @@ public class Course {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "anyElement")
   private List<Object> customExtensions;
-
   /**
    * The unique identifier for the course, represented as an anyURI.
    *
@@ -94,4 +95,11 @@ public class Course {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("id")
   private String id;
+
+  /**
+   * Default constructor for the Course class.
+   */
+  public Course() {
+    // Default constructor
+  }
 }

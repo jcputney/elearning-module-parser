@@ -17,12 +17,15 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.util.DurationIso8601Deserializer;
 import java.time.Duration;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -58,6 +61,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LomDuration {
 
@@ -68,7 +72,6 @@ public class LomDuration {
   @JsonAlias("datetime")
   @JsonDeserialize(using = DurationIso8601Deserializer.class)
   private Duration duration;
-
   /**
    * A natural language description of the duration, represented as a {@link LangString}.
    * <p>
@@ -81,4 +84,11 @@ public class LomDuration {
    */
   @JacksonXmlProperty(localName = "description")
   private SingleLangString description;
+
+  /**
+   * Default constructor for the LomDuration class.
+   */
+  public LomDuration() {
+    // Default constructor
+  }
 }

@@ -36,12 +36,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum YesNoType {
+  /**
+   * The value is yes.
+   */
   @JsonProperty("yes")
   YES,
+
+  /**
+   * The value is no.
+   */
   @JsonProperty("no")
   NO,
+
+  /**
+   * The value is true.
+   */
   @JsonProperty("true")
   TRUE,
+
+  /**
+   * The value is false.
+   */
   @JsonProperty("false")
   FALSE
 }

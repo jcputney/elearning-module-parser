@@ -17,12 +17,15 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.api.LoadableMetadata;
 import dev.jcputney.elearning.parser.input.lom.LOM;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12ADLCP;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
@@ -67,6 +70,7 @@ import lombok.extern.jackson.Jacksonized;
 @SuperBuilder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Metadata implements LoadableMetadata {
 
@@ -75,13 +79,11 @@ public class Scorm12Metadata implements LoadableMetadata {
    */
   @JacksonXmlProperty(localName = "schema", namespace = Scorm12Manifest.NAMESPACE_URI)
   private String schema;
-
   /**
    * The version of the schema used, such as "1.2". This element is optional.
    */
   @JacksonXmlProperty(localName = "schemaversion", namespace = Scorm12Manifest.NAMESPACE_URI)
   private String schemaVersion;
-
   /**
    * Inline metadata in the form of a Learning Object Metadata (LOM) element. This element is
    * optional.
@@ -89,10 +91,17 @@ public class Scorm12Metadata implements LoadableMetadata {
   @JacksonXmlProperty(localName = "lom", namespace = LOM.NAMESPACE_URI)
   @Setter
   private LOM lom;
-
   /**
    * A reference to an external metadata file, provided as a URI. This element is optional.
    */
   @JacksonXmlProperty(localName = "location", namespace = Scorm12ADLCP.NAMESPACE_URI)
   private String location;
+
+  /**
+   * Default constructor for the Scorm12Metadata class.
+   */
+  @SuppressWarnings("unused")
+  public Scorm12Metadata() {
+    // Default constructor
+  }
 }

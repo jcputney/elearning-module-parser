@@ -38,15 +38,34 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum RollupConsiderationType {
+
+  /**
+   * Always consider the rollup.
+   */
   @JsonProperty("always")
   ALWAYS,
+
+  /**
+   * Consider the rollup if it's been attempted.
+   */
   @JsonProperty("ifAttempted")
   IF_ATTEMPTED,
+
+  /**
+   * Consider the rollup if it hasn't been skipped.
+   */
   @JsonProperty("ifNotSkipped")
   IF_NOT_SKIPPED,
+
+  /**
+   * Consider the rollup if it hasn't been suspended.
+   */
   @JsonProperty("ifNotSuspended")
   IF_NOT_SUSPENDED,
 
+  /**
+   * Unknown value, used for deserialization when the value isn't recognized.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

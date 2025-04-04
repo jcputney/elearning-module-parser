@@ -25,14 +25,15 @@ import java.time.Duration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 /**
  * Custom deserializer for {@link Duration} objects, allowing HH:MM:SS duration strings to be parsed
  * into {@link java.time.Duration} instances.
  *
  * <p>This deserializer supports durations in the format HH:MM:SS, where HH represents
- * hours, MM represents minutes, and SS represents seconds. It does not support days, months, or
- * years, as these are not compatible with {@link java.time.Duration}.</p>
+ * hours, MM represents minutes, and SS represents seconds. It doesn't support days, months, or
+ * years, as these aren't compatible with {@link java.time.Duration}.</p>
  */
 public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
 
@@ -45,9 +46,45 @@ public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
           + "$"              // end of string
   );
 
+  /**
+   * Default constructor for the deserializer.
+   */
+  public DurationHHMMSSDeserializer() {
+    // Default constructor
+  }
+
+  /**
+   * Parses a string representation of a duration into a {@link Duration} object.
+   *
+   * <p>This method supports the following formats:
+   * <ul>
+   *   <li>Numeric values (interpreted as seconds)</li>
+   *   <li>HH:MM:SS format (hours:minutes:seconds)</li>
+   *   <li>MM:SS format (minutes:seconds)</li>
+   *   <li>SS format (seconds only)</li>
+   * </ul>
+   *
+   * <p>Examples:
+   * <ul>
+   *   <li>"3600" → 1 hour</li>
+   *   <li>"01:30:45" → 1 hour, 30 minutes, 45 seconds</li>
+   *   <li>"30:45" → 30 minutes, 45 seconds</li>
+   *   <li>"45" → 45 seconds</li>
+   * </ul>
+   *
+   * @param durationString the string to parse, can be empty or null (returns
+   * <code>Duration.ZERO</code>)
+   * @return the parsed {@link Duration}
+   * @throws NumberFormatException if the string can't be parsed as a duration
+   * @throws IllegalArgumentException if the string format is invalid
+   */
   public static Duration parseDuration(String durationString) throws NumberFormatException {
     if (StringUtils.isEmpty(durationString)) {
       return Duration.ZERO;
+    }
+
+    if (NumberUtils.isParsable(durationString)) {
+      return Duration.ofSeconds((long) Double.parseDouble(durationString));
     }
 
     Matcher matcher = HMS_REGEX.matcher(durationString);
@@ -55,9 +92,9 @@ public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
       throw new IllegalArgumentException("Invalid format: " + durationString);
     }
 
-    String hoursPart = matcher.group(1); // may be null or empty
-    String minutesPart = matcher.group(2); // may be null or empty
-    String secondsPart = matcher.group(3); // may be null or empty
+    String hoursPart = matcher.group(1); // maybe null or empty
+    String minutesPart = matcher.group(2); // maybe null or empty
+    String secondsPart = matcher.group(3); // maybe null or empty
 
     int hours = parseOrZero(hoursPart);
     int minutes = parseOrZero(minutesPart);
@@ -73,15 +110,34 @@ public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
     return (s == null || s.isEmpty()) ? 0 : Integer.parseInt(s);
   }
 
+  /**
+   * Deserializes a JSON value into a {@link Duration} object.
+   *
+   * <p>This method reads the text value from the parser and delegates to
+   * {@link #parseDuration(String)} for the actual parsing logic.</p>
+   *
+   * @param parser the JsonParser to read the value from
+   * @param context context for the deserialization process
+   * @return the deserialized {@link Duration} object
+   * @throws IOException if the value can't be parsed as a duration, or if there's an issue with the
+   * parser
+   * @throws IllegalArgumentException if the parser is null
+   * @see #parseDuration(String)
+   */
   @Override
   public Duration deserialize(JsonParser parser, DeserializationContext context)
       throws IOException {
+    if (parser == null) {
+      throw new IllegalArgumentException("JsonParser cannot be null");
+    }
+
     String durationString = parser.getText();
     try {
       return parseDuration(durationString);
     } catch (NumberFormatException e) {
       throw new IOException(
-          "Invalid HH:MM:SS duration format for java.time.Duration: " + durationString, e);
+          "Invalid HH:MM:SS duration format for java.time.Duration: " + durationString +
+              ". Expected format: HH:MM:SS, MM:SS, or SS.", e);
     }
   }
 }

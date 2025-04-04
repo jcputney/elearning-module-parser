@@ -66,7 +66,6 @@ public class OrComposite {
   @JacksonXmlElementWrapper(localName = "type", useWrapping = false)
   @JacksonXmlProperty(localName = "type")
   private SourceValuePair<Type> type;
-
   /**
    * The name of the platform or software, represented as controlled vocabulary.
    * <p>
@@ -84,7 +83,6 @@ public class OrComposite {
   @JacksonXmlElementWrapper(localName = "name", useWrapping = false)
   @JacksonXmlProperty(localName = "name")
   private SourceValuePair<Name> name;
-
   /**
    * The minimum version of the platform or software required.
    * <p>
@@ -101,7 +99,6 @@ public class OrComposite {
    */
   @JacksonXmlProperty(localName = "minimumVersion")
   private String minimumVersion;
-
   /**
    * The maximum version of the platform or software required.
    * <p>
@@ -118,4 +115,11 @@ public class OrComposite {
    */
   @JacksonXmlProperty(localName = "maximumVersion")
   private String maximumVersion;
+
+  /**
+   * Default constructor for the OrComposite class.
+   */
+  public OrComposite() {
+    // Default constructor
+  }
 }

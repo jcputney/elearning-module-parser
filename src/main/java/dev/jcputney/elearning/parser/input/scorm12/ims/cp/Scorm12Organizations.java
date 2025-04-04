@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,6 +26,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -31,9 +34,9 @@ import lombok.extern.jackson.Jacksonized;
 /**
  * Represents the {@code <organizations>} element in the SCORM 1.2 manifest file.
  * <p>
- * The {@code <organizations>} element defines a collection of organizations within the content package.
- * Each organization represents a hierarchical structure of learning resources and is identified by
- * a unique identifier.
+ * The {@code <organizations>} element defines a collection of organizations within the content
+ * package. Each organization represents a hierarchical structure of learning resources and is
+ * identified by a unique identifier.
  * </p>
  *
  * <pre>{@code
@@ -50,6 +53,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Organizations {
 
@@ -60,7 +64,6 @@ public class Scorm12Organizations {
   @JacksonXmlProperty(isAttribute = true, localName = "default", namespace = Scorm12Manifest.NAMESPACE_URI)
   @JsonProperty("default")
   private String defaultOrganization;
-
   /**
    * A list of organizations within the content package, each representing a structured hierarchy of
    * learning items.
@@ -68,6 +71,13 @@ public class Scorm12Organizations {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "organization", namespace = Scorm12Manifest.NAMESPACE_URI)
   private List<Scorm12Organization> organizationList;
+
+  /**
+   * Default constructor for the {@code Scorm12Organizations} class.
+   */
+  public Scorm12Organizations() {
+    // Default constructor
+  }
 
   /**
    * Retrieves an organization by its unique identifier.
@@ -93,4 +103,13 @@ public class Scorm12Organizations {
     return getOrganizationById(defaultOrganization);
   }
 
+  /**
+   * Manually added getter for organizationList to ensure it's available. This should be generated
+   * by Lombok's @Getter annotation, but adding it explicitly to fix compilation issues.
+   *
+   * @return The list of organizations within the content package.
+   */
+  public List<Scorm12Organization> getOrganizationList() {
+    return organizationList;
+  }
 }

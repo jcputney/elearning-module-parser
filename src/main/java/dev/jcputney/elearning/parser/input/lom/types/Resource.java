@@ -17,10 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -44,6 +47,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Resource {
 
@@ -65,7 +69,6 @@ public class Resource {
   @JacksonXmlElementWrapper(localName = "identifier", useWrapping = false)
   @JacksonXmlProperty(localName = "identifier")
   private List<Identifier> identifiers;
-
   /**
    * A list of descriptions providing language-specific information about the related resource.
    * <p>
@@ -82,7 +85,6 @@ public class Resource {
    */
   @JacksonXmlProperty(localName = "description")
   private UnboundLangString descriptions;
-
   /**
    * A list of catalog entries for the resource.
    *
@@ -94,7 +96,6 @@ public class Resource {
   @JacksonXmlElementWrapper(localName = "catalogentry", useWrapping = false)
   @JacksonXmlProperty(localName = "catalogentry")
   private List<CatalogEntry> catalogEntries;
-
   /**
    * A placeholder for custom elements that extend the resource information. This allows for
    * additional metadata to be included that is not part of the standard schema.
@@ -111,4 +112,11 @@ public class Resource {
   @JacksonXmlElementWrapper(localName = "customElements", useWrapping = false)
   @JacksonXmlProperty(localName = "customElements")
   private List<Object> customElements;
+
+  /**
+   * Default constructor for the Resource class.
+   */
+  public Resource() {
+    // Default constructor
+  }
 }

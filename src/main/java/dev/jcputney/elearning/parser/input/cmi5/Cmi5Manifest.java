@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.cmi5;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -26,6 +28,7 @@ import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -50,6 +53,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Cmi5Manifest implements PackageManifest {
 
@@ -72,7 +76,6 @@ public class Cmi5Manifest implements PackageManifest {
    */
   @JacksonXmlProperty(localName = "course")
   private Course course;
-
   /**
    * The 'objectives' element, representing the objectives of the course.
    *
@@ -82,7 +85,6 @@ public class Cmi5Manifest implements PackageManifest {
    */
   @JacksonXmlProperty(localName = "objectives")
   private Objectives objectives;
-
   /**
    * A list of blocks within the course structure. Each block can contain nested blocks or
    * assignable units (AUs).
@@ -94,7 +96,6 @@ public class Cmi5Manifest implements PackageManifest {
   @JacksonXmlElementWrapper(localName = "block", useWrapping = false)
   @JacksonXmlProperty(localName = "block")
   private List<Block> blocks;
-
   /**
    * A list of assignable units (AUs) within the course structure.
    *
@@ -105,6 +106,13 @@ public class Cmi5Manifest implements PackageManifest {
   @JacksonXmlElementWrapper(localName = "au", useWrapping = false)
   @JacksonXmlProperty(localName = "au")
   private List<AU> assignableUnits;
+
+  /**
+   * Default constructor for the Cmi5Manifest class.
+   */
+  public Cmi5Manifest() {
+    // Default constructor
+  }
 
   /**
    * Returns the title of the course. If the title is not present, returns null.
@@ -139,8 +147,8 @@ public class Cmi5Manifest implements PackageManifest {
   }
 
   /**
-   * Returns the launch URL for the course. If the course does not have any assignable units, returns
-   * null.
+   * Returns the launch URL for the course. If the course does not have any assignable units,
+   * returns null.
    *
    * @return the launch URL for the course
    */
@@ -154,7 +162,8 @@ public class Cmi5Manifest implements PackageManifest {
   }
 
   /**
-   * Returns the identifier for the course. If the course does not have an identifier, returns null.
+   * Returns the identifier for the course. If the course does not have an identifier, returns
+   * null.
    *
    * @return the identifier for the course
    */
@@ -167,6 +176,7 @@ public class Cmi5Manifest implements PackageManifest {
 
   /**
    * Returns null, as the CMI5 manifest does not include a version number.
+   *
    * @return null
    */
   @Override

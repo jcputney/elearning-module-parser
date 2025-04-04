@@ -38,18 +38,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum IntendedEndUserRole {
+  /**
+   * The intended end user role is a teacher.
+   */
   @JsonProperty("teacher")
   TEACHER,
 
+  /**
+   * The intended end user role is an author.
+   */
   @JsonProperty("author")
   AUTHOR,
 
+  /**
+   * The intended end user role is a learner.
+   */
   @JsonProperty("learner")
   LEARNER,
 
+  /**
+   * The intended end user role is a manager.
+   */
   @JsonProperty("manager")
   MANAGER,
 
+  /**
+   * The intended end user role is unknown.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

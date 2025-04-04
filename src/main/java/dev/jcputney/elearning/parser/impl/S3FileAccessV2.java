@@ -54,26 +54,28 @@ public class S3FileAccessV2 implements FileAccess {
   public S3FileAccessV2(S3Client s3Client, String bucketName, String rootPath) {
     this.s3Client = s3Client;
     this.bucketName = bucketName;
-    if (rootPath == null) {
-      rootPath = "";
+
+    String processedPath = rootPath;
+    if (processedPath == null) {
+      processedPath = "";
     }
 
-    rootPath = getInternalRootDirectory(rootPath);
+    processedPath = getInternalRootDirectory(processedPath);
 
-    if (rootPath.endsWith("/")) {
-      rootPath = rootPath.substring(0, rootPath.length() - 1);
+    if (processedPath.endsWith("/")) {
+      processedPath = processedPath.substring(0, processedPath.length() - 1);
     }
-    this.rootPath = rootPath;
+    this.rootPath = processedPath;
   }
 
   /**
    * Checks if a file exists at the specified path.
    *
-   * @param path The path of the file to check.
+   * @param path The path of the file to check (guaranteed to be non-null).
    * @return True if the file exists, false otherwise.
    */
   @Override
-  public boolean fileExists(String path) {
+  public boolean fileExistsInternal(String path) {
     try {
       s3Client.headObject(HeadObjectRequest.builder()
           .bucket(bucketName)
@@ -88,12 +90,12 @@ public class S3FileAccessV2 implements FileAccess {
   /**
    * Lists the files in the specified directory path.
    *
-   * @param directoryPath The path of the directory to list files from.
+   * @param directoryPath The path of the directory to list files from (guaranteed to be non-null).
    * @return A list of file paths in the specified directory.
    * @throws IOException If an error occurs while listing files.
    */
   @Override
-  public List<String> listFiles(String directoryPath) throws IOException {
+  public List<String> listFilesInternal(String directoryPath) throws IOException {
     try {
       return s3Client.listObjectsV2(ListObjectsV2Request.builder()
               .bucket(bucketName)
@@ -111,12 +113,12 @@ public class S3FileAccessV2 implements FileAccess {
   /**
    * Gets the contents of a file as an InputStream.
    *
-   * @param path The path of the file to get contents from.
+   * @param path The path of the file to get contents from (guaranteed to be non-null).
    * @return An InputStream containing the file contents.
    * @throws IOException If an error occurs while getting file contents.
    */
   @Override
-  public InputStream getFileContents(String path) throws IOException {
+  public InputStream getFileContentsInternal(String path) throws IOException {
     try {
       var response = s3Client.getObjectAsBytes(builder -> {
         builder.bucket(bucketName);
@@ -128,6 +130,16 @@ public class S3FileAccessV2 implements FileAccess {
     }
   }
 
+  /**
+   * Determines the internal root directory within the S3 bucket.
+   *
+   * <p>This method checks if there is a single common prefix at the specified path,
+   * which indicates a directory structure. If found, it returns that prefix as the root. Otherwise,
+   * it returns the original path.</p>
+   *
+   * @param rootPath The initial root path to check.
+   * @return The detected internal root directory or the original path if none is detected.
+   */
   public String getInternalRootDirectory(String rootPath) {
     List<CommonPrefix> commonPrefixes = s3Client.listObjectsV2(ListObjectsV2Request.builder()
             .bucket(bucketName)

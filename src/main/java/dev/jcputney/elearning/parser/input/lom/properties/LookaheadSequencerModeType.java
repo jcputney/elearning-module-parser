@@ -37,9 +37,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum LookaheadSequencerModeType {
 
+  /**
+   * The lookahead sequencer mode is enabled.
+   */
   @JsonProperty("enabled")
   ENABLED,
 
+  /**
+   * The lookahead sequencer mode is disabled.
+   */
   @JsonProperty("disabled")
   DISABLED
 }

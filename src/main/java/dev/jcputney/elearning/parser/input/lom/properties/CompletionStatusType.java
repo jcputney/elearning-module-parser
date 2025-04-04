@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025. Jonathan Putney
+ * Copyright (c) 2024. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -40,18 +40,34 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum CompletionStatusType {
 
+  /**
+   * The "completed" value indicates that the learning object has been completed.
+   */
   @JsonProperty("completed")
   COMPLETED,
 
+  /**
+   * The "incomplete" value indicates that the learning object has not been fully completed.
+   */
   @JsonProperty("incomplete")
   INCOMPLETE,
 
+  /**
+   * The "browsed" value indicates that the learning object has been browsed but not necessarily
+   * completed.
+   */
   @JsonProperty("browsed")
   BROWSED,
 
+  /**
+   * The "not attempted" value indicates that the learning object has not been attempted.
+   */
   @JsonProperty("not attempted")
   NOT_ATTEMPTED,
 
+  /**
+   * The "unknown" value indicates that the completion status is unknown.
+   */
   @JsonProperty("unknown")
   UNKNOWN
 }

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2025. Jonathan Putney
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Lesser General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Lesser General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<manifest identifier="com.example.complex_nested_organization" version="1.0" xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2" xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>1.2</schemaversion>
+  </metadata>
+  <organizations default="default_org">
+    <organization identifier="default_org">
+      <title>Complex Nested Organization Test</title>
+      <!-- Level 1 -->
+      <item identifier="module_1" identifierref="resource_module_1">
+        <title>Module 1</title>
+        <!-- Level 2 -->
+        <item identifier="chapter_1_1" identifierref="resource_chapter_1_1">
+          <title>Chapter 1.1</title>
+          <!-- Level 3 -->
+          <item identifier="section_1_1_1" identifierref="resource_section_1_1_1">
+            <title>Section 1.1.1</title>
+            <!-- Level 4 -->
+            <item identifier="topic_1_1_1_1" identifierref="resource_topic_1_1_1_1">
+              <title>Topic 1.1.1.1</title>
+            </item>
+            <item identifier="topic_1_1_1_2" identifierref="resource_topic_1_1_1_2">
+              <title>Topic 1.1.1.2</title>
+            </item>
+          </item>
+          <item identifier="section_1_1_2" identifierref="resource_section_1_1_2">
+            <title>Section 1.1.2</title>
+          </item>
+        </item>
+        <item identifier="chapter_1_2" identifierref="resource_chapter_1_2">
+          <title>Chapter 1.2</title>
+        </item>
+      </item>
+      <!-- Level 1 -->
+      <item identifier="module_2" identifierref="resource_module_2">
+        <title>Module 2</title>
+        <!-- Level 2 -->
+        <item identifier="chapter_2_1" identifierref="resource_chapter_2_1">
+          <title>Chapter 2.1</title>
+          <!-- Level 3 -->
+          <item identifier="section_2_1_1" identifierref="resource_section_2_1_1">
+            <title>Section 2.1.1</title>
+          </item>
+        </item>
+      </item>
+      <!-- Level 1 -->
+      <item identifier="module_3" identifierref="resource_module_3">
+        <title>Module 3</title>
+      </item>
+    </organization>
+    <organization identifier="alternate_org">
+      <title>Alternate Organization</title>
+      <item identifier="alt_item_1" identifierref="resource_alt_1">
+        <title>Alternate Item 1</title>
+      </item>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="resource_module_1" type="webcontent" adlcp:scormtype="sco" href="content/module1.html">
+      <file href="content/module1.html"/>
+    </resource>
+    <resource identifier="resource_chapter_1_1" type="webcontent" adlcp:scormtype="sco" href="content/chapter1_1.html">
+      <file href="content/chapter1_1.html"/>
+    </resource>
+    <resource identifier="resource_section_1_1_1" type="webcontent" adlcp:scormtype="sco" href="content/section1_1_1.html">
+      <file href="content/section1_1_1.html"/>
+    </resource>
+    <resource identifier="resource_topic_1_1_1_1" type="webcontent" adlcp:scormtype="sco" href="content/topic1_1_1_1.html">
+      <file href="content/topic1_1_1_1.html"/>
+    </resource>
+    <resource identifier="resource_topic_1_1_1_2" type="webcontent" adlcp:scormtype="sco" href="content/topic1_1_1_2.html">
+      <file href="content/topic1_1_1_2.html"/>
+    </resource>
+    <resource identifier="resource_section_1_1_2" type="webcontent" adlcp:scormtype="sco" href="content/section1_1_2.html">
+      <file href="content/section1_1_2.html"/>
+    </resource>
+    <resource identifier="resource_chapter_1_2" type="webcontent" adlcp:scormtype="sco" href="content/chapter1_2.html">
+      <file href="content/chapter1_2.html"/>
+    </resource>
+    <resource identifier="resource_module_2" type="webcontent" adlcp:scormtype="sco" href="content/module2.html">
+      <file href="content/module2.html"/>
+    </resource>
+    <resource identifier="resource_chapter_2_1" type="webcontent" adlcp:scormtype="sco" href="content/chapter2_1.html">
+      <file href="content/chapter2_1.html"/>
+    </resource>
+    <resource identifier="resource_section_2_1_1" type="webcontent" adlcp:scormtype="sco" href="content/section2_1_1.html">
+      <file href="content/section2_1_1.html"/>
+    </resource>
+    <resource identifier="resource_module_3" type="webcontent" adlcp:scormtype="sco" href="content/module3.html">
+      <file href="content/module3.html"/>
+    </resource>
+    <resource identifier="resource_alt_1" type="webcontent" adlcp:scormtype="sco" href="content/alt1.html">
+      <file href="content/alt1.html"/>
+    </resource>
+  </resources>
+</manifest>

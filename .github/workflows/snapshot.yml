@@ -1,61 +1,66 @@
-name: Publish Snapshot to Maven Repositories
-on:
-  push:
-    branches:
+name : Publish Snapshot to Maven Repositories
+on :
+  push :
+    branches :
       - main
 
-jobs:
-  publish-snapshot:
-    runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-      packages: write
-      statuses: write
-      checks: write
+jobs :
+  publish-snapshot :
+    runs-on : ubuntu-latest
+    permissions :
+      actions : read
+      contents : read
+      packages : write
+      statuses : write
+      checks : write
 
-    steps:
-      - uses: actions/checkout@v4
+    steps :
+      - uses : actions/checkout@v4
 
-      - uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: 'maven'
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
-
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-        env:
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-
-      - name: Test Summary
-        id: test_summary
-        uses: test-summary/action@v2
+      - uses : actions/setup-java@v4
         with :
-          paths: |
+          java-version : '17'
+          distribution : 'temurin'
+          cache : 'maven'
+          gpg-private-key : ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase : MAVEN_GPG_PASSPHRASE
+
+      - name : Build with Maven
+        run : mvn -B package --file pom.xml
+        env :
+          MAVEN_GPG_PASSPHRASE : ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+      - name : Test Summary
+        id : test_summary
+        uses : test-summary/action@v2
+        with :
+          paths : |
             target/surefire-reports/TEST-*.xml
             target/surefire-reports/**/TEST-*.xml
-        if: always()
-            
-      # generates coverage-report.md and publishes as checkrun
-      - name: JaCoCo Code Coverage Report
-        id: jacoco_reporter
-        uses: PavanMudigonda/jacoco-reporter@v5.0
+        if : always()
+
+      - uses : qltysh/qlty-action/coverage@main
         with :
-          coverage_results_path: target/site/jacoco/jacoco.xml
-          coverage_report_name: Coverage
-          coverage_report_title: JaCoCo
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          skip_check_run: false
-          minimum_coverage: 60
-          fail_below_threshold: false
-          publish_only_summary: false
+          coverage-token : {{secrets.QLTY_COVERAGE_TOKEN}}
+          files : target/site/jacoco/jacoco.xml
+
+      # generates coverage-report.md and publishes as checkrun
+      - name : JaCoCo Code Coverage Report
+        id : jacoco_reporter
+        uses : PavanMudigonda/jacoco-reporter@v5.0
+        with :
+          coverage_results_path : target/site/jacoco/jacoco.xml
+          coverage_report_name : Coverage
+          coverage_report_title : JaCoCo
+          github_token : ${{ secrets.GITHUB_TOKEN }}
+          skip_check_run : false
+          minimum_coverage : 60
+          fail_below_threshold : false
+          publish_only_summary : false
 
       # Publish Coverage Job Summary
-      - name: Add Jacocoo report to workflow run summary
-        run: |
+      - name : Add Jacoco report to workflow run summary
+        run : |
           echo "| Outcome | Value |" >> $GITHUB_STEP_SUMMARY
           echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
           echo "| Code Coverage % | ${{ steps.jacoco_reporter.outputs.coverage_percentage }} |" >> $GITHUB_STEP_SUMMARY
@@ -63,8 +68,8 @@ jobs:
           echo "| :x: Number of Lines Missed | ${{ steps.jacoco_reporter.outputs.missed_lines }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Total Number of Lines | ${{ steps.jacoco_reporter.outputs.total_lines }} |" >> $GITHUB_STEP_SUMMARY
 
-      - name: Publish package to GitHub Packages
-        run: mvn deploy -P github
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+      - name : Publish package to GitHub Packages
+        run : mvn deploy -P github
+        env :
+          GITHUB_TOKEN : ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_GPG_PASSPHRASE : ${{ secrets.MAVEN_GPG_PASSPHRASE }}

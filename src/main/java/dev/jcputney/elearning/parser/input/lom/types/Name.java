@@ -117,6 +117,9 @@ public enum Name {
   @JsonProperty("amaya")
   AMAYA,
 
+  /**
+   * The "unknown" value specifies that the platform or software requirements are unknown.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

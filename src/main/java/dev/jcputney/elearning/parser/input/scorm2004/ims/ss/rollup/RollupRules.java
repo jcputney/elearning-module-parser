@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,6 +26,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -53,6 +56,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupRules {
@@ -65,7 +69,6 @@ public class RollupRules {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "rollupRule", namespace = IMSSS.NAMESPACE_URI)
   private List<RollupRule> rollupRuleList;
-
   /**
    * Indicates whether the objective satisfaction status of the parent activity should be based on
    * the rollup of its child activities' statuses. When set to <code>true</code>, the parent
@@ -77,7 +80,6 @@ public class RollupRules {
   @JsonProperty("rollupObjectiveSatisfied")
   @Default
   private boolean rollupObjectiveSatisfied = true;
-
   /**
    * Indicates whether the progress completion status of the parent activity should be based on the
    * rollup of its child activities' completion statuses. When set to <code>true</code>, the parent
@@ -89,7 +91,6 @@ public class RollupRules {
   @JsonProperty("rollupProgressCompletion")
   @Default
   private boolean rollupProgressCompletion = true;
-
   /**
    * Specifies the weighting applied to the measure of each child activity’s objective when
    * determining the rollup satisfaction of the parent activity. This value allows each child
@@ -102,4 +103,12 @@ public class RollupRules {
   @JsonProperty("objectiveMeasureWeight")
   @Default
   private double objectiveMeasureWeight = 1.0;
+
+  /**
+   * Default constructor for the RollupRules class.
+   */
+  @SuppressWarnings("unused")
+  public RollupRules() {
+    // Default constructor
+  }
 }

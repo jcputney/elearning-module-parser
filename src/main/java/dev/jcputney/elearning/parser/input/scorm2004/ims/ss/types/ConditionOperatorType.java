@@ -49,6 +49,10 @@ public enum ConditionOperatorType {
   @JsonProperty("noOp")
   NO_OP,
 
+  /**
+   * The "unknown" operator is used when the condition operator type is not specified or is not
+   * recognized.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

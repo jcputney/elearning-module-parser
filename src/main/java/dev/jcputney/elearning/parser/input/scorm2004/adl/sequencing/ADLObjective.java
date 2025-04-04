@@ -17,12 +17,15 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLSeq;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -43,17 +46,17 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ADLObjective {
 
   /**
-   * The unique identifier for this objective. This is used to map the objective within the LMS
-   * to track the learner’s progress and completion status.
+   * The unique identifier for this objective. This is used to map the objective within the LMS to
+   * track the learner’s progress and completion status.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "objectiveID")
   @JsonProperty("objectiveID")
   private String objectiveID;
-
   /**
    * List of mappings for this objective, defining connections to global objectives or other
    * objectives within the LMS.
@@ -61,4 +64,12 @@ public class ADLObjective {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "mapInfo", namespace = ADLSeq.NAMESPACE_URI)
   private List<MapInfo> mapInfoList;
+
+  /**
+   * Default constructor for the ADLObjective class.
+   */
+  @SuppressWarnings("unused")
+  public ADLObjective() {
+    // Default constructor
+  }
 }

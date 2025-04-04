@@ -17,20 +17,24 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.adl;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
 /**
- * Represents the {@code <adlcp:prerequisites>} element in SCORM 1.2. This element includes a string value
- * and an optional type attribute.
+ * Represents the {@code <adlcp:prerequisites>} element in SCORM 1.2. This element includes a string
+ * value and an optional type attribute.
  */
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Prerequisites {
 
@@ -39,7 +43,6 @@ public class Scorm12Prerequisites {
    */
   @JacksonXmlProperty(localName = "value")
   private String value;
-
   /**
    * The type attribute of the prerequisites element, which is optional. Example value:
    * "aicc_script".
@@ -47,4 +50,12 @@ public class Scorm12Prerequisites {
   @JacksonXmlProperty(isAttribute = true, localName = "type")
   @JsonProperty("type")
   private String type;
+
+  /**
+   * Default constructor for the Scorm12Prerequisites class.
+   */
+  @SuppressWarnings("unused")
+  public Scorm12Prerequisites() {
+    // Default constructor
+  }
 }

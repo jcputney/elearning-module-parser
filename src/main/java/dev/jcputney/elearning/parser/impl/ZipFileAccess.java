@@ -52,13 +52,80 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
     this.rootPath = getInternalRootDirectory();
   }
 
+  /**
+   * Checks if a file exists within the ZIP archive.
+   *
+   * @param path The path to check (guaranteed to be non-null).
+   * @return True if the file exists in the ZIP archive, false otherwise.
+   */
+  @Override
+  public boolean fileExistsInternal(String path) {
+    return zipFile.getEntry(fullPath(path)) != null;
+  }
+
+  /**
+   * Lists all files within a specified directory in the ZIP archive.
+   *
+   * @param directoryPath The directory to list files from, for example, "folder/" (guaranteed to be
+   * non-null).
+   * @return A list of file paths within the directory.
+   */
+  @Override
+  public List<String> listFilesInternal(String directoryPath) {
+    List<String> fileList = new ArrayList<>();
+    Enumeration<? extends ZipEntry> entries = zipFile.entries();
+
+    while (entries.hasMoreElements()) {
+      ZipEntry entry = entries.nextElement();
+      String entryName = entry.getName();
+
+      // Check if the entry is within the specified directory
+      if (entryName.startsWith(fullPath(directoryPath)) && !entry.isDirectory()) {
+        fileList.add(entryName);
+      }
+    }
+    return fileList;
+  }
+
+  /**
+   * Retrieves the contents of a file within the ZIP archive as an InputStream.
+   *
+   * @param path The path to retrieve contents from (guaranteed to be non-null).
+   * @return An InputStream of the file contents.
+   * @throws IOException if the file can't be read.
+   */
+  @Override
+  public InputStream getFileContentsInternal(String path) throws IOException {
+    ZipEntry entry = zipFile.getEntry(fullPath(path));
+
+    if (entry == null) {
+      throw new IOException("File not found in ZIP archive: " + path);
+    }
+
+    return zipFile.getInputStream(entry);
+  }
+
+  /**
+   * Closes the ZIP file to release resources.
+   *
+   * @throws IOException if an error occurs while closing the ZIP file.
+   */
+  public void close() throws IOException {
+    zipFile.close();
+  }
+
+  /**
+   * Determines the internal root directory within the ZIP file.
+   *
+   * <p>This method analyzes the ZIP entries to determine if all files are contained
+   * within a single top-level directory. If so, it returns that directory name as the root path.
+   * Otherwise, it returns an empty string, indicating that files are at the root of the ZIP.</p>
+   *
+   * @return The detected internal root directory or an empty string if files are at the root.
+   */
   private String getInternalRootDirectory() {
     // Keep track of all distinct top-level folders encountered.
     Set<String> topLevelDirs = new HashSet<>();
-
-    if (this.zipFile == null) {
-      return "";
-    }
 
     Enumeration<? extends ZipEntry> entries = this.zipFile.entries();
     while (entries.hasMoreElements()) {
@@ -89,66 +156,5 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
     // If it gets here, either have exactly one top-level directory or none.
     // "None" shouldn't happen in a typical ZIP but handle the edge case.
     return topLevelDirs.size() == 1 ? topLevelDirs.iterator().next() : "";
-  }
-
-  /**
-   * Checks if a file exists within the ZIP archive.
-   *
-   * @param path The path to check.
-   * @return True if the file exists in the ZIP archive, false otherwise.
-   */
-  @Override
-  public boolean fileExists(String path) {
-    return zipFile.getEntry(fullPath(path)) != null;
-  }
-
-  /**
-   * Lists all files within a specified directory in the ZIP archive.
-   *
-   * @param directoryPath The directory to list files from, for example, "folder/".
-   * @return A list of file paths within the directory.
-   */
-  @Override
-  public List<String> listFiles(String directoryPath) {
-    List<String> fileList = new ArrayList<>();
-    Enumeration<? extends ZipEntry> entries = zipFile.entries();
-
-    while (entries.hasMoreElements()) {
-      ZipEntry entry = entries.nextElement();
-      String entryName = entry.getName();
-
-      // Check if the entry is within the specified directory
-      if (entryName.startsWith(fullPath(directoryPath)) && !entry.isDirectory()) {
-        fileList.add(entryName);
-      }
-    }
-    return fileList;
-  }
-
-  /**
-   * Retrieves the contents of a file within the ZIP archive as an InputStream.
-   *
-   * @param path The path to retrieve contents from.
-   * @return An InputStream of the file contents.
-   * @throws IOException if the file can't be read.
-   */
-  @Override
-  public InputStream getFileContents(String path) throws IOException {
-    ZipEntry entry = zipFile.getEntry(fullPath(path));
-
-    if (entry == null) {
-      throw new IOException("File not found in ZIP archive: " + path);
-    }
-
-    return zipFile.getInputStream(entry);
-  }
-
-  /**
-   * Closes the ZIP file to release resources.
-   *
-   * @throws IOException if an error occurs while closing the ZIP file.
-   */
-  public void close() throws IOException {
-    zipFile.close();
   }
 }

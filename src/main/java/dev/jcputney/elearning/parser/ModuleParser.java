@@ -21,6 +21,16 @@ import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 
+/**
+ * Interface for parsing module files and extracting metadata.
+ * <p>
+ * This interface defines the contract for parsers that handle different types of eLearning modules,
+ * such as SCORM, xAPI, and others. Implementations should provide methods to parse the module files
+ * and extract relevant metadata.
+ * </p>
+ *
+ * @param <M> The type of package manifest associated with the module.
+ */
 public interface ModuleParser<M extends PackageManifest> {
 
   /**

@@ -17,9 +17,30 @@
 
 package dev.jcputney.elearning.parser.enums;
 
+/**
+ * Enum representing the different types of modules.
+ * <p>
+ * This enum defines the possible module types that can be used in the system.
+ * </p>
+ */
 public enum ModuleType {
+  /**
+   * SCORM 1.2 module type.
+   */
   SCORM_12,
+
+  /**
+   * SCORM 2004 module type.
+   */
   SCORM_2004,
+
+  /**
+   * AICC (Aviation Industry Computer-Based Training Committee) module type.
+   */
   AICC,
+
+  /**
+   * cmi5 (xAPI for cmi5) module type.
+   */
   CMI5,
 }

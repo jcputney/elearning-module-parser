@@ -30,19 +30,39 @@ import lombok.Getter;
  * <p>This type enforces the range and precision for a measure as defined in the XML schema.
  * Valid values for this type fall within the range of -1 to 1.</p>
  */
+@SuppressWarnings("ClassCanBeRecord")
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class MeasureType {
 
+  /**
+   * The minimum and maximum values for the measure type.
+   */
   private static final BigDecimal MIN_VALUE = new BigDecimal("-1");
+
+  /**
+   * The maximum value for the measure type.
+   */
   private static final BigDecimal MAX_VALUE = new BigDecimal("1");
+
+  /**
+   * The scale for the measure type, which defines the number of decimal places.
+   */
   private static final int SCALE = 4; // At least 4 significant decimal digits
 
   /**
    * The decimal value for the measure must be between -1 and 1 with at least four decimal digits.
    */
   private final BigDecimal value;
+
+  /**
+   * Default constructor for the MeasureType class.
+   */
+  @SuppressWarnings("unused")
+  public MeasureType() {
+    this.value = BigDecimal.ZERO.setScale(SCALE, RoundingMode.HALF_UP);
+  }
 
   /**
    * Constructs a MeasureType instance with the specified value.

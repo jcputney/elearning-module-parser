@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,6 +29,7 @@ import dev.jcputney.elearning.parser.util.DurationIso8601Deserializer;
 import dev.jcputney.elearning.parser.util.InstantDeserializer;
 import java.time.Duration;
 import java.time.Instant;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -55,6 +58,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LimitConditions {
@@ -69,7 +73,6 @@ public class LimitConditions {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("attemptLimit")
   private Integer attemptLimit;
-
   /**
    * The absolute duration limit for an attempt, represented as an ISO 8601 duration (e.g., "PT30M"
    * for 30 minutes). This attribute defines the maximum allowable time for a single attempt on the
@@ -84,7 +87,6 @@ public class LimitConditions {
   @JsonDeserialize(using = DurationIso8601Deserializer.class)
   @JsonProperty("attemptAbsoluteDurationLimit")
   private Duration attemptAbsoluteDurationLimit;
-
   /**
    * The experienced duration limit for an attempt, represented as an ISO 8601 duration. This
    * duration measures the time actively spent by the learner on the activity, excluding idle or
@@ -99,7 +101,6 @@ public class LimitConditions {
   @JsonDeserialize(using = DurationIso8601Deserializer.class)
   @JsonProperty("attemptExperiencedDurationLimit")
   private Duration attemptExperiencedDurationLimit;
-
   /**
    * The absolute duration limit for the entire activity, represented as an ISO 8601 duration. This
    * limit defines the maximum allowable time for the activity across all attempts.
@@ -113,7 +114,6 @@ public class LimitConditions {
   @JsonDeserialize(using = DurationIso8601Deserializer.class)
   @JsonProperty("activityAbsoluteDurationLimit")
   private Duration activityAbsoluteDurationLimit;
-
   /**
    * The experienced duration limit for the activity, represented as an ISO 8601 duration. This
    * duration measures the active time spent on the activity across all attempts, excluding idle
@@ -128,7 +128,6 @@ public class LimitConditions {
   @JsonDeserialize(using = DurationIso8601Deserializer.class)
   @JsonProperty("activityExperiencedDurationLimit")
   private Duration activityExperiencedDurationLimit;
-
   /**
    * Specifies a start time for the activity as an ISO 8601 date-time (e.g.,
    * "2024-11-13T09:00:00Z"). This attribute defines the earliest time at which the learner can
@@ -143,7 +142,6 @@ public class LimitConditions {
   @JsonDeserialize(using = InstantDeserializer.class)
   @JsonProperty("beginTimeLimit")
   private Instant beginTimeLimit;
-
   /**
    * Specifies an end time for the activity as an ISO 8601 date-time. This attribute defines the
    * latest time at which the learner can interact with the activity.
@@ -157,4 +155,12 @@ public class LimitConditions {
   @JsonDeserialize(using = InstantDeserializer.class)
   @JsonProperty("endTimeLimit")
   private Instant endTimeLimit;
+
+  /**
+   * Default constructor for the LimitConditions class.
+   */
+  @SuppressWarnings("unused")
+  public LimitConditions() {
+    // Default constructor
+  }
 }

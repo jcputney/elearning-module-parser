@@ -21,7 +21,7 @@ import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.cmi5.Cmi5Manifest;
-import dev.jcputney.elearning.parser.output.cmi5.Cmi5Metadata;
+import dev.jcputney.elearning.parser.output.metadata.cmi5.Cmi5Metadata;
 
 /**
  * Cmi5Parser is responsible for parsing cmi5-specific metadata from the cmi5.xml file.
@@ -33,6 +33,9 @@ import dev.jcputney.elearning.parser.output.cmi5.Cmi5Metadata;
  */
 public class Cmi5Parser extends BaseParser<Cmi5Metadata, Cmi5Manifest> {
 
+  /**
+   * The name of the cmi5 XML file that contains the module metadata.
+   */
   public static final String CMI5_XML = "cmi5.xml";
 
   /**
@@ -72,15 +75,15 @@ public class Cmi5Parser extends BaseParser<Cmi5Metadata, Cmi5Manifest> {
       }
 
       // Build and return the Cmi5Metadata
-      return new Cmi5Metadata(
-          manifest,
-          ModuleType.CMI5,
-          true // cmi5 modules are always xAPI-enabled
-      );
+      return Cmi5Metadata.builder()
+          .manifest(manifest)
+          .moduleType(ModuleType.CMI5)
+          .xapiEnabled(true) // cmi5 modules are always xAPI-enabled
+          .build();
 
     } catch (Exception e) {
       throw new ModuleParsingException(
-          "Error parsing cmi5 module at path: " + this.fileAccess.getRootPath(), e);
+          "Error parsing cmi5 module at path: " + this.moduleFileProvider.getRootPath(), e);
     }
   }
 

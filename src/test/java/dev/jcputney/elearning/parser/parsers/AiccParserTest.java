@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.LocalFileAccess;
 import dev.jcputney.elearning.parser.input.aicc.AiccManifest;
-import dev.jcputney.elearning.parser.output.aicc.AiccMetadata;
+import dev.jcputney.elearning.parser.output.metadata.aicc.AiccMetadata;
 import org.junit.jupiter.api.Test;
 
 /**

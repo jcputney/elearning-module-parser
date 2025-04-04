@@ -62,6 +62,9 @@ public enum Status {
   @JsonProperty("unavailable")
   UNAVAILABLE,
 
+  /**
+   * The "unknown" value specifies that the status of the learning object is unknown.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,6 +28,7 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.ConditionOpera
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureTypeDeserializer;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.SequencingRuleConditionType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -39,6 +42,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RuleCondition {
@@ -50,16 +54,14 @@ public class RuleCondition {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("referencedObjective")
   private String referencedObjective;
-
   /**
-   * The minimum measure threshold for the objective. This value indicates the level of
-   * achievement required for the condition to be met, typically represented as a decimal.
+   * The minimum measure threshold for the objective. This value indicates the level of achievement
+   * required for the condition to be met, typically represented as a decimal.
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonDeserialize(using = MeasureTypeDeserializer.class)
   @JsonProperty("measureThreshold")
   private MeasureType measureThreshold;
-
   /**
    * Specifies the operator to use when evaluating the rule condition. Possible values are:
    * <ul>
@@ -71,7 +73,6 @@ public class RuleCondition {
   @JsonProperty("operator")
   @Default
   private ConditionOperatorType operator = ConditionOperatorType.NO_OP;
-
   /**
    * Specifies the condition evaluated for this rule. The condition can include criteria such as
    * "satisfied", "completed", "attempted", or other learning activity states.
@@ -79,4 +80,12 @@ public class RuleCondition {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("condition")
   private SequencingRuleConditionType condition;
+
+  /**
+   * Default constructor for the RuleCondition class.
+   */
+  @SuppressWarnings("unused")
+  public RuleCondition() {
+    // Default constructor
+  }
 }

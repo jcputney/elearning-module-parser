@@ -17,10 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -41,13 +44,26 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ScoExitActionSpec {
 
+  /**
+   * The action to take when the SCO is satisfied.
+   */
   @JacksonXmlProperty(localName = "satisfied")
   private ExitTypesSpec satisfied;
-
+  /**
+   * The action to take when the SCO is not satisfied.
+   */
   @JacksonXmlProperty(localName = "notSatisfied")
   private ExitTypesSpec notSatisfied;
+
+  /**
+   * Default constructor for the ScoExitActionSpec class.
+   */
+  public ScoExitActionSpec() {
+    // Default constructor
+  }
 }

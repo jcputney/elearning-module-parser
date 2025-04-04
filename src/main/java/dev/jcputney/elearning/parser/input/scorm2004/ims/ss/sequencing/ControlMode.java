@@ -17,10 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -52,6 +55,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ControlMode {
@@ -67,7 +71,6 @@ public class ControlMode {
   @JsonProperty("choice")
   @Default
   private boolean choice = true;
-
   /**
    * Indicates whether the learner is allowed to exit from an activity and return to a previously
    * accessed one. When set to <code>true</code>, the learner can exit and reselect previously
@@ -79,7 +82,6 @@ public class ControlMode {
   @JsonProperty("choiceExit")
   @Default
   private boolean choiceExit = true;
-
   /**
    * Enables linear or sequential navigation through activities in the sequence. When set to
    * <code>true</code>, the learner is required to progress sequentially through the activities,
@@ -92,7 +94,6 @@ public class ControlMode {
   @JsonProperty("flow")
   @Default
   private boolean flow = false;
-
   /**
    * Restricts the learner to only moving forward through the activities without being allowed to go
    * back. When set to <code>true</code>, the learner cannot revisit previously accessed activities
@@ -105,7 +106,6 @@ public class ControlMode {
   @JsonProperty("forwardOnly")
   @Default
   private boolean forwardOnly = false;
-
   /**
    * Indicates whether the current attempt's objective information is used in sequencing decisions.
    * When set to <code>true</code>, the system uses information about objectives completed within
@@ -117,7 +117,6 @@ public class ControlMode {
   @JsonProperty("useCurrentAttemptObjectiveInfo")
   @Default
   private boolean useCurrentAttemptObjectiveInfo = true;
-
   /**
    * Indicates whether the current attempt's progress information is used in sequencing decisions.
    * When set to <code>true</code>, the system uses information about progress made within the
@@ -129,4 +128,12 @@ public class ControlMode {
   @JsonProperty("useCurrentAttemptProgressInfo")
   @Default
   private boolean useCurrentAttemptProgressInfo = true;
+
+  /**
+   * Default constructor for the ControlMode class.
+   */
+  @SuppressWarnings("unused")
+  public ControlMode() {
+    // Default constructor
+  }
 }

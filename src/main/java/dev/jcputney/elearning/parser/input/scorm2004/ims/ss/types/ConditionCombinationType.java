@@ -53,6 +53,10 @@ public enum ConditionCombinationType {
   @JsonProperty("any")
   ANY,
 
+  /**
+   * The "unknown" value is used when the condition combination type is not specified or is not
+   * recognized.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

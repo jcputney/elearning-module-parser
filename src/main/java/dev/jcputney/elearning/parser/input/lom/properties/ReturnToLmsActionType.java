@@ -39,15 +39,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum ReturnToLmsActionType {
 
+  /**
+   * The return to LMS action type is legacy.
+   */
   @JsonProperty("legacy")
   LEGACY,
 
+  /**
+   * The return to LMS action type is suspend all.
+   */
   @JsonProperty("suspend_all")
   SUSPEND_ALL,
 
+  /**
+   * The return to LMS action type is exit all.
+   */
   @JsonProperty("exit_all")
   EXIT_ALL,
 
+  /**
+   * The return to LMS action type is selectable.
+   */
   @JsonProperty("selectable")
   SELECTABLE
 }

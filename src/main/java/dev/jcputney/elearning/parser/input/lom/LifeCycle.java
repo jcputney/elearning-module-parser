@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -25,6 +27,7 @@ import dev.jcputney.elearning.parser.input.lom.types.SingleLangString;
 import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import dev.jcputney.elearning.parser.input.lom.types.Status;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -53,6 +56,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LifeCycle {
 
@@ -73,7 +77,6 @@ public class LifeCycle {
    */
   @JacksonXmlProperty(localName = "version")
   private SingleLangString version;
-
   /**
    * The status of the learning object, indicating its stage in the lifecycle (e.g., draft, final,
    * revised).
@@ -92,7 +95,6 @@ public class LifeCycle {
   @JacksonXmlElementWrapper(localName = "status", useWrapping = false)
   @JacksonXmlProperty(localName = "status")
   private SourceValuePair<Status> status;
-
   /**
    * The list of contributions made to the learning object. Each contribution includes information
    * about the role of the contributor, their entity (e.g., name or organization), and the date of
@@ -114,7 +116,6 @@ public class LifeCycle {
   @JacksonXmlElementWrapper(localName = "contribute", useWrapping = false)
   @JacksonXmlProperty(localName = "contribute")
   private List<Contribute> contribute;
-
   /**
    * A placeholder for custom elements that extend the lifecycle information. This allows for
    * additional metadata to be included that is not part of the standard schema.
@@ -131,4 +132,12 @@ public class LifeCycle {
   @JacksonXmlElementWrapper(localName = "customElements", useWrapping = false)
   @JacksonXmlProperty(localName = "customElements")
   private List<Object> customElements;
+
+  /**
+   * Default constructor for the LifeCycle class.
+   */
+  @SuppressWarnings("unused")
+  public LifeCycle() {
+    // Default constructor
+  }
 }

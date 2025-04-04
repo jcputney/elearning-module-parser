@@ -17,11 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.lom.LOM;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -45,6 +48,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Taxon {
 
@@ -61,7 +65,6 @@ public class Taxon {
    */
   @JacksonXmlProperty(localName = "id")
   private String id;
-
   /**
    * The entry providing a description or label for the taxon, often represented as a multilingual
    * string.
@@ -75,7 +78,6 @@ public class Taxon {
    */
   @JacksonXmlProperty(localName = "entry")
   private SingleLangString entry;
-
   /**
    * Any custom elements or extensions defined within the taxon, allowing for schema extensibility.
    * <p>
@@ -87,4 +89,11 @@ public class Taxon {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "customElement", namespace = LOM.NAMESPACE_URI + "/extend")
   private List<Object> customElements;
+
+  /**
+   * Default constructor for the Taxon class.
+   */
+  public Taxon() {
+    // Default constructor
+  }
 }

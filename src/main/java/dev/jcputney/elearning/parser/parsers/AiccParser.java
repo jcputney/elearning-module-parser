@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import dev.jcputney.elearning.parser.api.FileAccess;
-import dev.jcputney.elearning.parser.enums.ModuleType;
+import dev.jcputney.elearning.parser.api.ModuleFileProvider;
 import dev.jcputney.elearning.parser.exception.ManifestParseException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.aicc.AiccCourse;
@@ -13,7 +13,7 @@ import dev.jcputney.elearning.parser.input.aicc.AiccManifest;
 import dev.jcputney.elearning.parser.input.aicc.AssignableUnit;
 import dev.jcputney.elearning.parser.input.aicc.CourseStructure;
 import dev.jcputney.elearning.parser.input.aicc.Descriptor;
-import dev.jcputney.elearning.parser.output.aicc.AiccMetadata;
+import dev.jcputney.elearning.parser.output.metadata.aicc.AiccMetadata;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,15 +32,48 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  */
 public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
 
+  /**
+   * The file extension for the AICC course file.
+   */
   public static final String CRS_EXTENSION = ".crs";
+
+  /**
+   * The file extension for the AICC descriptor file.
+   */
   public static final String DES_EXTENSION = ".des";
+
+  /**
+   * The file extension for the AICC assignable unit file.
+   */
   public static final String AU_EXTENSION = ".au";
+
+  /**
+   * The file extension for the AICC course structure file.
+   */
   public static final String CST_EXTENSION = ".cst";
 
+  /**
+   * Default constructor for the AiccParser class.
+   *
+   * @param fileAccess An instance of FileAccess for reading files.
+   */
   public AiccParser(FileAccess fileAccess) {
     super(fileAccess);
   }
 
+  /**
+   * Constructs an AiccParser with the specified ModuleFileProvider instance.
+   *
+   * @param moduleFileProvider An instance of ModuleFileProvider for reading files in the module
+   * package.
+   */
+  public AiccParser(ModuleFileProvider moduleFileProvider) {
+    super(moduleFileProvider);
+  }
+
+  /**
+   * Parses the AICC module and returns its metadata.
+   */
   @Override
   public AiccMetadata parse() throws ModuleParsingException {
     try {
@@ -56,18 +89,31 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
       }
 
       // Build and return metadata
-      return new AiccMetadata(
-          aiccManifest,
-          ModuleType.AICC,
-          checkForXapi()
-      );
-    } catch (Exception e) {
+      return AiccMetadata.create(aiccManifest, checkForXapi());
+    } catch (IOException | ManifestParseException e) {
       throw new ModuleParsingException(
-          "Error parsing AICC module at path: " + this.fileAccess.getRootPath(), e);
+          "Error parsing AICC module at path: " + this.moduleFileProvider.getRootPath(), e);
+    } catch (ModuleParsingException e) {
+      // Re-throw ModuleParsingException directly without wrapping
+      throw e;
+    } catch (Exception e) {
+      // Catch any other unexpected exceptions
+      throw new ModuleParsingException(
+          "Unexpected error parsing AICC module at path: " + this.moduleFileProvider.getRootPath(),
+          e);
     }
   }
 
-  public AiccManifest parseManifest() throws IOException, ModuleParsingException {
+  /**
+   * Parses the AICC manifest and returns an instance of AiccManifest.
+   *
+   * @return An instance of AiccManifest containing parsed data.
+   * @throws IOException If an error occurs while reading files.
+   * @throws ModuleParsingException If an error occurs during parsing.
+   * @throws ManifestParseException If an error occurs while parsing the manifest.
+   */
+  public AiccManifest parseManifest()
+      throws IOException, ModuleParsingException, ManifestParseException {
     AiccCourse aiccCourse = parseIniFile(AiccCourse.class, CRS_EXTENSION);
 
     // Parse CSV-style course data
@@ -88,6 +134,9 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
     return AiccManifest.class;
   }
 
+  /**
+   * Parses a CSV file and returns a list of objects of the specified class.
+   */
   private <T> List<T> parseCsvFile(Class<T> clazz, String extension)
       throws IOException {
     String fileName = findFileByExtension(extension);
@@ -95,7 +144,7 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
       throw new IOException("CSV file with extension " + extension + " not found.");
     }
 
-    try (InputStream inputStream = fileAccess.getFileContents(fileName)) {
+    try (InputStream inputStream = moduleFileProvider.getFileContents(fileName)) {
       MappingIterator<T> objectMappingIterator = new CsvMapper()
           .readerWithTypedSchemaFor(clazz)
           .with(CsvSchema.emptySchema().withHeader().withColumnSeparator(',').withQuoteChar('"'))
@@ -104,14 +153,17 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
     }
   }
 
+  /**
+   * Parses an INI file and returns an object of the specified class.
+   */
   private <T> T parseIniFile(Class<T> clazz, String extension)
-      throws IOException {
+      throws IOException, ManifestParseException {
     String fileName = findFileByExtension(extension);
     if (fileName == null) {
       throw new IOException("INI file with extension " + extension + " not found.");
     }
 
-    try (InputStream inputStream = fileAccess.getFileContents(
+    try (InputStream inputStream = moduleFileProvider.getFileContents(
         fileName); InputStreamReader reader = new InputStreamReader(inputStream)) {
       INIConfiguration iniData = new INIConfiguration();
       iniData.read(reader);
@@ -130,12 +182,12 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
       ObjectMapper objectMapper = new ObjectMapper();
       return objectMapper.convertValue(mapData, clazz);
     } catch (ConfigurationException e) {
-      throw new ManifestParseException("Error parsing INI file: " + fileName);
+      throw new ManifestParseException("Error parsing INI file: " + fileName, e);
     }
   }
 
   private String findFileByExtension(String extension) throws IOException {
-    return fileAccess.listFiles("").stream()
+    return moduleFileProvider.listFiles("").stream()
         .filter(fileName -> fileName.endsWith(extension))
         .findFirst()
         .orElse(null);

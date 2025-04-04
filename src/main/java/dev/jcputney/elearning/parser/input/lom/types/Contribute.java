@@ -17,10 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -66,6 +69,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Contribute {
 
@@ -87,7 +91,6 @@ public class Contribute {
   @JacksonXmlElementWrapper(localName = "role", useWrapping = false)
   @JacksonXmlProperty(localName = "role")
   private SourceValuePair<Role> role;
-
   /**
    * A list of entities contributing to the learning object, typically represented as vCard data.
    * Example:
@@ -114,7 +117,6 @@ public class Contribute {
   @JacksonXmlElementWrapper(localName = "entity", useWrapping = false)
   @JacksonXmlProperty(localName = "entity")
   private List<String> entities;
-
   /**
    * A list of entities contributing to the learning object, typically represented as vCard data.
    *
@@ -130,7 +132,6 @@ public class Contribute {
   @JacksonXmlElementWrapper(localName = "centity", useWrapping = false)
   @JacksonXmlProperty(localName = "centity")
   private List<ContributeEntity> cEntities;
-
   /**
    * The date associated with the contribution, such as when the contribution was made or its
    * significance.
@@ -150,4 +151,12 @@ public class Contribute {
    */
   @JacksonXmlProperty(localName = "date")
   private Date date;
+
+  /**
+   * Default constructor for the Contribute class.
+   */
+  @SuppressWarnings("unused")
+  public Contribute() {
+    // Default constructor
+  }
 }

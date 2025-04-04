@@ -17,9 +17,12 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -36,6 +39,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class AuxiliaryResource {
 
@@ -49,7 +53,6 @@ public class AuxiliaryResource {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("auxiliaryResourceID")
   private String auxiliaryResourceID;
-
   /**
    * Describes the purpose of the auxiliary resource. This attribute provides context for how the
    * resource is intended to support the learning activity, such as "reference material," "practice
@@ -61,4 +64,12 @@ public class AuxiliaryResource {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("purpose")
   private String purpose;
+
+  /**
+   * Default constructor for the AuxiliaryResource class.
+   */
+  @SuppressWarnings("unused")
+  public AuxiliaryResource() {
+    // Default constructor
+  }
 }

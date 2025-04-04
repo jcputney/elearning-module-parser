@@ -26,23 +26,60 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * Represents the AICC manifest for a course.
+ *
+ * <p>This class is used to parse the AICC manifest file and extract information about the course,
+ * assignable units, descriptors, and course structures.</p>
+ *
+ * <p>It also provides methods to retrieve the title, description, launch URL, identifier, version,
+ * and duration of the course.</p>
+ */
 @Builder
 @Getter
 @Jacksonized
 @AllArgsConstructor
 public class AiccManifest implements PackageManifest {
 
+  /**
+   * Course information for the AICC manifest.
+   */
   private AiccCourse course;
 
+  /**
+   * List of assignable units in the AICC manifest.
+   */
   private List<AssignableUnit> assignableUnits;
 
+  /**
+   * List of descriptors in the AICC manifest.
+   */
   private List<Descriptor> descriptors;
 
+  /**
+   * List of course structures in the AICC manifest.
+   */
   private List<CourseStructure> courseStructures;
 
+  /**
+   * The launch URL for the AICC manifest.
+   */
   private String launchUrl;
 
-  public AiccManifest(AiccCourse course, List<AssignableUnit> assignableUnits, List<Descriptor> descriptors, List<CourseStructure> courseStructures)
+  /**
+   * Default constructor for the AiccManifest class.
+   *
+   * <p>This constructor initializes the AiccManifest object with the provided course,
+   * assignable units, descriptors, and course structures.</p>
+   *
+   * @param course The AICC course information.
+   * @param assignableUnits The list of assignable units.
+   * @param descriptors The list of descriptors.
+   * @param courseStructures The list of course structures.
+   * @throws ModuleParsingException If there is an error parsing the AICC manifest.
+   */
+  public AiccManifest(AiccCourse course, List<AssignableUnit> assignableUnits,
+      List<Descriptor> descriptors, List<CourseStructure> courseStructures)
       throws ModuleParsingException {
     this.course = course;
     this.assignableUnits = assignableUnits;
@@ -73,7 +110,8 @@ public class AiccManifest implements PackageManifest {
     AssignableUnit rootAssignableUnit = assignableUnits.stream()
         .filter(au -> au.getSystemId().equals(rootAssignableUnitId))
         .findFirst()
-        .orElseThrow(() -> new ModuleParsingException("No assignable unit found with ID: " + rootAssignableUnitId));
+        .orElseThrow(() -> new ModuleParsingException(
+            "No assignable unit found with ID: " + rootAssignableUnitId));
 
     this.launchUrl = rootAssignableUnit.getFileName();
   }

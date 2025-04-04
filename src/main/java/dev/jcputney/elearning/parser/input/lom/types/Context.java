@@ -38,18 +38,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum Context {
+  /**
+   * The learning object is intended for use in a school context.
+   */
   @JsonProperty("school")
   SCHOOL,
 
+  /**
+   * The learning object is intended for use in a higher education context.
+   */
   @JsonProperty("higherEducation")
   HIGHER_EDUCATION,
 
+  /**
+   * The learning object is intended for use in a training context.
+   */
   @JsonProperty("training")
   TRAINING,
 
+  /**
+   * The learning object is intended for use in another context.
+   */
   @JsonProperty("other")
   OTHER,
 
+  /**
+   * The context of the learning object is unknown.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

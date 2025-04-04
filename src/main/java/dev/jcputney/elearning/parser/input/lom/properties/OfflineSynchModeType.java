@@ -41,21 +41,39 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum OfflineSynchModeType {
 
+  /**
+   * The offline synchronization mode is most recent.
+   */
   @JsonProperty("most recent")
   MOST_RECENT,
 
+  /**
+   * The offline synchronization mode is simple.
+   */
   @JsonProperty("simple")
   SIMPLE,
 
+  /**
+   * The offline synchronization mode is most complete.
+   */
   @JsonProperty("most complete")
   MOST_COMPLETE,
 
+  /**
+   * The offline synchronization mode is most satisfied.
+   */
   @JsonProperty("most satisfied")
   MOST_SATISFIED,
 
+  /**
+   * The offline synchronization mode is most done.
+   */
   @JsonProperty("most done")
   MOST_DONE,
 
-  @JsonProperty("best done ")
+  /**
+   * The offline synchronization mode is best done.
+   */
+  @JsonProperty("best done")
   BEST_DONE
 }

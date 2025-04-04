@@ -17,9 +17,12 @@
 
 package dev.jcputney.elearning.parser.input.cmi5.types;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -30,6 +33,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Objective {
 
@@ -42,7 +46,6 @@ public class Objective {
    */
   @JacksonXmlProperty(localName = "title")
   private TextType title;
-
   /**
    * The description of the objective, represented as a localized text type.
    *
@@ -52,7 +55,6 @@ public class Objective {
    */
   @JacksonXmlProperty(localName = "description")
   private TextType description;
-
   /**
    * The unique identifier for the objective, represented as an anyURI.
    *
@@ -63,4 +65,11 @@ public class Objective {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("id")
   private String id;
+
+  /**
+   * Default constructor for the Objective class.
+   */
+  public Objective() {
+    // Default constructor
+  }
 }

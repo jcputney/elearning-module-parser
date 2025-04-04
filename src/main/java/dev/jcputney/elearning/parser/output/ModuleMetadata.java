@@ -21,9 +21,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import java.time.Duration;
-import lombok.AllArgsConstructor;
+import lombok.Builder.Default;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.experimental.SuperBuilder;
 
 /**
  * Represents the core metadata for an eLearning module, providing common fields shared across
@@ -31,15 +32,49 @@ import lombok.NoArgsConstructor;
  * <p>
  * Each module type can extend this class to include additional fields specific to that type.
  * </p>
+ *
+ * @param <M> the type of the package manifest
  */
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@SuperBuilder
 public abstract class ModuleMetadata<M extends PackageManifest> implements PackageManifest {
 
-  private M manifest;
-  private ModuleType moduleType;
-  private boolean xapiEnabled;
+  /**
+   * The package manifest for the module.
+   */
+  @NonNull
+  protected M manifest;
+  /**
+   * The type of the module (for example, SCORM, AICC, cmi5).
+   */
+  @NonNull
+  protected ModuleType moduleType;
+  /**
+   * Indicates whether xAPI is enabled for the module.
+   */
+  @Default
+  protected boolean xapiEnabled = false;
+
+  /**
+   * Default constructor for the ModuleMetadata class.
+   */
+  @SuppressWarnings("unused")
+  protected ModuleMetadata() {
+    // Default constructor
+  }
+
+  /**
+   * Constructor for ModuleMetadata.
+   *
+   * @param manifest the package manifest
+   * @param moduleType the module type
+   * @param xapiEnabled whether xAPI is enabled
+   */
+  protected ModuleMetadata(M manifest, ModuleType moduleType, boolean xapiEnabled) {
+    this.manifest = manifest;
+    this.moduleType = moduleType;
+    this.xapiEnabled = xapiEnabled;
+  }
 
   @Override
   @JsonIgnore

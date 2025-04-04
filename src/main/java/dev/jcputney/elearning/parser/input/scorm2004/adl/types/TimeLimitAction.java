@@ -37,18 +37,34 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum TimeLimitAction {
+
+  /**
+   * Exit the activity and display a message.
+   */
   @JsonProperty("exit,message")
   EXIT_MESSAGE,
 
+  /**
+   * Exit the activity without displaying a message.
+   */
   @JsonProperty("exit,no message")
   EXIT_NO_MESSAGE,
 
+  /**
+   * Continue the activity and display a message.
+   */
   @JsonProperty("continue,message")
   CONTINUE_MESSAGE,
 
+  /**
+   * Continue the activity without displaying a message.
+   */
   @JsonProperty("continue,no message")
   CONTINUE_NO_MESSAGE,
 
+  /**
+   * Unknown value, used for error handling or default cases.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

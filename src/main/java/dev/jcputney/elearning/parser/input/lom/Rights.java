@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -24,13 +26,32 @@ import dev.jcputney.elearning.parser.input.lom.types.CopyrightAndOtherRestrictio
 import dev.jcputney.elearning.parser.input.lom.types.Cost;
 import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * Represents the {@code <rights>} element in a LOM (Learning Object Metadata) document.
+ * <p>
+ * The {@code <rights>} element contains information about the rights associated with the learning
+ * object, including cost, copyright, and other restrictions.
+ * </p>
+ *
+ * <pre>{@code
+ * <complexType name="rights">
+ *   <complexContent>
+ *     <extension base="rightsVocab">
+ *       <attributeGroup ref="ag:rights"/>
+ *     </extension>
+ *   </complexContent>
+ * </complexType>
+ * }</pre>
+ */
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Rights {
 
@@ -51,7 +72,6 @@ public class Rights {
   @JacksonXmlElementWrapper(localName = "cost", useWrapping = false)
   @JacksonXmlProperty(localName = "cost")
   private SourceValuePair<Cost> cost;
-
   /**
    * Copyright and other restrictions associated with the learning object, represented as a
    * source-value pair.
@@ -70,7 +90,6 @@ public class Rights {
   @JacksonXmlElementWrapper(localName = "copyrightAndOtherRestrictions", useWrapping = false)
   @JacksonXmlProperty(localName = "copyrightAndOtherRestrictions")
   private SourceValuePair<CopyrightAndOtherRestrictions> copyrightAndOtherRestrictions;
-
   /**
    * Descriptions of the "rights" information, represented as a list of language-specific strings.
    *
@@ -87,4 +106,12 @@ public class Rights {
    */
   @JacksonXmlProperty(localName = "description")
   private UnboundLangString descriptions;
+
+  /**
+   * Default constructor for the Rights class.
+   */
+  @SuppressWarnings("unused")
+  public Rights() {
+    // Default constructor
+  }
 }

@@ -27,7 +27,7 @@ import dev.jcputney.elearning.parser.impl.LocalFileAccess;
 import dev.jcputney.elearning.parser.input.lom.LOM;
 import dev.jcputney.elearning.parser.input.lom.properties.YesNoType;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
-import dev.jcputney.elearning.parser.output.scorm12.Scorm12Metadata;
+import dev.jcputney.elearning.parser.output.metadata.scorm12.Scorm12Metadata;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -128,7 +128,8 @@ public class Scorm12ParserTest {
     assertNotNull(lom);
 
     assertEquals("Catalog", lom.getGeneral().getCatalogEntries().get(0).getCatalog());
-    assertEquals(YesNoType.YES, lom.getTechnical().getPackageProperties().getBehavior().getAlwaysFlowToFirstSco());
+    assertEquals(YesNoType.YES,
+        lom.getTechnical().getPackageProperties().getBehavior().getAlwaysFlowToFirstSco());
     assertEquals("SCORM 1.2 With Metadata", manifest.getTitle());
     assertEquals("index.html", manifest.getLaunchUrl());
     assertEquals(1, manifest.getOrganizations().getDefault().getItems().size());

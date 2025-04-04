@@ -61,4 +61,11 @@ public class Requirement extends OrComposite {
   @JacksonXmlElementWrapper(localName = "orComposite", useWrapping = false)
   @JacksonXmlProperty(localName = "orComposite")
   private List<OrComposite> orCompositeList;
+
+  /**
+   * Default constructor for the Requirement class.
+   */
+  public Requirement() {
+    // Default constructor
+  }
 }

@@ -17,31 +17,58 @@
 
 package dev.jcputney.elearning.parser.input.aicc;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * Represents the descriptor element in an AICC module.
+ *
+ * <p>This class is used to parse the descriptor element of an AICC module file.
+ * It contains information about the system ID, developer ID, title, and description of the module.
+ */
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonNaming(SnakeCaseStrategy.class)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Descriptor {
 
+  /**
+   * The system ID of the descriptor element.
+   */
   @JsonProperty(value = "System_ID", required = true)
   private String systemId;
-
+  /**
+   * The developer ID of the descriptor element.
+   */
   @JsonProperty(value = "Developer_ID", required = true)
   private String developerId;
-
+  /**
+   * The title of the descriptor element.
+   */
   @JsonProperty(value = "Title", required = true)
   private String title;
-
+  /**
+   * The version of the descriptor element.
+   */
   @JsonProperty(value = "Description")
   private String description;
+
+  /**
+   * Default constructor for the Descriptor class.
+   */
+  @SuppressWarnings("unused")
+  public Descriptor() {
+    // Default constructor
+  }
 
 }

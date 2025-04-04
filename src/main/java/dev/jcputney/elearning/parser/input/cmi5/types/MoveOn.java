@@ -39,18 +39,34 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum MoveOn {
+
+  /**
+   * The move on condition is not applicable.
+   */
   @JsonProperty("NotApplicable")
   NOT_APPLICABLE,
 
+  /**
+   * The move on condition is completed.
+   */
   @JsonProperty("Completed")
   COMPLETED,
 
+  /**
+   * The move on condition is completed and passed.
+   */
   @JsonProperty("CompletedAndPassed")
   COMPLETED_AND_PASSED,
 
+  /**
+   * The move on condition is completed or passed.
+   */
   @JsonProperty("CompletedOrPassed")
   COMPLETED_OR_PASSED,
 
+  /**
+   * The move on condition is passed.
+   */
   @JsonProperty("Passed")
   PASSED
 }

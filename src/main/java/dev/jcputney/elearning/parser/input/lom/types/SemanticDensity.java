@@ -40,21 +40,39 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum SemanticDensity {
+  /**
+   * The semantic density is very low.
+   */
   @JsonProperty("very low")
   VERY_LOW,
 
+  /**
+   * The semantic density is low.
+   */
   @JsonProperty("low")
   LOW,
 
+  /**
+   * The semantic density is medium.
+   */
   @JsonProperty("medium")
   MEDIUM,
 
+  /**
+   * The semantic density is high.
+   */
   @JsonProperty("high")
   HIGH,
 
+  /**
+   * The semantic density is very high.
+   */
   @JsonProperty("very high")
   VERY_HIGH,
 
+  /**
+   * The semantic density is unknown.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

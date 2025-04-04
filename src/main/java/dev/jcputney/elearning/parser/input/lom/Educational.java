@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -31,6 +33,7 @@ import dev.jcputney.elearning.parser.input.lom.types.SemanticDensity;
 import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -64,6 +67,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Educational {
 
@@ -84,7 +88,6 @@ public class Educational {
   @JacksonXmlElementWrapper(localName = "interactivityType", useWrapping = false)
   @JacksonXmlProperty(localName = "interactivityType")
   private SourceValuePair<InteractivityType> interactivityType;
-
   /**
    * The types of learning resources associated with the learning object, represented as a list of
    * source-value pairs.
@@ -103,7 +106,6 @@ public class Educational {
   @JacksonXmlElementWrapper(localName = "learningResourceType", useWrapping = false)
   @JacksonXmlProperty(localName = "learningResourceType")
   private List<SourceValuePair<LearningResourceType>> learningResourceType;
-
   /**
    * The interactivity level of the learning object, represented as a source-value pair.
    *
@@ -121,7 +123,6 @@ public class Educational {
   @JacksonXmlElementWrapper(localName = "interactivityLevel", useWrapping = false)
   @JacksonXmlProperty(localName = "interactivityLevel")
   private SourceValuePair<InteractivityLevel> interactivityLevel;
-
   /**
    * The semantic density of the learning object, represented as a source-value pair.
    *
@@ -139,7 +140,6 @@ public class Educational {
   @JacksonXmlElementWrapper(localName = "semanticDensity", useWrapping = false)
   @JacksonXmlProperty(localName = "semanticDensity")
   private SourceValuePair<SemanticDensity> semanticDensity;
-
   /**
    * The intended end-user roles for the learning object, represented as a list of source-value
    * pairs.
@@ -158,7 +158,6 @@ public class Educational {
   @JacksonXmlElementWrapper(localName = "intendedEndUserRole", useWrapping = false)
   @JacksonXmlProperty(localName = "intendedEndUserRole")
   private List<SourceValuePair<IntendedEndUserRole>> intendedEndUserRole;
-
   /**
    * The context in which the learning object is intended to be used, represented as a list of
    * source-value pairs.
@@ -177,7 +176,6 @@ public class Educational {
   @JacksonXmlElementWrapper(localName = "context", useWrapping = false)
   @JacksonXmlProperty(localName = "context")
   private List<SourceValuePair<Context>> context;
-
   /**
    * The typical age range of the intended audience, represented as a list of language-specific
    * strings.
@@ -195,7 +193,6 @@ public class Educational {
    */
   @JacksonXmlProperty(localName = "typicalAgeRange")
   private UnboundLangString typicalAgeRange;
-
   /**
    * The difficulty level of the learning object, represented as a source-value pair.
    *
@@ -213,7 +210,6 @@ public class Educational {
   @JacksonXmlElementWrapper(localName = "difficulty", useWrapping = false)
   @JacksonXmlProperty(localName = "difficulty")
   private SourceValuePair<Difficulty> difficulty;
-
   /**
    * The typical learning time required to complete the learning object, represented as a duration.
    *
@@ -230,7 +226,6 @@ public class Educational {
    */
   @JacksonXmlProperty(localName = "typicalLearningTime")
   private LomDuration typicalLearningTime;
-
   /**
    * Descriptions of the learning object, represented as a list of language-specific strings.
    *
@@ -247,7 +242,6 @@ public class Educational {
    */
   @JacksonXmlProperty(localName = "description")
   private UnboundLangString descriptions;
-
   /**
    * The language of the learning object, represented as a list of language codes.
    *
@@ -265,4 +259,11 @@ public class Educational {
   @JacksonXmlElementWrapper(localName = "language", useWrapping = false)
   @JacksonXmlProperty(localName = "language")
   private List<String> languages;
+
+  /**
+   * Default constructor for the Educational class.
+   */
+  public Educational() {
+    // Default constructor
+  }
 }

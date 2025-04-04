@@ -40,21 +40,39 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum InteractivityLevel {
+  /**
+   * The interactivity level is very low.
+   */
   @JsonProperty("very low")
   VERY_LOW,
 
+  /**
+   * The interactivity level is low.
+   */
   @JsonProperty("low")
   LOW,
 
+  /**
+   * The interactivity level is medium.
+   */
   @JsonProperty("medium")
   MEDIUM,
 
+  /**
+   * The interactivity level is high.
+   */
   @JsonProperty("high")
   HIGH,
 
+  /**
+   * The interactivity level is very high.
+   */
   @JsonProperty("very high")
   VERY_HIGH,
 
+  /**
+   * The interactivity level is unknown.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

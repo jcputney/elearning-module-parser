@@ -42,33 +42,63 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum Purpose {
+  /**
+   * The purpose of the learning object is to provide a discipline.
+   */
   @JsonProperty("discipline")
   DISCIPLINE,
 
+  /**
+   * The purpose of the learning object is to provide an idea.
+   */
   @JsonProperty("idea")
   IDEA,
 
+  /**
+   * The purpose of the learning object is to provide a prerequisite.
+   */
   @JsonProperty("prerequisite")
   PREREQUISITE,
 
+  /**
+   * The purpose of the learning object is to provide an educational objective.
+   */
   @JsonProperty("educational objective")
   EDUCATIONAL_OBJECTIVE,
 
+  /**
+   * The purpose of the learning object is to provide accessibility restrictions.
+   */
   @JsonProperty("accessibility restrictions")
   ACCESSIBILITY_RESTRICTIONS,
 
+  /**
+   * The purpose of the learning object is to provide an educational level.
+   */
   @JsonProperty("educational level")
   EDUCATIONAL_LEVEL,
 
+  /**
+   * The purpose of the learning object is to provide a skill level.
+   */
   @JsonProperty("skill level")
   SKILL_LEVEL,
 
+  /**
+   * The purpose of the learning object is to provide a security level.
+   */
   @JsonProperty("security level")
   SECURITY_LEVEL,
 
+  /**
+   * The purpose of the learning object is to provide a competency.
+   */
   @JsonProperty("competency")
   COMPETENCY,
 
+  /**
+   * The purpose of the learning object is unknown.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

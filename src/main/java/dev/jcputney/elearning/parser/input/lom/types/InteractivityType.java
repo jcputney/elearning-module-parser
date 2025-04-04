@@ -38,15 +38,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum InteractivityType {
+  /**
+   * The learning resource is interactive and requires user input.
+   */
   @JsonProperty("active")
   ACTIVE,
 
+  /**
+   * The learning resource is expositive and doesn't require user input.
+   */
   @JsonProperty("expositive")
   EXPOSITIVE,
 
+  /**
+   * The learning resource is a mix of both active and expositive types.
+   */
   @JsonProperty("mixed")
   MIXED,
 
+  /**
+   * The interactivity type of the learning resource is unknown.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

@@ -33,10 +33,20 @@ import lombok.Getter;
  * Implementation of {@link FileAccess} that reads files from the classpath, allowing testing of
  * modules stored in the resources directory without needing actual filesystem access.
  */
+@SuppressWarnings("ClassCanBeRecord")
 public class ClasspathFileAccess implements FileAccess {
+
+  /**
+   * The root path for file access. This is the base directory where files are accessed from.
+   */
   @Getter
   private final String rootPath;
 
+  /**
+   * Constructs a ClasspathFileAccess instance with the specified root path.
+   *
+   * @param rootPath The root path for file access.
+   */
   public ClasspathFileAccess(String rootPath) {
     this.rootPath = rootPath;
   }
@@ -44,23 +54,23 @@ public class ClasspathFileAccess implements FileAccess {
   /**
    * Checks if a file exists on the classpath at the given path.
    *
-   * @param path The file path to check.
+   * @param path The path to check (guaranteed to be non-null).
    * @return True if the file exists on the classpath, false otherwise.
    */
   @Override
-  public boolean fileExists(String path) {
+  public boolean fileExistsInternal(String path) {
     return getClass().getClassLoader().getResource(path) != null;
   }
 
   /**
    * Lists all files within a specified directory path on the classpath.
    *
-   * @param directoryPath The directory to list files from.
+   * @param directoryPath The directory to list files from (guaranteed to be non-null).
    * @return A list of file paths within the specified directory.
-   * @throws IOException If there is an issue accessing the files.
+   * @throws IOException If there's an issue accessing the files.
    */
   @Override
-  public List<String> listFiles(String directoryPath) throws IOException {
+  public List<String> listFilesInternal(String directoryPath) throws IOException {
     List<String> fileList = new ArrayList<>();
     Optional<String> jarPath = getJarPath();
 
@@ -87,12 +97,12 @@ public class ClasspathFileAccess implements FileAccess {
   /**
    * Retrieves the contents of a file as an InputStream from the classpath.
    *
-   * @param path The file path to retrieve contents from.
+   * @param path The path to retrieve contents from (guaranteed to be non-null).
    * @return An InputStream of the file contents.
-   * @throws IOException if the file cannot be read.
+   * @throws IOException if the file can't be read.
    */
   @Override
-  public InputStream getFileContents(String path) throws IOException {
+  public InputStream getFileContentsInternal(String path) throws IOException {
     InputStream inputStream = getClass().getClassLoader().getResourceAsStream(path);
     if (inputStream == null) {
       throw new IOException("File not found on classpath: " + path);

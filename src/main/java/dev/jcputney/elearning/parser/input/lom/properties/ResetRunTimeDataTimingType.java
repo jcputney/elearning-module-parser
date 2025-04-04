@@ -38,12 +38,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum ResetRunTimeDataTimingType {
 
+  /**
+   * The reset run time data timing type is "never".
+   */
   @JsonProperty("never")
   NEVER,
 
+  /**
+   * The reset run time data timing type is "when exit is not suspend".
+   */
   @JsonProperty("when exit is not suspend")
   WHEN_EXIT_IS_NOT_SUSPEND,
 
+  /**
+   * The reset run time data timing type is "on each new sequencing attempt".
+   */
   @JsonProperty("on each new sequencing attempt")
   ON_EACH_NEW_SEQUENCING_ATTEMPT
 }

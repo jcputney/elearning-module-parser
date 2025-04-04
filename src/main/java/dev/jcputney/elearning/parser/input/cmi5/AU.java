@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.cmi5;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -27,13 +29,14 @@ import dev.jcputney.elearning.parser.input.cmi5.types.ReferencesObjectives;
 import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
 import dev.jcputney.elearning.parser.input.common.PercentType;
 import dev.jcputney.elearning.parser.input.common.PercentTypeDeserializer;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
 /**
- * Represents an Assignable Unit (AU) in a CMI5 course structure.
- * An AU is a distinct learning activity or resource that can be assigned to learners.
+ * Represents an Assignable Unit (AU) in a CMI5 course structure. An AU is a distinct learning
+ * activity or resource that can be assigned to learners.
  *
  * <p>Defined in the schema as:</p>
  *
@@ -90,6 +93,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class AU {
 
@@ -102,7 +106,6 @@ public class AU {
    */
   @JacksonXmlProperty(localName = "title")
   private TextType title;
-
   /**
    * The description of the Assignable Unit (AU).
    *
@@ -112,7 +115,6 @@ public class AU {
    */
   @JacksonXmlProperty(localName = "description")
   private TextType description;
-
   /**
    * Objectives referenced by the Assignable Unit.
    *
@@ -122,7 +124,6 @@ public class AU {
    */
   @JacksonXmlProperty(localName = "objectives")
   private ReferencesObjectives objectives;
-
   /**
    * The URL for launching the Assignable Unit.
    *
@@ -137,7 +138,6 @@ public class AU {
    */
   @JacksonXmlProperty(localName = "url")
   private String url;
-
   /**
    * Optional launch parameters for the AU.
    *
@@ -147,7 +147,6 @@ public class AU {
    */
   @JacksonXmlProperty(localName = "launchParameters")
   private String launchParameters;
-
   /**
    * Optional entitlement key for the AU.
    *
@@ -157,7 +156,6 @@ public class AU {
    */
   @JacksonXmlProperty(localName = "entitlementKey")
   private String entitlementKey;
-
   /**
    * The ID of the Assignable Unit, represented as an anyURI.
    *
@@ -168,10 +166,8 @@ public class AU {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("id")
   private String id;
-
   /**
-   * Specifies the condition required to move on from the AU.
-   * Default is "NotApplicable".
+   * Specifies the condition required to move on from the AU. Default is "NotApplicable".
    *
    * <pre>{@code
    * <xs:attribute name="moveOn" default="NotApplicable">
@@ -189,7 +185,6 @@ public class AU {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("moveOn")
   private MoveOn moveOn;
-
   /**
    * The mastery score required for the AU, represented as a decimal between 0 and 1.
    *
@@ -207,7 +202,6 @@ public class AU {
   @JsonDeserialize(using = PercentTypeDeserializer.class)
   @JsonProperty("masteryScore")
   private PercentType masteryScore;
-
   /**
    * Specifies the launch method for the AU, defaulting to "AnyWindow".
    *
@@ -224,7 +218,6 @@ public class AU {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("launchMethod")
   private LaunchMethod launchMethod;
-
   /**
    * Specifies the type of activity represented by the AU.
    *
@@ -235,4 +228,11 @@ public class AU {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("activityType")
   private String activityType;
+
+  /**
+   * Default constructor for the AU class.
+   */
+  public AU() {
+    // Default constructor
+  }
 }

@@ -38,12 +38,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum InvalidMenuItemActionType {
 
+  /**
+   * The invalid menu item action type is "show".
+   */
   @JsonProperty("show")
   SHOW,
 
+  /**
+   * The invalid menu item action type is "hide".
+   */
   @JsonProperty("hide")
   HIDE,
 
+  /**
+   * The invalid menu item action type is "disable".
+   */
   @JsonProperty("disable")
   DISABLE
 }

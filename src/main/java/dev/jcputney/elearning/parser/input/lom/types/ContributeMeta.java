@@ -17,10 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -66,6 +69,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ContributeMeta {
 
@@ -76,7 +80,6 @@ public class ContributeMeta {
   @JacksonXmlElementWrapper(localName = "role", useWrapping = false)
   @JacksonXmlProperty(localName = "role")
   private SourceValuePair<RoleMeta> role;
-
   /**
    * A list of entities contributing to the metadata, typically represented as vCard data. Example:
    * <pre>{@code
@@ -89,10 +92,16 @@ public class ContributeMeta {
   @JacksonXmlElementWrapper(localName = "entity", useWrapping = false)
   @JacksonXmlProperty(localName = "entity")
   private List<String> entities;
-
   /**
    * The date associated with the contribution, including optional descriptions.
    */
   @JacksonXmlProperty(localName = "date")
   private Date date;
+
+  /**
+   * Default constructor for the ContributeMeta class.
+   */
+  public ContributeMeta() {
+    // Default constructor
+  }
 }

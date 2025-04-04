@@ -48,6 +48,9 @@ public enum Type {
   @JsonProperty("browser")
   BROWSER,
 
+  /**
+   * The "unknown" value specifies that the location type is unknown.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

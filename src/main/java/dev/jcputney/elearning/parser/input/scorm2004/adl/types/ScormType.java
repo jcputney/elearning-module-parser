@@ -47,11 +47,15 @@ public enum ScormType {
   SCO,
 
   /**
-   * Indicates an asset, typically static content that does not support interactivity or tracking.
+   * Indicates an asset, typically static content, that doesn't support interactivity or tracking.
    */
   @JsonProperty("asset")
   ASSET,
 
+  /**
+   * Indicates an unknown type. This value is used when the type can't be determined or isn't
+   * specified in the manifest.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }

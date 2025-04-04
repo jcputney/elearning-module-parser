@@ -26,7 +26,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import dev.jcputney.elearning.parser.input.common.TrimAndPreserveIndentationDeserializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * Represents a LangString in LOM metadata, which is a collection of strings with language
@@ -51,7 +50,6 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-@NoArgsConstructor
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LangString {
 
@@ -62,11 +60,17 @@ public class LangString {
   @JsonProperty("language")
   @JsonAlias("lang")
   private String language;
-
   /**
    * The actual string value.
    */
   @JacksonXmlText
   @JsonDeserialize(using = TrimAndPreserveIndentationDeserializer.class)
   private String value;
+
+  /**
+   * Default constructor for the LangString class.
+   */
+  public LangString() {
+    // Default constructor
+  }
 }

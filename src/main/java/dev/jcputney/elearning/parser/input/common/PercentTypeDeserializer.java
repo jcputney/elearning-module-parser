@@ -28,6 +28,21 @@ import java.math.BigDecimal;
  */
 public class PercentTypeDeserializer extends JsonDeserializer<PercentType> {
 
+  /**
+   * Default constructor for the PercentTypeDeserializer class.
+   */
+  public PercentTypeDeserializer() {
+    // Default constructor
+  }
+
+  /**
+   * Deserializes a JSON string into a PercentType object.
+   *
+   * @param p the JsonParser
+   * @param context the DeserializationContext
+   * @return the deserialized PercentType object
+   * @throws IOException if an error occurs during deserialization
+   */
   @Override
   public PercentType deserialize(JsonParser p, DeserializationContext context)
       throws IOException {

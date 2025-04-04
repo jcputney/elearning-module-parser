@@ -17,12 +17,15 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -39,6 +42,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupConditions {
 
@@ -49,7 +53,6 @@ public class RollupConditions {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "rollupCondition", namespace = IMSSS.NAMESPACE_URI)
   private List<RollupCondition> rollupConditionList;
-
   /**
    * The logic used to combine the conditions in {@code rollupConditionList}. Possible values are:
    * <ul>
@@ -62,4 +65,12 @@ public class RollupConditions {
   @JsonProperty("conditionCombination")
   @Default
   private String conditionCombination = "any";
+
+  /**
+   * Default constructor for the RollupConditions class.
+   */
+  @SuppressWarnings("unused")
+  public RollupConditions() {
+    // Default constructor
+  }
 }

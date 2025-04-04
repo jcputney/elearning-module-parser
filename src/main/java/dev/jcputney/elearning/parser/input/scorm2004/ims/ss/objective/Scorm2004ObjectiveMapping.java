@@ -17,9 +17,12 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -35,6 +38,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004ObjectiveMapping {
 
@@ -48,7 +52,6 @@ public class Scorm2004ObjectiveMapping {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("targetObjectiveID")
   private String targetObjectiveID;
-
   /**
    * Specifies whether this local objective should read the satisfaction status of the target global
    * objective.
@@ -61,7 +64,6 @@ public class Scorm2004ObjectiveMapping {
   @JsonProperty("readSatisfiedStatus")
   @Default
   private boolean readSatisfiedStatus = true;
-
   /**
    * Specifies whether this local objective should read the normalized measure (performance level)
    * of the target global objective.
@@ -74,7 +76,6 @@ public class Scorm2004ObjectiveMapping {
   @JsonProperty("readNormalizedMeasure")
   @Default
   private boolean readNormalizedMeasure = true;
-
   /**
    * Specifies whether this local objective should write its satisfaction status to the target
    * global objective.
@@ -88,7 +89,6 @@ public class Scorm2004ObjectiveMapping {
   @JsonProperty("writeSatisfiedStatus")
   @Default
   private boolean writeSatisfiedStatus = false;
-
   /**
    * Specifies whether this local objective should write its normalized measure (performance level)
    * to the target global objective.
@@ -101,4 +101,12 @@ public class Scorm2004ObjectiveMapping {
   @JsonProperty("writeNormalizedMeasure")
   @Default
   private boolean writeNormalizedMeasure = false;
+
+  /**
+   * Default constructor for the Scorm2004ObjectiveMapping class.
+   */
+  @SuppressWarnings("unused")
+  public Scorm2004ObjectiveMapping() {
+    // Default constructor
+  }
 }

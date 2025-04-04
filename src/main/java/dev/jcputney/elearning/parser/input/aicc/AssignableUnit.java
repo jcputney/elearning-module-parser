@@ -17,60 +17,115 @@
 
 package dev.jcputney.elearning.parser.input.aicc;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * Represents an Assignable Unit (AU) in the context of AICC (Aviation Industry CBT Committee).
+ * <p>
+ * The Assignable Unit is a component of a course that can be assigned to learners.
+ * </p>
+ *
+ * <pre>{@code
+ * <complexType name="assignableUnit">
+ *   <complexContent>
+ *     <extension base="assignableUnitVocab">
+ *       <attributeGroup ref="ag:assignableUnit"/>
+ *     </extension>
+ *   </complexContent>
+ * </complexType>
+ * }</pre>
+ */
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class AssignableUnit {
 
+  /**
+   * The identifier of the assignable unit.
+   */
   @JsonProperty(value = "System_ID", required = true)
   private String systemId;
-
+  /**
+   * The command line used to launch the assignable unit.
+   */
   @JsonProperty(value = "Command_Line", required = true)
   private String commandLine;
-
+  /**
+   * The filename of the assignable unit.
+   */
   @JsonProperty(value = "File_Name", required = true)
   private String fileName;
-
+  /**
+   * The core vendor of the assignable unit.
+   */
   @JsonProperty(value = "Core_Vendor", required = true)
   private String coreVendor;
-
+  /**
+   * The type of the assignable unit.
+   */
   @JsonProperty(value = "Type")
   private String type;
-
+  /**
+   * The maximum score for the assignable unit.
+   */
   @JsonProperty(value = "Max_Score")
   private String maxScore;
-
+  /**
+   * The mastery score for the assignable unit.
+   */
   @JsonProperty(value = "Mastery_Score")
   private String masteryScore;
-
+  /**
+   * The maximum time allowed for the assignable unit.
+   */
   @JsonProperty(value = "Max_Time_Allowed")
   private String maxTimeAllowed;
-
+  /**
+   * The time limit action for the assignable unit.
+   */
   @JsonProperty(value = "Time_Limit_Action")
   private String timeLimitAction;
-
+  /**
+   * The system vendor of the assignable unit.
+   */
   @JsonProperty(value = "System_Vendor")
   private String systemVendor;
-
+  /**
+   * The web launch URL for the assignable unit.
+   */
   @JsonProperty(value = "web_launch")
   private String webLaunch;
-
+  /**
+   * The AU password for the assignable unit.
+   */
   @JsonProperty(value = "AU_Password")
   private String auPassword;
-
+  /**
+   * The AU descriptor for the assignable unit.
+   */
   @JsonIgnore
   @Setter
   private Descriptor descriptor;
+
+  /**
+   * Default constructor for the AssignableUnit class.
+   */
+  @SuppressWarnings("unused")
+  public AssignableUnit() {
+    // Default constructor
+  }
 }
 

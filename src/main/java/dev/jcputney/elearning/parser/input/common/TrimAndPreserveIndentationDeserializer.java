@@ -23,12 +23,28 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 /**
- * Custom deserializer for trimming leading whitespace and preserving indentation in JSON strings and XML text blocks.
+ * Custom deserializer for trimming leading whitespace and preserving indentation in JSON strings
+ * and XML text blocks.
  */
 public class TrimAndPreserveIndentationDeserializer extends JsonDeserializer<String> {
 
+  /**
+   * Default constructor for the TrimAndPreserveIndentationDeserializer class.
+   */
+  public TrimAndPreserveIndentationDeserializer() {
+    // Default constructor
+  }
+
+  /**
+   * Deserializes a JSON string into a trimmed and normalized string.
+   *
+   * @param p the JsonParser
+   * @param context the DeserializationContext
+   * @return the deserialized and normalized string
+   * @throws IOException if an error occurs during deserialization
+   */
   @Override
-  public String deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+  public String deserialize(JsonParser p, DeserializationContext context) throws IOException {
     String rawText = p.getText();
     if (rawText == null || rawText.isBlank()) {
       return "";

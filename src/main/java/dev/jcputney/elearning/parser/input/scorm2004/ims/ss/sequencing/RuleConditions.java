@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,6 +27,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.ConditionCombinationType;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
@@ -41,6 +44,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RuleConditions {
@@ -52,7 +56,6 @@ public class RuleConditions {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "ruleCondition", namespace = IMSSS.NAMESPACE_URI)
   private List<RuleCondition> ruleConditionList;
-
   /**
    * Specifies the combination type for conditions in this rollup rule. Determines whether all
    * conditions must be met ("all") or if any single condition is sufficient ("any").
@@ -61,4 +64,12 @@ public class RuleConditions {
   @JsonProperty("conditionCombination")
   @Default
   private ConditionCombinationType conditionCombination = ConditionCombinationType.ANY;
+
+  /**
+   * Default constructor for the RuleConditions class.
+   */
+  @SuppressWarnings("unused")
+  public RuleConditions() {
+    // Default constructor
+  }
 }

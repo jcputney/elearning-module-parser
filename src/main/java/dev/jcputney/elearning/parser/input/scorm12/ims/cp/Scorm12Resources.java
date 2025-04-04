@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,6 +26,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import java.util.List;
+import java.util.Optional;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
@@ -31,8 +35,8 @@ import lombok.extern.jackson.Jacksonized;
 /**
  * Represents the {@code <resources>} element in a SCORM 1.2 manifest file.
  * <p>
- * The {@code <resources>} element is a container for all {@code <resource>} elements in the manifest, defining the
- * resources used by the content package.
+ * The {@code <resources>} element is a container for all {@code <resource>} elements in the
+ * manifest, defining the resources used by the content package.
  * </p>
  *
  * <pre>{@code
@@ -49,6 +53,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Getter
 @Jacksonized
+@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Resources {
 
@@ -59,7 +64,6 @@ public class Scorm12Resources {
   @JacksonXmlProperty(isAttribute = true, localName = "base", namespace = "http://www.w3.org/XML/1998/namespace")
   @JsonProperty("base")
   private String base;
-
   /**
    * A list of all <resource> elements defined within the <resources> element.
    * <p>
@@ -71,14 +75,28 @@ public class Scorm12Resources {
   @JacksonXmlProperty(localName = "resource", namespace = Scorm12Manifest.NAMESPACE_URI)
   private List<Scorm12Resource> resourceList;
 
+  /**
+   * Default constructor for the {@code Scorm12Resources} class.
+   */
+  @SuppressWarnings("unused")
+  public Scorm12Resources() {
+    // Default constructor
+  }
+
+  /**
+   * Retrieves a resource by its identifier.
+   *
+   * @param id The identifier of the resource to retrieve.
+   * @return An {@link Optional} containing the resource if found, or an empty Optional if not
+   * found.
+   */
   @JsonIgnore
-  public Scorm12Resource getResourceById(String id) {
+  public Optional<Scorm12Resource> getResourceById(String id) {
     if (id == null || resourceList == null) {
-      return null;
+      return Optional.empty();
     }
     return resourceList.stream()
         .filter(resource -> id.equals(resource.getIdentifier()))
-        .findFirst()
-        .orElse(null);
+        .findFirst();
   }
 }

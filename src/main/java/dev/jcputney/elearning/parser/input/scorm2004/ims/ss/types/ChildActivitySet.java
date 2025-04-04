@@ -75,6 +75,10 @@ public enum ChildActivitySet {
   @JsonProperty("atLeastPercent")
   AT_LEAST_PERCENT,
 
+  /**
+   * The "unknown" value is used when the child activity set is not specified or is not recognized.
+   * This value may be used as a default or fallback option.
+   */
   @JsonEnumDefaultValue
   UNKNOWN
 }
