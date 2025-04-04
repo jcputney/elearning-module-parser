@@ -147,18 +147,33 @@ public class Cmi5Manifest implements PackageManifest {
   }
 
   /**
-   * Returns the launch URL for the course. If the course does not have any assignable units,
-   * returns null.
+   * Returns the launch URL for the course. First checks for assignable units at the root level,
+   * and if none are found, looks for assignable units inside the first block.
    *
-   * @return the launch URL for the course
+   * @return the launch URL for the course, or null if no assignable units are found
    */
   @Override
   public String getLaunchUrl() {
-    return Optional.ofNullable(assignableUnits)
+    // First try to get the URL from root-level AUs
+    String rootLevelUrl = Optional.ofNullable(assignableUnits)
         .filter(units -> !units.isEmpty())
         .map(units -> units.get(0))
         .map(AU::getUrl)
         .orElse(null);
+
+    // If no root-level AUs, try to get the URL from the first block's AUs
+    if (rootLevelUrl == null) {
+      return Optional.ofNullable(blocks)
+          .filter(blockList -> !blockList.isEmpty())
+          .map(blockList -> blockList.get(0))
+          .map(Block::getAssignableUnits)
+          .filter(units -> units != null && !units.isEmpty())
+          .map(units -> units.get(0))
+          .map(AU::getUrl)
+          .orElse(null);
+    }
+
+    return rootLevelUrl;
   }
 
   /**

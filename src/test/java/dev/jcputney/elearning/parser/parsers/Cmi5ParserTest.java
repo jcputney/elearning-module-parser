@@ -38,8 +38,10 @@ import org.junit.jupiter.api.Test;
  */
 public class Cmi5ParserTest {
 
+  public static final String EN_US = "en-US";
+
   @Test
-  void testParseCmi5Course_masteryscore_framed() throws ModuleParsingException {
+  void testParseCmi5CourseMasteryscoreFramed() throws ModuleParsingException {
     String modulePath = "src/test/resources/modules/cmi5/masteryscore_framed";
     Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(modulePath));
     Cmi5Metadata metadata = parser.parse();
@@ -61,7 +63,7 @@ public class Cmi5ParserTest {
   }
 
   @Test
-  void testParseCmi5Course_masteryscore_responsive() throws ModuleParsingException {
+  void testParseCmi5CourseMasteryscoreResponsive() throws ModuleParsingException {
     String modulePath = "src/test/resources/modules/cmi5/masteryscore_responsive";
     Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(modulePath));
     Cmi5Metadata metadata = parser.parse();
@@ -83,7 +85,7 @@ public class Cmi5ParserTest {
   }
 
   @Test
-  void testParseCmi5Course_multi_au_framed() throws ModuleParsingException {
+  void testParseCmi5CourseMultiAuFramed() throws ModuleParsingException {
     String modulePath = "src/test/resources/modules/cmi5/multi_au_framed";
     Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(modulePath));
     Cmi5Metadata metadata = parser.parse();
@@ -105,4 +107,79 @@ public class Cmi5ParserTest {
     assertNull(manifest.getAssignableUnits().get(7).getLaunchMethod());
   }
 
+  @Test
+  void testParseCmi5CoursePrePostTestFramed() throws ModuleParsingException {
+    String modulePath = "src/test/resources/modules/cmi5/pre_post_test_framed";
+    Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(modulePath));
+    Cmi5Metadata metadata = parser.parse();
+    assertNotNull(metadata);
+    Cmi5Manifest manifest = metadata.getManifest();
+    assertNotNull(manifest);
+
+    // Test course properties
+    assertEquals("Introduction to Geology - Pre/Post Test", manifest.getTitle());
+    assertEquals(
+        "This course will introduce you into the basics of geology. This includes subjects such as\nplate tectonics, geological materials and the history of the Earth.",
+        manifest.getDescription());
+
+    // Test course title and description (TextType and LangString)
+    TextType courseTitle = manifest.getCourse().getTitle();
+    assertNotNull(courseTitle);
+    assertEquals(1, courseTitle.getStrings().size());
+
+    LangString courseTitleLangString = courseTitle.getStrings().get(0);
+    assertNotNull(courseTitleLangString);
+    assertEquals("Introduction to Geology - Pre/Post Test", courseTitleLangString.getValue());
+    assertEquals(EN_US, courseTitleLangString.getLang());
+
+    TextType courseDescription = manifest.getCourse().getDescription();
+    assertNotNull(courseDescription);
+    assertEquals(1, courseDescription.getStrings().size());
+
+    LangString courseDescriptionLangString = courseDescription.getStrings().get(0);
+    assertNotNull(courseDescriptionLangString);
+    assertEquals(
+        "This course will introduce you into the basics of geology. This includes subjects such as\nplate tectonics, geological materials and the history of the Earth.",
+        courseDescriptionLangString.getValue());
+    assertEquals(EN_US, courseDescriptionLangString.getLang());
+
+    // Test blocks
+    assertEquals(2, manifest.getBlocks().size());
+
+    Block block1 = manifest.getBlocks().get(0);
+    assertNotNull(block1);
+    assertEquals("https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-preposttest/block1",
+        block1.getId());
+
+    // Test block title and description (TextType and LangString)
+    TextType block1Title = block1.getTitle();
+    assertNotNull(block1Title);
+    assertEquals(1, block1Title.getStrings().size());
+
+    LangString block1TitleLangString = block1Title.getStrings().get(0);
+    assertNotNull(block1TitleLangString);
+    assertEquals("Introduction to Geology", block1TitleLangString.getValue());
+    assertEquals(EN_US, block1TitleLangString.getLang());
+
+    // Test AUs
+    assertEquals(3, block1.getAssignableUnits().size());
+
+    AU preTest = block1.getAssignableUnits().get(0);
+    assertNotNull(preTest);
+    assertEquals(
+        "https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-preposttest/block1/pre",
+        preTest.getId());
+    assertEquals(MoveOn.PASSED, preTest.getMoveOn());
+    assertEquals("pre1.html", preTest.getUrl());
+
+    // Test AU title and description (TextType and LangString)
+    TextType preTestTitle = preTest.getTitle();
+    assertNotNull(preTestTitle);
+    assertEquals(1, preTestTitle.getStrings().size());
+
+    LangString preTestTitleLangString = preTestTitle.getStrings().get(0);
+    assertNotNull(preTestTitleLangString);
+    assertEquals("Pre-test", preTestTitleLangString.getValue());
+    assertEquals(EN_US, preTestTitleLangString.getLang());
+  }
 }
