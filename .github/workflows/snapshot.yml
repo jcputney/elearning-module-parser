@@ -41,7 +41,7 @@ jobs :
 
       - uses : qltysh/qlty-action/coverage@main
         with :
-          coverage-token : {{secrets.QLTY_COVERAGE_TOKEN}}
+          coverage-token : ${{secrets.QLTY_COVERAGE_TOKEN}}
           files : target/site/jacoco/jacoco.xml
 
       # generates coverage-report.md and publishes as checkrun
