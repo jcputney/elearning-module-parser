@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.jcputney.elearning.parser.util;
+package dev.jcputney.elearning.parser.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.api.ModuleTypeDetector;
 import dev.jcputney.elearning.parser.api.ModuleTypeDetectorPlugin;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
@@ -41,22 +42,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests for the {@link ModuleTypeDetector} class.
+ * Tests for the {@link DefaultModuleTypeDetector} class.
  */
-class ModuleTypeDetectorTest {
+class DefaultModuleTypeDetectorTest {
 
   private MockFileAccess mockFileAccess;
-  private ModuleTypeDetector detector;
+  private DefaultModuleTypeDetector detector;
 
   @BeforeEach
   void setUp() {
     mockFileAccess = new MockFileAccess("root/path");
-    detector = new ModuleTypeDetector(mockFileAccess);
+    detector = new DefaultModuleTypeDetector(mockFileAccess);
   }
 
   @Test
   void constructor_withNullFileAccess_throwsIllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> new ModuleTypeDetector(null));
+    assertThrows(IllegalArgumentException.class, () -> new DefaultModuleTypeDetector(null));
   }
 
   @Test

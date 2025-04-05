@@ -38,9 +38,10 @@ import org.apache.commons.lang3.math.NumberUtils;
 public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
 
   // Matches up to three groups of digits separated by optional colons.
+  // Also handles the case where the string starts with a colon (e.g., ":45" for 45 minutes)
   private static final Pattern HMS_REGEX = Pattern.compile(
       "^"                // start of string
-          + "(\\d+)"         // hours (group 1) - one or more digits
+          + "(\\d+)?"    // optional hours (group 1) - one or more digits
           + "(?::(\\d+))?"   // optional colon, then minutes (group 2) - one or more digits
           + "(?::(\\d+))?"   // optional colon, then seconds (group 3) - one or more digits
           + "$"              // end of string
