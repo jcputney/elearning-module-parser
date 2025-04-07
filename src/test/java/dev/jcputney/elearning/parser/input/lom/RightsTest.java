@@ -1,5 +1,4 @@
-/*
- * Copyright (c) 2025. Jonathan Putney
+/* Copyright (c) 2025. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -90,7 +89,8 @@ class RightsTest {
     assertNotNull(rights);
     assertNotNull(rights.getCopyrightAndOtherRestrictions());
     assertEquals("LOMv1.0", rights.getCopyrightAndOtherRestrictions().getSource());
-    assertEquals(CopyrightAndOtherRestrictions.YES, rights.getCopyrightAndOtherRestrictions().getValue());
+    assertEquals(CopyrightAndOtherRestrictions.YES,
+        rights.getCopyrightAndOtherRestrictions().getValue());
   }
 
   @Test
@@ -111,7 +111,7 @@ class RightsTest {
     assertNotNull(rights.getDescriptions());
     assertNotNull(rights.getDescriptions().getLangStrings());
     assertEquals(2, rights.getDescriptions().getLangStrings().size());
-    
+
     List<LangString> langStrings = rights.getDescriptions().getLangStrings();
     assertEquals("en", langStrings.get(0).getLanguage());
     assertEquals("This content is copyrighted.", langStrings.get(0).getValue());
@@ -141,22 +141,24 @@ class RightsTest {
 
     // Then
     assertNotNull(rights);
-    
+
     // Check cost
     assertNotNull(rights.getCost());
     assertEquals("LOMv1.0", rights.getCost().getSource());
     assertEquals(Cost.YES, rights.getCost().getValue());
-    
+
     // Check copyright and other restrictions
     assertNotNull(rights.getCopyrightAndOtherRestrictions());
     assertEquals("LOMv1.0", rights.getCopyrightAndOtherRestrictions().getSource());
-    assertEquals(CopyrightAndOtherRestrictions.YES, rights.getCopyrightAndOtherRestrictions().getValue());
-    
+    assertEquals(CopyrightAndOtherRestrictions.YES,
+        rights.getCopyrightAndOtherRestrictions().getValue());
+
     // Check descriptions
     assertNotNull(rights.getDescriptions());
     assertNotNull(rights.getDescriptions().getLangStrings());
     assertEquals(1, rights.getDescriptions().getLangStrings().size());
     assertEquals("en", rights.getDescriptions().getLangStrings().get(0).getLanguage());
-    assertEquals("This content is copyrighted.", rights.getDescriptions().getLangStrings().get(0).getValue());
+    assertEquals("This content is copyrighted.",
+        rights.getDescriptions().getLangStrings().get(0).getValue());
   }
 }

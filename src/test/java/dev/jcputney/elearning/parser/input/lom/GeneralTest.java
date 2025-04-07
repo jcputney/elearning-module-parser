@@ -1,5 +1,4 @@
-/*
- * Copyright (c) 2025. Jonathan Putney
+/* Copyright (c) 2025. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -89,7 +88,8 @@ class GeneralTest {
     assertNotNull(general.getDescription().getLangStrings());
     assertEquals(1, general.getDescription().getLangStrings().size());
     assertEquals("en", general.getDescription().getLangStrings().get(0).getLanguage());
-    assertEquals("This is a test description", general.getDescription().getLangStrings().get(0).getValue());
+    assertEquals("This is a test description",
+        general.getDescription().getLangStrings().get(0).getValue());
   }
 
   @Test
@@ -303,9 +303,11 @@ class GeneralTest {
     assertNotNull(general.getDescription().getLangStrings());
     assertEquals(2, general.getDescription().getLangStrings().size());
     assertEquals("en", general.getDescription().getLangStrings().get(0).getLanguage());
-    assertEquals("This is a complete test description", general.getDescription().getLangStrings().get(0).getValue());
+    assertEquals("This is a complete test description",
+        general.getDescription().getLangStrings().get(0).getValue());
     assertEquals("fr", general.getDescription().getLangStrings().get(1).getLanguage());
-    assertEquals("C'est une description de test complète", general.getDescription().getLangStrings().get(1).getValue());
+    assertEquals("C'est une description de test complète",
+        general.getDescription().getLangStrings().get(1).getValue());
 
     // Check keywords
     assertNotNull(general.getKeywords());

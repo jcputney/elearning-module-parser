@@ -1,5 +1,4 @@
-/*
- * Copyright (c) 2025. Jonathan Putney
+/* Copyright (c) 2025. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -32,13 +31,14 @@ import javax.xml.stream.XMLStreamException;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests for parsing SCORM 2004 objectives from manifest files.
- * This test focuses specifically on the objective classes and their parsing.
+ * Tests for parsing SCORM 2004 objectives from manifest files. This test focuses specifically on
+ * the objective classes and their parsing.
  */
 public class Scorm2004ObjectiveParserTest {
 
   @Test
-  void testParsePostTestObjectives() throws XMLStreamException, IOException, ModuleParsingException {
+  void testParsePostTestObjectives()
+      throws XMLStreamException, IOException, ModuleParsingException {
     // Parse the SequencingRandomTest_SCORM20043rdEdition manifest
     String modulePath = "src/test/resources/modules/scorm2004/SequencingRandomTest_SCORM20043rdEdition";
     Scorm2004Parser parser = new Scorm2004Parser(new LocalFileAccess(modulePath));
@@ -66,7 +66,8 @@ public class Scorm2004ObjectiveParserTest {
     assertEquals(1, primaryMapInfo.size());
 
     Scorm2004ObjectiveMapping primaryMapping = primaryMapInfo.get(0);
-    assertEquals("com.scorm.golfsamples.sequencing.randomtest.course_score", primaryMapping.getTargetObjectiveID());
+    assertEquals("com.scorm.golfsamples.sequencing.randomtest.course_score",
+        primaryMapping.getTargetObjectiveID());
     assertFalse(primaryMapping.isReadSatisfiedStatus());
     assertTrue(primaryMapping.isReadNormalizedMeasure());
 
@@ -84,13 +85,15 @@ public class Scorm2004ObjectiveParserTest {
     assertEquals(1, secondaryMapInfo.size());
 
     Scorm2004ObjectiveMapping secondaryMapping = secondaryMapInfo.get(0);
-    assertEquals("com.scorm.golfsamples.sequencing.randomtest.content_completed", secondaryMapping.getTargetObjectiveID());
+    assertEquals("com.scorm.golfsamples.sequencing.randomtest.content_completed",
+        secondaryMapping.getTargetObjectiveID());
     assertTrue(secondaryMapping.isReadSatisfiedStatus());
     assertTrue(secondaryMapping.isReadNormalizedMeasure()); // Default is true when not specified
   }
 
   @Test
-  void testParseContentWrapperObjectives() throws XMLStreamException, IOException, ModuleParsingException {
+  void testParseContentWrapperObjectives()
+      throws XMLStreamException, IOException, ModuleParsingException {
     // Parse the SequencingRandomTest_SCORM20043rdEdition manifest
     String modulePath = "src/test/resources/modules/scorm2004/SequencingRandomTest_SCORM20043rdEdition";
     Scorm2004Parser parser = new Scorm2004Parser(new LocalFileAccess(modulePath));
@@ -118,7 +121,8 @@ public class Scorm2004ObjectiveParserTest {
     assertEquals(1, mapInfo.size());
 
     Scorm2004ObjectiveMapping mapping = mapInfo.get(0);
-    assertEquals("com.scorm.golfsamples.sequencing.randomtest.content_completed", mapping.getTargetObjectiveID());
+    assertEquals("com.scorm.golfsamples.sequencing.randomtest.content_completed",
+        mapping.getTargetObjectiveID());
     assertTrue(mapping.isWriteSatisfiedStatus());
     assertFalse(mapping.isWriteNormalizedMeasure());
   }

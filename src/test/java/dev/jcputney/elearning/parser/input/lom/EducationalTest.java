@@ -1,5 +1,4 @@
-/*
- * Copyright (c) 2025. Jonathan Putney
+/* Copyright (c) 2025. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -286,11 +285,14 @@ class EducationalTest {
     // Then
     assertNotNull(educational);
     assertNotNull(educational.getTypicalLearningTime());
-    assertEquals(java.time.Duration.parse("PT1H30M"), educational.getTypicalLearningTime().getDuration());
+    assertEquals(java.time.Duration.parse("PT1H30M"),
+        educational.getTypicalLearningTime().getDuration());
     assertNotNull(educational.getTypicalLearningTime().getDescription());
     assertNotNull(educational.getTypicalLearningTime().getDescription().getLangString());
-    assertEquals("en", educational.getTypicalLearningTime().getDescription().getLangString().getLanguage());
-    assertEquals("One and a half hours", educational.getTypicalLearningTime().getDescription().getLangString().getValue());
+    assertEquals("en",
+        educational.getTypicalLearningTime().getDescription().getLangString().getLanguage());
+    assertEquals("One and a half hours",
+        educational.getTypicalLearningTime().getDescription().getLangString().getValue());
   }
 
   @Test
@@ -400,7 +402,8 @@ class EducationalTest {
     assertNotNull(educational.getLearningResourceType());
     assertEquals(1, educational.getLearningResourceType().size());
     assertEquals("LOMv1.0", educational.getLearningResourceType().get(0).getSource());
-    assertEquals(LearningResourceType.EXERCISE, educational.getLearningResourceType().get(0).getValue());
+    assertEquals(LearningResourceType.EXERCISE,
+        educational.getLearningResourceType().get(0).getValue());
 
     // Check interactivityLevel
     assertNotNull(educational.getInteractivityLevel());
@@ -416,7 +419,8 @@ class EducationalTest {
     assertNotNull(educational.getIntendedEndUserRole());
     assertEquals(1, educational.getIntendedEndUserRole().size());
     assertEquals("LOMv1.0", educational.getIntendedEndUserRole().get(0).getSource());
-    assertEquals(IntendedEndUserRole.LEARNER, educational.getIntendedEndUserRole().get(0).getValue());
+    assertEquals(IntendedEndUserRole.LEARNER,
+        educational.getIntendedEndUserRole().get(0).getValue());
 
     // Check context
     assertNotNull(educational.getContext());
@@ -437,15 +441,18 @@ class EducationalTest {
 
     // Check typicalLearningTime
     assertNotNull(educational.getTypicalLearningTime());
-    assertEquals(java.time.Duration.parse("PT1H30M"), educational.getTypicalLearningTime().getDuration());
+    assertEquals(java.time.Duration.parse("PT1H30M"),
+        educational.getTypicalLearningTime().getDuration());
     assertNotNull(educational.getTypicalLearningTime().getDescription());
-    assertEquals("One and a half hours", educational.getTypicalLearningTime().getDescription().getLangString().getValue());
+    assertEquals("One and a half hours",
+        educational.getTypicalLearningTime().getDescription().getLangString().getValue());
 
     // Check descriptions
     assertNotNull(educational.getDescriptions());
     assertEquals(1, educational.getDescriptions().getLangStrings().size());
     assertEquals("en", educational.getDescriptions().getLangStrings().get(0).getLanguage());
-    assertEquals("This is an educational description", educational.getDescriptions().getLangStrings().get(0).getValue());
+    assertEquals("This is an educational description",
+        educational.getDescriptions().getLangStrings().get(0).getValue());
 
     // Check languages
     assertNotNull(educational.getLanguages());

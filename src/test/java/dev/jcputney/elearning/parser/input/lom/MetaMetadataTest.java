@@ -1,5 +1,4 @@
-/*
- * Copyright (c) 2025. Jonathan Putney
+/* Copyright (c) 2025. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -79,7 +78,7 @@ class MetaMetadataTest {
     assertNotNull(metaMetadata);
     assertNotNull(metaMetadata.getIdentifier());
     assertEquals(1, metaMetadata.getIdentifier().size());
-    
+
     Identifier identifier = metaMetadata.getIdentifier().get(0);
     assertEquals("URI", identifier.getCatalog());
     assertEquals("http://example.com/metadata/123", identifier.getEntry());
@@ -104,7 +103,7 @@ class MetaMetadataTest {
     assertNotNull(metaMetadata);
     assertNotNull(metaMetadata.getCatalogEntries());
     assertEquals(1, metaMetadata.getCatalogEntries().size());
-    
+
     CatalogEntry entry = metaMetadata.getCatalogEntries().get(0);
     assertEquals("Catalog1", entry.getCatalog());
     assertNotNull(entry.getEntry());
@@ -136,16 +135,16 @@ class MetaMetadataTest {
     assertNotNull(metaMetadata);
     assertNotNull(metaMetadata.getContribute());
     assertEquals(1, metaMetadata.getContribute().size());
-    
+
     ContributeMeta contribute = metaMetadata.getContribute().get(0);
     assertNotNull(contribute.getRole());
     assertEquals("LOMv1.0", contribute.getRole().getSource());
     assertEquals(RoleMeta.CREATOR, contribute.getRole().getValue());
-    
+
     assertNotNull(contribute.getEntities());
     assertEquals(1, contribute.getEntities().size());
     assertEquals("John Doe", contribute.getEntities().get(0));
-    
+
     assertNotNull(contribute.getDate());
     assertEquals("2023-01-15", contribute.getDate().getDateTime());
   }
@@ -212,14 +211,14 @@ class MetaMetadataTest {
 
     // Then
     assertNotNull(metaMetadata);
-    
+
     // Check identifier
     assertNotNull(metaMetadata.getIdentifier());
     assertEquals(1, metaMetadata.getIdentifier().size());
     Identifier identifier = metaMetadata.getIdentifier().get(0);
     assertEquals("URI", identifier.getCatalog());
     assertEquals("http://example.com/metadata/123", identifier.getEntry());
-    
+
     // Check contribute
     assertNotNull(metaMetadata.getContribute());
     assertEquals(1, metaMetadata.getContribute().size());
@@ -232,12 +231,12 @@ class MetaMetadataTest {
     assertEquals("John Doe", contribute.getEntities().get(0));
     assertNotNull(contribute.getDate());
     assertEquals("2023-01-15", contribute.getDate().getDateTime());
-    
+
     // Check metadata schema
     assertNotNull(metaMetadata.getMetadataSchema());
     assertEquals(1, metaMetadata.getMetadataSchema().size());
     assertEquals("LOMv1.0", metaMetadata.getMetadataSchema().get(0));
-    
+
     // Check language
     assertNotNull(metaMetadata.getLanguage());
     assertEquals("en", metaMetadata.getLanguage());

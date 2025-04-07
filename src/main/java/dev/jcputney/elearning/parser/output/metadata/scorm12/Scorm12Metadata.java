@@ -1,6 +1,4 @@
 /*
- * qlty-ignore: +qlty:similar-code
- *
  * Copyright (c) 2024-2025. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,8 +13,6 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- * qlty-ignore: -qlty:similar-code
  */
 
 package dev.jcputney.elearning.parser.output.metadata.scorm12;
@@ -49,13 +45,14 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
   /**
    * Creates a new Scorm12Metadata instance with standard SCORM 1.2 metadata components.
    *
-   * @param manifest    The SCORM 1.2 manifest.
+   * @param manifest The SCORM 1.2 manifest.
    * @param xapiEnabled Whether xAPI is enabled.
    * @return A new Scorm12Metadata instance.
    */
   public static Scorm12Metadata create(Scorm12Manifest manifest, boolean xapiEnabled) {
     Scorm12Metadata metadata =
-        Scorm12Metadata.builder().manifest(manifest).moduleType(ModuleType.SCORM_12).xapiEnabled(xapiEnabled).build();
+        Scorm12Metadata.builder().manifest(manifest).moduleType(ModuleType.SCORM_12)
+            .xapiEnabled(xapiEnabled).build();
 
     // Add SCORM 1.2 specific metadata
     SimpleMetadata scorm12Metadata = metadata.getSimpleMetadata(manifest);

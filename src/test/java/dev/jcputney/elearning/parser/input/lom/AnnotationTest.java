@@ -1,5 +1,4 @@
-/*
- * Copyright (c) 2025. Jonathan Putney
+/* Copyright (c) 2025. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -63,7 +62,8 @@ class AnnotationTest {
     // Then
     assertNotNull(annotation);
     assertNotNull(annotation.getEntity());
-    assertEquals("BEGIN:VCARD\nFN:John Doe\nEMAIL:john.doe@example.com\nEND:VCARD", annotation.getEntity());
+    assertEquals("BEGIN:VCARD\nFN:John Doe\nEMAIL:john.doe@example.com\nEND:VCARD",
+        annotation.getEntity());
     assertNull(annotation.getDate());
     assertNull(annotation.getDescription());
   }
@@ -92,7 +92,8 @@ class AnnotationTest {
     assertNotNull(annotation.getDate().getDescription().getLangStrings());
     assertEquals(1, annotation.getDate().getDescription().getLangStrings().size());
     assertEquals("en", annotation.getDate().getDescription().getLangStrings().get(0).getLanguage());
-    assertEquals("Creation date", annotation.getDate().getDescription().getLangStrings().get(0).getValue());
+    assertEquals("Creation date",
+        annotation.getDate().getDescription().getLangStrings().get(0).getValue());
     assertNull(annotation.getDescription());
   }
 
@@ -115,7 +116,8 @@ class AnnotationTest {
     assertNotNull(annotation.getDescription());
     assertNotNull(annotation.getDescription().getLangString());
     assertEquals("en", annotation.getDescription().getLangString().getLanguage());
-    assertEquals("This is an annotation description", annotation.getDescription().getLangString().getValue());
+    assertEquals("This is an annotation description",
+        annotation.getDescription().getLangString().getValue());
   }
 
   @Test
@@ -139,11 +141,12 @@ class AnnotationTest {
 
     // Then
     assertNotNull(annotation);
-    
+
     // Check entity
     assertNotNull(annotation.getEntity());
-    assertEquals("BEGIN:VCARD\nFN:John Doe\nEMAIL:john.doe@example.com\nEND:VCARD", annotation.getEntity());
-    
+    assertEquals("BEGIN:VCARD\nFN:John Doe\nEMAIL:john.doe@example.com\nEND:VCARD",
+        annotation.getEntity());
+
     // Check date
     assertNotNull(annotation.getDate());
     assertEquals("2023-04-01T12:00:00", annotation.getDate().getDateTime());
@@ -151,12 +154,14 @@ class AnnotationTest {
     assertNotNull(annotation.getDate().getDescription().getLangStrings());
     assertEquals(1, annotation.getDate().getDescription().getLangStrings().size());
     assertEquals("en", annotation.getDate().getDescription().getLangStrings().get(0).getLanguage());
-    assertEquals("Creation date", annotation.getDate().getDescription().getLangStrings().get(0).getValue());
-    
+    assertEquals("Creation date",
+        annotation.getDate().getDescription().getLangStrings().get(0).getValue());
+
     // Check description
     assertNotNull(annotation.getDescription());
     assertNotNull(annotation.getDescription().getLangString());
     assertEquals("en", annotation.getDescription().getLangString().getLanguage());
-    assertEquals("This is an annotation description", annotation.getDescription().getLangString().getValue());
+    assertEquals("This is an annotation description",
+        annotation.getDescription().getLangString().getValue());
   }
 }

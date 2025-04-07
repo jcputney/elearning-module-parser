@@ -1,5 +1,4 @@
-/*
- * Copyright (c) 2025. Jonathan Putney
+/* Copyright (c) 2025. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -211,7 +210,8 @@ class LOMTest {
   @Test
   void testDeserializeFromFile() throws Exception {
     // Given
-    File file = new File("src/test/resources/modules/scorm12/ContentPackagingWithMetadata_SCORM12/metadata.xml");
+    File file = new File(
+        "src/test/resources/modules/scorm12/ContentPackagingWithMetadata_SCORM12/metadata.xml");
 
     // When
     LOM lom = xmlMapper.readValue(file, LOM.class);

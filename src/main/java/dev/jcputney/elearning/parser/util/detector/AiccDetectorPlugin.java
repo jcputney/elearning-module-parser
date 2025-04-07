@@ -1,6 +1,4 @@
 /*
- * qlty-ignore: +qlty:similar-code
- *
  * Copyright (c) 2024-2025. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,8 +13,6 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- * qlty-ignore: -qlty:similar-code
  */
 
 package dev.jcputney.elearning.parser.util.detector;

@@ -1,6 +1,4 @@
 /*
- * qlty-ignore: +qlty:similar-code
- *
  * Copyright (c) 2024-2025. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,8 +13,6 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- * qlty-ignore: -qlty:similar-code
  */
 
 package dev.jcputney.elearning.parser.output.metadata.scorm2004;
@@ -58,13 +54,14 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
   /**
    * Creates a new Scorm2004Metadata instance with standard SCORM 2004 metadata components.
    *
-   * @param manifest    The SCORM 2004 manifest.
+   * @param manifest The SCORM 2004 manifest.
    * @param xapiEnabled Whether xAPI is enabled.
    * @return A new Scorm2004Metadata instance.
    */
   public static Scorm2004Metadata create(Scorm2004Manifest manifest, boolean xapiEnabled) {
     Scorm2004Metadata metadata =
-        Scorm2004Metadata.builder().manifest(manifest).moduleType(ModuleType.SCORM_2004).xapiEnabled(xapiEnabled)
+        Scorm2004Metadata.builder().manifest(manifest).moduleType(ModuleType.SCORM_2004)
+            .xapiEnabled(xapiEnabled)
             .build();
 
     // Add SCORM 2004 specific metadata
@@ -118,7 +115,7 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
    * Wraps a potentially null collection in a stream.
    *
    * @param collection The collection to wrap.
-   * @param <T>        The type of elements in the collection.
+   * @param <T> The type of elements in the collection.
    * @return A stream of elements, or an empty stream if the collection is null.
    */
   private static <T> Stream<T> safeStream(Collection<T> collection) {

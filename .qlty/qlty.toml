@@ -36,6 +36,9 @@ test_patterns = [
   "**/test/**",
 ]
 
+[[ignore]]
+rules = ["qlty:similar-code"]
+
 [smells]
 mode = "comment"
 

@@ -1,6 +1,4 @@
 /*
- * qlty-ignore: +qlty:similar-code
- *
  * Copyright (c) 2024-2025. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,8 +13,6 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- * qlty-ignore: -qlty:similar-code
  */
 
 package dev.jcputney.elearning.parser.parsers;
@@ -69,7 +65,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    * Constructs a Scorm12Parser with the specified ModuleFileProvider instance.
    *
    * @param moduleFileProvider An instance of ModuleFileProvider for reading files in the module
-   *                           package.
+   * package.
    */
   public Scorm12Parser(ModuleFileProvider moduleFileProvider) {
     super(moduleFileProvider);
@@ -113,7 +109,8 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
       // Catch any other unexpected exceptions
       log.error("Unexpected error parsing SCORM 1.2 module: {}", e.getMessage());
       throw new ModuleParsingException(
-          "Unexpected error parsing SCORM 1.2 module at path: " + this.moduleFileProvider.getRootPath(), e);
+          "Unexpected error parsing SCORM 1.2 module at path: "
+              + this.moduleFileProvider.getRootPath(), e);
     }
   }
 
@@ -126,16 +123,18 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    * Parses and validates the SCORM 1.2 manifest file.
    *
    * @return The parsed manifest object.
-   * @throws IOException            If an error occurs while reading the file.
-   * @throws XMLStreamException     If an error occurs while parsing the XML.
+   * @throws IOException If an error occurs while reading the file.
+   * @throws XMLStreamException If an error occurs while parsing the XML.
    * @throws ModuleParsingException If the manifest file is not found.
    */
-  private Scorm12Manifest parseAndValidateManifest() throws IOException, XMLStreamException, ModuleParsingException {
+  private Scorm12Manifest parseAndValidateManifest()
+      throws IOException, XMLStreamException, ModuleParsingException {
     // Define the manifest path and verify its existence
     log.debug("Checking for SCORM 1.2 manifest file: {}", MANIFEST_FILE);
     if (!moduleFileProvider.fileExists(MANIFEST_FILE)) {
       log.error("SCORM 1.2 manifest file not found: {}", MANIFEST_FILE);
-      throw new ModuleParsingException("SCORM 1.2 manifest file not found at path: " + MANIFEST_FILE);
+      throw new ModuleParsingException(
+          "SCORM 1.2 manifest file not found at path: " + MANIFEST_FILE);
     }
 
     // Parse the manifest XML file using a secure parser from BaseParser
@@ -160,7 +159,8 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
     }
     if (launchUrl == null || launchUrl.isEmpty()) {
       log.error("SCORM 1.2 manifest is missing a required <launchUrl> in <resource> element");
-      throw new ModuleParsingException("SCORM 1.2 manifest is missing a required <launchUrl> in <resource> element.");
+      throw new ModuleParsingException(
+          "SCORM 1.2 manifest is missing a required <launchUrl> in <resource> element.");
     }
   }
 
@@ -168,7 +168,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    * Creates a metadata object from the parsed manifest.
    *
    * @param manifest The parsed manifest.
-   * @param hasXapi  Whether the module has xAPI support.
+   * @param hasXapi Whether the module has xAPI support.
    * @return A new Scorm12Metadata object.
    */
   private Scorm12Metadata createMetadata(Scorm12Manifest manifest, boolean hasXapi) {
@@ -180,9 +180,10 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    *
    * @param manifest The SCORM 1.2 manifest object.
    * @throws XMLStreamException If an error occurs while parsing the XML.
-   * @throws IOException        If an error occurs while reading the file.
+   * @throws IOException If an error occurs while reading the file.
    */
-  private void loadExternalMetadata(Scorm12Manifest manifest) throws XMLStreamException, IOException {
+  private void loadExternalMetadata(Scorm12Manifest manifest)
+      throws XMLStreamException, IOException {
     if (manifest == null) {
       return;
     }
@@ -199,9 +200,10 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    *
    * @param resources The list of resources to load metadata for.
    * @throws XMLStreamException If an error occurs while parsing the XML.
-   * @throws IOException        If an error occurs while reading the file.
+   * @throws IOException If an error occurs while reading the file.
    */
-  private void loadResourcesMetadata(List<Scorm12Resource> resources) throws XMLStreamException, IOException {
+  private void loadResourcesMetadata(List<Scorm12Resource> resources)
+      throws XMLStreamException, IOException {
     if (resources == null) {
       return;
     }
@@ -218,7 +220,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    *
    * @param files The list of files to load metadata for.
    * @throws XMLStreamException If an error occurs while parsing the XML.
-   * @throws IOException        If an error occurs while reading the file.
+   * @throws IOException If an error occurs while reading the file.
    */
   private void loadFilesMetadata(List<Scorm12File> files) throws XMLStreamException, IOException {
     if (files == null) {
@@ -243,7 +245,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    *
    * @param organizations The list of organizations to load metadata for.
    * @throws XMLStreamException If an error occurs while parsing the XML.
-   * @throws IOException        If an error occurs while reading the file.
+   * @throws IOException If an error occurs while reading the file.
    */
   private void loadOrganizationsMetadata(List<Scorm12Organization> organizations)
       throws XMLStreamException, IOException {
@@ -263,7 +265,8 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    *
    * @param items The list of items to load external metadata for.
    */
-  private void loadExternalMetadataForItems(List<Scorm12Item> items) throws XMLStreamException, IOException {
+  private void loadExternalMetadataForItems(List<Scorm12Item> items)
+      throws XMLStreamException, IOException {
     if (items != null) {
       log.debug("Processing {} items for external metadata", items.size());
       for (Scorm12Item item : items) {
@@ -272,7 +275,8 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
         // Recursively process child items
         List<Scorm12Item> childItems = item.getItems();
         if (childItems != null && !childItems.isEmpty()) {
-          log.debug("Processing {} child items for item: {}", childItems.size(), item.getIdentifier());
+          log.debug("Processing {} child items for item: {}", childItems.size(),
+              item.getIdentifier());
           loadExternalMetadataForItems(childItems);
         }
       }

@@ -1,5 +1,4 @@
-/*
- * Copyright (c) 2025. Jonathan Putney
+/* Copyright (c) 2025. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -136,7 +135,8 @@ class TechnicalTest {
     assertNotNull(technical.getInstallationRemarks());
     assertNotNull(technical.getInstallationRemarks().getLangString());
     assertEquals("en", technical.getInstallationRemarks().getLangString().getLanguage());
-    assertEquals("Extract the zip file and run setup.exe", technical.getInstallationRemarks().getLangString().getValue());
+    assertEquals("Extract the zip file and run setup.exe",
+        technical.getInstallationRemarks().getLangString().getValue());
   }
 
   @Test
@@ -156,7 +156,8 @@ class TechnicalTest {
     assertNotNull(technical.getOtherPlatformRequirements());
     assertNotNull(technical.getOtherPlatformRequirements().getLangString());
     assertEquals("en", technical.getOtherPlatformRequirements().getLangString().getLanguage());
-    assertEquals("Requires Java Runtime Environment 8 or higher", technical.getOtherPlatformRequirements().getLangString().getValue());
+    assertEquals("Requires Java Runtime Environment 8 or higher",
+        technical.getOtherPlatformRequirements().getLangString().getValue());
   }
 
   @Test
@@ -197,27 +198,28 @@ class TechnicalTest {
 
     // Then
     assertNotNull(technical);
-    
+
     // Check format
     assertNotNull(technical.getFormat());
     assertEquals(1, technical.getFormat().size());
     assertEquals("text/html", technical.getFormat().get(0));
-    
+
     // Check size
     assertNotNull(technical.getSize());
     assertEquals(1024, technical.getSize());
-    
+
     // Check location
     assertNotNull(technical.getLocation());
     assertEquals(1, technical.getLocation().size());
     assertEquals("http://example.com/resource", technical.getLocation().get(0));
-    
+
     // Check installation remarks
     assertNotNull(technical.getInstallationRemarks());
     assertNotNull(technical.getInstallationRemarks().getLangString());
     assertEquals("en", technical.getInstallationRemarks().getLangString().getLanguage());
-    assertEquals("Extract the zip file and run setup.exe", technical.getInstallationRemarks().getLangString().getValue());
-    
+    assertEquals("Extract the zip file and run setup.exe",
+        technical.getInstallationRemarks().getLangString().getValue());
+
     // Check duration
     assertNotNull(technical.getDuration());
     assertEquals(java.time.Duration.parse("PT2H30M"), technical.getDuration().getDuration());
