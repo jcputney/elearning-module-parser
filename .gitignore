@@ -156,3 +156,4 @@ target/
 release.properties
 pom.xml.releaseBackup
 /logs/
+docs/sequencing.md

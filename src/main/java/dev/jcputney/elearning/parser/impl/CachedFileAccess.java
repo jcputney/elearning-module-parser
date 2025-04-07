@@ -1,4 +1,6 @@
 /*
+ * qlty-ignore: +qlty:similar-code
+ *
  * Copyright (c) 2024-2025. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,13 +15,15 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * qlty-ignore: -qlty:similar-code
  */
 
 package dev.jcputney.elearning.parser.impl;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.exception.FileAccessException;
 import dev.jcputney.elearning.parser.exception.RuntimeFileAccessException;
-import dev.jcputney.elearning.parser.util.ErrorHandlingUtils;
 import dev.jcputney.elearning.parser.util.LoggingUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -126,7 +130,7 @@ public class CachedFileAccess implements FileAccess {
           log.debug("Exception details:", e);
 
           // Wrap the IOException in a FileAccessException to be compatible with computeIfAbsent
-          throw new RuntimeFileAccessException(ErrorHandlingUtils.createFileAccessException(
+          throw new RuntimeFileAccessException(new FileAccessException(
               "Error listing files in directory: %s".formatted(p), e, metadata));
         }
       });
@@ -172,7 +176,7 @@ public class CachedFileAccess implements FileAccess {
           log.debug("Exception details:", e);
 
           // Wrap the IOException in a FileAccessException to be compatible with computeIfAbsent
-          throw new RuntimeFileAccessException(ErrorHandlingUtils.createFileAccessException(
+          throw new RuntimeFileAccessException(new FileAccessException(
               "Error reading file contents for: " + p, e, metadata));
         }
       });

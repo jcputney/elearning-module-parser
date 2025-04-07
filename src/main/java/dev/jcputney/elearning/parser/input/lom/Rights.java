@@ -1,5 +1,7 @@
 /*
- * Copyright (c) 2024. Jonathan Putney
+ * qlty-ignore: +qlty:similar-code
+ *
+ * Copyright (c) 2024-2025. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,6 +15,8 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * qlty-ignore: -qlty:similar-code
  */
 
 package dev.jcputney.elearning.parser.input.lom;
@@ -31,23 +35,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
-/**
- * Represents the {@code <rights>} element in a LOM (Learning Object Metadata) document.
- * <p>
- * The {@code <rights>} element contains information about the rights associated with the learning
- * object, including cost, copyright, and other restrictions.
- * </p>
- *
- * <pre>{@code
- * <complexType name="rights">
- *   <complexContent>
- *     <extension base="rightsVocab">
- *       <attributeGroup ref="ag:rights"/>
- *     </extension>
- *   </complexContent>
- * </complexType>
- * }</pre>
- */
 @Builder
 @Getter
 @Jacksonized

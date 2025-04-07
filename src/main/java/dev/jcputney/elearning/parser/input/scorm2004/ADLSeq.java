@@ -1,5 +1,7 @@
 /*
- * Copyright (c) 2024. Jonathan Putney
+ * qlty-ignore: +qlty:similar-code
+ *
+ * Copyright (c) 2024-2025. Jonathan Putney
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,6 +15,8 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * qlty-ignore: -qlty:similar-code
  */
 
 package dev.jcputney.elearning.parser.input.scorm2004;
@@ -26,7 +30,7 @@ package dev.jcputney.elearning.parser.input.scorm2004;
  *
  * <p>The ADLSeq namespace is specified by {@link #NAMESPACE_URI}, and this class
  * is designed to conform to the SCORM 2004 3rd Edition specification.</p>
- *
+ * <p>
  * The following schema shows the structure of the ADLSeq element:
  * <pre>{@code
  *   <?xml version = "1.0"?>

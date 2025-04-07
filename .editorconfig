@@ -13,6 +13,9 @@ ij_formatter_tags_enabled = false
 ij_smart_tabs = false
 ij_wrap_on_typing = false
 
+[*.md]
+indent_size = 3
+
 [*.conf]
 ij_continuation_indent_size = 2
 ij_hocon_keep_blank_lines_before_right_brace = 2
