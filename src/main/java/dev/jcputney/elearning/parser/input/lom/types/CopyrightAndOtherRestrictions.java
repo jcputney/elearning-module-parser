@@ -22,6 +22,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Enum representing the copyright and other restrictions of a learning object.
+ *
+ * <p>This enum is used to indicate whether a learning object has copyright and other restrictions,
+ * doesn't have such restrictions, or if the status is unknown.
+ *
+ * <p>It is annotated with {@link JsonFormat} to allow for case-insensitive deserialization of
+ * values.
+ */
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_VALUES)
 public enum CopyrightAndOtherRestrictions {
   /**

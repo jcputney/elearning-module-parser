@@ -31,6 +31,24 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
+/**
+ * Represents the rights information of a learning object, including cost, copyright, and
+ * descriptions.
+ *
+ * <p>This class is part of the Learning Object Metadata (LOM) model and is used to describe the
+ * rights associated with a learning object.
+ *
+ * <p>Schema snippet:
+ * <pre>{@code
+ * <complexType name="rights">
+ *   <complexContent>
+ *     <extension base="rightsVocab">
+ *       <attributeGroup ref="ag:rights"/>
+ *     </extension>
+ *   </complexContent>
+ * </complexType>
+ * }</pre>
+ */
 @Builder
 @Getter
 @Jacksonized

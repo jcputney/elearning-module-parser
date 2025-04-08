@@ -24,9 +24,9 @@ import java.util.Map;
  * detection process.
  *
  * <p>This exception is typically thrown by
- * {@link dev.jcputney.elearning.parser.util.ModuleTypeDetector} implementations when they are
- * unable to determine the type of an eLearning module (SCORM 1.2, SCORM 2004, AICC, cmi5) based on
- * the module's structure and manifest files.
+ * {@link dev.jcputney.elearning.parser.api.ModuleTypeDetector} implementations when they're unable
+ * to determine the type of an eLearning module (SCORM 1.2, SCORM 2004, AICC, cmi5) based on the
+ * module's structure and manifest files.
  *
  * <p>Common scenarios that might cause this exception include:
  * <ul>

@@ -28,7 +28,7 @@ import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
  * the module.
  * </p>
  * <p>
- * Plugins are registered with the {@link dev.jcputney.elearning.parser.util.ModuleTypeDetector} and
+ * Plugins are registered with the {@link dev.jcputney.elearning.parser.api.ModuleTypeDetector} and
  * are called in order of priority until one of them successfully detects a module type.
  * </p>
  */
