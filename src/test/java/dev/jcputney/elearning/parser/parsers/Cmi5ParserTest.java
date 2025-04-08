@@ -19,32 +19,50 @@ package dev.jcputney.elearning.parser.parsers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.LocalFileAccess;
 import dev.jcputney.elearning.parser.input.cmi5.AU;
 import dev.jcputney.elearning.parser.input.cmi5.Block;
 import dev.jcputney.elearning.parser.input.cmi5.Cmi5Manifest;
+import dev.jcputney.elearning.parser.input.cmi5.Course;
 import dev.jcputney.elearning.parser.input.cmi5.types.LangString;
 import dev.jcputney.elearning.parser.input.cmi5.types.LaunchMethod;
 import dev.jcputney.elearning.parser.input.cmi5.types.MoveOn;
 import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
 import dev.jcputney.elearning.parser.output.metadata.cmi5.Cmi5Metadata;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Tests for the Cmi5Parser class.
+ * Comprehensive tests for the Cmi5Parser class.
  */
 public class Cmi5ParserTest {
 
   public static final String EN_US = "en-US";
+  private static final String BASE_MODULE_PATH = "src/test/resources/modules/cmi5";
 
+  /**
+   * Tests parsing a CMI5 course with mastery score in framed style.
+   */
   @Test
   void testParseCmi5CourseMasteryscoreFramed() throws ModuleParsingException {
-    String modulePath = "src/test/resources/modules/cmi5/masteryscore_framed";
+    String modulePath = BASE_MODULE_PATH + "/masteryscore_framed";
     Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(modulePath));
     Cmi5Metadata metadata = parser.parse();
     assertNotNull(metadata);
+    assertEquals(ModuleType.CMI5, metadata.getModuleType());
+
     Cmi5Manifest manifest = metadata.getManifest();
     assertNotNull(manifest);
 
@@ -61,9 +79,12 @@ public class Cmi5ParserTest {
     assertEquals(LaunchMethod.OWN_WINDOW, manifest.getAssignableUnits().get(0).getLaunchMethod());
   }
 
+  /**
+   * Tests parsing a CMI5 course with mastery score in responsive style.
+   */
   @Test
   void testParseCmi5CourseMasteryscoreResponsive() throws ModuleParsingException {
-    String modulePath = "src/test/resources/modules/cmi5/masteryscore_responsive";
+    String modulePath = BASE_MODULE_PATH + "/masteryscore_responsive";
     Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(modulePath));
     Cmi5Metadata metadata = parser.parse();
     assertNotNull(metadata);
@@ -83,9 +104,12 @@ public class Cmi5ParserTest {
     assertEquals(LaunchMethod.OWN_WINDOW, manifest.getAssignableUnits().get(0).getLaunchMethod());
   }
 
+  /**
+   * Tests parsing a CMI5 course with multiple assignable units.
+   */
   @Test
   void testParseCmi5CourseMultiAuFramed() throws ModuleParsingException {
-    String modulePath = "src/test/resources/modules/cmi5/multi_au_framed";
+    String modulePath = BASE_MODULE_PATH + "/multi_au_framed";
     Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(modulePath));
     Cmi5Metadata metadata = parser.parse();
     assertNotNull(metadata);
@@ -106,9 +130,12 @@ public class Cmi5ParserTest {
     assertNull(manifest.getAssignableUnits().get(7).getLaunchMethod());
   }
 
+  /**
+   * Tests parsing a CMI5 course with pre/post tests.
+   */
   @Test
   void testParseCmi5CoursePrePostTestFramed() throws ModuleParsingException {
-    String modulePath = "src/test/resources/modules/cmi5/pre_post_test_framed";
+    String modulePath = BASE_MODULE_PATH + "/pre_post_test_framed";
     Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(modulePath));
     Cmi5Metadata metadata = parser.parse();
     assertNotNull(metadata);
@@ -180,5 +207,98 @@ public class Cmi5ParserTest {
     assertNotNull(preTestTitleLangString);
     assertEquals("Pre-test", preTestTitleLangString.getValue());
     assertEquals(EN_US, preTestTitleLangString.getLang());
+  }
+
+  /**
+   * Tests that the parser correctly handles a missing manifest file.
+   */
+  @Test
+  void testParse_withMissingManifestFile_throwsException(@TempDir Path tempDir) 
+      throws IOException {
+    // Create an empty directory with no cmi5.xml file
+    Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(tempDir.toString()));
+    assertThrows(ModuleParsingException.class, parser::parse);
+  }
+
+  /**
+   * Tests that the parser correctly handles an invalid manifest file.
+   */
+  @Test
+  void testParse_withInvalidManifestFile_throwsException(@TempDir Path tempDir) 
+      throws IOException {
+    // Create a directory with an invalid cmi5.xml file
+    Path manifestPath = tempDir.resolve("cmi5.xml");
+    Files.writeString(manifestPath, "<invalid>This is not a valid CMI5 manifest</invalid>");
+
+    Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(tempDir.toString()));
+    assertThrows(ModuleParsingException.class, parser::parse);
+  }
+
+  /**
+   * Tests that the parser correctly handles a minimal valid CMI5 package.
+   */
+  @Test
+  void testParse_withMinimalValidPackage_succeeds(@TempDir Path tempDir) 
+      throws IOException, ModuleParsingException {
+    // Create a minimal valid CMI5 package
+    // Write the manifest to a file
+    Path manifestPath = tempDir.resolve("cmi5.xml");
+    String manifestXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        + "<courseStructure xmlns=\"https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd\">\n"
+        + "  <course id=\"https://example.com/minimal-course\">\n"
+        + "    <title>\n"
+        + "      <langstring lang=\"en-US\">Minimal CMI5 Course</langstring>\n"
+        + "    </title>\n"
+        + "  </course>\n"
+        + "  <au id=\"https://example.com/minimal-course/au1\" moveOn=\"Completed\">\n"
+        + "    <title>\n"
+        + "      <langstring lang=\"en-US\">Minimal AU</langstring>\n"
+        + "    </title>\n"
+        + "    <url>index.html</url>\n"
+        + "  </au>\n"
+        + "</courseStructure>";
+    Files.writeString(manifestPath, manifestXml);
+
+    // Create a minimal index.html file
+    Path indexPath = tempDir.resolve("index.html");
+    Files.writeString(indexPath, "<html><body>Minimal CMI5 Course</body></html>");
+
+    Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(tempDir.toString()));
+    Cmi5Metadata metadata = parser.parse();
+
+    assertNotNull(metadata);
+    assertEquals(ModuleType.CMI5, metadata.getModuleType());
+
+    Cmi5Manifest parsedManifest = metadata.getManifest();
+    assertNotNull(parsedManifest);
+    assertEquals("https://example.com/minimal-course", parsedManifest.getCourse().getId());
+    assertEquals(1, parsedManifest.getAssignableUnits().size());
+    assertEquals("https://example.com/minimal-course/au1", 
+        parsedManifest.getAssignableUnits().get(0).getId());
+    assertEquals(MoveOn.COMPLETED, parsedManifest.getAssignableUnits().get(0).getMoveOn());
+  }
+
+  /**
+   * Tests that the parser correctly handles a CMI5 package with missing required fields.
+   */
+  @Test
+  void testParse_withMissingRequiredFields_throwsException(@TempDir Path tempDir) 
+      throws IOException {
+    // Create a CMI5 package with missing required fields
+    String manifestXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        + "<courseStructure xmlns=\"https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd\">\n"
+        + "  <course id=\"https://example.com/minimal-course\">\n"
+        + "    <!-- Missing title -->\n"
+        + "  </course>\n"
+        + "  <au id=\"https://example.com/minimal-course/au1\" moveOn=\"Completed\">\n"
+        + "    <!-- Missing title -->\n"
+        + "    <!-- Missing url -->\n"
+        + "  </au>\n"
+        + "</courseStructure>";
+    Path manifestPath = tempDir.resolve("cmi5.xml");
+    Files.writeString(manifestPath, manifestXml);
+
+    Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(tempDir.toString()));
+    assertThrows(ModuleParsingException.class, parser::parse);
   }
 }

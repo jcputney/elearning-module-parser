@@ -128,23 +128,151 @@ the appropriate content/lesson flow.
 
 ```java
 public void launchSCO(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    // 1. Determine the next SCO (sequencing engine / user action)
-    Activity nextActivity = sequencingEngine.resolveNextActivity(currentActivity, navRequest);
-    
-    // 2. Resolve launch info
-    String launchUrl = contentBasePath + nextActivity.getResource().getHref();
-    
-    // 3. Manage attempt
-    Attempt attempt = loadOrCreateAttempt(userId, nextActivity);
-    if (attempt.isNew()) {
-        attempt.setEntry("ab-initio");
-        attempt.incrementAttemptCount();
-    } else if (attempt.isSuspended()) {
-        attempt.setEntry("resume");
-    }
-    saveAttempt(attempt);
-    
-    // 4. Output frameset with SCORM API in the parent
-    resp.getWriter().println("<html><head><script src='scorm_api_adapter.js'></script></head>");
-    resp.getWriter().println("<frameset><frame src='" + launchUrl + "' name='scoFrame'/></frameset></html>");
+   // 1. Determine the next SCO (sequencing engine / user action)
+   Activity nextActivity = sequencingEngine.resolveNextActivity(currentActivity, navRequest);
+
+   // 2. Resolve launch info
+   String launchUrl = contentBasePath + nextActivity.getResource().getHref();
+
+   // 3. Manage attempt
+   Attempt attempt = loadOrCreateAttempt(userId, nextActivity);
+   if (attempt.isNew()) {
+      attempt.setEntry("ab-initio");
+      attempt.incrementAttemptCount();
+   } else if (attempt.isSuspended()) {
+      attempt.setEntry("resume");
+   }
+   saveAttempt(attempt);
+
+   // 4. Output frameset with SCORM API in the parent
+   resp.getWriter().println("<html><head><script src='scorm_api_adapter.js'></script></head>");
+   resp.getWriter()
+       .println("<frameset><frame src='" + launchUrl + "' name='scoFrame'/></frameset></html>");
 }
+```
+
+## 6. Runtime Communication and LMS Duties
+
+Once the SCO is launched, it calls:
+
+1. **`Initialize("")`**
+   - The LMS marks the attempt as active and returns `"true"`.
+   - This may involve noting a start timestamp for the session or confirming the previously
+     determined attempt state (e.g., `entry="resume"` or `"ab-initio"`).
+
+2. **`GetValue(...)` / `SetValue(...)`**
+   - The SCO reads or writes runtime data. The LMS enforces SCORM 2004 data model rules (data types,
+     read/write permissions, etc.).
+   - Examples:
+      - `GetValue("cmi.suspend_data")` → returns any stored suspend data.
+      - `SetValue("cmi.location", "Page5")` → updates the learner’s bookmark for that SCO attempt.
+      - `SetValue("cmi.completion_status", "completed")` → signals the LMS to mark the SCO as
+        complete.
+   - If the SCO tries to set a read-only element or invalid format, the LMS returns an error code.
+
+3. **(Optional) `Commit("")`**
+   - If the SCO calls `Commit`, the LMS ensures any pending changes are permanently saved.
+   - Many modern LMS implementations save continuously (on each `SetValue` call) but still return
+     `"true"` to indicate a successful commit.
+
+4. **`Terminate("")`**
+   - The SCO calls this to end its session. The LMS finalizes the attempt and triggers *
+     *postcondition rules**.
+   - Once terminated, further `SetValue` calls are invalid.
+   - The LMS typically checks if `cmi.exit="suspend"` or normal exit, then updates attempt status
+     accordingly (e.g., keep attempt open or finalize it).
+   - After termination, the LMS decides if sequencing moves on to another SCO or if the course
+     session ends.
+
+Throughout this flow, the **server** must maintain current tracking data so it can apply sequencing
+logic accurately when needed.
+
+---
+
+## 7. Applying Sequencing at the Server
+
+After each SCO attempt ends or a navigation request is triggered:
+
+1. **End Current Activity**
+   - Mark the SCO’s attempt as complete/incomplete, passed/failed, or suspended (per final data from
+     `SetValue` calls).
+
+2. **Check Postcondition Rules**
+   - e.g., “If `success_status` = failed, then `retry`” or “If completed, then `exitAll`.”
+   - These can override the requested navigation path.
+
+3. **Resolve the Next Activity**
+   - For “Continue”/“Previous,” find the appropriate sibling in the activity tree.
+   - For “Choice”/“Jump,” navigate to the targeted activity ID (if allowed by control modes).
+   - Consider precondition rules that might skip or disable certain activities.
+
+4. **Update Rollup**
+   - If a child’s status changed, recalculate the parent’s status. e.g., if all children of a
+     cluster are complete, the cluster is complete.
+   - (4th Ed) Weighted rollup uses `cmi.progress_measure` from children to compute overall progress.
+
+5. **Launch or Conclude**
+   - If another SCO is selected, initiate that launch sequence (new attempt or resume).
+   - If no activities remain or `exitAll` is triggered, the LMS ends the course session.
+
+**Implementation**: Follow SCORM 2004’s official pseudocode to handle edge cases consistently,
+ensuring correct transitions even in complex course structures.
+
+---
+
+## 8. Resuming a Suspended Course
+
+When a course is **suspended** (e.g., via `SuspendAll` or abrupt closure with `cmi.exit="suspend"`):
+
+- The LMS preserves the **entire tracking state** for each activity (completion, score,
+  suspend_data, etc.).
+- On next launch, the LMS sees that an attempt is suspended. It reassigns `cmi.entry="resume"` for
+  that SCO and provides the previous `cmi.suspend_data`.
+- This way, the learner returns exactly where they left off.
+- Rollup statuses are also maintained, so any completed activities remain completed.
+- If the learner restarts the course from scratch, the LMS may create a **new** attempt (clearing
+  suspend_data), unless the design calls for resuming by default.
+
+---
+
+## 9. Key Edition-Specific Notes
+
+1. **SCORM 2004 1st/2nd Edition**
+   - No formal `jump` request; `SuspendAll` from SCO was limited or ambiguous.
+   - Core sequencing structure is largely the same.
+
+2. **SCORM 2004 3rd Edition**
+   - Officially allows SCOs to call `adl.nav.request="suspendAll"` (SCO-initiated suspend).
+   - Refines data model behavior and clarifies error codes.
+
+3. **SCORM 2004 4th Edition**
+   - Adds **`jump`** navigation request (bypassing normal choice constraints).
+   - Weighted rollup for progress measure.
+   - **Shared data buckets** for storing data across SCOs (`adl.data`).
+   - More comprehensive handling of global objectives.
+   - Backward-compatible with earlier editions.
+
+If you implement the 4th Edition features, you effectively support all earlier SCORM 2004 content.
+
+---
+
+## 10. Summary
+
+In summary, **server-side** handling of SCORM 2004 modules with sequencing entails:
+
+1. **Import**: Extract activity tree, SCO resources, and all sequencing definitions (manifest).
+2. **Tracking Model**: Maintain per-activity state (attempts, status, objectives, etc.) and global
+   data.
+3. **Launch**: Determine the SCO to deliver based on sequencing; set or resume attempt data (
+   `cmi.entry`, `cmi.suspend_data`), and serve the **SCORM API** to the browser.
+4. **Runtime**: Handle `Initialize`, `GetValue`, `SetValue`, `Commit`, `Terminate` calls in real
+   time, updating tracking data.
+5. **Sequencing**: Whenever an activity ends or nav request arises, evaluate rules (pre/post/exit),
+   check rollup, and launch the next SCO or end the course.
+6. **Resume**: If suspended, restore the entire state on next session, continuing from the last
+   point.
+7. **Edition Differences**: Implement 4th Ed features (jump, shared data, weighted rollup) for full
+   compatibility.
+
+Doing so ensures a **standards-compliant** SCORM 2004 experience, allowing content from any SCORM
+2004 edition to run properly under your LMS’s server-side sequencing engine.
