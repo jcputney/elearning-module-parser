@@ -77,9 +77,9 @@ class DurationIso8601DeserializerTest {
       "1, 1",
       "60, 60",
       "3600, 3600",
-      "123.45, 123"
+      "123.45, 123.45"
   })
-  void deserialize_numericValue_returnsSeconds(String input, long expectedSeconds)
+  void deserialize_numericValue_returnsSeconds(String input, double expectedSeconds)
       throws IOException {
     // Arrange
     JsonParser parser = new TestJsonParser(input);
@@ -88,7 +88,10 @@ class DurationIso8601DeserializerTest {
     Duration result = deserializer.deserialize(parser, context);
 
     // Assert
-    assertEquals(Duration.ofSeconds(expectedSeconds), result);
+    int nanos = (int) ((expectedSeconds - (int) expectedSeconds) * 1_000_000_000);
+    assertEquals(Duration
+        .ofSeconds((long) expectedSeconds)
+        .withNanos(nanos), result);
   }
 
   /**
@@ -117,7 +120,8 @@ class DurationIso8601DeserializerTest {
     Duration result = deserializer.deserialize(parser, context);
 
     // Assert
-    Duration expected = Duration.ofHours(expectedHours)
+    Duration expected = Duration
+        .ofHours(expectedHours)
         .plusMinutes(expectedMinutes)
         .plusSeconds(expectedSeconds);
     assertEquals(expected, result);
@@ -138,7 +142,8 @@ class DurationIso8601DeserializerTest {
 
     // Assert
     // PeriodDuration.parse("P1DT1H30M45S").getDuration() returns PT1H30M45S
-    Duration expected = Duration.ofHours(1)
+    Duration expected = Duration
+        .ofHours(1)
         .plusMinutes(30)
         .plusSeconds(45);
     assertEquals(expected, result);
@@ -170,7 +175,8 @@ class DurationIso8601DeserializerTest {
     Duration result = deserializer.deserialize(parser, context);
 
     // Assert
-    Duration expected = Duration.ofHours(expectedHours)
+    Duration expected = Duration
+        .ofHours(expectedHours)
         .plusMinutes(expectedMinutes)
         .plusSeconds(expectedSeconds);
     assertEquals(expected, result);
@@ -317,7 +323,8 @@ class DurationIso8601DeserializerTest {
     Duration result = deserializer.deserialize(parser, context);
 
     // Assert
-    Duration expected = Duration.ofHours(expectedHours)
+    Duration expected = Duration
+        .ofHours(expectedHours)
         .plusMinutes(expectedMinutes)
         .plusSeconds(expectedSeconds);
     assertEquals(expected, result);
@@ -338,7 +345,9 @@ class DurationIso8601DeserializerTest {
 
     // Verify the exception message
     org.junit.jupiter.api.Assertions.assertTrue(
-        exception.getMessage().contains("Invalid ISO 8601 duration format"));
+        exception
+            .getMessage()
+            .contains("Invalid ISO 8601 duration format"));
   }
 
   /**

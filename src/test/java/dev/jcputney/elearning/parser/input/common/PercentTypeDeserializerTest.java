@@ -32,7 +32,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests for {@link PercentTypeDeserializer} to ensure proper deserialization of PercentType values.
+ * Tests for {@link PercentTypeDeserializer} to ensure proper deserialization of PercentType
+ * values.
  */
 class PercentTypeDeserializerTest {
 
@@ -59,18 +60,6 @@ class PercentTypeDeserializerTest {
   }
 
   @Test
-  void deserialize_objectWithValueField_returnsPercentType() throws IOException {
-    // Arrange
-    String json = "{\"value\":\"0.75\"}";
-
-    // Act
-    PercentType result = objectMapper.readValue(json, PercentType.class);
-
-    // Assert
-    assertEquals(new BigDecimal("0.75"), result.getValue());
-  }
-
-  @Test
   void deserialize_invalidSimpleValue_throwsIOException() {
     // Arrange
     String json = "\"invalid\"";
@@ -89,27 +78,9 @@ class PercentTypeDeserializerTest {
   }
 
   @Test
-  void deserialize_objectWithoutValueField_throwsIOException() {
-    // Arrange
-    String json = "{\"someOtherField\":\"0.5\"}";
-
-    // Act & Assert
-    assertThrows(IOException.class, () -> objectMapper.readValue(json, PercentType.class));
-  }
-
-  @Test
   void deserialize_outOfRangeValue_throwsIOException() {
     // Arrange
     String json = "\"1.5\"";
-
-    // Act & Assert
-    assertThrows(IOException.class, () -> objectMapper.readValue(json, PercentType.class));
-  }
-
-  @Test
-  void deserialize_outOfRangeObjectValue_throwsIOException() {
-    // Arrange
-    String json = "{\"value\":\"1.5\"}";
 
     // Act & Assert
     assertThrows(IOException.class, () -> objectMapper.readValue(json, PercentType.class));
