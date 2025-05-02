@@ -29,6 +29,8 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the delivery controls for a learning activity within the SCORM IMS Simple Sequencing
@@ -110,5 +112,33 @@ public class DeliveryControls {
   @SuppressWarnings("unused")
   public DeliveryControls() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    DeliveryControls that = (DeliveryControls) o;
+
+    return new EqualsBuilder()
+        .append(tracked, that.tracked)
+        .append(completionSetByContent, that.completionSetByContent)
+        .append(objectiveSetByContent, that.objectiveSetByContent)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(tracked)
+        .append(completionSetByContent)
+        .append(objectiveSetByContent)
+        .toHashCode();
   }
 }

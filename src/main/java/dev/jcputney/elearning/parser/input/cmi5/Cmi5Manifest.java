@@ -32,6 +32,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the root element of a CMI5 course structure manifest. Implements the
@@ -121,7 +123,8 @@ public class Cmi5Manifest implements PackageManifest {
    */
   @Override
   public String getTitle() {
-    return Optional.ofNullable(course)
+    return Optional
+        .ofNullable(course)
         .map(Course::getTitle)
         .map(TextType::getStrings)
         .filter(strings -> !strings.isEmpty())
@@ -137,7 +140,8 @@ public class Cmi5Manifest implements PackageManifest {
    */
   @Override
   public String getDescription() {
-    return Optional.ofNullable(course)
+    return Optional
+        .ofNullable(course)
         .map(Course::getDescription)
         .map(TextType::getStrings)
         .filter(strings -> !strings.isEmpty())
@@ -155,7 +159,8 @@ public class Cmi5Manifest implements PackageManifest {
   @Override
   public String getLaunchUrl() {
     // First try to get the URL from root-level AUs
-    String rootLevelUrl = Optional.ofNullable(assignableUnits)
+    String rootLevelUrl = Optional
+        .ofNullable(assignableUnits)
         .filter(units -> !units.isEmpty())
         .map(units -> units.get(0))
         .map(AU::getUrl)
@@ -163,7 +168,8 @@ public class Cmi5Manifest implements PackageManifest {
 
     // If no root-level AUs, try to get the URL from the first block's AUs
     if (rootLevelUrl == null) {
-      return Optional.ofNullable(blocks)
+      return Optional
+          .ofNullable(blocks)
           .filter(blockList -> !blockList.isEmpty())
           .map(blockList -> blockList.get(0))
           .map(Block::getAssignableUnits)
@@ -184,7 +190,8 @@ public class Cmi5Manifest implements PackageManifest {
    */
   @Override
   public String getIdentifier() {
-    return Optional.ofNullable(course)
+    return Optional
+        .ofNullable(course)
         .map(Course::getId)
         .orElse(null);
   }
@@ -202,5 +209,35 @@ public class Cmi5Manifest implements PackageManifest {
   @Override
   public Duration getDuration() {
     return Duration.ZERO;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Cmi5Manifest that = (Cmi5Manifest) o;
+
+    return new EqualsBuilder()
+        .append(course, that.course)
+        .append(objectives, that.objectives)
+        .append(blocks, that.blocks)
+        .append(assignableUnits, that.assignableUnits)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(course)
+        .append(objectives)
+        .append(blocks)
+        .append(assignableUnits)
+        .toHashCode();
   }
 }

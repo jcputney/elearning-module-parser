@@ -30,6 +30,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the relationship information about a learning object in a Learning Object Metadata
@@ -98,5 +100,31 @@ public class Relation {
   @SuppressWarnings("unused")
   public Relation() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Relation relation = (Relation) o;
+
+    return new EqualsBuilder()
+        .append(kind, relation.kind)
+        .append(resource, relation.resource)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(kind)
+        .append(resource)
+        .toHashCode();
   }
 }

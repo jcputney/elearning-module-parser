@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.Duration;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -40,6 +41,11 @@ class DurationHHMMSSDeserializerTest {
   @NullAndEmptySource
   void parseDuration_nullOrEmpty_returnsZero(String input) {
     assertEquals(Duration.ZERO, DurationHHMMSSDeserializer.parseDuration(input));
+  }
+
+  @Test
+  void parseDuration_semiColons_returnsZero() {
+    assertEquals(Duration.ZERO, DurationHHMMSSDeserializer.parseDuration("::"));
   }
 
   /**

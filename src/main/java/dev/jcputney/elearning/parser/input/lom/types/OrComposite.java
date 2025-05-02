@@ -23,6 +23,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an <code>orComposite</code> element in the LOM schema, defining a set of conditions
@@ -121,5 +123,35 @@ public class OrComposite {
    */
   public OrComposite() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    OrComposite that = (OrComposite) o;
+
+    return new EqualsBuilder()
+        .append(type, that.type)
+        .append(name, that.name)
+        .append(minimumVersion, that.minimumVersion)
+        .append(maximumVersion, that.maximumVersion)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(type)
+        .append(name)
+        .append(minimumVersion)
+        .append(maximumVersion)
+        .toHashCode();
   }
 }

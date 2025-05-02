@@ -31,6 +31,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the {@code <resources>} element in a SCORM 1.2 manifest file.
@@ -95,8 +97,35 @@ public class Scorm12Resources {
     if (id == null || resourceList == null) {
       return Optional.empty();
     }
-    return resourceList.stream()
+    return resourceList
+        .stream()
         .filter(resource -> id.equals(resource.getIdentifier()))
         .findFirst();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Scorm12Resources that = (Scorm12Resources) o;
+
+    return new EqualsBuilder()
+        .append(base, that.base)
+        .append(resourceList, that.resourceList)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(base)
+        .append(resourceList)
+        .toHashCode();
   }
 }

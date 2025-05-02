@@ -27,6 +27,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>scoExitActionSpec</strong> complex type.</p>
@@ -65,5 +67,31 @@ public class ScoExitActionSpec {
    */
   public ScoExitActionSpec() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    ScoExitActionSpec that = (ScoExitActionSpec) o;
+
+    return new EqualsBuilder()
+        .append(satisfied, that.satisfied)
+        .append(notSatisfied, that.notSatisfied)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(satisfied)
+        .append(notSatisfied)
+        .toHashCode();
   }
 }

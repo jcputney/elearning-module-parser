@@ -32,6 +32,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the classification information about a learning object in a Learning Object Metadata
@@ -134,5 +136,35 @@ public class Classification {
    */
   public Classification() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Classification that = (Classification) o;
+
+    return new EqualsBuilder()
+        .append(purpose, that.purpose)
+        .append(taxonPaths, that.taxonPaths)
+        .append(description, that.description)
+        .append(keywords, that.keywords)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(purpose)
+        .append(taxonPaths)
+        .append(description)
+        .append(keywords)
+        .toHashCode();
   }
 }

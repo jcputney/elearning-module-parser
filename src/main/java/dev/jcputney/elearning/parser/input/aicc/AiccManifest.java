@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.aicc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import java.time.Duration;
@@ -25,6 +26,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the AICC manifest for a course.
@@ -97,7 +100,8 @@ public class AiccManifest implements PackageManifest {
       }
     }
 
-    CourseStructure root = courseStructures.stream()
+    CourseStructure root = courseStructures
+        .stream()
         .filter(cs -> cs.getBlock().equalsIgnoreCase("ROOT"))
         .findFirst()
         .orElse(null);
@@ -110,7 +114,8 @@ public class AiccManifest implements PackageManifest {
       throw new ModuleParsingException("No root assignable unit found.");
     }
 
-    AssignableUnit rootAssignableUnit = assignableUnits.stream()
+    AssignableUnit rootAssignableUnit = assignableUnits
+        .stream()
         .filter(au -> au.getSystemId().equals(rootAssignableUnitId))
         .findFirst()
         .orElseThrow(() -> new ModuleParsingException(
@@ -120,32 +125,70 @@ public class AiccManifest implements PackageManifest {
   }
 
   @Override
+  @JsonIgnore
   public String getTitle() {
     return this.course.getCourse().getCourseTitle();
   }
 
   @Override
+  @JsonIgnore
   public String getDescription() {
     return this.course.getCourseDescription();
   }
 
   @Override
+  @JsonIgnore
   public String getLaunchUrl() {
     return launchUrl;
   }
 
   @Override
+  @JsonIgnore
   public String getIdentifier() {
     return this.course.getCourse().getCourseId();
   }
 
   @Override
+  @JsonIgnore
   public String getVersion() {
     return this.course.getCourse().getVersion();
   }
 
   @Override
+  @JsonIgnore
   public Duration getDuration() {
     return Duration.ZERO;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    AiccManifest that = (AiccManifest) o;
+
+    return new EqualsBuilder()
+        .append(course, that.course)
+        .append(assignableUnits, that.assignableUnits)
+        .append(descriptors, that.descriptors)
+        .append(courseStructures, that.courseStructures)
+        .append(launchUrl, that.launchUrl)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(course)
+        .append(assignableUnits)
+        .append(descriptors)
+        .append(courseStructures)
+        .append(launchUrl)
+        .toHashCode();
   }
 }

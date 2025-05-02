@@ -30,6 +30,8 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the <code>organization</code> element in SCORM 1.2.
@@ -110,5 +112,37 @@ public class Scorm12Organization {
   @SuppressWarnings("unused")
   public Scorm12Organization() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Scorm12Organization that = (Scorm12Organization) o;
+
+    return new EqualsBuilder()
+        .append(identifier, that.identifier)
+        .append(structure, that.structure)
+        .append(title, that.title)
+        .append(metadata, that.metadata)
+        .append(items, that.items)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(identifier)
+        .append(structure)
+        .append(title)
+        .append(metadata)
+        .append(items)
+        .toHashCode();
   }
 }

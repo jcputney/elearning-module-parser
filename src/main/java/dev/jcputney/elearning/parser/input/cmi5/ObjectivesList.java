@@ -28,6 +28,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the objectives section of a CMI5 course structure, containing a list of defined
@@ -86,4 +88,27 @@ public class ObjectivesList {
     // Default constructor
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    ObjectivesList that = (ObjectivesList) o;
+
+    return new EqualsBuilder()
+        .append(objectives, that.objectives)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(objectives)
+        .toHashCode();
+  }
 }

@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.NonNull;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A simple implementation of the MetadataComponent interface that stores metadata in a map.
@@ -82,5 +84,29 @@ public class SimpleMetadata implements MetadataComponent {
   @Override
   public boolean hasMetadata(String key) {
     return metadata.containsKey(key);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    SimpleMetadata that = (SimpleMetadata) o;
+
+    return new EqualsBuilder()
+        .append(metadata, that.metadata)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(metadata)
+        .toHashCode();
   }
 }

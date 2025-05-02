@@ -30,6 +30,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the rights information of a learning object, including cost, copyright, and
@@ -114,5 +116,33 @@ public class Rights {
   @SuppressWarnings("unused")
   public Rights() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Rights rights = (Rights) o;
+
+    return new EqualsBuilder()
+        .append(cost, rights.cost)
+        .append(copyrightAndOtherRestrictions, rights.copyrightAndOtherRestrictions)
+        .append(descriptions, rights.descriptions)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(cost)
+        .append(copyrightAndOtherRestrictions)
+        .append(descriptions)
+        .toHashCode();
   }
 }

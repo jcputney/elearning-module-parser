@@ -32,6 +32,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The root element of a Learning Object Metadata (LOM) document. This is the entry point for
@@ -241,11 +243,14 @@ public class LOM {
    */
   @JsonIgnore
   public String getTitle() {
-    return Optional.ofNullable(general)
+    return Optional
+        .ofNullable(general)
         .map(General::getTitle)
         .map(UnboundLangString::getLangStrings)
         .filter(titles -> !titles.isEmpty())
-        .map(titles -> titles.get(0).getValue())
+        .map(titles -> titles
+            .get(0)
+            .getValue())
         .orElse(null);
   }
 
@@ -256,11 +261,54 @@ public class LOM {
    */
   @JsonIgnore
   public String getDescription() {
-    return Optional.ofNullable(general)
+    return Optional
+        .ofNullable(general)
         .map(General::getDescription)
         .map(UnboundLangString::getLangStrings)
         .filter(descriptions -> !descriptions.isEmpty())
-        .map(descriptions -> descriptions.get(0).getValue())
+        .map(descriptions -> descriptions
+            .get(0)
+            .getValue())
         .orElse(null);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    LOM lom = (LOM) o;
+
+    return new EqualsBuilder()
+        .append(general, lom.general)
+        .append(lifecycle, lom.lifecycle)
+        .append(metaMetadata, lom.metaMetadata)
+        .append(technical, lom.technical)
+        .append(educational, lom.educational)
+        .append(rights, lom.rights)
+        .append(relations, lom.relations)
+        .append(annotations, lom.annotations)
+        .append(classifications, lom.classifications)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(general)
+        .append(lifecycle)
+        .append(metaMetadata)
+        .append(technical)
+        .append(educational)
+        .append(rights)
+        .append(relations)
+        .append(annotations)
+        .append(classifications)
+        .toHashCode();
   }
 }

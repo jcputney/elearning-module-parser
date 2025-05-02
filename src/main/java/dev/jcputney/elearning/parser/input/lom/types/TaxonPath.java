@@ -28,6 +28,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a taxon path in the Learning Object Metadata (LOM) schema. A taxon path defines a
@@ -98,5 +100,33 @@ public class TaxonPath {
    */
   public TaxonPath() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    TaxonPath taxonPath = (TaxonPath) o;
+
+    return new EqualsBuilder()
+        .append(source, taxonPath.source)
+        .append(taxons, taxonPath.taxons)
+        .append(customElements, taxonPath.customElements)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(source)
+        .append(taxons)
+        .append(customElements)
+        .toHashCode();
   }
 }

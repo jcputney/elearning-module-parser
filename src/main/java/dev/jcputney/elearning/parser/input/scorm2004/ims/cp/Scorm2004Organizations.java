@@ -31,6 +31,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the hierarchical structure of organizations in the content package. Organizations
@@ -75,8 +77,11 @@ public class Scorm2004Organizations {
    */
   @JsonIgnore
   public Scorm2004Organization getOrganizationById(String id) {
-    return organizationList.stream()
-        .filter(org -> org.getIdentifier().equals(id))
+    return organizationList
+        .stream()
+        .filter(org -> org
+            .getIdentifier()
+            .equals(id))
         .findFirst()
         .orElse(null);
   }
@@ -99,18 +104,25 @@ public class Scorm2004Organizations {
    */
   @JsonIgnore
   public Scorm2004Item getItemById(String itemId) {
-    Scorm2004Item result = organizationList.stream()
+    Scorm2004Item result = organizationList
+        .stream()
         .map(Scorm2004Organization::getItems)
         .flatMap(List::stream)
-        .filter(item -> item.getIdentifier().equals(itemId))
+        .filter(item -> item
+            .getIdentifier()
+            .equals(itemId))
         .findFirst()
         .orElse(null);
 
     if (result == null) {
       // search child items
       for (Scorm2004Organization org : organizationList) {
-        result = org.getItems().stream()
-            .filter(item -> item.getIdentifier().equals(itemId))
+        result = org
+            .getItems()
+            .stream()
+            .filter(item -> item
+                .getIdentifier()
+                .equals(itemId))
             .findFirst()
             .orElse(null);
 
@@ -121,5 +133,31 @@ public class Scorm2004Organizations {
     }
 
     return result;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Scorm2004Organizations that = (Scorm2004Organizations) o;
+
+    return new EqualsBuilder()
+        .append(defaultOrganization, that.defaultOrganization)
+        .append(organizationList, that.organizationList)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(defaultOrganization)
+        .append(organizationList)
+        .toHashCode();
   }
 }

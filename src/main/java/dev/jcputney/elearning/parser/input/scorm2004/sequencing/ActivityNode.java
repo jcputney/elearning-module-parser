@@ -29,17 +29,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.Getter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a node in the SCORM 2004 Activity Tree.
  * <p>
- * An ActivityNode can represent either an organization or an item in the SCORM 2004 manifest.
- * It contains references to its parent and children, as well as the sequencing information
- * associated with the node.
+ * An ActivityNode can represent either an organization or an item in the SCORM 2004 manifest. It
+ * contains references to its parent and children, as well as the sequencing information associated
+ * with the node.
  * </p>
  */
 @Getter
 public class ActivityNode {
+
   private final String identifier;
   private final String title;
   private final ActivityNode parent;
@@ -48,6 +51,28 @@ public class ActivityNode {
   private final boolean isLeaf;
   private final String resourceIdentifier;
   private final boolean isVisible;
+
+  /**
+   * Constructor for ActivityNode.
+   *
+   * @param identifier The identifier of the node
+   * @param title The title of the node
+   * @param parent The parent node
+   * @param sequencing The sequencing information
+   * @param isLeaf Whether this node is a leaf node
+   * @param resourceIdentifier The identifier of the associated resource
+   * @param isVisible Whether this node is visible
+   */
+  private ActivityNode(String identifier, String title, ActivityNode parent, Sequencing sequencing,
+      boolean isLeaf, String resourceIdentifier, boolean isVisible) {
+    this.identifier = identifier;
+    this.title = title;
+    this.parent = parent;
+    this.sequencing = sequencing;
+    this.isLeaf = isLeaf;
+    this.resourceIdentifier = resourceIdentifier;
+    this.isVisible = isVisible;
+  }
 
   /**
    * Creates an ActivityNode from a Scorm2004Organization.
@@ -75,7 +100,9 @@ public class ActivityNode {
    * @return The created ActivityNode
    */
   public static ActivityNode fromItem(Scorm2004Item item, ActivityNode parent) {
-    boolean isLeaf = item.getItems() == null || item.getItems().isEmpty();
+    boolean isLeaf = item.getItems() == null || item
+        .getItems()
+        .isEmpty();
     return new ActivityNode(
         item.getIdentifier(),
         item.getTitle(),
@@ -85,28 +112,6 @@ public class ActivityNode {
         item.getIdentifierRef(),
         item.isVisible()
     );
-  }
-
-  /**
-   * Constructor for ActivityNode.
-   *
-   * @param identifier The identifier of the node
-   * @param title The title of the node
-   * @param parent The parent node
-   * @param sequencing The sequencing information
-   * @param isLeaf Whether this node is a leaf node
-   * @param resourceIdentifier The identifier of the associated resource
-   * @param isVisible Whether this node is visible
-   */
-  private ActivityNode(String identifier, String title, ActivityNode parent, Sequencing sequencing,
-      boolean isLeaf, String resourceIdentifier, boolean isVisible) {
-    this.identifier = identifier;
-    this.title = title;
-    this.parent = parent;
-    this.sequencing = sequencing;
-    this.isLeaf = isLeaf;
-    this.resourceIdentifier = resourceIdentifier;
-    this.isVisible = isVisible;
   }
 
   /**
@@ -188,5 +193,43 @@ public class ActivityNode {
    */
   public String getTitle() {
     return title;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    ActivityNode that = (ActivityNode) o;
+
+    return new EqualsBuilder()
+        .append(isLeaf, that.isLeaf)
+        .append(isVisible, that.isVisible)
+        .append(identifier, that.identifier)
+        .append(title, that.title)
+        .append(parent, that.parent)
+        .append(children, that.children)
+        .append(sequencing, that.sequencing)
+        .append(resourceIdentifier, that.resourceIdentifier)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(identifier)
+        .append(title)
+        .append(parent)
+        .append(children)
+        .append(sequencing)
+        .append(isLeaf)
+        .append(resourceIdentifier)
+        .append(isVisible)
+        .toHashCode();
   }
 }

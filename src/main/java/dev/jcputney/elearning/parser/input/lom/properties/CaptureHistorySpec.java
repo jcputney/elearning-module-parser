@@ -27,6 +27,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>captureHistorySpec</strong> complex type.</p>
@@ -66,5 +68,31 @@ public class CaptureHistorySpec {
   @SuppressWarnings("unused")
   public CaptureHistorySpec() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    CaptureHistorySpec that = (CaptureHistorySpec) o;
+
+    return new EqualsBuilder()
+        .append(captureHistory, that.captureHistory)
+        .append(captureHistoryDetailed, that.captureHistoryDetailed)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(captureHistory)
+        .append(captureHistoryDetailed)
+        .toHashCode();
   }
 }

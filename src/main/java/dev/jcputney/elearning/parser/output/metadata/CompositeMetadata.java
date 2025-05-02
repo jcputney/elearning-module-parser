@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.NonNull;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A composite implementation of the MetadataComponent interface that can contain other metadata
@@ -107,5 +109,29 @@ public class CompositeMetadata implements MetadataComponent {
    */
   public List<MetadataComponent> getComponents() {
     return new ArrayList<>(components);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    CompositeMetadata that = (CompositeMetadata) o;
+
+    return new EqualsBuilder()
+        .append(components, that.components)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(components)
+        .toHashCode();
   }
 }

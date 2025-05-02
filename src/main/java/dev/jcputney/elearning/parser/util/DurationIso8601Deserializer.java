@@ -75,14 +75,19 @@ public class DurationIso8601Deserializer extends JsonDeserializer<Duration> {
     }
 
     if (NumberUtils.isParsable(durationString)) {
-      return Duration.ofSeconds((long) Double.parseDouble(durationString));
+      double seconds = Double.parseDouble(durationString);
+      return Duration
+          .ofSeconds((long) seconds)
+          .withNanos((int) ((seconds - (long) seconds) * 1_000_000_000));
     }
 
     try {
       if (!durationString.startsWith("P")) {
         return DurationHHMMSSDeserializer.parseDuration(durationString);
       }
-      return PeriodDuration.parse(durationString).getDuration();
+      return PeriodDuration
+          .parse(durationString)
+          .getDuration();
     } catch (NumberFormatException | DateTimeParseException e) {
       throw new IOException(
           "Invalid ISO 8601 duration format for java.time.Duration: " + durationString +

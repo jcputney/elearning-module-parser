@@ -29,6 +29,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a collection of auxiliary resources associated with a learning activity within the
@@ -72,5 +74,29 @@ public class AuxiliaryResources {
   @SuppressWarnings("unused")
   public AuxiliaryResources() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    AuxiliaryResources that = (AuxiliaryResources) o;
+
+    return new EqualsBuilder()
+        .append(auxiliaryResourceList, that.auxiliaryResourceList)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(auxiliaryResourceList)
+        .toHashCode();
   }
 }

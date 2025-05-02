@@ -29,6 +29,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the duration metadata of a resource, including the duration value in ISO 8601 format
@@ -90,5 +92,31 @@ public class LomDuration {
    */
   public LomDuration() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    LomDuration that = (LomDuration) o;
+
+    return new EqualsBuilder()
+        .append(duration, that.duration)
+        .append(description, that.description)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(duration)
+        .append(description)
+        .toHashCode();
   }
 }

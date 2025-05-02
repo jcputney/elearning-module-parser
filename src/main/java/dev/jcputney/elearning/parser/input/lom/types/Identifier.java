@@ -26,6 +26,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an identifier for a related resource.
@@ -63,5 +65,31 @@ public class Identifier {
    */
   public Identifier() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Identifier that = (Identifier) o;
+
+    return new EqualsBuilder()
+        .append(catalog, that.catalog)
+        .append(entry, that.entry)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(catalog)
+        .append(entry)
+        .toHashCode();
   }
 }

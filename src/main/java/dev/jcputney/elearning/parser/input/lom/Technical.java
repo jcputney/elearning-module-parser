@@ -33,6 +33,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the technical information about a learning object in a Learning Object Metadata (LOM)
@@ -205,5 +207,45 @@ public class Technical {
   @SuppressWarnings("unused")
   public Technical() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Technical technical = (Technical) o;
+
+    return new EqualsBuilder()
+        .append(format, technical.format)
+        .append(size, technical.size)
+        .append(location, technical.location)
+        .append(requirements, technical.requirements)
+        .append(installationRemarks, technical.installationRemarks)
+        .append(otherPlatformRequirements, technical.otherPlatformRequirements)
+        .append(duration, technical.duration)
+        .append(packageProperties, technical.packageProperties)
+        .append(customElements, technical.customElements)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(format)
+        .append(size)
+        .append(location)
+        .append(requirements)
+        .append(installationRemarks)
+        .append(otherPlatformRequirements)
+        .append(duration)
+        .append(packageProperties)
+        .append(customElements)
+        .toHashCode();
   }
 }

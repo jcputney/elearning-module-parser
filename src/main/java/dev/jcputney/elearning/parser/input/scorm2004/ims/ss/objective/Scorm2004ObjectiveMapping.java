@@ -27,6 +27,8 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a mapping from a local objective to a global objective within the SCORM IMS Simple
@@ -108,5 +110,37 @@ public class Scorm2004ObjectiveMapping {
   @SuppressWarnings("unused")
   public Scorm2004ObjectiveMapping() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Scorm2004ObjectiveMapping that = (Scorm2004ObjectiveMapping) o;
+
+    return new EqualsBuilder()
+        .append(readSatisfiedStatus, that.readSatisfiedStatus)
+        .append(readNormalizedMeasure, that.readNormalizedMeasure)
+        .append(writeSatisfiedStatus, that.writeSatisfiedStatus)
+        .append(writeNormalizedMeasure, that.writeNormalizedMeasure)
+        .append(targetObjectiveID, that.targetObjectiveID)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(targetObjectiveID)
+        .append(readSatisfiedStatus)
+        .append(readNormalizedMeasure)
+        .append(writeSatisfiedStatus)
+        .append(writeNormalizedMeasure)
+        .toHashCode();
   }
 }

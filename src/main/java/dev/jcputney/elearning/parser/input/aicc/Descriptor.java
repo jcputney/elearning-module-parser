@@ -27,6 +27,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the descriptor element in an AICC module.
@@ -69,6 +71,36 @@ public class Descriptor {
   @SuppressWarnings("unused")
   public Descriptor() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Descriptor that = (Descriptor) o;
+
+    return new EqualsBuilder()
+        .append(systemId, that.systemId)
+        .append(developerId, that.developerId)
+        .append(title, that.title)
+        .append(description, that.description)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(systemId)
+        .append(developerId)
+        .append(title)
+        .append(description)
+        .toHashCode();
   }
 
 }

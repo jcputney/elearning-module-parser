@@ -35,6 +35,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the <code>general</code> element in the LOM schema, which provides general information
@@ -159,5 +161,45 @@ public class General {
    */
   public General() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    General general = (General) o;
+
+    return new EqualsBuilder()
+        .append(identifiers, general.identifiers)
+        .append(title, general.title)
+        .append(catalogEntries, general.catalogEntries)
+        .append(language, general.language)
+        .append(description, general.description)
+        .append(keywords, general.keywords)
+        .append(coverage, general.coverage)
+        .append(structure, general.structure)
+        .append(aggregationLevel, general.aggregationLevel)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(identifiers)
+        .append(title)
+        .append(catalogEntries)
+        .append(language)
+        .append(description)
+        .append(keywords)
+        .append(coverage)
+        .append(structure)
+        .append(aggregationLevel)
+        .toHashCode();
   }
 }

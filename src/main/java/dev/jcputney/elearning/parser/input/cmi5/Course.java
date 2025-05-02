@@ -29,6 +29,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the root course element in a CMI5 course structure, including metadata such as title,
@@ -101,5 +103,35 @@ public class Course {
    */
   public Course() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Course course = (Course) o;
+
+    return new EqualsBuilder()
+        .append(title, course.title)
+        .append(description, course.description)
+        .append(customExtensions, course.customExtensions)
+        .append(id, course.id)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(title)
+        .append(description)
+        .append(customExtensions)
+        .append(id)
+        .toHashCode();
   }
 }

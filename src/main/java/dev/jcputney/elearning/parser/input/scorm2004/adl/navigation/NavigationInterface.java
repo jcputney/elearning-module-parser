@@ -29,6 +29,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the navigation interface controls, which specify options for interacting with the LMS
@@ -57,5 +59,29 @@ public class NavigationInterface {
   @SuppressWarnings("unused")
   public NavigationInterface() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    NavigationInterface that = (NavigationInterface) o;
+
+    return new EqualsBuilder()
+        .append(hideLMSUI, that.hideLMSUI)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(hideLMSUI)
+        .toHashCode();
   }
 }

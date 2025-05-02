@@ -28,6 +28,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a list of language strings in LOM metadata. This type is used for fields that require
@@ -61,5 +63,29 @@ public class UnboundLangString {
    */
   public UnboundLangString() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    UnboundLangString that = (UnboundLangString) o;
+
+    return new EqualsBuilder()
+        .append(langStrings, that.langStrings)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(langStrings)
+        .toHashCode();
   }
 }

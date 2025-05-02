@@ -27,6 +27,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>launchSpec</strong> complex type.</p>
@@ -71,5 +73,33 @@ public class LaunchSpec {
    */
   public LaunchSpec() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    LaunchSpec that = (LaunchSpec) o;
+
+    return new EqualsBuilder()
+        .append(sco, that.sco)
+        .append(player, that.player)
+        .append(wrapScoWindowWithApi, that.wrapScoWindowWithApi)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(sco)
+        .append(player)
+        .append(wrapScoWindowWithApi)
+        .toHashCode();
   }
 }

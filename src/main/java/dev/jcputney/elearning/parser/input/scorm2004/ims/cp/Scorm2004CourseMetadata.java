@@ -31,6 +31,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents metadata information about the content package in SCORM manifest.
@@ -96,5 +98,35 @@ public class Scorm2004CourseMetadata implements LoadableMetadata {
   @SuppressWarnings("unused")
   public Scorm2004CourseMetadata() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Scorm2004CourseMetadata that = (Scorm2004CourseMetadata) o;
+
+    return new EqualsBuilder()
+        .append(schema, that.schema)
+        .append(schemaVersion, that.schemaVersion)
+        .append(location, that.location)
+        .append(lom, that.lom)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(schema)
+        .append(schemaVersion)
+        .append(location)
+        .append(lom)
+        .toHashCode();
   }
 }

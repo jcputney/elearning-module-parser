@@ -27,6 +27,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>exitTypesSpec</strong> complex type.</p>
@@ -77,5 +79,35 @@ public class ExitTypesSpec {
    */
   public ExitTypesSpec() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    ExitTypesSpec that = (ExitTypesSpec) o;
+
+    return new EqualsBuilder()
+        .append(normal, that.normal)
+        .append(suspend, that.suspend)
+        .append(timeout, that.timeout)
+        .append(logout, that.logout)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(normal)
+        .append(suspend)
+        .append(timeout)
+        .append(logout)
+        .toHashCode();
   }
 }

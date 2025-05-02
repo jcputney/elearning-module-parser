@@ -28,6 +28,8 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the control mode settings for a learning activity within the SCORM IMS Simple
@@ -135,5 +137,39 @@ public class ControlMode {
   @SuppressWarnings("unused")
   public ControlMode() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    ControlMode that = (ControlMode) o;
+
+    return new EqualsBuilder()
+        .append(choice, that.choice)
+        .append(choiceExit, that.choiceExit)
+        .append(flow, that.flow)
+        .append(forwardOnly, that.forwardOnly)
+        .append(useCurrentAttemptObjectiveInfo, that.useCurrentAttemptObjectiveInfo)
+        .append(useCurrentAttemptProgressInfo, that.useCurrentAttemptProgressInfo)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(choice)
+        .append(choiceExit)
+        .append(flow)
+        .append(forwardOnly)
+        .append(useCurrentAttemptObjectiveInfo)
+        .append(useCurrentAttemptProgressInfo)
+        .toHashCode();
   }
 }

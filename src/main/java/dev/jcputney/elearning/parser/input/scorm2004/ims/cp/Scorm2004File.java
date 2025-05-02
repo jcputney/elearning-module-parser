@@ -30,6 +30,8 @@ import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a file element within a resource, specifying a particular physical file in the content
@@ -69,5 +71,33 @@ public class Scorm2004File {
   @SuppressWarnings("unused")
   public Scorm2004File() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Scorm2004File that = (Scorm2004File) o;
+
+    return new EqualsBuilder()
+        .append(exists, that.exists)
+        .append(href, that.href)
+        .append(metadata, that.metadata)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(href)
+        .append(metadata)
+        .append(exists)
+        .toHashCode();
   }
 }

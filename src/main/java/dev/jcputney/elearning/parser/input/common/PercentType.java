@@ -21,6 +21,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import lombok.Getter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a percentage value constrained between 0 and 1, inclusive. This type enforces the
@@ -35,12 +37,10 @@ public class PercentType {
    * The minimum and maximum values for the percentage.
    */
   private static final BigDecimal MIN_VALUE = BigDecimal.ZERO;
-
   /**
    * The maximum value for the percentage.
    */
   private static final BigDecimal MAX_VALUE = BigDecimal.ONE;
-
   /**
    * The decimal value for the percentage must be between 0 and 1.
    */
@@ -85,6 +85,30 @@ public class PercentType {
     }
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    PercentType that = (PercentType) o;
+
+    return new EqualsBuilder()
+        .append(value, that.value)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(value)
+        .toHashCode();
+  }
+
   /**
    * Returns the string representation of the percentage value.
    *
@@ -95,20 +119,4 @@ public class PercentType {
     return value.toPlainString();
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    PercentType that = (PercentType) o;
-    return value.equals(that.value);
-  }
-
-  @Override
-  public int hashCode() {
-    return value.hashCode();
-  }
 }

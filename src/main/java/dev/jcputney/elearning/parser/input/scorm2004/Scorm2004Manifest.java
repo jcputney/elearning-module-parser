@@ -50,6 +50,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the SCORM IMS Content Packaging (IMSCP) elements according to the imscp_v1p1 schema.
@@ -314,13 +316,19 @@ public class Scorm2004Manifest implements PackageManifest {
   @Override
   public String getTitle() {
     //noinspection DuplicatedCode
-    String organizationTitle = Optional.ofNullable(organizations)
-        .map(Scorm2004Organizations::getDefault).map(Scorm2004Organization::getTitle).orElse(null);
+    String organizationTitle = Optional
+        .ofNullable(organizations)
+        .map(Scorm2004Organizations::getDefault)
+        .map(Scorm2004Organization::getTitle)
+        .orElse(null);
     if (organizationTitle != null && !organizationTitle.isEmpty()) {
       return organizationTitle;
     }
 
-    return Optional.ofNullable(metadata).map(Scorm2004CourseMetadata::getLom).map(LOM::getTitle)
+    return Optional
+        .ofNullable(metadata)
+        .map(Scorm2004CourseMetadata::getLom)
+        .map(LOM::getTitle)
         .orElse(null);
   }
 
@@ -332,8 +340,11 @@ public class Scorm2004Manifest implements PackageManifest {
    */
   @Override
   public String getDescription() {
-    return Optional.ofNullable(metadata).map(Scorm2004CourseMetadata::getLom)
-        .map(LOM::getDescription).orElse(null);
+    return Optional
+        .ofNullable(metadata)
+        .map(Scorm2004CourseMetadata::getLom)
+        .map(LOM::getDescription)
+        .orElse(null);
   }
 
   /**
@@ -345,9 +356,13 @@ public class Scorm2004Manifest implements PackageManifest {
   @Override
   public String getLaunchUrl() {
     // get relative URL from first resource
-    return Optional.ofNullable(resources).map(Scorm2004Resources::getResourceList)
-        .filter(resourceList -> !resourceList.isEmpty()).map(resourceList -> resourceList.get(0))
-        .map(Scorm2004Resource::getHref).orElse(null);
+    return Optional
+        .ofNullable(resources)
+        .map(Scorm2004Resources::getResourceList)
+        .filter(resourceList -> !resourceList.isEmpty())
+        .map(resourceList -> resourceList.get(0))
+        .map(Scorm2004Resource::getHref)
+        .orElse(null);
   }
 
   /**
@@ -359,7 +374,8 @@ public class Scorm2004Manifest implements PackageManifest {
    */
   public Optional<String> getLaunchUrlForItem(String itemId) {
     // search all organizations for an item with itemId
-    Optional<Scorm2004Item> resourceItemOpt = Optional.ofNullable(organizations)
+    Optional<Scorm2004Item> resourceItemOpt = Optional
+        .ofNullable(organizations)
         .map(orgs -> orgs.getItemById(itemId));
 
     if (resourceItemOpt.isEmpty()) {
@@ -369,9 +385,12 @@ public class Scorm2004Manifest implements PackageManifest {
     Scorm2004Item resourceItem = resourceItemOpt.get();
 
     // get relative URL from item
-    Optional<String> hrefOpt = Optional.ofNullable(resources)
-        .map(Scorm2004Resources::getResourceList).filter(resourceList -> !resourceList.isEmpty())
-        .map(resourceList -> resourceList.get(0)).map(Scorm2004Resource::getHref)
+    Optional<String> hrefOpt = Optional
+        .ofNullable(resources)
+        .map(Scorm2004Resources::getResourceList)
+        .filter(resourceList -> !resourceList.isEmpty())
+        .map(resourceList -> resourceList.get(0))
+        .map(Scorm2004Resource::getHref)
         .filter(href -> !href.isEmpty());
 
     if (hrefOpt.isEmpty()) {
@@ -390,10 +409,22 @@ public class Scorm2004Manifest implements PackageManifest {
 
   @Override
   public Duration getDuration() {
-    return Optional.ofNullable(metadata).filter(
-            m -> m.getLom() != null && m.getLom().getTechnical() != null
-                && m.getLom().getTechnical().getDuration() != null).map(Scorm2004CourseMetadata::getLom)
-        .map(lom -> lom.getTechnical().getDuration().getDuration()).orElse(Duration.ZERO);
+    return Optional
+        .ofNullable(metadata)
+        .filter(
+            m -> m.getLom() != null && m
+                .getLom()
+                .getTechnical() != null
+                && m
+                .getLom()
+                .getTechnical()
+                .getDuration() != null)
+        .map(Scorm2004CourseMetadata::getLom)
+        .map(lom -> lom
+            .getTechnical()
+            .getDuration()
+            .getDuration())
+        .orElse(Duration.ZERO);
   }
 
   /**
@@ -410,7 +441,9 @@ public class Scorm2004Manifest implements PackageManifest {
       return Collections.emptySet();
     }
 
-    return organizations.getOrganizationList().stream()
+    return organizations
+        .getOrganizationList()
+        .stream()
         .flatMap(org -> safeStream(org.getItems())) // Null-safe stream for items
         .flatMap(item -> safeStream(getObjectives(item))) // Null-safe stream for objectives
         .flatMap(obj -> safeStream(obj.getMapInfo())) // Null-safe stream for mapInfo
@@ -433,7 +466,9 @@ public class Scorm2004Manifest implements PackageManifest {
       return Collections.emptySet();
     }
 
-    return resources.getResourceList().stream()
+    return resources
+        .getResourceList()
+        .stream()
         .filter(resource -> resource.getScormType() == ScormType.SCO)
         .map(Scorm2004Resource::getIdentifier)
         .collect(Collectors.toSet());
@@ -453,28 +488,38 @@ public class Scorm2004Manifest implements PackageManifest {
     return ActivityTree.buildFromManifest(this);
   }
 
-  /**
-   * Retrieves the list of objectives from a given item in a null-safe manner.
-   *
-   * @param item The SCORM item to retrieve objectives from.
-   * @return A list of objectives, or an empty list if null.
-   */
-  private List<Scorm2004Objective> getObjectives(Scorm2004Item item) {
-    if (item.getSequencing() != null && item.getSequencing().getObjectives() != null) {
-      return item.getSequencing().getObjectives().getObjectiveList();
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-    return List.of(); // Return an empty list if objectives are null
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Scorm2004Manifest that = (Scorm2004Manifest) o;
+
+    return new EqualsBuilder()
+        .append(identifier, that.identifier)
+        .append(version, that.version)
+        .append(metadata, that.metadata)
+        .append(organizations, that.organizations)
+        .append(resources, that.resources)
+        .append(sequencingCollection, that.sequencingCollection)
+        .isEquals();
   }
 
-  /**
-   * Wraps a potentially null collection in a stream.
-   *
-   * @param collection The collection to wrap.
-   * @param <T> The type of elements in the collection.
-   * @return A stream of elements, or an empty stream if the collection is null.
-   */
-  private <T> Stream<T> safeStream(Collection<T> collection) {
-    return collection != null ? collection.stream() : Stream.empty();
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(identifier)
+        .append(version)
+        .append(metadata)
+        .append(organizations)
+        .append(resources)
+        .append(sequencingCollection)
+        .toHashCode();
   }
 
   /**
@@ -491,9 +536,43 @@ public class Scorm2004Manifest implements PackageManifest {
       return true;
     }
 
-    return organizations != null && organizations.getOrganizationList().stream().anyMatch(
-        org -> org.getSequencing() != null || org.getItems().stream()
-            .anyMatch(this::hasSequencing));
+    return organizations != null && organizations
+        .getOrganizationList()
+        .stream()
+        .anyMatch(
+            org -> org.getSequencing() != null || org
+                .getItems()
+                .stream()
+                .anyMatch(this::hasSequencing));
+  }
+
+  /**
+   * Retrieves the list of objectives from a given item in a null-safe manner.
+   *
+   * @param item The SCORM item to retrieve objectives from.
+   * @return A list of objectives, or an empty list if null.
+   */
+  private List<Scorm2004Objective> getObjectives(Scorm2004Item item) {
+    if (item.getSequencing() != null && item
+        .getSequencing()
+        .getObjectives() != null) {
+      return item
+          .getSequencing()
+          .getObjectives()
+          .getObjectiveList();
+    }
+    return List.of(); // Return an empty list if objectives are null
+  }
+
+  /**
+   * Wraps a potentially null collection in a stream.
+   *
+   * @param collection The collection to wrap.
+   * @param <T> The type of elements in the collection.
+   * @return A stream of elements, or an empty stream if the collection is null.
+   */
+  private <T> Stream<T> safeStream(Collection<T> collection) {
+    return collection != null ? collection.stream() : Stream.empty();
   }
 
   /**

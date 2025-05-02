@@ -30,6 +30,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the {@code <organizations>} element in the SCORM 1.2 manifest file.
@@ -87,8 +89,11 @@ public class Scorm12Organizations {
    */
   @JsonIgnore
   public Scorm12Organization getOrganizationById(String id) {
-    return organizationList.stream()
-        .filter(org -> org.getIdentifier().equals(id))
+    return organizationList
+        .stream()
+        .filter(org -> org
+            .getIdentifier()
+            .equals(id))
         .findFirst()
         .orElse(null);
   }
@@ -101,5 +106,31 @@ public class Scorm12Organizations {
   @JsonIgnore
   public Scorm12Organization getDefault() {
     return getOrganizationById(defaultOrganization);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Scorm12Organizations that = (Scorm12Organizations) o;
+
+    return new EqualsBuilder()
+        .append(defaultOrganization, that.defaultOrganization)
+        .append(organizationList, that.organizationList)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(defaultOrganization)
+        .append(organizationList)
+        .toHashCode();
   }
 }

@@ -32,6 +32,8 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a set of conditions that must be met for a sequencing rule to apply. Rule conditions
@@ -71,5 +73,31 @@ public class RuleConditions {
   @SuppressWarnings("unused")
   public RuleConditions() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    RuleConditions that = (RuleConditions) o;
+
+    return new EqualsBuilder()
+        .append(ruleConditionList, that.ruleConditionList)
+        .append(conditionCombination, that.conditionCombination)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(ruleConditionList)
+        .append(conditionCombination)
+        .toHashCode();
   }
 }

@@ -25,6 +25,8 @@ import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the core metadata for an eLearning module, providing common fields shared across
@@ -110,5 +112,33 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
   @JsonIgnore
   public Duration getDuration() {
     return manifest.getDuration();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    ModuleMetadata<?> that = (ModuleMetadata<?>) o;
+
+    return new EqualsBuilder()
+        .append(xapiEnabled, that.xapiEnabled)
+        .append(manifest, that.manifest)
+        .append(moduleType, that.moduleType)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(manifest)
+        .append(moduleType)
+        .append(xapiEnabled)
+        .toHashCode();
   }
 }

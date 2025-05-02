@@ -25,6 +25,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>courseStructure</strong> complex type.</p>
@@ -63,6 +65,32 @@ public class CourseStructure {
   @SuppressWarnings("unused")
   public CourseStructure() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    CourseStructure that = (CourseStructure) o;
+
+    return new EqualsBuilder()
+        .append(block, that.block)
+        .append(member, that.member)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(block)
+        .append(member)
+        .toHashCode();
   }
 
 }

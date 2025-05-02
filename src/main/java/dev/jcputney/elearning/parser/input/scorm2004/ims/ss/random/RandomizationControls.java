@@ -30,6 +30,8 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the randomization controls for a learning activity within the SCORM IMS Simple
@@ -114,5 +116,35 @@ public class RandomizationControls {
   @SuppressWarnings("unused")
   public RandomizationControls() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    RandomizationControls that = (RandomizationControls) o;
+
+    return new EqualsBuilder()
+        .append(reorderChildren, that.reorderChildren)
+        .append(randomizationTiming, that.randomizationTiming)
+        .append(selectionTiming, that.selectionTiming)
+        .append(selectCount, that.selectCount)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(randomizationTiming)
+        .append(selectionTiming)
+        .append(reorderChildren)
+        .append(selectCount)
+        .toHashCode();
   }
 }

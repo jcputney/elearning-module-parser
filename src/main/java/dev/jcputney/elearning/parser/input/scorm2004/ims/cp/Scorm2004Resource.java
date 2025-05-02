@@ -33,6 +33,8 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a single resource within the content package, typically corresponding to a physical
@@ -106,5 +108,43 @@ public class Scorm2004Resource {
   @SuppressWarnings("unused")
   public Scorm2004Resource() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Scorm2004Resource that = (Scorm2004Resource) o;
+
+    return new EqualsBuilder()
+        .append(identifier, that.identifier)
+        .append(type, that.type)
+        .append(href, that.href)
+        .append(base, that.base)
+        .append(scormType, that.scormType)
+        .append(metadata, that.metadata)
+        .append(files, that.files)
+        .append(dependencies, that.dependencies)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(identifier)
+        .append(type)
+        .append(href)
+        .append(base)
+        .append(scormType)
+        .append(metadata)
+        .append(files)
+        .append(dependencies)
+        .toHashCode();
   }
 }

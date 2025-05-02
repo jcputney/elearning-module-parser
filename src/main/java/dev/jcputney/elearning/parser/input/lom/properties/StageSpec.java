@@ -28,6 +28,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>stageSpec</strong> complex type.</p>
@@ -69,5 +71,33 @@ public class StageSpec {
    */
   public StageSpec() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    StageSpec stageSpec = (StageSpec) o;
+
+    return new EqualsBuilder()
+        .append(width, stageSpec.width)
+        .append(height, stageSpec.height)
+        .append(fullscreen, stageSpec.fullscreen)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(width)
+        .append(height)
+        .append(fullscreen)
+        .toHashCode();
   }
 }

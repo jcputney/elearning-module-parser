@@ -25,6 +25,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a catalog entry in LOM metadata. This type is used for fields that require a catalog
@@ -68,5 +70,31 @@ public class CatalogEntry {
   @SuppressWarnings("unused")
   public CatalogEntry() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    CatalogEntry that = (CatalogEntry) o;
+
+    return new EqualsBuilder()
+        .append(catalog, that.catalog)
+        .append(entry, that.entry)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(catalog)
+        .append(entry)
+        .toHashCode();
   }
 }

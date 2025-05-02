@@ -27,6 +27,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the annotation information about a learning object in a Learning Object Metadata (LOM)
@@ -107,5 +109,33 @@ public class Annotation {
    */
   public Annotation() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Annotation that = (Annotation) o;
+
+    return new EqualsBuilder()
+        .append(entity, that.entity)
+        .append(date, that.date)
+        .append(description, that.description)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(entity)
+        .append(date)
+        .append(description)
+        .toHashCode();
   }
 }

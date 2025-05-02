@@ -25,6 +25,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a source-value pair, commonly used in the LOM schema to describe a value and its
@@ -77,5 +79,31 @@ public class SourceValuePair<T> {
    */
   public SourceValuePair() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    SourceValuePair<?> that = (SourceValuePair<?>) o;
+
+    return new EqualsBuilder()
+        .append(source, that.source)
+        .append(value, that.value)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(source)
+        .append(value)
+        .toHashCode();
   }
 }

@@ -25,6 +25,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a date element in LOM metadata, including the date value and an optional description.
@@ -61,5 +63,31 @@ public class Date {
    */
   public Date() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Date date = (Date) o;
+
+    return new EqualsBuilder()
+        .append(dateTime, date.dateTime)
+        .append(description, date.description)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(dateTime)
+        .append(description)
+        .toHashCode();
   }
 }

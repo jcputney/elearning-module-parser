@@ -29,6 +29,8 @@ import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a file within SCORM 1.2 resource.
@@ -102,5 +104,33 @@ public class Scorm12File {
    */
   public Scorm12Metadata getMetadata() {
     return metadata;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Scorm12File that = (Scorm12File) o;
+
+    return new EqualsBuilder()
+        .append(exists, that.exists)
+        .append(href, that.href)
+        .append(metadata, that.metadata)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(href)
+        .append(metadata)
+        .append(exists)
+        .toHashCode();
   }
 }

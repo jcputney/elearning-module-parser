@@ -30,6 +30,8 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a set of conditions that control when a rollup rule should apply. Rollup conditions
@@ -72,5 +74,31 @@ public class RollupConditions {
   @SuppressWarnings("unused")
   public RollupConditions() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    RollupConditions that = (RollupConditions) o;
+
+    return new EqualsBuilder()
+        .append(rollupConditionList, that.rollupConditionList)
+        .append(conditionCombination, that.conditionCombination)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(rollupConditionList)
+        .append(conditionCombination)
+        .toHashCode();
   }
 }

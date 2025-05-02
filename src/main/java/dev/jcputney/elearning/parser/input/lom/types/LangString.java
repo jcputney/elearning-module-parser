@@ -26,6 +26,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import dev.jcputney.elearning.parser.input.common.TrimAndPreserveIndentationDeserializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a LangString in LOM metadata, which is a collection of strings with language
@@ -72,5 +74,31 @@ public class LangString {
    */
   public LangString() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    LangString that = (LangString) o;
+
+    return new EqualsBuilder()
+        .append(language, that.language)
+        .append(value, that.value)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(language)
+        .append(value)
+        .toHashCode();
   }
 }

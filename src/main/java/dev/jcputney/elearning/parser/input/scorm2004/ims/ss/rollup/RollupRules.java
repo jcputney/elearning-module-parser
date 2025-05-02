@@ -31,6 +31,8 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a set of rollup rules within the SCORM IMS Simple Sequencing (IMSSS) schema. Rollup
@@ -110,5 +112,35 @@ public class RollupRules {
   @SuppressWarnings("unused")
   public RollupRules() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    RollupRules that = (RollupRules) o;
+
+    return new EqualsBuilder()
+        .append(rollupObjectiveSatisfied, that.rollupObjectiveSatisfied)
+        .append(rollupProgressCompletion, that.rollupProgressCompletion)
+        .append(objectiveMeasureWeight, that.objectiveMeasureWeight)
+        .append(rollupRuleList, that.rollupRuleList)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(rollupRuleList)
+        .append(rollupObjectiveSatisfied)
+        .append(rollupProgressCompletion)
+        .append(objectiveMeasureWeight)
+        .toHashCode();
   }
 }

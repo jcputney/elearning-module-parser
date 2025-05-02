@@ -22,6 +22,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import lombok.Getter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a decimal measure with a value between -1 and 1, inclusive, with at least four
@@ -106,7 +108,9 @@ public class MeasureType {
    */
   @Override
   public String toString() {
-    return value.setScale(SCALE, RoundingMode.HALF_UP).toPlainString();
+    return value
+        .setScale(SCALE, RoundingMode.HALF_UP)
+        .toPlainString();
   }
 
   @Override
@@ -114,15 +118,22 @@ public class MeasureType {
     if (this == o) {
       return true;
     }
+
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
+
     MeasureType that = (MeasureType) o;
-    return value.equals(that.value);
+
+    return new EqualsBuilder()
+        .append(value, that.value)
+        .isEquals();
   }
 
   @Override
   public int hashCode() {
-    return value.hashCode();
+    return new HashCodeBuilder(17, 37)
+        .append(value)
+        .toHashCode();
   }
 }

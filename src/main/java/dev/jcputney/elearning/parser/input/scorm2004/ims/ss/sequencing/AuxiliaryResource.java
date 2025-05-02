@@ -26,6 +26,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an individual auxiliary resource within the SCORM IMS Simple Sequencing schema. An
@@ -71,5 +73,31 @@ public class AuxiliaryResource {
   @SuppressWarnings("unused")
   public AuxiliaryResource() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    AuxiliaryResource that = (AuxiliaryResource) o;
+
+    return new EqualsBuilder()
+        .append(auxiliaryResourceID, that.auxiliaryResourceID)
+        .append(purpose, that.purpose)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(auxiliaryResourceID)
+        .append(purpose)
+        .toHashCode();
   }
 }

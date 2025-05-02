@@ -29,6 +29,8 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an individual rollup condition within a set of rollup conditions. Each condition
@@ -67,5 +69,31 @@ public class RollupCondition {
   @SuppressWarnings("unused")
   public RollupCondition() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    RollupCondition that = (RollupCondition) o;
+
+    return new EqualsBuilder()
+        .append(operator, that.operator)
+        .append(condition, that.condition)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(operator)
+        .append(condition)
+        .toHashCode();
   }
 }

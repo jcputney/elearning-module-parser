@@ -22,9 +22,11 @@ import static lombok.AccessLevel.PRIVATE;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.common.PercentType;
 import dev.jcputney.elearning.parser.input.common.PercentTypeDeserializer;
+import dev.jcputney.elearning.parser.input.common.PercentTypeSerializer;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.ChildActivitySet;
 import java.math.BigDecimal;
@@ -88,6 +90,7 @@ public class RollupRule {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonDeserialize(using = PercentTypeDeserializer.class)
+  @JsonSerialize(using = PercentTypeSerializer.class)
   @JsonProperty("minimumPercent")
   @Default
   private PercentType minimumPercent = new PercentType(BigDecimal.ZERO);

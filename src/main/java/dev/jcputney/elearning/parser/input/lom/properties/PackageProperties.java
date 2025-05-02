@@ -27,6 +27,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Class representing the root element of the ScormEnginePackageProperties XML.</p>
@@ -92,5 +94,37 @@ public class PackageProperties {
   @SuppressWarnings("unused")
   public PackageProperties() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    PackageProperties that = (PackageProperties) o;
+
+    return new EqualsBuilder()
+        .append(controls, that.controls)
+        .append(appearance, that.appearance)
+        .append(behavior, that.behavior)
+        .append(rsop, that.rsop)
+        .append(heuristics, that.heuristics)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(controls)
+        .append(appearance)
+        .append(behavior)
+        .append(rsop)
+        .append(heuristics)
+        .toHashCode();
   }
 }

@@ -27,6 +27,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Base class for module metadata that implements the MetadataComponent interface.
@@ -155,6 +157,28 @@ public abstract class BaseModuleMetadata<M extends PackageManifest> extends
         // Then check composite metadata
           compositeMetadata != null && compositeMetadata.hasMetadata(key);
     };
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .appendSuper(super.equals(o))
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .appendSuper(super.hashCode())
+        .toHashCode();
   }
 
   /**

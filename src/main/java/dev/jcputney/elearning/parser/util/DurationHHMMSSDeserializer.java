@@ -80,7 +80,7 @@ public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
    * @throws IllegalArgumentException if the string format is invalid
    */
   public static Duration parseDuration(String durationString) throws NumberFormatException {
-    if (StringUtils.isEmpty(durationString)) {
+    if (StringUtils.isEmpty(durationString) || StringUtils.equalsAny("::", durationString)) {
       return Duration.ZERO;
     }
 

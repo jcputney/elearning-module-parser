@@ -27,6 +27,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>rsopSpec</strong> complex type.</p>
@@ -59,5 +61,29 @@ public class RsopSpec {
    */
   public RsopSpec() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    RsopSpec rsopSpec = (RsopSpec) o;
+
+    return new EqualsBuilder()
+        .append(offlineSynchMode, rsopSpec.offlineSynchMode)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(offlineSynchMode)
+        .toHashCode();
   }
 }

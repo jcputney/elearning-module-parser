@@ -33,6 +33,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the limit conditions for a learning activity within the SCORM IMS Simple Sequencing
@@ -162,5 +164,41 @@ public class LimitConditions {
   @SuppressWarnings("unused")
   public LimitConditions() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    LimitConditions that = (LimitConditions) o;
+
+    return new EqualsBuilder()
+        .append(attemptLimit, that.attemptLimit)
+        .append(attemptAbsoluteDurationLimit, that.attemptAbsoluteDurationLimit)
+        .append(attemptExperiencedDurationLimit, that.attemptExperiencedDurationLimit)
+        .append(activityAbsoluteDurationLimit, that.activityAbsoluteDurationLimit)
+        .append(activityExperiencedDurationLimit, that.activityExperiencedDurationLimit)
+        .append(beginTimeLimit, that.beginTimeLimit)
+        .append(endTimeLimit, that.endTimeLimit)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(attemptLimit)
+        .append(attemptAbsoluteDurationLimit)
+        .append(attemptExperiencedDurationLimit)
+        .append(activityAbsoluteDurationLimit)
+        .append(activityExperiencedDurationLimit)
+        .append(beginTimeLimit)
+        .append(endTimeLimit)
+        .toHashCode();
   }
 }

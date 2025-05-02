@@ -29,6 +29,8 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the rollupConsiderationsType complex type, defining attributes for rollup conditions.
@@ -93,5 +95,38 @@ public class RollupConsiderations {
   @SuppressWarnings("unused")
   public RollupConsiderations() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    RollupConsiderations that = (RollupConsiderations) o;
+
+    return new EqualsBuilder()
+        .append(measureSatisfactionIfActive,
+            that.measureSatisfactionIfActive)
+        .append(requiredForSatisfied, that.requiredForSatisfied)
+        .append(requiredForNotSatisfied, that.requiredForNotSatisfied)
+        .append(requiredForCompleted, that.requiredForCompleted)
+        .append(requiredForIncomplete, that.requiredForIncomplete)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(requiredForSatisfied)
+        .append(requiredForNotSatisfied)
+        .append(requiredForCompleted)
+        .append(requiredForIncomplete)
+        .append(measureSatisfactionIfActive)
+        .toHashCode();
   }
 }

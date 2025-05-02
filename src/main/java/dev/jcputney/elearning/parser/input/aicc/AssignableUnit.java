@@ -20,7 +20,6 @@ package dev.jcputney.elearning.parser.input.aicc;
 import static lombok.AccessLevel.PRIVATE;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -28,6 +27,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an Assignable Unit (AU) in the context of AICC (Aviation Industry CBT Committee).
@@ -116,7 +117,6 @@ public class AssignableUnit {
   /**
    * The AU descriptor for the assignable unit.
    */
-  @JsonIgnore
   @Setter
   private Descriptor descriptor;
 
@@ -126,6 +126,54 @@ public class AssignableUnit {
   @SuppressWarnings("unused")
   public AssignableUnit() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    AssignableUnit that = (AssignableUnit) o;
+
+    return new EqualsBuilder()
+        .append(systemId, that.systemId)
+        .append(commandLine, that.commandLine)
+        .append(fileName, that.fileName)
+        .append(coreVendor, that.coreVendor)
+        .append(type, that.type)
+        .append(maxScore, that.maxScore)
+        .append(masteryScore, that.masteryScore)
+        .append(maxTimeAllowed, that.maxTimeAllowed)
+        .append(timeLimitAction, that.timeLimitAction)
+        .append(systemVendor, that.systemVendor)
+        .append(webLaunch, that.webLaunch)
+        .append(auPassword, that.auPassword)
+        .append(descriptor, that.descriptor)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(systemId)
+        .append(commandLine)
+        .append(fileName)
+        .append(coreVendor)
+        .append(type)
+        .append(maxScore)
+        .append(masteryScore)
+        .append(maxTimeAllowed)
+        .append(timeLimitAction)
+        .append(systemVendor)
+        .append(webLaunch)
+        .append(auPassword)
+        .append(descriptor)
+        .toHashCode();
   }
 }
 

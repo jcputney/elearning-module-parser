@@ -30,6 +30,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents metadata for a SCORM element, which can either be inline metadata using a LOM element
@@ -80,5 +82,31 @@ public class Scorm2004SubMetadata implements LoadableMetadata {
   @SuppressWarnings("unused")
   public Scorm2004SubMetadata() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Scorm2004SubMetadata that = (Scorm2004SubMetadata) o;
+
+    return new EqualsBuilder()
+        .append(location, that.location)
+        .append(lom, that.lom)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(location)
+        .append(lom)
+        .toHashCode();
   }
 }

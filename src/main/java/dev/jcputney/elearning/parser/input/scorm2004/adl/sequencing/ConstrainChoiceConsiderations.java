@@ -28,6 +28,8 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the constrainedChoiceConsiderationsType complex type, defining choice and activation
@@ -69,5 +71,31 @@ public class ConstrainChoiceConsiderations {
   @SuppressWarnings("unused")
   public ConstrainChoiceConsiderations() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    ConstrainChoiceConsiderations that = (ConstrainChoiceConsiderations) o;
+
+    return new EqualsBuilder()
+        .append(preventActivation, that.preventActivation)
+        .append(constrainChoice, that.constrainChoice)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(preventActivation)
+        .append(constrainChoice)
+        .toHashCode();
   }
 }

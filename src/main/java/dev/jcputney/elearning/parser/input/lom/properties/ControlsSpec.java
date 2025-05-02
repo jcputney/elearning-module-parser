@@ -27,6 +27,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>controlsSpec</strong> complex type.</p>
@@ -132,5 +134,53 @@ public class ControlsSpec {
   @SuppressWarnings("unused")
   public ControlsSpec() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    ControlsSpec that = (ControlsSpec) o;
+
+    return new EqualsBuilder()
+        .append(showFinishButton, that.showFinishButton)
+        .append(showCloseItem, that.showCloseItem)
+        .append(showHelp, that.showHelp)
+        .append(showProgressBar, that.showProgressBar)
+        .append(useMeasureProgressBar, that.useMeasureProgressBar)
+        .append(showCourseStructure, that.showCourseStructure)
+        .append(courseStructureStartsOpen, that.courseStructureStartsOpen)
+        .append(showNavBar, that.showNavBar)
+        .append(showTitleBar, that.showTitleBar)
+        .append(enableFlowNav, that.enableFlowNav)
+        .append(enableChoiceNav, that.enableChoiceNav)
+        .append(statusDisplay, that.statusDisplay)
+        .append(forceDisableRootChoice, that.forceDisableRootChoice)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(showFinishButton)
+        .append(showCloseItem)
+        .append(showHelp)
+        .append(showProgressBar)
+        .append(useMeasureProgressBar)
+        .append(showCourseStructure)
+        .append(courseStructureStartsOpen)
+        .append(showNavBar)
+        .append(showTitleBar)
+        .append(enableFlowNav)
+        .append(enableChoiceNav)
+        .append(statusDisplay)
+        .append(forceDisableRootChoice)
+        .toHashCode();
   }
 }

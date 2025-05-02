@@ -28,6 +28,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the AICC course information.
@@ -69,6 +71,34 @@ public class AiccCourse {
     // Default constructor
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    AiccCourse that = (AiccCourse) o;
+
+    return new EqualsBuilder()
+        .append(course, that.course)
+        .append(courseBehavior, that.courseBehavior)
+        .append(courseDescription, that.courseDescription)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(course)
+        .append(courseBehavior)
+        .append(courseDescription)
+        .toHashCode();
+  }
+
   /**
    * Course description information for the AICC manifest.
    *
@@ -80,11 +110,7 @@ public class AiccCourse {
       return null;
     }
 
-    return courseDescription.entrySet()
-        .stream()
-        .findFirst()
-        .map(Map.Entry::getKey)
-        .orElse(null);
+    return courseDescription.entrySet().stream().findFirst().map(Map.Entry::getKey).orElse(null);
   }
 
   /**

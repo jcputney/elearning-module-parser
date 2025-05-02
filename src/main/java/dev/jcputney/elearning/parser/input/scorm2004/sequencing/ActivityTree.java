@@ -31,17 +31,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.Getter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a SCORM 2004 Activity Tree.
  * <p>
- * An ActivityTree is a hierarchical structure of ActivityNodes that represents the organization
- * of learning activities in a SCORM 2004 content package. It is built from the manifest and
- * provides methods to navigate and manipulate the tree.
+ * An ActivityTree is a hierarchical structure of ActivityNodes that represents the organization of
+ * learning activities in a SCORM 2004 content package. It is built from the manifest and provides
+ * methods to navigate and manipulate the tree.
  * </p>
  */
 @Getter
 public class ActivityTree {
+
   private final ActivityNode root;
   private final Map<String, ActivityNode> nodeMap = new HashMap<>();
 
@@ -86,6 +89,62 @@ public class ActivityTree {
     return Optional.of(tree);
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    ActivityTree that = (ActivityTree) o;
+
+    return new EqualsBuilder()
+        .append(root, that.root)
+        .append(nodeMap, that.nodeMap)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(root)
+        .append(nodeMap)
+        .toHashCode();
+  }
+
+  /**
+   * Gets a node by its identifier.
+   *
+   * @param identifier The identifier of the node to get
+   * @return An Optional containing the node, or empty if not found
+   */
+  public Optional<ActivityNode> getNodeByIdentifier(String identifier) {
+    return Optional.ofNullable(nodeMap.get(identifier));
+  }
+
+  /**
+   * Gets all leaf nodes in the tree.
+   *
+   * @return A list of all leaf nodes
+   */
+  public List<ActivityNode> getLeafNodes() {
+    List<ActivityNode> leafNodes = new ArrayList<>();
+    collectLeafNodes(root, leafNodes);
+    return leafNodes;
+  }
+
+  /**
+   * Gets the root node of the tree.
+   *
+   * @return The root node
+   */
+  public ActivityNode getRoot() {
+    return root;
+  }
+
   /**
    * Recursively processes an item and its children, adding them to the tree.
    *
@@ -115,27 +174,6 @@ public class ActivityTree {
   }
 
   /**
-   * Gets a node by its identifier.
-   *
-   * @param identifier The identifier of the node to get
-   * @return An Optional containing the node, or empty if not found
-   */
-  public Optional<ActivityNode> getNodeByIdentifier(String identifier) {
-    return Optional.ofNullable(nodeMap.get(identifier));
-  }
-
-  /**
-   * Gets all leaf nodes in the tree.
-   *
-   * @return A list of all leaf nodes
-   */
-  public List<ActivityNode> getLeafNodes() {
-    List<ActivityNode> leafNodes = new ArrayList<>();
-    collectLeafNodes(root, leafNodes);
-    return leafNodes;
-  }
-
-  /**
    * Recursively collects all leaf nodes in the tree.
    *
    * @param node The current node
@@ -149,14 +187,5 @@ public class ActivityTree {
         collectLeafNodes(child, leafNodes);
       }
     }
-  }
-
-  /**
-   * Gets the root node of the tree.
-   *
-   * @return The root node
-   */
-  public ActivityNode getRoot() {
-    return root;
   }
 }

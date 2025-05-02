@@ -31,6 +31,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the meta-metadata information about a learning object in a Learning Object Metadata
@@ -165,5 +167,39 @@ public class MetaMetadata {
   @SuppressWarnings("unused")
   public MetaMetadata() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    MetaMetadata that = (MetaMetadata) o;
+
+    return new EqualsBuilder()
+        .append(identifier, that.identifier)
+        .append(catalogEntries, that.catalogEntries)
+        .append(contribute, that.contribute)
+        .append(metadataSchema, that.metadataSchema)
+        .append(language, that.language)
+        .append(customElements, that.customElements)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(identifier)
+        .append(catalogEntries)
+        .append(contribute)
+        .append(metadataSchema)
+        .append(language)
+        .append(customElements)
+        .toHashCode();
   }
 }

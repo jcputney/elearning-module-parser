@@ -27,6 +27,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the <code>resource</code> element in the LOM schema, containing information about a
@@ -118,5 +120,35 @@ public class Resource {
    */
   public Resource() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Resource resource = (Resource) o;
+
+    return new EqualsBuilder()
+        .append(identifiers, resource.identifiers)
+        .append(descriptions, resource.descriptions)
+        .append(catalogEntries, resource.catalogEntries)
+        .append(customElements, resource.customElements)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(identifiers)
+        .append(descriptions)
+        .append(catalogEntries)
+        .append(customElements)
+        .toHashCode();
   }
 }

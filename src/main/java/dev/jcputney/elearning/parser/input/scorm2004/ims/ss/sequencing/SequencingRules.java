@@ -29,6 +29,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a set of sequencing rules within the SCORM IMS Simple Sequencing (IMSSS) schema.
@@ -94,5 +96,33 @@ public class SequencingRules {
   @SuppressWarnings("unused")
   public SequencingRules() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    SequencingRules that = (SequencingRules) o;
+
+    return new EqualsBuilder()
+        .append(preConditionRules, that.preConditionRules)
+        .append(exitConditionRules, that.exitConditionRules)
+        .append(postConditionRules, that.postConditionRules)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(preConditionRules)
+        .append(exitConditionRules)
+        .append(postConditionRules)
+        .toHashCode();
   }
 }

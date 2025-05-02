@@ -28,6 +28,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>behaviorSpec</strong> complex type.</p>
@@ -259,5 +261,95 @@ public class BehaviorSpec {
   @SuppressWarnings("unused")
   public BehaviorSpec() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    BehaviorSpec that = (BehaviorSpec) o;
+
+    return new EqualsBuilder()
+        .append(launch, that.launch)
+        .append(exitActions, that.exitActions)
+        .append(communications, that.communications)
+        .append(debug, that.debug)
+        .append(history, that.history)
+        .append(disableRightClick, that.disableRightClick)
+        .append(preventWindowResize, that.preventWindowResize)
+        .append(scoreRollupMode, that.scoreRollupMode)
+        .append(numberOfScoringObjects, that.numberOfScoringObjects)
+        .append(statusRollupMode, that.statusRollupMode)
+        .append(thresholdScoreForCompletion, that.thresholdScoreForCompletion)
+        .append(applyRollupStatusToSuccess, that.applyRollupStatusToSuccess)
+        .append(firstScoIsPretest, that.firstScoIsPretest)
+        .append(finishCausesImmediateCommit, that.finishCausesImmediateCommit)
+        .append(invalidMenuItemAction, that.invalidMenuItemAction)
+        .append(alwaysFlowToFirstSco, that.alwaysFlowToFirstSco)
+        .append(logoutCausesPlayerExit, that.logoutCausesPlayerExit)
+        .append(resetRtTiming, that.resetRtTiming)
+        .append(lookaheadSequencerMode, that.lookaheadSequencerMode)
+        .append(scoreOverridesStatus, that.scoreOverridesStatus)
+        .append(allowCompleteStatusChange, that.allowCompleteStatusChange)
+        .append(scaleRawScore, that.scaleRawScore)
+        .append(useQuickLookaheadSequencer, that.useQuickLookaheadSequencer)
+        .append(rollupRuntimeAtScoUnload, that.rollupRuntimeAtScoUnload)
+        .append(forceObjectiveCompletionSetByContent, that.forceObjectiveCompletionSetByContent)
+        .append(invokeRollupAtSuspendAll, that.invokeRollupAtSuspendAll)
+        .append(completionStatOfFailedSuccessStat, that.completionStatOfFailedSuccessStat)
+        .append(satisfiedCausesCompletion, that.satisfiedCausesCompletion)
+        .append(makeStudentPrefsGlobalToCourse, that.makeStudentPrefsGlobalToCourse)
+        .append(returnToLmsAction, that.returnToLmsAction)
+        .append(rollupEmptySetToUnknown, that.rollupEmptySetToUnknown)
+        .append(validateInteractionTypes, that.validateInteractionTypes)
+        .append(suspendDataMaxLength, that.suspendDataMaxLength)
+        .append(timeLimit, that.timeLimit)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(launch)
+        .append(exitActions)
+        .append(communications)
+        .append(debug)
+        .append(history)
+        .append(disableRightClick)
+        .append(preventWindowResize)
+        .append(scoreRollupMode)
+        .append(numberOfScoringObjects)
+        .append(statusRollupMode)
+        .append(thresholdScoreForCompletion)
+        .append(applyRollupStatusToSuccess)
+        .append(firstScoIsPretest)
+        .append(finishCausesImmediateCommit)
+        .append(invalidMenuItemAction)
+        .append(alwaysFlowToFirstSco)
+        .append(logoutCausesPlayerExit)
+        .append(resetRtTiming)
+        .append(lookaheadSequencerMode)
+        .append(scoreOverridesStatus)
+        .append(allowCompleteStatusChange)
+        .append(scaleRawScore)
+        .append(useQuickLookaheadSequencer)
+        .append(rollupRuntimeAtScoUnload)
+        .append(forceObjectiveCompletionSetByContent)
+        .append(invokeRollupAtSuspendAll)
+        .append(completionStatOfFailedSuccessStat)
+        .append(satisfiedCausesCompletion)
+        .append(makeStudentPrefsGlobalToCourse)
+        .append(returnToLmsAction)
+        .append(rollupEmptySetToUnknown)
+        .append(validateInteractionTypes)
+        .append(suspendDataMaxLength)
+        .append(timeLimit)
+        .toHashCode();
   }
 }

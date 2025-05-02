@@ -26,6 +26,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a dependency within SCORM 1.2 resource.
@@ -72,5 +74,29 @@ public class Scorm12Dependency {
   @SuppressWarnings("unused")
   public Scorm12Dependency() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Scorm12Dependency that = (Scorm12Dependency) o;
+
+    return new EqualsBuilder()
+        .append(identifierRef, that.identifierRef)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(identifierRef)
+        .toHashCode();
   }
 }

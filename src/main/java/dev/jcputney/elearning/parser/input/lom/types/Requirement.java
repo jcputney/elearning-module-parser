@@ -25,6 +25,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a requirement for a learning object in a Learning Object Metadata (LOM) document. A
@@ -67,5 +69,31 @@ public class Requirement extends OrComposite {
    */
   public Requirement() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Requirement that = (Requirement) o;
+
+    return new EqualsBuilder()
+        .appendSuper(super.equals(o))
+        .append(orCompositeList, that.orCompositeList)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .appendSuper(super.hashCode())
+        .append(orCompositeList)
+        .toHashCode();
   }
 }

@@ -27,6 +27,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a single sequencing rule within a set of pre-condition, exit-condition, or
@@ -61,5 +63,31 @@ public class SequencingRule {
   @SuppressWarnings("unused")
   public SequencingRule() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    SequencingRule that = (SequencingRule) o;
+
+    return new EqualsBuilder()
+        .append(ruleConditions, that.ruleConditions)
+        .append(ruleAction, that.ruleAction)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(ruleConditions)
+        .append(ruleAction)
+        .toHashCode();
   }
 }

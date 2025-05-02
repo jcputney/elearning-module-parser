@@ -31,6 +31,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the lifecycle information about a learning object in a Learning Object Metadata (LOM)
@@ -139,5 +141,35 @@ public class LifeCycle {
   @SuppressWarnings("unused")
   public LifeCycle() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    LifeCycle lifeCycle = (LifeCycle) o;
+
+    return new EqualsBuilder()
+        .append(version, lifeCycle.version)
+        .append(status, lifeCycle.status)
+        .append(contribute, lifeCycle.contribute)
+        .append(customElements, lifeCycle.customElements)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(version)
+        .append(status)
+        .append(contribute)
+        .append(customElements)
+        .toHashCode();
   }
 }

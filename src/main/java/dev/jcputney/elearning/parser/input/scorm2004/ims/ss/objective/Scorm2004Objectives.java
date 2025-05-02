@@ -29,6 +29,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the learning objectives for an activity within the SCORM IMS Simple Sequencing (IMSSS)
@@ -81,5 +83,31 @@ public class Scorm2004Objectives {
   @SuppressWarnings("unused")
   public Scorm2004Objectives() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Scorm2004Objectives that = (Scorm2004Objectives) o;
+
+    return new EqualsBuilder()
+        .append(primaryObjective, that.primaryObjective)
+        .append(objectiveList, that.objectiveList)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(primaryObjective)
+        .append(objectiveList)
+        .toHashCode();
   }
 }

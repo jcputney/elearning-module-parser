@@ -35,6 +35,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an item within a SCORM 1.2 organization.
@@ -183,5 +185,51 @@ public class Scorm12Item {
    */
   public Scorm12Metadata getMetadata() {
     return metadata;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Scorm12Item that = (Scorm12Item) o;
+
+    return new EqualsBuilder()
+        .append(identifier, that.identifier)
+        .append(identifierRef, that.identifierRef)
+        .append(isVisible, that.isVisible)
+        .append(parameters, that.parameters)
+        .append(maxTimeAllowed, that.maxTimeAllowed)
+        .append(masteryScore, that.masteryScore)
+        .append(prerequisites, that.prerequisites)
+        .append(timeLimitAction, that.timeLimitAction)
+        .append(dataFromLMS, that.dataFromLMS)
+        .append(title, that.title)
+        .append(metadata, that.metadata)
+        .append(items, that.items)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(identifier)
+        .append(identifierRef)
+        .append(isVisible)
+        .append(parameters)
+        .append(maxTimeAllowed)
+        .append(masteryScore)
+        .append(prerequisites)
+        .append(timeLimitAction)
+        .append(dataFromLMS)
+        .append(title)
+        .append(metadata)
+        .append(items)
+        .toHashCode();
   }
 }

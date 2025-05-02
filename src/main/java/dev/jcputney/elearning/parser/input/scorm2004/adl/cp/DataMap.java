@@ -28,6 +28,8 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the map element, specifying shared data configuration.
@@ -67,5 +69,33 @@ public class DataMap {
   @SuppressWarnings("unused")
   public DataMap() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    DataMap dataMap = (DataMap) o;
+
+    return new EqualsBuilder()
+        .append(readSharedData, dataMap.readSharedData)
+        .append(writeSharedData, dataMap.writeSharedData)
+        .append(targetID, dataMap.targetID)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(targetID)
+        .append(readSharedData)
+        .append(writeSharedData)
+        .toHashCode();
   }
 }

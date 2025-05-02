@@ -37,6 +37,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the educational information about a learning object in a Learning Object Metadata
@@ -265,5 +267,49 @@ public class Educational {
    */
   public Educational() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Educational that = (Educational) o;
+
+    return new EqualsBuilder()
+        .append(interactivityType, that.interactivityType)
+        .append(learningResourceType, that.learningResourceType)
+        .append(interactivityLevel, that.interactivityLevel)
+        .append(semanticDensity, that.semanticDensity)
+        .append(intendedEndUserRole, that.intendedEndUserRole)
+        .append(context, that.context)
+        .append(typicalAgeRange, that.typicalAgeRange)
+        .append(difficulty, that.difficulty)
+        .append(typicalLearningTime, that.typicalLearningTime)
+        .append(descriptions, that.descriptions)
+        .append(languages, that.languages)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(interactivityType)
+        .append(learningResourceType)
+        .append(interactivityLevel)
+        .append(semanticDensity)
+        .append(intendedEndUserRole)
+        .append(context)
+        .append(typicalAgeRange)
+        .append(difficulty)
+        .append(typicalLearningTime)
+        .append(descriptions)
+        .append(languages)
+        .toHashCode();
   }
 }

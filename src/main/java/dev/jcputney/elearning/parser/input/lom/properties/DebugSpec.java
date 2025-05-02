@@ -27,6 +27,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>debugSpec</strong> complex type.</p>
@@ -114,5 +116,47 @@ public class DebugSpec {
   @SuppressWarnings("unused")
   public DebugSpec() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    DebugSpec debugSpec = (DebugSpec) o;
+
+    return new EqualsBuilder()
+        .append(controlAudit, debugSpec.controlAudit)
+        .append(controlDetailed, debugSpec.controlDetailed)
+        .append(runtimeAudit, debugSpec.runtimeAudit)
+        .append(runtimeDetailed, debugSpec.runtimeDetailed)
+        .append(sequencingAudit, debugSpec.sequencingAudit)
+        .append(sequencingDetailed, debugSpec.sequencingDetailed)
+        .append(sequencingSimple, debugSpec.sequencingSimple)
+        .append(lookaheadAudit, debugSpec.lookaheadAudit)
+        .append(lookaheadDetailed, debugSpec.lookaheadDetailed)
+        .append(includeTimestamps, debugSpec.includeTimestamps)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(controlAudit)
+        .append(controlDetailed)
+        .append(runtimeAudit)
+        .append(runtimeDetailed)
+        .append(sequencingAudit)
+        .append(sequencingDetailed)
+        .append(sequencingSimple)
+        .append(lookaheadAudit)
+        .append(lookaheadDetailed)
+        .append(includeTimestamps)
+        .toHashCode();
   }
 }

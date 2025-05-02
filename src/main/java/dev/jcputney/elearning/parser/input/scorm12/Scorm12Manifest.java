@@ -40,6 +40,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the SCORM IMS Content Packaging (IMSCP) elements according to the imscp_rootv1p1p2
@@ -374,14 +376,16 @@ public class Scorm12Manifest implements PackageManifest {
   @Override
   public String getTitle() {
     //noinspection DuplicatedCode
-    String organizationTitle = Optional.ofNullable(organizations)
+    String organizationTitle = Optional
+        .ofNullable(organizations)
         .map(Scorm12Organizations::getDefault)
         .map(Scorm12Organization::getTitle)
         .orElse(null);
     if (organizationTitle != null && !organizationTitle.isEmpty()) {
       return organizationTitle;
     }
-    return Optional.ofNullable(metadata)
+    return Optional
+        .ofNullable(metadata)
         .map(Scorm12Metadata::getLom)
         .map(LOM::getTitle)
         .orElse(null);
@@ -389,7 +393,8 @@ public class Scorm12Manifest implements PackageManifest {
 
   @Override
   public String getDescription() {
-    return Optional.ofNullable(metadata)
+    return Optional
+        .ofNullable(metadata)
         .map(Scorm12Metadata::getLom)
         .map(LOM::getDescription)
         .orElse(null);
@@ -398,7 +403,8 @@ public class Scorm12Manifest implements PackageManifest {
   @Override
   public String getLaunchUrl() {
     // Find all items with non-null identifierRef at any level
-    List<String> resourceIds = Optional.ofNullable(organizations)
+    List<String> resourceIds = Optional
+        .ofNullable(organizations)
         .map(Scorm12Organizations::getDefault)
         .map(Scorm12Organization::getItems)
         .map(items -> findAllItemsWithIdentifierRef(items))
@@ -406,7 +412,8 @@ public class Scorm12Manifest implements PackageManifest {
 
     // Find the first resource that exists
     for (String resourceId : resourceIds) {
-      String href = Optional.ofNullable(resources)
+      String href = Optional
+          .ofNullable(resources)
           .flatMap(r -> r.getResourceById(resourceId))
           .map(Scorm12Resource::getHref)
           .orElse(null);
@@ -421,11 +428,19 @@ public class Scorm12Manifest implements PackageManifest {
 
   @Override
   public Duration getDuration() {
-    return Optional.ofNullable(metadata)
-        .filter(m -> m.getLom() != null && m.getLom().getTechnical() != null
-            && m.getLom().getTechnical().getDuration() != null)
+    return Optional
+        .ofNullable(metadata)
+        .filter(m -> m.getLom() != null && m
+            .getLom()
+            .getTechnical() != null && m
+            .getLom()
+            .getTechnical()
+            .getDuration() != null)
         .map(Scorm12Metadata::getLom)
-        .map(lom -> lom.getTechnical().getDuration().getDuration())
+        .map(lom -> lom
+            .getTechnical()
+            .getDuration()
+            .getDuration())
         .orElse(Duration.ZERO);
   }
 
@@ -437,6 +452,40 @@ public class Scorm12Manifest implements PackageManifest {
    */
   public Scorm12Organizations getOrganizations() {
     return organizations;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Scorm12Manifest that = (Scorm12Manifest) o;
+
+    return new EqualsBuilder()
+        .append(identifier, that.identifier)
+        .append(version, that.version)
+        .append(base, that.base)
+        .append(metadata, that.metadata)
+        .append(organizations, that.organizations)
+        .append(resources, that.resources)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(identifier)
+        .append(version)
+        .append(base)
+        .append(metadata)
+        .append(organizations)
+        .append(resources)
+        .toHashCode();
   }
 
   /**
@@ -455,14 +504,18 @@ public class Scorm12Manifest implements PackageManifest {
 
     // First, check if any top-level items have an identifierRef
     for (Scorm12Item item : items) {
-      if (item.getIdentifierRef() != null && !item.getIdentifierRef().isEmpty()) {
+      if (item.getIdentifierRef() != null && !item
+          .getIdentifierRef()
+          .isEmpty()) {
         result.add(item.getIdentifierRef());
       }
     }
 
     // Then, recursively check child items
     for (Scorm12Item item : items) {
-      if (item.getItems() != null && !item.getItems().isEmpty()) {
+      if (item.getItems() != null && !item
+          .getItems()
+          .isEmpty()) {
         result.addAll(findAllItemsWithIdentifierRef(item.getItems()));
       }
     }

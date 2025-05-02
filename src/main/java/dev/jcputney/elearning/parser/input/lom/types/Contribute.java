@@ -27,6 +27,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a contribution to the lifecycle of the learning object in the Learning Object Metadata
@@ -158,5 +160,35 @@ public class Contribute {
   @SuppressWarnings("unused")
   public Contribute() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Contribute that = (Contribute) o;
+
+    return new EqualsBuilder()
+        .append(role, that.role)
+        .append(entities, that.entities)
+        .append(cEntities, that.cEntities)
+        .append(date, that.date)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(role)
+        .append(entities)
+        .append(cEntities)
+        .append(date)
+        .toHashCode();
   }
 }
