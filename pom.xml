@@ -43,7 +43,7 @@
     <!-- Dependency Versions -->
 
     <version.ascii-table>1.8.0</version.ascii-table>
-    <version.assertj>3.26.3</version.assertj>
+    <version.assertj>3.27.3</version.assertj>
     <version.aws.sdk.v1>1.12.782</version.aws.sdk.v1>
     <version.aws.sdk.v2>2.31.15</version.aws.sdk.v2>
     <version.commons-configuration2>2.11.0</version.commons-configuration2>
