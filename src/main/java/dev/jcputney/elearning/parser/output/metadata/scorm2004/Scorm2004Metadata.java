@@ -60,7 +60,10 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
    */
   public static Scorm2004Metadata create(Scorm2004Manifest manifest, boolean xapiEnabled) {
     Scorm2004Metadata metadata =
-        Scorm2004Metadata.builder().manifest(manifest).moduleType(ModuleType.SCORM_2004)
+        Scorm2004Metadata
+            .builder()
+            .manifest(manifest)
+            .moduleType(ModuleType.SCORM_2004)
             .xapiEnabled(xapiEnabled)
             .build();
 
@@ -88,7 +91,10 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
    */
   @JsonIgnore
   private static Set<String> getGlobalObjectiveIds(Scorm2004Manifest manifest) {
-    return manifest.getOrganizations().getOrganizationList().stream()
+    return manifest
+        .getOrganizations()
+        .getOrganizationList()
+        .stream()
         .flatMap(org -> safeStream(org.getItems())) // Null-safe stream for items
         .flatMap(item -> safeStream(getObjectives(item))) // Null-safe stream for objectives
         .flatMap(obj -> safeStream(obj.getMapInfo())) // Null-safe stream for mapInfo
@@ -105,8 +111,13 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
    */
   private static List<Scorm2004Objective> getObjectives(
       dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item item) {
-    if (item.getSequencing() != null && item.getSequencing().getObjectives() != null) {
-      return item.getSequencing().getObjectives().getObjectiveList();
+    if (item.getSequencing() != null && item
+        .getSequencing()
+        .getObjectives() != null) {
+      return item
+          .getSequencing()
+          .getObjectives()
+          .getObjectiveList();
     }
     return List.of(); // Return an empty list if objectives are null
   }

@@ -120,12 +120,28 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
     try (InputStream manifestStream = moduleFileProvider.getFileContents(manifestPath)) {
       M manifest = parseXmlToObject(manifestStream, getManifestClass());
       log.debug("Successfully parsed manifest file: {}", manifestPath);
+      loadExternalMetadata(manifest);
       return manifest;
     } catch (IOException | XMLStreamException e) {
       log.error("Error parsing manifest file {}: {}", manifestPath, e.getMessage());
       throw e;
     }
   }
+
+  /**
+   * Abstract method to load external metadata files into the manifest object.
+   * <p>
+   * This method should be implemented by the specific parsers to load any additional metadata files
+   * that are referenced in the manifest.
+   * </p>
+   *
+   * @param manifest The manifest object to load external metadata into.
+   * @throws XMLStreamException If an error occurs while parsing the XML.
+   * @throws IOException If an error occurs while reading the file.
+   * @throws IllegalArgumentException if manifest is null
+   */
+  abstract void loadExternalMetadata(M manifest)
+      throws XMLStreamException, IOException;
 
   /**
    * Abstract method to return the class of the manifest object for the specific parser.

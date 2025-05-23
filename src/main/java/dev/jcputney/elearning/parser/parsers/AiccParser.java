@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.xml.stream.XMLStreamException;
 import org.apache.commons.configuration2.INIConfiguration;
 import org.apache.commons.configuration2.SubnodeConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -147,6 +148,11 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
   }
 
   @Override
+  void loadExternalMetadata(AiccManifest manifest) throws XMLStreamException, IOException {
+    // No external metadata to load for AICC
+  }
+
+  @Override
   protected Class<AiccManifest> getManifestClass() {
     return AiccManifest.class;
   }
@@ -164,7 +170,11 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
     try (InputStream inputStream = moduleFileProvider.getFileContents(fileName)) {
       MappingIterator<T> objectMappingIterator = new CsvMapper()
           .readerWithTypedSchemaFor(clazz)
-          .with(CsvSchema.emptySchema().withHeader().withColumnSeparator(',').withQuoteChar('"'))
+          .with(CsvSchema
+              .emptySchema()
+              .withHeader()
+              .withColumnSeparator(',')
+              .withQuoteChar('"'))
           .readValues(inputStream);
       return new ArrayList<>(objectMappingIterator.readAll());
     }
@@ -191,7 +201,9 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
         Iterator<String> keyIterator = confSection.getKeys();
         while (keyIterator.hasNext()) {
           String key = keyIterator.next();
-          String value = confSection.getProperty(key).toString();
+          String value = confSection
+              .getProperty(key)
+              .toString();
           subSectionMap.put(key, value);
         }
         mapData.put(section, subSectionMap);
@@ -204,7 +216,9 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
   }
 
   private String findFileByExtension(String extension) throws IOException {
-    return moduleFileProvider.listFiles("").stream()
+    return moduleFileProvider
+        .listFiles("")
+        .stream()
         .filter(fileName -> fileName.endsWith(extension))
         .findFirst()
         .orElse(null);

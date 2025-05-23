@@ -78,7 +78,6 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
       }
 
       var manifest = parseManifest(MANIFEST_FILE);
-      loadExternalMetadata(manifest);
 
       String title = manifest.getTitle();
       String launchUrl = manifest.getLaunchUrl();
@@ -111,15 +110,19 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
    * @throws XMLStreamException If an error occurs while parsing the XML.
    * @throws IOException If an error occurs while reading the file.
    */
-  public void loadExternalMetadata(Scorm2004Manifest manifest)
+  void loadExternalMetadata(Scorm2004Manifest manifest)
       throws XMLStreamException, IOException {
     if (manifest == null) {
       return;
     }
 
     loadExternalMetadataIntoMetadata(manifest.getMetadata());
-    loadResourcesMetadata(manifest.getResources().getResourceList());
-    loadOrganizationsMetadata(manifest.getOrganizations().getOrganizationList());
+    loadResourcesMetadata(manifest
+        .getResources()
+        .getResourceList());
+    loadOrganizationsMetadata(manifest
+        .getOrganizations()
+        .getOrganizationList());
   }
 
   /**
