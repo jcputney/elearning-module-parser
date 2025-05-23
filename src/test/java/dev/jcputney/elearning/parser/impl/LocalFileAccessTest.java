@@ -345,4 +345,26 @@ class LocalFileAccessTest {
     String path = "subdir//file.txt";
     assertEquals(tempDir.toString() + "/" + path, localFileAccess.fullPath(path));
   }
+
+  @Test
+  void listFiles_withEmptyRootPath_preservesDirectoryStructure() throws IOException {
+    // Use LocalFileAccess without a root path
+    LocalFileAccess access = new LocalFileAccess("");
+
+    // Create a temporary directory and file relative to the current working directory
+    Path tempRoot = Files.createTempDirectory(Paths.get(""), "lfa");
+    Path subDir = Files.createDirectory(tempRoot.resolve("sub"));
+    Path testFile = subDir.resolve("file.txt");
+    Files.write(testFile, "content".getBytes(StandardCharsets.UTF_8));
+
+    try {
+      String relativePath = tempRoot.getFileName() + "/sub";
+      List<String> files = access.listFiles(relativePath);
+      assertTrue(files.contains(relativePath + "/file.txt"));
+    } finally {
+      Files.deleteIfExists(testFile);
+      Files.deleteIfExists(subDir);
+      Files.deleteIfExists(tempRoot);
+    }
+  }
 }

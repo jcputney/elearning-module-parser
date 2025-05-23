@@ -18,7 +18,6 @@
 package dev.jcputney.elearning.parser.impl;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -89,10 +88,11 @@ public class LocalFileAccess implements FileAccess {
 
     try (Stream<Path> paths = Files.list(dirPath)) {
       // Use stream API for more secure listing with filtering on regular files only
+      Path basePath = Paths.get(getRootPath());
       return paths
           .filter(Files::isRegularFile) // Only list regular files
+          .map(basePath::relativize)
           .map(Path::toString)
-          .map(path -> path.replace(rootPath + File.separator, ""))
           .toList();
     } catch (IOException e) {
       throw new IOException("Failed to list files in directory: " + directoryPath, e);
