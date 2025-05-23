@@ -28,10 +28,10 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an objective within the SCORM sequencing model. Objectives define specific learning
@@ -49,6 +49,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ADLObjective implements Serializable {
@@ -67,38 +69,4 @@ public class ADLObjective implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "mapInfo", namespace = ADLSeq.NAMESPACE_URI)
   private List<MapInfo> mapInfoList;
-
-  /**
-   * Default constructor for the ADLObjective class.
-   */
-  @SuppressWarnings("unused")
-  public ADLObjective() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    ADLObjective that = (ADLObjective) o;
-
-    return new EqualsBuilder()
-        .append(objectiveID, that.objectiveID)
-        .append(mapInfoList, that.mapInfoList)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(objectiveID)
-        .append(mapInfoList)
-        .toHashCode();
-  }
 }

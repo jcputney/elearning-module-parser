@@ -28,9 +28,9 @@ import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a LangString in LOM metadata, which is a collection of strings with language
@@ -56,6 +56,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Jacksonized
 @Data
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LangString implements Serializable {
@@ -73,37 +75,4 @@ public class LangString implements Serializable {
   @JacksonXmlText
   @JsonDeserialize(using = TrimAndPreserveIndentationDeserializer.class)
   private String value;
-
-  /**
-   * Default constructor for the LangString class.
-   */
-  public LangString() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    LangString that = (LangString) o;
-
-    return new EqualsBuilder()
-        .append(language, that.language)
-        .append(value, that.value)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(language)
-        .append(value)
-        .toHashCode();
-  }
 }

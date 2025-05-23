@@ -33,10 +33,10 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the <code>general</code> element in the LOM schema, which provides general information
@@ -64,6 +64,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -155,51 +157,4 @@ public class General implements Serializable {
   @JacksonXmlElementWrapper(localName = "aggregationLevel", useWrapping = false)
   @JacksonXmlProperty(localName = "aggregationLevel")
   private SourceValuePair<AggregationLevel> aggregationLevel;
-
-  /**
-   * Default constructor for the General class.
-   */
-  public General() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    General general = (General) o;
-
-    return new EqualsBuilder()
-        .append(identifiers, general.identifiers)
-        .append(title, general.title)
-        .append(catalogEntries, general.catalogEntries)
-        .append(language, general.language)
-        .append(description, general.description)
-        .append(keywords, general.keywords)
-        .append(coverage, general.coverage)
-        .append(structure, general.structure)
-        .append(aggregationLevel, general.aggregationLevel)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(identifiers)
-        .append(title)
-        .append(catalogEntries)
-        .append(language)
-        .append(description)
-        .append(keywords)
-        .append(coverage)
-        .append(structure)
-        .append(aggregationLevel)
-        .toHashCode();
-  }
 }

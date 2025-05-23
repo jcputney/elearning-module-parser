@@ -27,11 +27,11 @@ import dev.jcputney.elearning.parser.input.lom.LOM;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLCP;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents metadata for a SCORM element, which can either be inline metadata using a LOM element
@@ -58,6 +58,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -75,38 +77,4 @@ public class Scorm2004SubMetadata implements LoadableMetadata {
   @JacksonXmlProperty(localName = "lom", namespace = LOM.NAMESPACE_URI)
   @Setter
   private LOM lom;
-
-  /**
-   * Default constructor for the Scorm2004SubMetadata class.
-   */
-  @SuppressWarnings("unused")
-  public Scorm2004SubMetadata() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Scorm2004SubMetadata that = (Scorm2004SubMetadata) o;
-
-    return new EqualsBuilder()
-        .append(location, that.location)
-        .append(lom, that.lom)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(location)
-        .append(lom)
-        .toHashCode();
-  }
 }

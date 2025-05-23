@@ -32,10 +32,10 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup.RollupRules;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a top-level sequencing configuration, containing elements that define the sequencing
@@ -44,6 +44,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -109,56 +111,4 @@ public class Sequencing implements Serializable {
    */
   @JacksonXmlProperty(localName = "constrainedChoiceConsiderations", namespace = ADLSeq.NAMESPACE_URI)
   private ConstrainChoiceConsiderations constrainChoiceConsiderations;
-
-  /**
-   * Default constructor for the Sequencing class.
-   */
-  @SuppressWarnings("unused")
-  public Sequencing() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Sequencing that = (Sequencing) o;
-
-    return new EqualsBuilder()
-        .append(controlMode, that.controlMode)
-        .append(sequencingRules, that.sequencingRules)
-        .append(limitConditions, that.limitConditions)
-        .append(auxiliaryResources, that.auxiliaryResources)
-        .append(rollupRules, that.rollupRules)
-        .append(objectives, that.objectives)
-        .append(adlObjectives, that.adlObjectives)
-        .append(randomizationControls, that.randomizationControls)
-        .append(deliveryControls, that.deliveryControls)
-        .append(rollupConsiderations, that.rollupConsiderations)
-        .append(constrainChoiceConsiderations, that.constrainChoiceConsiderations)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(controlMode)
-        .append(sequencingRules)
-        .append(limitConditions)
-        .append(auxiliaryResources)
-        .append(rollupRules)
-        .append(objectives)
-        .append(adlObjectives)
-        .append(randomizationControls)
-        .append(deliveryControls)
-        .append(rollupConsiderations)
-        .append(constrainChoiceConsiderations)
-        .toHashCode();
-  }
 }

@@ -80,7 +80,10 @@ public class S3FileAccessV1 implements FileAccess {
    */
   @Override
   public List<String> listFilesInternal(String directoryPath) {
-    return s3Client.listObjects(bucketName, fullPath(directoryPath)).getObjectSummaries().stream()
+    return s3Client
+        .listObjects(bucketName, fullPath(directoryPath))
+        .getObjectSummaries()
+        .stream()
         .map(S3ObjectSummary::getKey)
         .toList();
   }
@@ -108,7 +111,8 @@ public class S3FileAccessV1 implements FileAccess {
    * @return The detected internal root directory or the original path if none is detected.
    */
   public String getInternalRootDirectory(String rootPath) {
-    List<String> commonPrefixes = s3Client.listObjects(bucketName, fullPath(rootPath))
+    List<String> commonPrefixes = s3Client
+        .listObjects(bucketName, fullPath(rootPath))
         .getCommonPrefixes();
     if (commonPrefixes.size() != 1) {
       return rootPath;

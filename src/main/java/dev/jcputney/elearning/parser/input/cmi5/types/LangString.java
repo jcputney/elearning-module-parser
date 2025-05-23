@@ -28,10 +28,10 @@ import dev.jcputney.elearning.parser.input.common.TrimAndPreserveIndentationDese
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a single localized string with an optional language attribute.
@@ -53,6 +53,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LangString implements Serializable {
@@ -80,37 +82,4 @@ public class LangString implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("lang")
   private String lang;
-
-  /**
-   * Default constructor for the LangString class.
-   */
-  public LangString() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    LangString that = (LangString) o;
-
-    return new EqualsBuilder()
-        .append(value, that.value)
-        .append(lang, that.lang)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(value)
-        .append(lang)
-        .toHashCode();
-  }
 }

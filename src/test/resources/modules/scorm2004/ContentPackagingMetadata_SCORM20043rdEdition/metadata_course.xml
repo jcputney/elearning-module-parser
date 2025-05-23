@@ -1,14 +1,15 @@
 <?xml version="1.0" ?>
 <!-- An example of course level metadata using every possible metadata element.-->
-<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM lom.xsd">
+<lom xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ltsc.ieee.org/xsd/LOM"
+  xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM lom.xsd">
   <general>
-   
+
     <!-- This course is identifier by a unique URI in a domain controlled by us.-->
     <identifier>
       <catalog>URI</catalog>
       <entry>com.scorm.golfsamples.contentpackaging.metadata.20043rd</entry>
     </identifier>
-    
+
     <title>
       <string language="en-US">Golf Explained</string>
       <!-- An alternate title for Spanish language users-->
@@ -19,7 +20,10 @@
     <language>en</language>
 
     <description>
-      <string language="en-US">A high level overview of the sport of golf. This course describes how to play golf, how to use a golf handicap, the etiquette of golfing and how to have fun while playing.</string>
+      <string language="en-US">A high level overview of the sport of golf. This course describes how
+        to play golf, how to use a golf handicap, the etiquette of golfing and how to have fun while
+        playing.
+      </string>
     </description>
 
     <!-- Several keyword sets are applicable-->
@@ -34,27 +38,29 @@
     </keyword>
 
     <coverage>
-      <string language="en-US">Current time. Applicable to the entire world, but focused on the US and UK.</string>
+      <string language="en-US">Current time. Applicable to the entire world, but focused on the US
+        and UK.
+      </string>
     </coverage>
-    
+
     <structure>
       <source>LOMv1.0</source>
       <value>hierarchical</value>
     </structure>
-    
+
     <aggregationLevel>
       <source>LOMv1.0</source>
       <value>1</value>
     </aggregationLevel>
-    
+
   </general>
-  
+
   <lifeCycle>
 
     <version>
       <string language="en-US">1.0</string>
     </version>
-    
+
     <status>
       <source>LOMv1.0</source>
       <value>final</value>
@@ -97,13 +103,14 @@ END:VCARD]]>
       <date>
         <dateTime>2009-01-12</dateTime>
         <description>
-          <string language="en-US">This is the date the text copy was copied from Wikipedia.</string>
+          <string language="en-US">This is the date the text copy was copied from Wikipedia.
+          </string>
         </description>
       </date>
     </contribute>
-    
+
   </lifeCycle>
-  
+
   <metaMetadata>
 
     <!-- A unique identifier in our domain identifying this particular metadata file-->
@@ -111,7 +118,7 @@ END:VCARD]]>
       <catalog>URI</catalog>
       <entry>com.scorm.golfsamples.contentpackaging.metadata.20043rd.courselevelmetadata</entry>
     </identifier>
-   
+
     <contribute>
       <role>
         <source>LOMv1.0</source>
@@ -134,14 +141,14 @@ END:VCARD]]>
         </description>
       </date>
     </contribute>
-    
+
     <metadataSchema>LOMv1.0</metadataSchema>
     <metadataSchema>SCORM_CAM_v1.3</metadataSchema>
-    
+
     <language>en-us</language>
-  
+
   </metaMetadata>
-  
+
   <technical>
 
     <!-- All of the file types used by this course-->
@@ -179,20 +186,24 @@ END:VCARD]]>
     </installationRemarks>
 
     <otherPlatformRequirements>
-      <string language="en-us">This course has been tested in Firefox and IE and also on Windows and on a Mac.</string>
+      <string language="en-us">This course has been tested in Firefox and IE and also on Windows and
+        on a Mac.
+      </string>
     </otherPlatformRequirements>
 
     <duration>
       <duration>PT10M</duration>
       <description>
-        <string language="en-us">This field isn't really applicable to the course as a whole, it is meant more for media assets. Here we say that it takes about 10 minutes to complete.</string>
+        <string language="en-us">This field isn't really applicable to the course as a whole, it is
+          meant more for media assets. Here we say that it takes about 10 minutes to complete.
+        </string>
       </description>
     </duration>
-    
+
   </technical>
 
   <educational>
-    
+
     <learningResourceType>
       <source>LOMv1.0</source>
       <value>narrative text</value>
@@ -201,11 +212,16 @@ END:VCARD]]>
       <source>LOMv1.0</source>
       <value>self assessment</value>
     </learningResourceType>
-    
+
     <interactivityLevel>
       <source>LOMv1.0</source>
       <value>very low</value>
     </interactivityLevel>
+
+    <interactivityType>
+      <source>LOMv1.0</source>
+      <value>expositive</value>
+    </interactivityType>
 
     <semanticDensity>
       <source>LOMv1.0</source>
@@ -239,13 +255,16 @@ END:VCARD]]>
     </typicalLearningTime>
 
     <description>
-      <string>This course should be used to provide people with a new interest in golf an overview of the game. It does not provide instruction on how to swing a club or any other athletic advice. It is purely an overview of the concepts of the game.</string>
+      <string>This course should be used to provide people with a new interest in golf an overview
+        of the game. It does not provide instruction on how to swing a club or any other athletic
+        advice. It is purely an overview of the concepts of the game.
+      </string>
     </description>
 
     <language>en-us</language>
-    
+
   </educational>
-  
+
   <rights>
 
     <cost>
@@ -259,13 +278,15 @@ END:VCARD]]>
     </copyrightAndOtherRestrictions>
 
     <description>
-      <string>This content may be freely distributed subject to the Creative Commons Attribution 3.0 United States License.</string>
+      <string>This content may be freely distributed subject to the Creative Commons Attribution 3.0
+        United States License.
+      </string>
     </description>
-  
+
   </rights>
 
   <relation>
-  
+
     <kind>
       <source>LOMv1.0</source>
       <value>isbasedon</value>
@@ -276,10 +297,12 @@ END:VCARD]]>
         <entry>com.scorm.golfsamples.contentpackaging.singlesco.20043rd</entry>
       </identifier>
       <description>
-        <string language="en-us">This course was derived from the Single SCO golf example from Rustici Software.</string>
+        <string language="en-us">This course was derived from the Single SCO golf example from
+          Rustici Software.
+        </string>
       </description>
     </resource>
-  
+
   </relation>
 
   <annotation>
@@ -296,22 +319,24 @@ END:VCARD]]>
     <date>
       <dateTime>2009-01-23</dateTime>
       <description>
-        <string language="en-us">This annotation was added on the same date the metadata was developed.</string>
+        <string language="en-us">This annotation was added on the same date the metadata was
+          developed.
+        </string>
       </description>
     </date>
     <description>
       <string language="en-us">Learners will need to understand that golf is a sport.</string>
     </description>
   </annotation>
-  
+
   <classification>
-    
+
     <!-- Ties this course into the rest of the golf samples library.-->
     <purpose>
       <source>LOMv1.0</source>
       <value>educational objective</value>
     </purpose>
-    
+
     <taxonPath>
       <source>
         <string language="en-us">Rustici Software's catalog of golf sample courses</string>
@@ -319,13 +344,17 @@ END:VCARD]]>
       <taxon>
         <id>metadata_instruction</id>
         <entry>
-          <string language="en-us">Examples that demonstrate the proper use of SCORM metadata</string>
+          <string language="en-us">Examples that demonstrate the proper use of SCORM metadata
+          </string>
         </entry>
       </taxon>
     </taxonPath>
-    
+
     <description>
-      <string language="en-US">This is the primary example of metadata usage in the golf samples. It is for SCORM 2004 3rd Edition and should be used in conjunction with the example for SCORM 1.2.</string>
+      <string language="en-US">This is the primary example of metadata usage in the golf samples. It
+        is for SCORM 2004 3rd Edition and should be used in conjunction with the example for SCORM
+        1.2.
+      </string>
     </description>
 
     <keyword>
@@ -334,6 +363,6 @@ END:VCARD]]>
     <keyword>
       <string language="en-US">SCORM 2004</string>
     </keyword>
-    
+
   </classification>
 </lom>

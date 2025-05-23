@@ -29,10 +29,10 @@ import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the rights information of a learning object, including cost, copyright, and
@@ -55,6 +55,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Rights implements Serializable {
@@ -110,40 +112,4 @@ public class Rights implements Serializable {
    */
   @JacksonXmlProperty(localName = "description")
   private UnboundLangString descriptions;
-
-  /**
-   * Default constructor for the Rights class.
-   */
-  @SuppressWarnings("unused")
-  public Rights() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Rights rights = (Rights) o;
-
-    return new EqualsBuilder()
-        .append(cost, rights.cost)
-        .append(copyrightAndOtherRestrictions, rights.copyrightAndOtherRestrictions)
-        .append(descriptions, rights.descriptions)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(cost)
-        .append(copyrightAndOtherRestrictions)
-        .append(descriptions)
-        .toHashCode();
-  }
 }

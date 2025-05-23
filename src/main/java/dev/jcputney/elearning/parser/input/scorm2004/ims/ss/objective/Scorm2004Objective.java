@@ -29,10 +29,10 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an individual learning objective within the SCORM IMS Simple Sequencing schema.
@@ -42,6 +42,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Objective implements Serializable {
@@ -85,42 +87,4 @@ public class Scorm2004Objective implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "mapInfo", namespace = IMSSS.NAMESPACE_URI)
   private List<Scorm2004ObjectiveMapping> mapInfo;
-
-  /**
-   * Default constructor for the Scorm2004Objective class.
-   */
-  @SuppressWarnings("unused")
-  public Scorm2004Objective() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Scorm2004Objective that = (Scorm2004Objective) o;
-
-    return new EqualsBuilder()
-        .append(objectiveID, that.objectiveID)
-        .append(satisfiedByMeasure, that.satisfiedByMeasure)
-        .append(minNormalizedMeasure, that.minNormalizedMeasure)
-        .append(mapInfo, that.mapInfo)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(objectiveID)
-        .append(satisfiedByMeasure)
-        .append(minNormalizedMeasure)
-        .append(mapInfo)
-        .toHashCode();
-  }
 }

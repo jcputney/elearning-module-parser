@@ -31,10 +31,10 @@ import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The root element of a Learning Object Metadata (LOM) document. This is the entry point for
@@ -63,6 +63,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JacksonXmlRootElement(localName = "lom", namespace = LOM.NAMESPACE_URI)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -231,13 +233,6 @@ public class LOM implements Serializable {
   private List<Classification> classifications;
 
   /**
-   * Default constructor for the LOM class.
-   */
-  public LOM() {
-    // Default constructor
-  }
-
-  /**
    * Get the title of the learning object.
    *
    * @return the title of the learning object
@@ -271,45 +266,5 @@ public class LOM implements Serializable {
             .get(0)
             .getValue())
         .orElse(null);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    LOM lom = (LOM) o;
-
-    return new EqualsBuilder()
-        .append(general, lom.general)
-        .append(lifecycle, lom.lifecycle)
-        .append(metaMetadata, lom.metaMetadata)
-        .append(technical, lom.technical)
-        .append(educational, lom.educational)
-        .append(rights, lom.rights)
-        .append(relations, lom.relations)
-        .append(annotations, lom.annotations)
-        .append(classifications, lom.classifications)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(general)
-        .append(lifecycle)
-        .append(metaMetadata)
-        .append(technical)
-        .append(educational)
-        .append(rights)
-        .append(relations)
-        .append(annotations)
-        .append(classifications)
-        .toHashCode();
   }
 }

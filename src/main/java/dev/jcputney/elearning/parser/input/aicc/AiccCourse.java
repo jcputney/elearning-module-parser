@@ -27,10 +27,10 @@ import java.io.Serializable;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the AICC course information.
@@ -43,6 +43,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -63,42 +65,6 @@ public class AiccCourse implements Serializable {
    */
   @JsonProperty(value = "Course_Description", required = true)
   private Map<String, String> courseDescription;
-
-  /**
-   * Default constructor for the AiccCourse class.
-   */
-  @SuppressWarnings("unused")
-  public AiccCourse() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    AiccCourse that = (AiccCourse) o;
-
-    return new EqualsBuilder()
-        .append(course, that.course)
-        .append(courseBehavior, that.courseBehavior)
-        .append(courseDescription, that.courseDescription)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(course)
-        .append(courseBehavior)
-        .append(courseDescription)
-        .toHashCode();
-  }
 
   /**
    * Course description information for the AICC manifest.
@@ -125,6 +91,8 @@ public class AiccCourse implements Serializable {
   @Builder
   @Getter
   @Jacksonized
+  @EqualsAndHashCode(doNotUseGetters = true)
+  @NoArgsConstructor
   @AllArgsConstructor(access = PRIVATE)
   @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
   public static class Course {
@@ -189,60 +157,6 @@ public class AiccCourse implements Serializable {
      */
     @JsonProperty(value = "Total_Objectives")
     private String totalObjectives;
-
-    /**
-     * Default constructor for the Course class.
-     */
-    @SuppressWarnings("unused")
-    public Course() {
-      // Default constructor
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-
-      if (o == null || getClass() != o.getClass()) {
-        return false;
-      }
-
-      Course course = (Course) o;
-
-      return new EqualsBuilder()
-          .append(courseCreator, course.courseCreator)
-          .append(courseId, course.courseId)
-          .append(courseTitle, course.courseTitle)
-          .append(courseSystem, course.courseSystem)
-          .append(level, course.level)
-          .append(maxFieldsCst, course.maxFieldsCst)
-          .append(maxFieldsOrt, course.maxFieldsOrt)
-          .append(totalAus, course.totalAus)
-          .append(totalBlocks, course.totalBlocks)
-          .append(version, course.version)
-          .append(totalComplexObj, course.totalComplexObj)
-          .append(totalObjectives, course.totalObjectives)
-          .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-      return new HashCodeBuilder(17, 37)
-          .append(courseCreator)
-          .append(courseId)
-          .append(courseTitle)
-          .append(courseSystem)
-          .append(level)
-          .append(maxFieldsCst)
-          .append(maxFieldsOrt)
-          .append(totalAus)
-          .append(totalBlocks)
-          .append(version)
-          .append(totalComplexObj)
-          .append(totalObjectives)
-          .toHashCode();
-    }
   }
 
   /**
@@ -251,6 +165,8 @@ public class AiccCourse implements Serializable {
   @Builder
   @Getter
   @Jacksonized
+  @EqualsAndHashCode(doNotUseGetters = true)
+  @NoArgsConstructor
   @AllArgsConstructor(access = PRIVATE)
   @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
   public static class CourseBehavior {
@@ -260,37 +176,5 @@ public class AiccCourse implements Serializable {
      */
     @JsonProperty(value = "Max_Normal", required = true)
     private String maxNormal;
-
-    /**
-     * Default constructor for the CourseBehavior class.
-     */
-    @SuppressWarnings("unused")
-    public CourseBehavior() {
-      // Default constructor
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-
-      if (o == null || getClass() != o.getClass()) {
-        return false;
-      }
-
-      CourseBehavior that = (CourseBehavior) o;
-
-      return new EqualsBuilder()
-          .append(maxNormal, that.maxNormal)
-          .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-      return new HashCodeBuilder(17, 37)
-          .append(maxNormal)
-          .toHashCode();
-    }
   }
 }

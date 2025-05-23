@@ -33,10 +33,10 @@ import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the completion threshold element, which specifies the minimum progress required to
@@ -46,6 +46,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -77,40 +79,4 @@ public class CompletionThreshold implements Serializable {
   @JsonProperty("completedByMeasure")
   @Default
   private Boolean completedByMeasure = false;
-
-  /**
-   * Default constructor for the CompletionThreshold class.
-   */
-  @SuppressWarnings("unused")
-  public CompletionThreshold() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    CompletionThreshold that = (CompletionThreshold) o;
-
-    return new EqualsBuilder()
-        .append(minProgressMeasure, that.minProgressMeasure)
-        .append(progressWeight, that.progressWeight)
-        .append(completedByMeasure, that.completedByMeasure)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(minProgressMeasure)
-        .append(progressWeight)
-        .append(completedByMeasure)
-        .toHashCode();
-  }
 }

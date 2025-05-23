@@ -26,10 +26,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>debugSpec</strong> complex type.</p>
@@ -55,6 +55,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -110,54 +112,4 @@ public class DebugSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "includeTimestamps")
   private YesNoType includeTimestamps;
-
-  /**
-   * Default constructor for the DebugSpec class.
-   */
-  @SuppressWarnings("unused")
-  public DebugSpec() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    DebugSpec debugSpec = (DebugSpec) o;
-
-    return new EqualsBuilder()
-        .append(controlAudit, debugSpec.controlAudit)
-        .append(controlDetailed, debugSpec.controlDetailed)
-        .append(runtimeAudit, debugSpec.runtimeAudit)
-        .append(runtimeDetailed, debugSpec.runtimeDetailed)
-        .append(sequencingAudit, debugSpec.sequencingAudit)
-        .append(sequencingDetailed, debugSpec.sequencingDetailed)
-        .append(sequencingSimple, debugSpec.sequencingSimple)
-        .append(lookaheadAudit, debugSpec.lookaheadAudit)
-        .append(lookaheadDetailed, debugSpec.lookaheadDetailed)
-        .append(includeTimestamps, debugSpec.includeTimestamps)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(controlAudit)
-        .append(controlDetailed)
-        .append(runtimeAudit)
-        .append(runtimeDetailed)
-        .append(sequencingAudit)
-        .append(sequencingDetailed)
-        .append(sequencingSimple)
-        .append(lookaheadAudit)
-        .append(lookaheadDetailed)
-        .append(includeTimestamps)
-        .toHashCode();
-  }
 }

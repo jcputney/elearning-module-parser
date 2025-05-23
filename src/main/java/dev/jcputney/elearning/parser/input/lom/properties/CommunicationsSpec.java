@@ -26,10 +26,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>communicationsSpec</strong> complex type.</p>
@@ -47,6 +47,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -62,38 +64,4 @@ public class CommunicationsSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "commitFrequency")
   private Integer commitFrequency;
-
-  /**
-   * Default constructor for the CommunicationsSpec class.
-   */
-  @SuppressWarnings("unused")
-  public CommunicationsSpec() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    CommunicationsSpec that = (CommunicationsSpec) o;
-
-    return new EqualsBuilder()
-        .append(maxFailedSubmissions, that.maxFailedSubmissions)
-        .append(commitFrequency, that.commitFrequency)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(maxFailedSubmissions)
-        .append(commitFrequency)
-        .toHashCode();
-  }
 }

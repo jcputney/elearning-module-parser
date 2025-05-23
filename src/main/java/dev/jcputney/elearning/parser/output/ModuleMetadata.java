@@ -23,6 +23,7 @@ import dev.jcputney.elearning.parser.input.PackageManifest;
 import java.time.Duration;
 import lombok.Builder.Default;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -39,6 +40,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @Getter
 @SuperBuilder
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public abstract class ModuleMetadata<M extends PackageManifest> implements PackageManifest {
 
   /**
@@ -56,14 +58,6 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
    */
   @Default
   protected boolean xapiEnabled = false;
-
-  /**
-   * Default constructor for the ModuleMetadata class.
-   */
-  @SuppressWarnings("unused")
-  protected ModuleMetadata() {
-    // Default constructor
-  }
 
   /**
    * Constructor for ModuleMetadata.

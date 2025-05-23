@@ -30,10 +30,10 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a set of rollup rules within the SCORM IMS Simple Sequencing (IMSSS) schema. Rollup
@@ -59,6 +59,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -106,42 +108,4 @@ public class RollupRules implements Serializable {
   @JsonProperty("objectiveMeasureWeight")
   @Default
   private double objectiveMeasureWeight = 1.0;
-
-  /**
-   * Default constructor for the RollupRules class.
-   */
-  @SuppressWarnings("unused")
-  public RollupRules() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    RollupRules that = (RollupRules) o;
-
-    return new EqualsBuilder()
-        .append(rollupObjectiveSatisfied, that.rollupObjectiveSatisfied)
-        .append(rollupProgressCompletion, that.rollupProgressCompletion)
-        .append(objectiveMeasureWeight, that.objectiveMeasureWeight)
-        .append(rollupRuleList, that.rollupRuleList)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(rollupRuleList)
-        .append(rollupObjectiveSatisfied)
-        .append(rollupProgressCompletion)
-        .append(objectiveMeasureWeight)
-        .toHashCode();
-  }
 }

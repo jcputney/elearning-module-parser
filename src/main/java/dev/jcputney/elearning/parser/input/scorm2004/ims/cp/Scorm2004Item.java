@@ -38,10 +38,10 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a single item within an organization, typically mapping to a learning object or
@@ -50,6 +50,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -157,64 +159,4 @@ public class Scorm2004Item implements Serializable {
    */
   @JacksonXmlProperty(localName = "dataFromLMS", namespace = ADLCP.NAMESPACE_URI)
   private String dataFromLMS;
-
-  /**
-   * Default constructor for the Scorm2004Item class.
-   */
-  @SuppressWarnings("unused")
-  public Scorm2004Item() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Scorm2004Item that = (Scorm2004Item) o;
-
-    return new EqualsBuilder()
-        .append(isVisible, that.isVisible)
-        .append(identifier, that.identifier)
-        .append(identifierRef, that.identifierRef)
-        .append(parameters, that.parameters)
-        .append(title, that.title)
-        .append(items, that.items)
-        .append(data, that.data)
-        .append(completionThreshold, that.completionThreshold)
-        .append(sequencing, that.sequencing)
-        .append(metadata, that.metadata)
-        .append(presentation, that.presentation)
-        .append(masteryScore, that.masteryScore)
-        .append(prerequisites, that.prerequisites)
-        .append(timeLimitAction, that.timeLimitAction)
-        .append(dataFromLMS, that.dataFromLMS)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(identifier)
-        .append(identifierRef)
-        .append(isVisible)
-        .append(parameters)
-        .append(title)
-        .append(items)
-        .append(data)
-        .append(completionThreshold)
-        .append(sequencing)
-        .append(metadata)
-        .append(presentation)
-        .append(masteryScore)
-        .append(prerequisites)
-        .append(timeLimitAction)
-        .append(dataFromLMS)
-        .toHashCode();
-  }
 }

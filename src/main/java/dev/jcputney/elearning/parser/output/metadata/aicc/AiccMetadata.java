@@ -23,6 +23,7 @@ import dev.jcputney.elearning.parser.input.aicc.AssignableUnit;
 import dev.jcputney.elearning.parser.output.metadata.BaseModuleMetadata;
 import dev.jcputney.elearning.parser.output.metadata.SimpleMetadata;
 import java.util.List;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -35,15 +36,8 @@ import lombok.experimental.SuperBuilder;
  * </p>
  */
 @SuperBuilder
+@NoArgsConstructor
 public class AiccMetadata extends BaseModuleMetadata<AiccManifest> {
-
-  /**
-   * Default constructor for the AiccMetadata class.
-   */
-  @SuppressWarnings("unused")
-  protected AiccMetadata() {
-    // Default constructor
-  }
 
   /**
    * Creates a new AiccMetadata instance with standard AICC metadata components.
@@ -53,7 +47,8 @@ public class AiccMetadata extends BaseModuleMetadata<AiccManifest> {
    * @return A new AiccMetadata instance.
    */
   public static AiccMetadata create(AiccManifest manifest, boolean xapiEnabled) {
-    AiccMetadata metadata = AiccMetadata.builder()
+    AiccMetadata metadata = AiccMetadata
+        .builder()
         .manifest(manifest)
         .moduleType(ModuleType.AICC)
         .xapiEnabled(xapiEnabled)
@@ -66,13 +61,15 @@ public class AiccMetadata extends BaseModuleMetadata<AiccManifest> {
     List<AssignableUnit> assignableUnits = manifest.getAssignableUnits();
     if (assignableUnits != null && !assignableUnits.isEmpty()) {
       // Add assignable unit IDs
-      List<String> assignableUnitIds = assignableUnits.stream()
+      List<String> assignableUnitIds = assignableUnits
+          .stream()
           .map(AssignableUnit::getSystemId)
           .toList();
       aiccMetadata.addMetadata("assignableUnitIds", assignableUnitIds);
 
       // Add assignable unit names
-      List<String> assignableUnitNames = assignableUnits.stream()
+      List<String> assignableUnitNames = assignableUnits
+          .stream()
           .map(AssignableUnit::getFileName)
           .toList();
       aiccMetadata.addMetadata("assignableUnitNames", assignableUnitNames);

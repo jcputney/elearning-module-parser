@@ -26,10 +26,10 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a contribution to the lifecycle of the learning object in the Learning Object Metadata
@@ -72,6 +72,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Contribute implements Serializable {
@@ -154,42 +156,4 @@ public class Contribute implements Serializable {
    */
   @JacksonXmlProperty(localName = "date")
   private Date date;
-
-  /**
-   * Default constructor for the Contribute class.
-   */
-  @SuppressWarnings("unused")
-  public Contribute() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Contribute that = (Contribute) o;
-
-    return new EqualsBuilder()
-        .append(role, that.role)
-        .append(entities, that.entities)
-        .append(cEntities, that.cEntities)
-        .append(date, that.date)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(role)
-        .append(entities)
-        .append(cEntities)
-        .append(date)
-        .toHashCode();
-  }
 }

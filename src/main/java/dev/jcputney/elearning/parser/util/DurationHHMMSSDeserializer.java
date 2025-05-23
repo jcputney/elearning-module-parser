@@ -101,7 +101,8 @@ public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
     int minutes = parseOrZero(minutesPart);
     int seconds = parseOrZero(secondsPart);
 
-    return Duration.ofHours(hours)
+    return Duration
+        .ofHours(hours)
         .plusMinutes(minutes)
         .plusSeconds(seconds);
   }

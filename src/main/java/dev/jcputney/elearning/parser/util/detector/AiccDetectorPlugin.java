@@ -86,7 +86,9 @@ public class AiccDetectorPlugin implements ModuleTypeDetectorPlugin {
       boolean isAicc = files
           .stream()
           .anyMatch(file -> file.endsWith(AiccParser.AU_EXTENSION) &&
-              files.stream().anyMatch(f -> f.endsWith(AiccParser.CRS_EXTENSION)));
+              files
+                  .stream()
+                  .anyMatch(f -> f.endsWith(AiccParser.CRS_EXTENSION)));
 
       if (isAicc) {
         log.debug("Found AICC files (.au and .crs)");

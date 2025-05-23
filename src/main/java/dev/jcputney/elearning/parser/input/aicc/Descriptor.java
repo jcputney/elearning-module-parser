@@ -26,10 +26,10 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the descriptor element in an AICC module.
@@ -40,6 +40,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonNaming(SnakeCaseStrategy.class)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -65,43 +67,4 @@ public class Descriptor implements Serializable {
    */
   @JsonProperty(value = "Description")
   private String description;
-
-  /**
-   * Default constructor for the Descriptor class.
-   */
-  @SuppressWarnings("unused")
-  public Descriptor() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Descriptor that = (Descriptor) o;
-
-    return new EqualsBuilder()
-        .append(systemId, that.systemId)
-        .append(developerId, that.developerId)
-        .append(title, that.title)
-        .append(description, that.description)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(systemId)
-        .append(developerId)
-        .append(title)
-        .append(description)
-        .toHashCode();
-  }
-
 }

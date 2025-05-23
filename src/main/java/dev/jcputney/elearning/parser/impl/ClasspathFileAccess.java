@@ -59,7 +59,9 @@ public class ClasspathFileAccess implements FileAccess {
    */
   @Override
   public boolean fileExistsInternal(String path) {
-    return getClass().getClassLoader().getResource(path) != null;
+    return getClass()
+        .getClassLoader()
+        .getResource(path) != null;
   }
 
   /**
@@ -79,14 +81,18 @@ public class ClasspathFileAccess implements FileAccess {
         Enumeration<JarEntry> entries = jarFile.entries();
         while (entries.hasMoreElements()) {
           JarEntry entry = entries.nextElement();
-          if (entry.getName().startsWith(directoryPath) && !entry.isDirectory()) {
+          if (entry
+              .getName()
+              .startsWith(directoryPath) && !entry.isDirectory()) {
             fileList.add(entry.getName());
           }
         }
       }
     } else {
       // Fall back to loading from classpath directly (not inside a JAR)
-      var dirUrl = getClass().getClassLoader().getResource(directoryPath);
+      var dirUrl = getClass()
+          .getClassLoader()
+          .getResource(directoryPath);
       if (dirUrl != null) {
         fileList.add(dirUrl.getFile());
       }
@@ -103,7 +109,9 @@ public class ClasspathFileAccess implements FileAccess {
    */
   @Override
   public InputStream getFileContentsInternal(String path) throws IOException {
-    InputStream inputStream = getClass().getClassLoader().getResourceAsStream(path);
+    InputStream inputStream = getClass()
+        .getClassLoader()
+        .getResourceAsStream(path);
     if (inputStream == null) {
       throw new IOException("File not found on classpath: " + path);
     }
@@ -116,7 +124,9 @@ public class ClasspathFileAccess implements FileAccess {
    * @return An Optional containing the JAR path if available, or empty if not running from a JAR.
    */
   private Optional<String> getJarPath() {
-    String jarPath = Objects.requireNonNull(getClass().getResource("")).getPath();
+    String jarPath = Objects
+        .requireNonNull(getClass().getResource(""))
+        .getPath();
     if (jarPath.startsWith("file:") && jarPath.contains("!")) {
       jarPath = jarPath.substring(5, jarPath.indexOf("!"));
       return Optional.of(jarPath);

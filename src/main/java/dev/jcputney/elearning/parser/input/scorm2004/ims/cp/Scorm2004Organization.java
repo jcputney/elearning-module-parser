@@ -34,10 +34,10 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a single organization within the content package. Each organization may contain
@@ -46,6 +46,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -110,50 +112,4 @@ public class Scorm2004Organization implements Serializable {
    */
   @JacksonXmlProperty(localName = "sequencing", namespace = IMSSS.NAMESPACE_URI)
   private Sequencing sequencing;
-
-  /**
-   * Default constructor for the Scorm2004Organization class.
-   */
-  @SuppressWarnings("unused")
-  public Scorm2004Organization() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Scorm2004Organization that = (Scorm2004Organization) o;
-
-    return new EqualsBuilder()
-        .append(objectivesGlobalToSystem, that.objectivesGlobalToSystem)
-        .append(sharedDataGlobalToSystem, that.sharedDataGlobalToSystem)
-        .append(identifier, that.identifier)
-        .append(structure, that.structure)
-        .append(title, that.title)
-        .append(items, that.items)
-        .append(metadata, that.metadata)
-        .append(sequencing, that.sequencing)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(identifier)
-        .append(structure)
-        .append(title)
-        .append(items)
-        .append(objectivesGlobalToSystem)
-        .append(sharedDataGlobalToSystem)
-        .append(metadata)
-        .append(sequencing)
-        .toHashCode();
-  }
 }

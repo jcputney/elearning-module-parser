@@ -32,10 +32,10 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a single resource within the content package, typically corresponding to a physical
@@ -44,6 +44,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -102,50 +104,4 @@ public class Scorm2004Resource implements Serializable {
   @JacksonXmlElementWrapper(localName = "dependency", useWrapping = false)
   @JacksonXmlProperty(localName = "dependency", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private List<Scorm2004Dependency> dependencies;
-
-  /**
-   * Default constructor for the Scorm2004Resource class.
-   */
-  @SuppressWarnings("unused")
-  public Scorm2004Resource() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Scorm2004Resource that = (Scorm2004Resource) o;
-
-    return new EqualsBuilder()
-        .append(identifier, that.identifier)
-        .append(type, that.type)
-        .append(href, that.href)
-        .append(base, that.base)
-        .append(scormType, that.scormType)
-        .append(metadata, that.metadata)
-        .append(files, that.files)
-        .append(dependencies, that.dependencies)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(identifier)
-        .append(type)
-        .append(href)
-        .append(base)
-        .append(scormType)
-        .append(metadata)
-        .append(files)
-        .append(dependencies)
-        .toHashCode();
-  }
 }

@@ -28,10 +28,10 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a set of sequencing rules within the SCORM IMS Simple Sequencing (IMSSS) schema.
@@ -61,6 +61,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -90,40 +92,4 @@ public class SequencingRules implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "postConditionRule", namespace = IMSSS.NAMESPACE_URI)
   private List<SequencingRule> postConditionRules;
-
-  /**
-   * Default constructor for the SequencingRules class.
-   */
-  @SuppressWarnings("unused")
-  public SequencingRules() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    SequencingRules that = (SequencingRules) o;
-
-    return new EqualsBuilder()
-        .append(preConditionRules, that.preConditionRules)
-        .append(exitConditionRules, that.exitConditionRules)
-        .append(postConditionRules, that.postConditionRules)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(preConditionRules)
-        .append(exitConditionRules)
-        .append(postConditionRules)
-        .toHashCode();
-  }
 }

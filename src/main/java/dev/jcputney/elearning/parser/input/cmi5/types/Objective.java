@@ -25,10 +25,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a single objective with a title, description, and unique identifier.
@@ -36,6 +36,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Objective implements Serializable {
@@ -68,39 +70,4 @@ public class Objective implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("id")
   private String id;
-
-  /**
-   * Default constructor for the Objective class.
-   */
-  public Objective() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Objective objective = (Objective) o;
-
-    return new EqualsBuilder()
-        .append(title, objective.title)
-        .append(description, objective.description)
-        .append(id, objective.id)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(title)
-        .append(description)
-        .append(id)
-        .toHashCode();
-  }
 }

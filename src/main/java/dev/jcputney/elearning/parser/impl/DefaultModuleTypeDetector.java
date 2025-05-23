@@ -87,7 +87,9 @@ public class DefaultModuleTypeDetector implements ModuleTypeDetector {
     log.debug("Registering module type detector plugin: {}", plugin.getName());
     plugins.add(plugin);
     // Sort plugins by priority (highest first)
-    plugins.sort(Comparator.comparingInt(ModuleTypeDetectorPlugin::getPriority).reversed());
+    plugins.sort(Comparator
+        .comparingInt(ModuleTypeDetectorPlugin::getPriority)
+        .reversed());
   }
 
   /**

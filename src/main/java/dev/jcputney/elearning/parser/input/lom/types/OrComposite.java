@@ -21,11 +21,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an <code>orComposite</code> element in the LOM schema, defining a set of conditions
@@ -49,6 +49,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @SuperBuilder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class OrComposite implements Serializable {
 
@@ -118,41 +120,4 @@ public class OrComposite implements Serializable {
    */
   @JacksonXmlProperty(localName = "maximumVersion")
   private String maximumVersion;
-
-  /**
-   * Default constructor for the OrComposite class.
-   */
-  public OrComposite() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    OrComposite that = (OrComposite) o;
-
-    return new EqualsBuilder()
-        .append(type, that.type)
-        .append(name, that.name)
-        .append(minimumVersion, that.minimumVersion)
-        .append(maximumVersion, that.maximumVersion)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(type)
-        .append(name)
-        .append(minimumVersion)
-        .append(maximumVersion)
-        .toHashCode();
-  }
 }

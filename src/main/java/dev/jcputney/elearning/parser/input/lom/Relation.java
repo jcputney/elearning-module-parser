@@ -29,10 +29,10 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the relationship information about a learning object in a Learning Object Metadata
@@ -54,6 +54,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Relation implements Serializable {
@@ -94,38 +96,4 @@ public class Relation implements Serializable {
   @JacksonXmlElementWrapper(localName = "resource", useWrapping = false)
   @JacksonXmlProperty(localName = "resource")
   private List<Resource> resource;
-
-  /**
-   * Default constructor for the Relation class.
-   */
-  @SuppressWarnings("unused")
-  public Relation() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Relation relation = (Relation) o;
-
-    return new EqualsBuilder()
-        .append(kind, relation.kind)
-        .append(resource, relation.resource)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(kind)
-        .append(resource)
-        .toHashCode();
-  }
 }

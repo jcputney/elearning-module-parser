@@ -30,10 +30,10 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the hierarchical structure of organizations in the content package. Organizations
@@ -42,6 +42,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -61,14 +63,6 @@ public class Scorm2004Organizations implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "organization", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private List<Scorm2004Organization> organizationList;
-
-  /**
-   * Default constructor for the Scorm2004Organizations class.
-   */
-  @SuppressWarnings("unused")
-  public Scorm2004Organizations() {
-    // Default constructor
-  }
 
   /**
    * Retrieves an organization by its unique identifier.
@@ -134,31 +128,5 @@ public class Scorm2004Organizations implements Serializable {
     }
 
     return result;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Scorm2004Organizations that = (Scorm2004Organizations) o;
-
-    return new EqualsBuilder()
-        .append(defaultOrganization, that.defaultOrganization)
-        .append(organizationList, that.organizationList)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(defaultOrganization)
-        .append(organizationList)
-        .toHashCode();
   }
 }

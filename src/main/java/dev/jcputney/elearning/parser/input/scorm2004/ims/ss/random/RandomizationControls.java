@@ -29,10 +29,10 @@ import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the randomization controls for a learning activity within the SCORM IMS Simple
@@ -58,6 +58,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -110,42 +112,4 @@ public class RandomizationControls implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("selectCount")
   private Integer selectCount;
-
-  /**
-   * Default constructor for the RandomizationControls class.
-   */
-  @SuppressWarnings("unused")
-  public RandomizationControls() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    RandomizationControls that = (RandomizationControls) o;
-
-    return new EqualsBuilder()
-        .append(reorderChildren, that.reorderChildren)
-        .append(randomizationTiming, that.randomizationTiming)
-        .append(selectionTiming, that.selectionTiming)
-        .append(selectCount, that.selectCount)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(randomizationTiming)
-        .append(selectionTiming)
-        .append(reorderChildren)
-        .append(selectCount)
-        .toHashCode();
-  }
 }

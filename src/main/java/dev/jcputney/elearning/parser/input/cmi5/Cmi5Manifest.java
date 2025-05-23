@@ -30,10 +30,10 @@ import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the root element of a CMI5 course structure manifest. Implements the
@@ -55,6 +55,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Cmi5Manifest implements PackageManifest {
@@ -108,13 +110,6 @@ public class Cmi5Manifest implements PackageManifest {
   @JacksonXmlElementWrapper(localName = "au", useWrapping = false)
   @JacksonXmlProperty(localName = "au")
   private List<AU> assignableUnits;
-
-  /**
-   * Default constructor for the Cmi5Manifest class.
-   */
-  public Cmi5Manifest() {
-    // Default constructor
-  }
 
   /**
    * Returns the title of the course. If the title is not present, returns null.
@@ -209,35 +204,5 @@ public class Cmi5Manifest implements PackageManifest {
   @Override
   public Duration getDuration() {
     return Duration.ZERO;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Cmi5Manifest that = (Cmi5Manifest) o;
-
-    return new EqualsBuilder()
-        .append(course, that.course)
-        .append(objectives, that.objectives)
-        .append(blocks, that.blocks)
-        .append(assignableUnits, that.assignableUnits)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(course)
-        .append(objectives)
-        .append(blocks)
-        .append(assignableUnits)
-        .toHashCode();
   }
 }

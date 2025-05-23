@@ -26,10 +26,10 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.RollupActionTy
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the action to perform if the conditions specified in a rollup rule are met. The rollup
@@ -42,6 +42,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupAction implements Serializable {
@@ -59,36 +61,4 @@ public class RollupAction implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("action")
   private RollupActionType action;
-
-  /**
-   * Default constructor for the RollupAction class.
-   */
-  @SuppressWarnings("unused")
-  public RollupAction() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    RollupAction that = (RollupAction) o;
-
-    return new EqualsBuilder()
-        .append(action, that.action)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(action)
-        .toHashCode();
-  }
 }

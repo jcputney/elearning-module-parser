@@ -24,10 +24,10 @@ import java.time.Duration;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the AICC manifest for a course.
@@ -41,6 +41,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@EqualsAndHashCode(doNotUseGetters = true)
+@NoArgsConstructor
 @AllArgsConstructor
 public class AiccManifest implements PackageManifest {
 
@@ -145,11 +147,6 @@ public class AiccManifest implements PackageManifest {
   }
 
   @Override
-  public String getLaunchUrl() {
-    return launchUrl;
-  }
-
-  @Override
   @JsonIgnore
   public String getIdentifier() {
     return this.course
@@ -169,37 +166,5 @@ public class AiccManifest implements PackageManifest {
   @JsonIgnore
   public Duration getDuration() {
     return Duration.ZERO;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    AiccManifest that = (AiccManifest) o;
-
-    return new EqualsBuilder()
-        .append(course, that.course)
-        .append(assignableUnits, that.assignableUnits)
-        .append(descriptors, that.descriptors)
-        .append(courseStructures, that.courseStructures)
-        .append(launchUrl, that.launchUrl)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(course)
-        .append(assignableUnits)
-        .append(descriptors)
-        .append(courseStructures)
-        .append(launchUrl)
-        .toHashCode();
   }
 }

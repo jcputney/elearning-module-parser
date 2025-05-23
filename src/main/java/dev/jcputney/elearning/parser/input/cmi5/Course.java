@@ -28,10 +28,10 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the root course element in a CMI5 course structure, including metadata such as title,
@@ -56,6 +56,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Course implements Serializable {
@@ -98,41 +100,4 @@ public class Course implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("id")
   private String id;
-
-  /**
-   * Default constructor for the Course class.
-   */
-  public Course() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Course course = (Course) o;
-
-    return new EqualsBuilder()
-        .append(title, course.title)
-        .append(description, course.description)
-        .append(customExtensions, course.customExtensions)
-        .append(id, course.id)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(title)
-        .append(description)
-        .append(customExtensions)
-        .append(id)
-        .toHashCode();
-  }
 }

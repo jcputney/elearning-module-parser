@@ -18,7 +18,6 @@ package dev.jcputney.elearning.parser.parsers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
@@ -27,6 +26,7 @@ import dev.jcputney.elearning.parser.input.lom.LOM;
 import dev.jcputney.elearning.parser.input.lom.properties.YesNoType;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.output.metadata.scorm12.Scorm12Metadata;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -46,15 +46,33 @@ public class Scorm12ParserTest {
 
     assertEquals("Golf Explained - CP One File Per SCO", manifest.getTitle());
     assertEquals("Playing/Playing.html", manifest.getLaunchUrl());
-    assertEquals(4, manifest.getOrganizations().getDefault().getItems().size());
-    assertEquals(4, manifest.getOrganizations().getDefault().getItems()
+    assertEquals(4, manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems()
+        .size());
+    assertEquals(4, manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems()
         .stream()
-        .filter(item -> item.getItems() != null && !item.getItems().isEmpty())
-        .filter(item -> !item.getIdentifier().isEmpty())
-        .filter(item -> item.getIdentifierRef() == null || item.getIdentifierRef().isEmpty())
-        .filter(item -> item.getTitle() != null && !item.getTitle().isEmpty())
+        .filter(item -> item.getItems() != null && !item
+            .getItems()
+            .isEmpty())
+        .filter(item -> !item
+            .getIdentifier()
+            .isEmpty())
+        .filter(item -> item.getIdentifierRef() == null || item
+            .getIdentifierRef()
+            .isEmpty())
+        .filter(item -> item.getTitle() != null && !item
+            .getTitle()
+            .isEmpty())
         .count());
-    assertEquals(19, manifest.getResources().getResourceList().size());
+    assertEquals(19, manifest
+        .getResources()
+        .getResourceList()
+        .size());
   }
 
   @Test
@@ -69,10 +87,25 @@ public class Scorm12ParserTest {
 
     assertEquals("Golf Explained - CP Single SCO", manifest.getTitle());
     assertEquals("shared/launchpage.html", manifest.getLaunchUrl());
-    assertEquals(1, manifest.getOrganizations().getDefault().getItems().size());
-    assertEquals(1, manifest.getResources().getResourceList().size());
-    assertEquals(39, manifest.getResources().getResourceList().get(0).getFiles().stream()
-        .filter(file -> file.getHref() != null && !file.getHref().isEmpty()).count());
+    assertEquals(1, manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems()
+        .size());
+    assertEquals(1, manifest
+        .getResources()
+        .getResourceList()
+        .size());
+    assertEquals(39, manifest
+        .getResources()
+        .getResourceList()
+        .get(0)
+        .getFiles()
+        .stream()
+        .filter(file -> file.getHref() != null && !file
+            .getHref()
+            .isEmpty())
+        .count());
   }
 
   @Test
@@ -86,10 +119,25 @@ public class Scorm12ParserTest {
 
     assertEquals("Golf Explained - Run-time Basic Calls", manifest.getTitle());
     assertEquals("shared/launchpage.html", manifest.getLaunchUrl());
-    assertEquals(1, manifest.getOrganizations().getDefault().getItems().size());
-    assertEquals(1, manifest.getResources().getResourceList().size());
-    assertEquals(39, manifest.getResources().getResourceList().get(0).getFiles().stream()
-        .filter(file -> file.getHref() != null && !file.getHref().isEmpty()).count());
+    assertEquals(1, manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems()
+        .size());
+    assertEquals(1, manifest
+        .getResources()
+        .getResourceList()
+        .size());
+    assertEquals(39, manifest
+        .getResources()
+        .getResourceList()
+        .get(0)
+        .getFiles()
+        .stream()
+        .filter(file -> file.getHref() != null && !file
+            .getHref()
+            .isEmpty())
+        .count());
   }
 
   @Test
@@ -103,15 +151,33 @@ public class Scorm12ParserTest {
 
     assertEquals("Golf Explained - Minimum Run-time Calls", manifest.getTitle());
     assertEquals("Playing/Playing.html", manifest.getLaunchUrl());
-    assertEquals(4, manifest.getOrganizations().getDefault().getItems().size());
-    assertEquals(4, manifest.getOrganizations().getDefault().getItems()
+    assertEquals(4, manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems()
+        .size());
+    assertEquals(4, manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems()
         .stream()
-        .filter(item -> item.getItems() != null && !item.getItems().isEmpty())
-        .filter(item -> !item.getIdentifier().isEmpty())
-        .filter(item -> item.getIdentifierRef() == null || item.getIdentifierRef().isEmpty())
-        .filter(item -> item.getTitle() != null && !item.getTitle().isEmpty())
+        .filter(item -> item.getItems() != null && !item
+            .getItems()
+            .isEmpty())
+        .filter(item -> !item
+            .getIdentifier()
+            .isEmpty())
+        .filter(item -> item.getIdentifierRef() == null || item
+            .getIdentifierRef()
+            .isEmpty())
+        .filter(item -> item.getTitle() != null && !item
+            .getTitle()
+            .isEmpty())
         .count());
-    assertEquals(19, manifest.getResources().getResourceList().size());
+    assertEquals(19, manifest
+        .getResources()
+        .getResourceList()
+        .size());
   }
 
   @Test
@@ -123,31 +189,68 @@ public class Scorm12ParserTest {
     Scorm12Manifest manifest = metadata.getManifest();
     assertCommonFields(manifest);
 
-    LOM lom = manifest.getMetadata().getLom();
+    LOM lom = manifest
+        .getMetadata()
+        .getLom();
     assertNotNull(lom);
 
-    assertEquals("Catalog", lom.getGeneral().getCatalogEntries().get(0).getCatalog());
+    assertEquals("Catalog", lom
+        .getGeneral()
+        .getCatalogEntries()
+        .get(0)
+        .getCatalog());
     assertEquals(YesNoType.YES,
-        lom.getTechnical().getPackageProperties().getBehavior().getAlwaysFlowToFirstSco());
+        lom
+            .getTechnical()
+            .getPackageProperties()
+            .getBehavior()
+            .getAlwaysFlowToFirstSco());
     assertEquals("SCORM 1.2 With Metadata", manifest.getTitle());
     assertEquals("index.html", manifest.getLaunchUrl());
-    assertEquals(1, manifest.getOrganizations().getDefault().getItems().size());
-    assertEquals(1, manifest.getResources().getResourceList().size());
+    assertEquals(1, manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems()
+        .size());
+    assertEquals(1, manifest
+        .getResources()
+        .getResourceList()
+        .size());
   }
 
   private void assertCommonFields(Scorm12Manifest manifest) {
     assertNotNull(manifest);
-    assertNull(manifest.getDescription());
+    assertTrue(StringUtils.isEmpty(manifest.getDescription()));
 
-    assertEquals("ADL SCORM", manifest.getMetadata().getSchema());
-    assertEquals("1.2", manifest.getMetadata().getSchemaVersion());
+    assertEquals("ADL SCORM", manifest
+        .getMetadata()
+        .getSchema());
+    assertEquals("1.2", manifest
+        .getMetadata()
+        .getSchemaVersion());
 
-    assertTrue(manifest.getResources().getResourceList().stream().allMatch(
-        resource -> resource.getIdentifier() != null && !resource.getIdentifier().isEmpty()));
-    assertTrue(manifest.getResources().getResourceList().stream()
+    assertTrue(manifest
+        .getResources()
+        .getResourceList()
+        .stream()
+        .allMatch(
+            resource -> resource.getIdentifier() != null && !resource
+                .getIdentifier()
+                .isEmpty()));
+    assertTrue(manifest
+        .getResources()
+        .getResourceList()
+        .stream()
         .allMatch(resource -> resource.getScormType() != null));
-    assertTrue(manifest.getResources().getResourceList().stream()
-        .filter(resource -> !resource.getIdentifier().equals("common_files"))
-        .allMatch(resource -> resource.getHref() != null && !resource.getHref().isEmpty()));
+    assertTrue(manifest
+        .getResources()
+        .getResourceList()
+        .stream()
+        .filter(resource -> !resource
+            .getIdentifier()
+            .equals("common_files"))
+        .allMatch(resource -> resource.getHref() != null && !resource
+            .getHref()
+            .isEmpty()));
   }
 }

@@ -28,10 +28,10 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the learning objectives for an activity within the SCORM IMS Simple Sequencing (IMSSS)
@@ -52,6 +52,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -77,38 +79,4 @@ public class Scorm2004Objectives implements Serializable {
   @JacksonXmlElementWrapper(localName = "objective", useWrapping = false)
   @JacksonXmlProperty(localName = "objective", namespace = IMSSS.NAMESPACE_URI)
   private List<Scorm2004Objective> objectiveList;
-
-  /**
-   * Default constructor for the Scorm2004Objectives class.
-   */
-  @SuppressWarnings("unused")
-  public Scorm2004Objectives() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Scorm2004Objectives that = (Scorm2004Objectives) o;
-
-    return new EqualsBuilder()
-        .append(primaryObjective, that.primaryObjective)
-        .append(objectiveList, that.objectiveList)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(primaryObjective)
-        .append(objectiveList)
-        .toHashCode();
-  }
 }

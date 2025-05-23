@@ -26,10 +26,10 @@ import dev.jcputney.elearning.parser.input.scorm2004.ADLNav;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the presentation settings for the navigation controls. This class contains additional
@@ -39,6 +39,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -50,36 +52,4 @@ public class Presentation implements Serializable {
    */
   @JacksonXmlProperty(localName = "navigationInterface", namespace = ADLNav.NAMESPACE_URI)
   private NavigationInterface navigationInterface;
-
-  /**
-   * Default constructor for the Presentation class.
-   */
-  @SuppressWarnings("unused")
-  public Presentation() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Presentation that = (Presentation) o;
-
-    return new EqualsBuilder()
-        .append(navigationInterface, that.navigationInterface)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(navigationInterface)
-        .toHashCode();
-  }
 }

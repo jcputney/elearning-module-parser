@@ -28,10 +28,10 @@ import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the delivery controls for a learning activity within the SCORM IMS Simple Sequencing
@@ -56,6 +56,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -106,40 +108,4 @@ public class DeliveryControls implements Serializable {
   @JsonProperty("objectiveSetByContent")
   @Default
   private boolean objectiveSetByContent = false;
-
-  /**
-   * Default constructor for the DeliveryControls class.
-   */
-  @SuppressWarnings("unused")
-  public DeliveryControls() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    DeliveryControls that = (DeliveryControls) o;
-
-    return new EqualsBuilder()
-        .append(tracked, that.tracked)
-        .append(completionSetByContent, that.completionSetByContent)
-        .append(objectiveSetByContent, that.objectiveSetByContent)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(tracked)
-        .append(completionSetByContent)
-        .append(objectiveSetByContent)
-        .toHashCode();
-  }
 }

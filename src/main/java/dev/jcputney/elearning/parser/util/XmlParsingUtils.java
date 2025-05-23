@@ -112,7 +112,9 @@ public final class XmlParsingUtils {
       throw new IllegalArgumentException("FileAccess cannot be null");
     }
 
-    if (subMetadata.getLocation() != null && !subMetadata.getLocation().isEmpty()) {
+    if (subMetadata.getLocation() != null && !subMetadata
+        .getLocation()
+        .isEmpty()) {
       String metadataPath = subMetadata.getLocation();
       log.debug("Checking for external metadata file: {}", metadataPath);
       if (fileAccess.fileExists(metadataPath)) {
@@ -158,7 +160,9 @@ public final class XmlParsingUtils {
       throw new IllegalArgumentException("ModuleFileProvider cannot be null");
     }
 
-    if (subMetadata.getLocation() != null && !subMetadata.getLocation().isEmpty()) {
+    if (subMetadata.getLocation() != null && !subMetadata
+        .getLocation()
+        .isEmpty()) {
       String metadataPath = subMetadata.getLocation();
       log.debug("Checking for external metadata file: {}", metadataPath);
       if (moduleFileProvider.fileExists(metadataPath)) {

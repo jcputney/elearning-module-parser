@@ -32,10 +32,10 @@ import dev.jcputney.elearning.parser.input.common.PercentTypeDeserializer;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an Assignable Unit (AU) in a CMI5 course structure. An AU is a distinct learning
@@ -96,6 +96,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class AU implements Serializable {
@@ -231,55 +233,4 @@ public class AU implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("activityType")
   private String activityType;
-
-  /**
-   * Default constructor for the AU class.
-   */
-  public AU() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    AU au = (AU) o;
-
-    return new EqualsBuilder()
-        .append(title, au.title)
-        .append(description, au.description)
-        .append(objectives, au.objectives)
-        .append(url, au.url)
-        .append(launchParameters, au.launchParameters)
-        .append(entitlementKey, au.entitlementKey)
-        .append(id, au.id)
-        .append(moveOn, au.moveOn)
-        .append(masteryScore, au.masteryScore)
-        .append(launchMethod, au.launchMethod)
-        .append(activityType, au.activityType)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(title)
-        .append(description)
-        .append(objectives)
-        .append(url)
-        .append(launchParameters)
-        .append(entitlementKey)
-        .append(id)
-        .append(moveOn)
-        .append(masteryScore)
-        .append(launchMethod)
-        .append(activityType)
-        .toHashCode();
-  }
 }

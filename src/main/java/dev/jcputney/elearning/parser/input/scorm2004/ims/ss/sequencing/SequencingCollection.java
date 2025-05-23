@@ -27,10 +27,10 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a collection of sequencing elements within the SCORM IMS Simple Sequencing schema. A
@@ -40,6 +40,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class SequencingCollection implements Serializable {
@@ -54,36 +56,4 @@ public class SequencingCollection implements Serializable {
   @JacksonXmlElementWrapper(localName = "sequencing", useWrapping = false)
   @JacksonXmlProperty(localName = "sequencing", namespace = NAMESPACE_URI)
   private List<Sequencing> sequencingList;
-
-  /**
-   * Default constructor for the SequencingCollection class.
-   */
-  @SuppressWarnings("unused")
-  public SequencingCollection() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    SequencingCollection that = (SequencingCollection) o;
-
-    return new EqualsBuilder()
-        .append(sequencingList, that.sequencingList)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(sequencingList)
-        .toHashCode();
-  }
 }

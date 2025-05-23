@@ -25,10 +25,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the {@code <adlcp:prerequisites>} element in SCORM 1.2. This element includes a string
@@ -37,6 +37,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Prerequisites implements Serializable {
@@ -53,38 +55,4 @@ public class Scorm12Prerequisites implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "type")
   @JsonProperty("type")
   private String type;
-
-  /**
-   * Default constructor for the Scorm12Prerequisites class.
-   */
-  @SuppressWarnings("unused")
-  public Scorm12Prerequisites() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Scorm12Prerequisites that = (Scorm12Prerequisites) o;
-
-    return new EqualsBuilder()
-        .append(value, that.value)
-        .append(type, that.type)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(value)
-        .append(type)
-        .toHashCode();
-  }
 }

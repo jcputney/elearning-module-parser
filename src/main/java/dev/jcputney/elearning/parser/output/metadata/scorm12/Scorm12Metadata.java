@@ -21,6 +21,8 @@ import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.output.metadata.BaseModuleMetadata;
 import dev.jcputney.elearning.parser.output.metadata.SimpleMetadata;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -32,15 +34,9 @@ import lombok.experimental.SuperBuilder;
  * </p>
  */
 @SuperBuilder
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@EqualsAndHashCode(doNotUseGetters = true, callSuper = true)
 public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
-
-  /**
-   * Default constructor for the Scorm12Metadata class.
-   */
-  @SuppressWarnings("unused")
-  protected Scorm12Metadata() {
-    // Default constructor
-  }
 
   /**
    * Creates a new Scorm12Metadata instance with standard SCORM 1.2 metadata components.
@@ -51,8 +47,12 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
    */
   public static Scorm12Metadata create(Scorm12Manifest manifest, boolean xapiEnabled) {
     Scorm12Metadata metadata =
-        Scorm12Metadata.builder().manifest(manifest).moduleType(ModuleType.SCORM_12)
-            .xapiEnabled(xapiEnabled).build();
+        Scorm12Metadata
+            .builder()
+            .manifest(manifest)
+            .moduleType(ModuleType.SCORM_12)
+            .xapiEnabled(xapiEnabled)
+            .build();
 
     // Add SCORM 1.2 specific metadata
     SimpleMetadata scorm12Metadata = metadata.getSimpleMetadata(manifest);

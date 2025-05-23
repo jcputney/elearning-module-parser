@@ -28,10 +28,10 @@ import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the rollupConsiderationsType complex type, defining attributes for rollup conditions.
@@ -49,6 +49,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -89,45 +91,4 @@ public class RollupConsiderations implements Serializable {
   @JsonProperty("measureSatisfactionIfActive")
   @Default
   private boolean measureSatisfactionIfActive = true;
-
-  /**
-   * Default constructor for the RollupConsiderations class.
-   */
-  @SuppressWarnings("unused")
-  public RollupConsiderations() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    RollupConsiderations that = (RollupConsiderations) o;
-
-    return new EqualsBuilder()
-        .append(measureSatisfactionIfActive,
-            that.measureSatisfactionIfActive)
-        .append(requiredForSatisfied, that.requiredForSatisfied)
-        .append(requiredForNotSatisfied, that.requiredForNotSatisfied)
-        .append(requiredForCompleted, that.requiredForCompleted)
-        .append(requiredForIncomplete, that.requiredForIncomplete)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(requiredForSatisfied)
-        .append(requiredForNotSatisfied)
-        .append(requiredForCompleted)
-        .append(requiredForIncomplete)
-        .append(measureSatisfactionIfActive)
-        .toHashCode();
-  }
 }

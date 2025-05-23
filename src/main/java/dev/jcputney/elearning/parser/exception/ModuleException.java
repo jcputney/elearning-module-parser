@@ -122,10 +122,15 @@ public class ModuleException extends Exception {
     StringBuilder sb = new StringBuilder(getClass().getName());
     String message = getLocalizedMessage();
     if (message != null) {
-      sb.append(": ").append(message);
+      sb
+          .append(": ")
+          .append(message);
     }
     if (!metadata.isEmpty()) {
-      sb.append(" [Metadata: ").append(metadata).append("]");
+      sb
+          .append(" [Metadata: ")
+          .append(metadata)
+          .append("]");
     }
     return sb.toString();
   }

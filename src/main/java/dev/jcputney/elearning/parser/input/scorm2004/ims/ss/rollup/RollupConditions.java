@@ -29,10 +29,10 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a set of conditions that control when a rollup rule should apply. Rollup conditions
@@ -45,6 +45,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupConditions implements Serializable {
@@ -68,38 +70,4 @@ public class RollupConditions implements Serializable {
   @JsonProperty("conditionCombination")
   @Default
   private String conditionCombination = "any";
-
-  /**
-   * Default constructor for the RollupConditions class.
-   */
-  @SuppressWarnings("unused")
-  public RollupConditions() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    RollupConditions that = (RollupConditions) o;
-
-    return new EqualsBuilder()
-        .append(rollupConditionList, that.rollupConditionList)
-        .append(conditionCombination, that.conditionCombination)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(rollupConditionList)
-        .append(conditionCombination)
-        .toHashCode();
-  }
 }

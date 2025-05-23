@@ -21,11 +21,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a requirement for a learning object in a Learning Object Metadata (LOM) document. A
@@ -45,6 +45,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @SuperBuilder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true, callSuper = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Requirement extends OrComposite {
 
@@ -61,37 +63,4 @@ public class Requirement extends OrComposite {
   @JacksonXmlElementWrapper(localName = "orComposite", useWrapping = false)
   @JacksonXmlProperty(localName = "orComposite")
   private List<OrComposite> orCompositeList;
-
-  /**
-   * Default constructor for the Requirement class.
-   */
-  public Requirement() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Requirement that = (Requirement) o;
-
-    return new EqualsBuilder()
-        .appendSuper(super.equals(o))
-        .append(orCompositeList, that.orCompositeList)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .appendSuper(super.hashCode())
-        .append(orCompositeList)
-        .toHashCode();
-  }
 }

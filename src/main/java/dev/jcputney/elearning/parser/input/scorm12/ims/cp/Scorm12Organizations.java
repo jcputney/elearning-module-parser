@@ -29,10 +29,10 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the {@code <organizations>} element in the SCORM 1.2 manifest file.
@@ -56,6 +56,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Organizations implements Serializable {
@@ -74,13 +76,6 @@ public class Scorm12Organizations implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "organization", namespace = Scorm12Manifest.NAMESPACE_URI)
   private List<Scorm12Organization> organizationList;
-
-  /**
-   * Default constructor for the {@code Scorm12Organizations} class.
-   */
-  public Scorm12Organizations() {
-    // Default constructor
-  }
 
   /**
    * Retrieves an organization by its unique identifier.
@@ -107,31 +102,5 @@ public class Scorm12Organizations implements Serializable {
   @JsonIgnore
   public Scorm12Organization getDefault() {
     return getOrganizationById(defaultOrganization);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Scorm12Organizations that = (Scorm12Organizations) o;
-
-    return new EqualsBuilder()
-        .append(defaultOrganization, that.defaultOrganization)
-        .append(organizationList, that.organizationList)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(defaultOrganization)
-        .append(organizationList)
-        .toHashCode();
   }
 }

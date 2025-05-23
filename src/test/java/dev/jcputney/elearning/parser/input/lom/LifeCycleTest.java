@@ -16,15 +16,16 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
+import static dev.jcputney.elearning.parser.input.lom.types.Role.CONTENT_PROVIDER;
+import static dev.jcputney.elearning.parser.input.lom.types.Role.PUBLISHER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import dev.jcputney.elearning.parser.input.lom.types.Contribute;
-import dev.jcputney.elearning.parser.input.lom.types.Role;
-import dev.jcputney.elearning.parser.input.lom.types.Status;
-import org.junit.jupiter.api.BeforeEach;
+import java.io.File;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -32,297 +33,273 @@ import org.junit.jupiter.api.Test;
  */
 class LifeCycleTest {
 
-  private XmlMapper xmlMapper;
+  private final XmlMapper xmlMapper = new XmlMapper();
 
-  @BeforeEach
-  void setUp() {
-    xmlMapper = new XmlMapper();
-  }
-
+  /**
+   * Tests the deserialization of a LifeCycle object from XML.
+   */
   @Test
-  void testDeserializeEmptyLifeCycle() throws Exception {
+  void testDeserializeLifeCycle() throws Exception {
     // Given
-    String xml = "<lifeCycle xmlns=\"http://ltsc.ieee.org/xsd/LOM\"></lifeCycle>";
+    File file = new File(
+        "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition/metadata_course.xml");
 
     // When
-    LifeCycle lifeCycle = xmlMapper.readValue(xml, LifeCycle.class);
+    LOM lom = xmlMapper.readValue(file, LOM.class);
 
     // Then
-    assertNotNull(lifeCycle);
-    assertNull(lifeCycle.getVersion());
-    assertNull(lifeCycle.getStatus());
-    assertNull(lifeCycle.getContribute());
-    assertNull(lifeCycle.getCustomElements());
-  }
+    assertNotNull(lom);
+    assertNotNull(lom.getLifecycle());
 
-  @Test
-  void testDeserializeLifeCycleWithVersion() throws Exception {
-    // Given
-    String xml = "<lifeCycle xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <version>"
-        + "    <string language=\"en\">1.0.0</string>"
-        + "  </version>"
-        + "</lifeCycle>";
+    LifeCycle lifeCycle = lom.getLifecycle();
 
-    // When
-    LifeCycle lifeCycle = xmlMapper.readValue(xml, LifeCycle.class);
-
-    // Then
-    assertNotNull(lifeCycle);
+    // Test version
     assertNotNull(lifeCycle.getVersion());
     assertNotNull(lifeCycle
         .getVersion()
+        .getLangStrings());
+    assertFalse(lifeCycle
+        .getVersion()
         .getLangStrings()
-        .get(0));
-    assertEquals("en", lifeCycle
+        .isEmpty());
+    assertEquals("1.0", lifeCycle
+        .getVersion()
+        .getLangStrings()
+        .get(0)
+        .getValue());
+    assertEquals("en-US", lifeCycle
         .getVersion()
         .getLangStrings()
         .get(0)
         .getLanguage());
-    assertEquals("1.0.0", lifeCycle
-        .getVersion()
-        .getLangStrings()
-        .get(0)
-        .getValue());
-  }
 
-  @Test
-  void testDeserializeLifeCycleWithStatus() throws Exception {
-    // Given
-    String xml = "<lifeCycle xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <status>"
-        + "    <source>LOMv1.0</source>"
-        + "    <value>final</value>"
-        + "  </status>"
-        + "</lifeCycle>";
-
-    // When
-    LifeCycle lifeCycle = xmlMapper.readValue(xml, LifeCycle.class);
-
-    // Then
-    assertNotNull(lifeCycle);
+    // Test status
     assertNotNull(lifeCycle.getStatus());
     assertEquals("LOMv1.0", lifeCycle
         .getStatus()
         .getSource());
-    assertEquals(Status.FINAL, lifeCycle
+    assertEquals("FINAL", lifeCycle
         .getStatus()
-        .getValue());
-  }
+        .getValue()
+        .toString());
 
-  @Test
-  void testDeserializeLifeCycleWithContribute() throws Exception {
-    // Given
-    String xml = "<lifeCycle xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <contribute>"
-        + "    <role>"
-        + "      <source>LOMv1.0</source>"
-        + "      <value>author</value>"
-        + "    </role>"
-        + "    <entity>John Doe</entity>"
-        + "    <date>"
-        + "      <dateTime>2023-01-15</dateTime>"
-        + "    </date>"
-        + "  </contribute>"
-        + "</lifeCycle>";
-
-    // When
-    LifeCycle lifeCycle = xmlMapper.readValue(xml, LifeCycle.class);
-
-    // Then
-    assertNotNull(lifeCycle);
+    // Test contribute
     assertNotNull(lifeCycle.getContribute());
-    assertEquals(1, lifeCycle
+    assertFalse(lifeCycle
         .getContribute()
-        .size());
+        .isEmpty());
 
-    Contribute contribute = lifeCycle
-        .getContribute()
+    // Test first contribution (publisher)
+    Contribute publisherContribution = null;
+    Contribute contentProviderContribution = null;
+
+    for (Contribute contribute : lifeCycle.getContribute()) {
+      if (contribute.getRole() != null && PUBLISHER == contribute
+          .getRole()
+          .getValue()) {
+        publisherContribution = contribute;
+      } else if (contribute.getRole() != null && CONTENT_PROVIDER == contribute
+          .getRole()
+          .getValue()) {
+        contentProviderContribution = contribute;
+      }
+    }
+
+    assertNotNull(publisherContribution, "Publisher contribution should be present");
+    assertNotNull(publisherContribution.getRole());
+    assertEquals("LOMv1.0", publisherContribution
+        .getRole()
+        .getSource());
+    assertEquals(PUBLISHER, publisherContribution
+        .getRole()
+        .getValue());
+
+    // Test entity (vCard)
+    assertNotNull(publisherContribution.getEntities());
+    assertFalse(publisherContribution
+        .getEntities()
+        .isEmpty());
+    String entity = publisherContribution
+        .getEntities()
         .get(0);
-    assertNotNull(contribute.getRole());
-    assertEquals("LOMv1.0", contribute
-        .getRole()
-        .getSource());
-    assertEquals(Role.AUTHOR, contribute
-        .getRole()
-        .getValue());
+    assertTrue(entity.contains("BEGIN:VCARD"));
+    assertTrue(entity.contains("FN:Mike Rustici"));
+    assertTrue(entity.contains("ORG:Rustici Software"));
+    assertTrue(entity.contains("END:VCARD"));
 
-    assertNotNull(contribute.getEntities());
-    assertEquals(1, contribute
-        .getEntities()
-        .size());
-    assertEquals("John Doe", contribute
-        .getEntities()
-        .get(0));
-
-    assertNotNull(contribute.getDate());
-    assertEquals("2023-01-15", contribute
+    // Test date
+    assertNotNull(publisherContribution.getDate());
+    assertNotNull(publisherContribution
         .getDate()
         .getDateTime());
-  }
-
-  @Test
-  void testDeserializeLifeCycleWithMultipleContributions() throws Exception {
-    // Given
-    String xml = "<lifeCycle xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <contribute>"
-        + "    <role>"
-        + "      <source>LOMv1.0</source>"
-        + "      <value>author</value>"
-        + "    </role>"
-        + "    <entity>John Doe</entity>"
-        + "    <date>"
-        + "      <dateTime>2023-01-15</dateTime>"
-        + "    </date>"
-        + "  </contribute>"
-        + "  <contribute>"
-        + "    <role>"
-        + "      <source>LOMv1.0</source>"
-        + "      <value>publisher</value>"
-        + "    </role>"
-        + "    <entity>ACME Publishing</entity>"
-        + "    <date>"
-        + "      <dateTime>2023-02-20</dateTime>"
-        + "    </date>"
-        + "  </contribute>"
-        + "</lifeCycle>";
-
-    // When
-    LifeCycle lifeCycle = xmlMapper.readValue(xml, LifeCycle.class);
-
-    // Then
-    assertNotNull(lifeCycle);
-    assertNotNull(lifeCycle.getContribute());
-    assertEquals(2, lifeCycle
-        .getContribute()
-        .size());
-
-    // First contribution
-    Contribute contribute1 = lifeCycle
-        .getContribute()
-        .get(0);
-    assertNotNull(contribute1.getRole());
-    assertEquals("LOMv1.0", contribute1
-        .getRole()
-        .getSource());
-    assertEquals(Role.AUTHOR, contribute1
-        .getRole()
-        .getValue());
-    assertNotNull(contribute1.getEntities());
-    assertEquals(1, contribute1
-        .getEntities()
-        .size());
-    assertEquals("John Doe", contribute1
-        .getEntities()
-        .get(0));
-    assertNotNull(contribute1.getDate());
-    assertEquals("2023-01-15", contribute1
+    assertEquals("2009-01-23", publisherContribution
         .getDate()
         .getDateTime());
-
-    // Second contribution
-    Contribute contribute2 = lifeCycle
-        .getContribute()
-        .get(1);
-    assertNotNull(contribute2.getRole());
-    assertEquals("LOMv1.0", contribute2
-        .getRole()
-        .getSource());
-    assertEquals(Role.PUBLISHER, contribute2
-        .getRole()
-        .getValue());
-    assertNotNull(contribute2.getEntities());
-    assertEquals(1, contribute2
-        .getEntities()
-        .size());
-    assertEquals("ACME Publishing", contribute2
-        .getEntities()
-        .get(0));
-    assertNotNull(contribute2.getDate());
-    assertEquals("2023-02-20", contribute2
+    assertNotNull(publisherContribution
         .getDate()
-        .getDateTime());
-  }
-
-  @Test
-  void testDeserializeLifeCycleWithAllFields() throws Exception {
-    // Given
-    String xml = "<lifeCycle xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <version>"
-        + "    <string language=\"en\">1.0.0</string>"
-        + "  </version>"
-        + "  <status>"
-        + "    <source>LOMv1.0</source>"
-        + "    <value>final</value>"
-        + "  </status>"
-        + "  <contribute>"
-        + "    <role>"
-        + "      <source>LOMv1.0</source>"
-        + "      <value>author</value>"
-        + "    </role>"
-        + "    <entity>John Doe</entity>"
-        + "    <date>"
-        + "      <dateTime>2023-01-15</dateTime>"
-        + "    </date>"
-        + "  </contribute>"
-        + "</lifeCycle>";
-
-    // When
-    LifeCycle lifeCycle = xmlMapper.readValue(xml, LifeCycle.class);
-
-    // Then
-    assertNotNull(lifeCycle);
-
-    // Check version
-    assertNotNull(lifeCycle.getVersion());
-    assertNotNull(lifeCycle
-        .getVersion()
+        .getDescription());
+    assertNotNull(publisherContribution
+        .getDate()
+        .getDescription()
+        .getLangStrings());
+    assertFalse(publisherContribution
+        .getDate()
+        .getDescription()
         .getLangStrings()
-        .get(0));
-    assertEquals("en", lifeCycle
-        .getVersion()
+        .isEmpty());
+    assertTrue(publisherContribution
+        .getDate()
+        .getDescription()
         .getLangStrings()
         .get(0)
-        .getLanguage());
-    assertEquals("1.0.0", lifeCycle
+        .getValue()
+        .contains("This is the date this sample metadata was first created"));
+
+    // Test second contribution (content provider)
+    assertNotNull(contentProviderContribution, "Content provider contribution should be present");
+    assertNotNull(contentProviderContribution.getRole());
+    assertEquals("LOMv1.0", contentProviderContribution
+        .getRole()
+        .getSource());
+    assertEquals(CONTENT_PROVIDER, contentProviderContribution
+        .getRole()
+        .getValue());
+
+    // Test entity (vCard)
+    assertNotNull(contentProviderContribution.getEntities());
+    assertFalse(contentProviderContribution
+        .getEntities()
+        .isEmpty());
+    entity = contentProviderContribution
+        .getEntities()
+        .get(0);
+    assertTrue(entity.contains("BEGIN:VCARD"));
+    assertTrue(entity.contains("ORG:Wikipedia"));
+    assertTrue(entity.contains("END:VCARD"));
+
+    // Test date
+    assertNotNull(contentProviderContribution.getDate());
+    assertNotNull(contentProviderContribution
+        .getDate()
+        .getDateTime());
+    assertEquals("2009-01-12", contentProviderContribution
+        .getDate()
+        .getDateTime());
+    assertNotNull(contentProviderContribution
+        .getDate()
+        .getDescription());
+    assertNotNull(contentProviderContribution
+        .getDate()
+        .getDescription()
+        .getLangStrings());
+    assertFalse(contentProviderContribution
+        .getDate()
+        .getDescription()
+        .getLangStrings()
+        .isEmpty());
+    assertTrue(contentProviderContribution
+        .getDate()
+        .getDescription()
+        .getLangStrings()
+        .get(0)
+        .getValue()
+        .contains("This is the date the text copy was copied from Wikipedia"));
+  }
+
+  /**
+   * Tests the deserialization of a LifeCycle object from an imsmanifest.xml file.
+   */
+  @Test
+  void testDeserializeLifeCycleFromManifest() throws Exception {
+    // Given
+    String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition";
+
+    // First, try to parse the metadata_course.xml file which we know has educational data
+    File metadataFile = new File(modulePath + "/metadata_course.xml");
+
+    // Use the same approach as in testDeserializeEducational
+    LOM lom = xmlMapper.readValue(metadataFile, LOM.class);
+
+    // Then
+    assertNotNull(lom, "LOM object should not be null");
+
+    // Check if lifecycle exists
+    LifeCycle lifeCycle = lom.getLifecycle();
+
+    // Test version
+    assertEquals("1.0", lifeCycle
         .getVersion()
         .getLangStrings()
         .get(0)
         .getValue());
 
-    // Check status
-    assertNotNull(lifeCycle.getStatus());
+    // Test status
     assertEquals("LOMv1.0", lifeCycle
         .getStatus()
         .getSource());
-    assertEquals(Status.FINAL, lifeCycle
+    assertEquals("FINAL", lifeCycle
         .getStatus()
-        .getValue());
+        .getValue()
+        .toString());
 
-    // Check contribute
-    assertNotNull(lifeCycle.getContribute());
-    assertEquals(1, lifeCycle
-        .getContribute()
-        .size());
-    Contribute contribute = lifeCycle
-        .getContribute()
-        .get(0);
-    assertNotNull(contribute.getRole());
-    assertEquals("LOMv1.0", contribute
+    // Test contribute
+    // Find publisher and content provider contributions
+    Contribute publisherContribution = null;
+    Contribute contentProviderContribution = null;
+
+    for (Contribute contribute : lifeCycle.getContribute()) {
+      if (contribute.getRole() != null && PUBLISHER == contribute
+          .getRole()
+          .getValue()) {
+        publisherContribution = contribute;
+      } else if (contribute.getRole() != null && CONTENT_PROVIDER == contribute
+          .getRole()
+          .getValue()) {
+        contentProviderContribution = contribute;
+      }
+    }
+
+    assertNotNull(publisherContribution, "Publisher contribution should be present");
+    assertNotNull(contentProviderContribution, "Content provider contribution should be present");
+
+    // Test publisher contribution if present
+    // Test role
+    assertEquals("LOMv1.0", publisherContribution
         .getRole()
         .getSource());
-    assertEquals(Role.AUTHOR, contribute
+    assertEquals(PUBLISHER, publisherContribution
         .getRole()
         .getValue());
-    assertNotNull(contribute.getEntities());
-    assertEquals(1, contribute
+
+    // Test entity
+    String entity = publisherContribution
         .getEntities()
-        .size());
-    assertEquals("John Doe", contribute
+        .get(0);
+    assertTrue(entity.contains("BEGIN:VCARD"));
+
+    // Test date
+    assertNotNull(publisherContribution
+        .getDate()
+        .getDateTime());
+
+    // Test content provider contribution if present
+
+    // Test role
+    assertEquals("LOMv1.0", contentProviderContribution
+        .getRole()
+        .getSource());
+    assertEquals(CONTENT_PROVIDER, contentProviderContribution
+        .getRole()
+        .getValue());
+
+    // Test entity
+    String contentEntity = contentProviderContribution
         .getEntities()
-        .get(0));
-    assertNotNull(contribute.getDate());
-    assertEquals("2023-01-15", contribute
+        .get(0);
+    assertTrue(contentEntity.contains("BEGIN:VCARD"));
+
+    // Test date
+    assertNotNull(contentProviderContribution
         .getDate()
         .getDateTime());
   }

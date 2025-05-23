@@ -71,7 +71,9 @@ public class CachedFileAccess implements FileAccess {
       throw new IllegalArgumentException("FileAccess delegate cannot be null");
     }
     this.delegate = delegate;
-    log.debug("Created CachedFileAccess wrapping {}", delegate.getClass().getSimpleName());
+    log.debug("Created CachedFileAccess wrapping {}", delegate
+        .getClass()
+        .getSimpleName());
   }
 
   /**
@@ -119,7 +121,9 @@ public class CachedFileAccess implements FileAccess {
           Map<String, Object> metadata = new HashMap<>();
           metadata.put("path", p);
           metadata.put("operation", "listFiles");
-          metadata.put("fileAccess", delegate.getClass().getSimpleName());
+          metadata.put("fileAccess", delegate
+              .getClass()
+              .getSimpleName());
 
           // Log the error with detailed information
           log.error("Error listing files in directory {}: {}", p, e.getMessage());
@@ -133,7 +137,9 @@ public class CachedFileAccess implements FileAccess {
     } catch (RuntimeFileAccessException e) {
       // For any other exception, wrap it in an IOException with a detailed message
       throw new IOException("Error listing files in directory: %s using %s".formatted(directoryPath,
-          delegate.getClass().getSimpleName()), e.getCause());
+          delegate
+              .getClass()
+              .getSimpleName()), e.getCause());
     }
   }
 
@@ -165,7 +171,9 @@ public class CachedFileAccess implements FileAccess {
           Map<String, Object> metadata = new HashMap<>();
           metadata.put("path", p);
           metadata.put("operation", "getFileContents");
-          metadata.put("fileAccess", delegate.getClass().getSimpleName());
+          metadata.put("fileAccess", delegate
+              .getClass()
+              .getSimpleName());
 
           // Log the error with detailed information
           log.error("Error reading file contents for {}: {}", p, e.getMessage());
@@ -181,7 +189,9 @@ public class CachedFileAccess implements FileAccess {
     } catch (RuntimeFileAccessException e) {
       // For any other exception, wrap it in an IOException with a detailed message
       throw new IOException("Error reading file contents for path: %s using %s".formatted(path,
-          delegate.getClass().getSimpleName()), e.getCause());
+          delegate
+              .getClass()
+              .getSimpleName()), e.getCause());
     }
   }
 

@@ -26,10 +26,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>controlsSpec</strong> complex type.</p>
@@ -58,6 +58,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -128,60 +130,4 @@ public class ControlsSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "forceDisableRootChoice")
   private YesNoType forceDisableRootChoice;
-
-  /**
-   * Default constructor for the ControlsSpec class.
-   */
-  @SuppressWarnings("unused")
-  public ControlsSpec() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    ControlsSpec that = (ControlsSpec) o;
-
-    return new EqualsBuilder()
-        .append(showFinishButton, that.showFinishButton)
-        .append(showCloseItem, that.showCloseItem)
-        .append(showHelp, that.showHelp)
-        .append(showProgressBar, that.showProgressBar)
-        .append(useMeasureProgressBar, that.useMeasureProgressBar)
-        .append(showCourseStructure, that.showCourseStructure)
-        .append(courseStructureStartsOpen, that.courseStructureStartsOpen)
-        .append(showNavBar, that.showNavBar)
-        .append(showTitleBar, that.showTitleBar)
-        .append(enableFlowNav, that.enableFlowNav)
-        .append(enableChoiceNav, that.enableChoiceNav)
-        .append(statusDisplay, that.statusDisplay)
-        .append(forceDisableRootChoice, that.forceDisableRootChoice)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(showFinishButton)
-        .append(showCloseItem)
-        .append(showHelp)
-        .append(showProgressBar)
-        .append(useMeasureProgressBar)
-        .append(showCourseStructure)
-        .append(courseStructureStartsOpen)
-        .append(showNavBar)
-        .append(showTitleBar)
-        .append(enableFlowNav)
-        .append(enableChoiceNav)
-        .append(statusDisplay)
-        .append(forceDisableRootChoice)
-        .toHashCode();
-  }
 }

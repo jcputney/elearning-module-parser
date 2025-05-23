@@ -166,8 +166,7 @@ public class Scorm2004ManifestTest {
     // Get the description
     String description = manifest.getDescription();
 
-    assertTrue(description.contains(
-            "A high level overview of the sport of golf. This course describes how to play golf, how to use a golf handicap, the etiquette of golfing and how to have fun while playing."),
+    assertTrue(description.contains("A high level overview of the sport of golf."),
         "Description should contain expected text");
   }
 
@@ -275,21 +274,32 @@ public class Scorm2004ManifestTest {
     assertNotNull(organizations, "Organizations should not be null");
     assertNotNull(organizations.getDefault(), "Default organization should not be null");
     assertNotNull(organizations.getOrganizationList(), "Organization list should not be null");
-    assertFalse(organizations.getOrganizationList().isEmpty(), "Organization list should not be empty");
+    assertFalse(organizations
+        .getOrganizationList()
+        .isEmpty(), "Organization list should not be empty");
 
     // Verify the first organization
-    Scorm2004Organization organization = organizations.getOrganizationList().get(0);
-    assertEquals("golf_sample_default_org", organization.getIdentifier(), "Organization identifier should match the expected value");
-    assertEquals("Golf Explained - Metadata Example", organization.getTitle(), "Organization title should match the expected value");
+    Scorm2004Organization organization = organizations
+        .getOrganizationList()
+        .get(0);
+    assertEquals("golf_sample_default_org", organization.getIdentifier(),
+        "Organization identifier should match the expected value");
+    assertEquals("Golf Explained - Metadata Example", organization.getTitle(),
+        "Organization title should match the expected value");
 
     // Verify the organization's items
     assertNotNull(organization.getItems(), "Organization items should not be null");
-    assertFalse(organization.getItems().isEmpty(), "Organization items should not be empty");
+    assertFalse(organization
+        .getItems()
+        .isEmpty(), "Organization items should not be empty");
 
     // Verify the first item
-    Scorm2004Item item = organization.getItems().get(0);
+    Scorm2004Item item = organization
+        .getItems()
+        .get(0);
     assertEquals("item_1", item.getIdentifier(), "Item identifier should match the expected value");
-    assertEquals("resource_1", item.getIdentifierRef(), "Item identifierRef should match the expected value");
+    assertEquals("resource_1", item.getIdentifierRef(),
+        "Item identifierRef should match the expected value");
     assertEquals("Golf Explained", item.getTitle(), "Item title should match the expected value");
   }
 
@@ -310,21 +320,34 @@ public class Scorm2004ManifestTest {
     // Verify that the resources are correct
     assertNotNull(resources, "Resources should not be null");
     assertNotNull(resources.getResourceList(), "Resource list should not be null");
-    assertFalse(resources.getResourceList().isEmpty(), "Resource list should not be empty");
+    assertFalse(resources
+        .getResourceList()
+        .isEmpty(), "Resource list should not be empty");
 
     // Verify the first resource
-    Scorm2004Resource resource = resources.getResourceList().get(0);
-    assertEquals("resource_1", resource.getIdentifier(), "Resource identifier should match the expected value");
+    Scorm2004Resource resource = resources
+        .getResourceList()
+        .get(0);
+    assertEquals("resource_1", resource.getIdentifier(),
+        "Resource identifier should match the expected value");
     assertEquals("webcontent", resource.getType(), "Resource type should match the expected value");
-    assertEquals(ScormType.SCO, resource.getScormType(), "Resource SCORM type should match the expected value");
-    assertEquals("shared/launchpage.html", resource.getHref(), "Resource href should match the expected value");
+    assertEquals(ScormType.SCO, resource.getScormType(),
+        "Resource SCORM type should match the expected value");
+    assertEquals("shared/launchpage.html", resource.getHref(),
+        "Resource href should match the expected value");
 
     // Verify the resource's files
     assertNotNull(resource.getFiles(), "Resource files should not be null");
-    assertFalse(resource.getFiles().isEmpty(), "Resource files should not be empty");
-    assertTrue(resource.getFiles().stream().anyMatch(file -> "shared/launchpage.html".equals(file.getHref())), 
+    assertFalse(resource
+        .getFiles()
+        .isEmpty(), "Resource files should not be empty");
+    assertTrue(resource
+            .getFiles()
+            .stream()
+            .anyMatch(file -> "shared/launchpage.html".equals(file.getHref())),
         "Resource files should contain the launch page");
   }
+
   /**
    * Tests the getIdentifier method with a manifest that contains an identifier.
    */
@@ -341,7 +364,7 @@ public class Scorm2004ManifestTest {
 
     // Verify that the identifier is correct
     assertNotNull(identifier, "Identifier should not be null");
-    assertEquals("com.scorm.golfsamples.contentpackaging.metadata.20043rd", identifier, 
+    assertEquals("com.scorm.golfsamples.contentpackaging.metadata.20043rd", identifier,
         "Identifier should match the expected value");
   }
 

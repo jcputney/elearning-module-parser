@@ -26,10 +26,10 @@ import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a single sequencing rule within a set of pre-condition, exit-condition, or
@@ -38,6 +38,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -57,38 +59,4 @@ public class SequencingRule implements Serializable {
    */
   @JacksonXmlProperty(localName = "ruleAction", namespace = IMSSS.NAMESPACE_URI)
   private RuleAction ruleAction;
-
-  /**
-   * Default constructor for the SequencingRule class.
-   */
-  @SuppressWarnings("unused")
-  public SequencingRule() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    SequencingRule that = (SequencingRule) o;
-
-    return new EqualsBuilder()
-        .append(ruleConditions, that.ruleConditions)
-        .append(ruleAction, that.ruleAction)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(ruleConditions)
-        .append(ruleAction)
-        .toHashCode();
-  }
 }

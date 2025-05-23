@@ -33,10 +33,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a SCORM 2004 Activity Tree.
@@ -49,6 +48,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@EqualsAndHashCode(doNotUseGetters = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ActivityTree implements Serializable {
 
@@ -101,32 +101,6 @@ public class ActivityTree implements Serializable {
     }
 
     return Optional.of(tree);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    ActivityTree that = (ActivityTree) o;
-
-    return new EqualsBuilder()
-        .append(root, that.root)
-        .append(nodeMap, that.nodeMap)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(root)
-        .append(nodeMap)
-        .toHashCode();
   }
 
   /**

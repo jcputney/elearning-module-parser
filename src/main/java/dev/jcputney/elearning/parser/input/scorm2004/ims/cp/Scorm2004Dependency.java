@@ -26,10 +26,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a dependency element within a resource, specifying a relationship to another resource
@@ -38,6 +38,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -50,36 +52,4 @@ public class Scorm2004Dependency implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "identifierref")
   @JsonProperty("identifierref")
   private String identifierRef;
-
-  /**
-   * Default constructor for the Scorm2004Dependency class.
-   */
-  @SuppressWarnings("unused")
-  public Scorm2004Dependency() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Scorm2004Dependency that = (Scorm2004Dependency) o;
-
-    return new EqualsBuilder()
-        .append(identifierRef, that.identifierRef)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(identifierRef)
-        .toHashCode();
-  }
 }

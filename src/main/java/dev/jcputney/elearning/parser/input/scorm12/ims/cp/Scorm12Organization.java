@@ -29,10 +29,10 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the <code>organization</code> element in SCORM 1.2.
@@ -73,6 +73,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Organization implements Serializable {
@@ -106,44 +108,4 @@ public class Scorm12Organization implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "item", namespace = Scorm12Manifest.NAMESPACE_URI)
   private List<Scorm12Item> items;
-
-  /**
-   * Default constructor for the Scorm12Organization class.
-   */
-  @SuppressWarnings("unused")
-  public Scorm12Organization() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Scorm12Organization that = (Scorm12Organization) o;
-
-    return new EqualsBuilder()
-        .append(identifier, that.identifier)
-        .append(structure, that.structure)
-        .append(title, that.title)
-        .append(metadata, that.metadata)
-        .append(items, that.items)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(identifier)
-        .append(structure)
-        .append(title)
-        .append(metadata)
-        .append(items)
-        .toHashCode();
-  }
 }

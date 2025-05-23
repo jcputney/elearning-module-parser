@@ -77,7 +77,8 @@ public class S3FileAccessV2 implements FileAccess {
   @Override
   public boolean fileExistsInternal(String path) {
     try {
-      s3Client.headObject(HeadObjectRequest.builder()
+      s3Client.headObject(HeadObjectRequest
+          .builder()
           .bucket(bucketName)
           .key(fullPath(path))
           .build());
@@ -97,7 +98,9 @@ public class S3FileAccessV2 implements FileAccess {
   @Override
   public List<String> listFilesInternal(String directoryPath) throws IOException {
     try {
-      return s3Client.listObjectsV2(ListObjectsV2Request.builder()
+      return s3Client
+          .listObjectsV2(ListObjectsV2Request
+              .builder()
               .bucket(bucketName)
               .prefix(fullPath(directoryPath))
               .build())
@@ -141,7 +144,9 @@ public class S3FileAccessV2 implements FileAccess {
    * @return The detected internal root directory or the original path if none is detected.
    */
   public String getInternalRootDirectory(String rootPath) {
-    List<CommonPrefix> commonPrefixes = s3Client.listObjectsV2(ListObjectsV2Request.builder()
+    List<CommonPrefix> commonPrefixes = s3Client
+        .listObjectsV2(ListObjectsV2Request
+            .builder()
             .bucket(bucketName)
             .prefix(rootPath)
             .delimiter("/")
@@ -150,6 +155,8 @@ public class S3FileAccessV2 implements FileAccess {
     if (commonPrefixes.size() != 1) {
       return rootPath;
     }
-    return commonPrefixes.get(0).prefix();
+    return commonPrefixes
+        .get(0)
+        .prefix();
   }
 }

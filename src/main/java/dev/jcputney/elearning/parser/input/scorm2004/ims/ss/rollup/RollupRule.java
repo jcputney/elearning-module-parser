@@ -34,10 +34,10 @@ import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an individual rollup rule within a set of rollup rules. Each rule defines conditions
@@ -46,6 +46,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupRule implements Serializable {
@@ -97,44 +99,4 @@ public class RollupRule implements Serializable {
   @JsonProperty("minimumPercent")
   @Default
   private PercentType minimumPercent = new PercentType(BigDecimal.ZERO);
-
-  /**
-   * Default constructor for the RollupRule class.
-   */
-  @SuppressWarnings("unused")
-  public RollupRule() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    RollupRule that = (RollupRule) o;
-
-    return new EqualsBuilder()
-        .append(minimumCount, that.minimumCount)
-        .append(rollupConditions, that.rollupConditions)
-        .append(rollupAction, that.rollupAction)
-        .append(childActivitySet, that.childActivitySet)
-        .append(minimumPercent, that.minimumPercent)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(rollupConditions)
-        .append(rollupAction)
-        .append(childActivitySet)
-        .append(minimumCount)
-        .append(minimumPercent)
-        .toHashCode();
-  }
 }

@@ -153,7 +153,9 @@ public class DefaultModuleParserFactory implements ModuleParserFactory {
     log.info("Starting module parsing");
     try {
       ModuleParser<?> parser = getParser();
-      log.debug("Parsing module with parser: {}", parser.getClass().getSimpleName());
+      log.debug("Parsing module with parser: {}", parser
+          .getClass()
+          .getSimpleName());
       ModuleMetadata<?> metadata = parser.parse();
       log.info("Module parsing completed successfully");
       return metadata;

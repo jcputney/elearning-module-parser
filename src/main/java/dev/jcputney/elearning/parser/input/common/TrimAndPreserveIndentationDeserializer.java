@@ -69,11 +69,19 @@ public class TrimAndPreserveIndentationDeserializer extends JsonDeserializer<Str
     // Normalize all lines by removing leading whitespace
     StringBuilder result = new StringBuilder();
     for (String line : lines) {
-      if (!line.trim().isEmpty()) {
-        result.append(line.substring(minIndentation).trim()).append("\n");
+      if (!line
+          .trim()
+          .isEmpty()) {
+        result
+            .append(line
+                .substring(minIndentation)
+                .trim())
+            .append("\n");
       }
     }
 
-    return result.toString().trim();
+    return result
+        .toString()
+        .trim();
   }
 }

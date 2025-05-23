@@ -26,10 +26,10 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the <code>resource</code> element in the LOM schema, containing information about a
@@ -50,6 +50,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Resource implements Serializable {
@@ -115,41 +117,4 @@ public class Resource implements Serializable {
   @JacksonXmlElementWrapper(localName = "customElements", useWrapping = false)
   @JacksonXmlProperty(localName = "customElements")
   private List<Object> customElements;
-
-  /**
-   * Default constructor for the Resource class.
-   */
-  public Resource() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Resource resource = (Resource) o;
-
-    return new EqualsBuilder()
-        .append(identifiers, resource.identifiers)
-        .append(descriptions, resource.descriptions)
-        .append(catalogEntries, resource.catalogEntries)
-        .append(customElements, resource.customElements)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(identifiers)
-        .append(descriptions)
-        .append(catalogEntries)
-        .append(customElements)
-        .toHashCode();
-  }
 }

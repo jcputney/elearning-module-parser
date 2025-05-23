@@ -78,8 +78,12 @@ public class ScormVersionDetector {
     Document document = builder.parse(fileAccess.getFileContents(MANIFEST_FILE));
 
     // Check schema version
-    Element schemaElement = (Element) document.getElementsByTagName("schema").item(0);
-    Element versionElement = (Element) document.getElementsByTagName("schemaversion").item(0);
+    Element schemaElement = (Element) document
+        .getElementsByTagName("schema")
+        .item(0);
+    Element versionElement = (Element) document
+        .getElementsByTagName("schemaversion")
+        .item(0);
     if (schemaElement != null && versionElement != null) {
       String schema = schemaElement.getTextContent();
       String version = versionElement.getTextContent();
@@ -94,7 +98,10 @@ public class ScormVersionDetector {
     }
 
     // Check for SCORM 2004-specific namespaces
-    if (document.getDocumentElement().getAttribute("xmlns:adlcp").contains("adlcp_v1p3")) {
+    if (document
+        .getDocumentElement()
+        .getAttribute("xmlns:adlcp")
+        .contains("adlcp_v1p3")) {
       return SCORM_2004;
     }
 

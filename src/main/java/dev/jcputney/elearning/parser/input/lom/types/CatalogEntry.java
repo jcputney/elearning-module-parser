@@ -24,10 +24,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a catalog entry in LOM metadata. This type is used for fields that require a catalog
@@ -46,6 +46,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class CatalogEntry implements Serializable {
@@ -64,38 +66,4 @@ public class CatalogEntry implements Serializable {
    */
   @JacksonXmlProperty(localName = "entry")
   private UnboundLangString entry;
-
-  /**
-   * Default constructor for the CatalogEntry class.
-   */
-  @SuppressWarnings("unused")
-  public CatalogEntry() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    CatalogEntry that = (CatalogEntry) o;
-
-    return new EqualsBuilder()
-        .append(catalog, that.catalog)
-        .append(entry, that.entry)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(catalog)
-        .append(entry)
-        .toHashCode();
-  }
 }

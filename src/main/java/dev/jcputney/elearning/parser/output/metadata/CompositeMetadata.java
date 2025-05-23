@@ -20,9 +20,11 @@ package dev.jcputney.elearning.parser.output.metadata;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.extern.jackson.Jacksonized;
 
 /**
  * A composite implementation of the MetadataComponent interface that can contain other metadata
@@ -33,20 +35,16 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * finds a match.
  * </p>
  */
+@Builder
+@Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 public class CompositeMetadata implements MetadataComponent {
 
   /**
    * The list of metadata components contained in this composite.
    */
   private final List<MetadataComponent> components = new ArrayList<>();
-
-  /**
-   * Default constructor for CompositeMetadata.
-   */
-  @SuppressWarnings("unused")
-  public CompositeMetadata() {
-    // Default constructor
-  }
 
   /**
    * Adds a metadata component to this composite.
@@ -109,29 +107,5 @@ public class CompositeMetadata implements MetadataComponent {
    */
   public List<MetadataComponent> getComponents() {
     return new ArrayList<>(components);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    CompositeMetadata that = (CompositeMetadata) o;
-
-    return new EqualsBuilder()
-        .append(components, that.components)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(components)
-        .toHashCode();
   }
 }

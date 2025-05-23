@@ -26,10 +26,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>displayStageSpec</strong> complex type.</p>
@@ -47,6 +47,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -62,38 +64,4 @@ public class DisplayStageSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "desired")
   private StageSpec desired;
-
-  /**
-   * Default constructor for the DisplayStageSpec class.
-   */
-  @SuppressWarnings("unused")
-  public DisplayStageSpec() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    DisplayStageSpec that = (DisplayStageSpec) o;
-
-    return new EqualsBuilder()
-        .append(required, that.required)
-        .append(desired, that.desired)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(required)
-        .append(desired)
-        .toHashCode();
-  }
 }

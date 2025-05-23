@@ -16,19 +16,18 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
+import static dev.jcputney.elearning.parser.input.lom.types.Name.MS_INTERNET_EXPLORER;
+import static dev.jcputney.elearning.parser.input.lom.types.Type.BROWSER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import dev.jcputney.elearning.parser.input.lom.properties.PackageProperties;
-import dev.jcputney.elearning.parser.input.lom.types.LangString;
-import dev.jcputney.elearning.parser.input.lom.types.LomDuration;
 import dev.jcputney.elearning.parser.input.lom.types.OrComposite;
 import dev.jcputney.elearning.parser.input.lom.types.Requirement;
-import dev.jcputney.elearning.parser.input.lom.types.SingleLangString;
-import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
+import java.io.File;
+import java.time.Duration;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -36,192 +35,275 @@ import org.junit.jupiter.api.Test;
  */
 class TechnicalTest {
 
-  private XmlMapper xmlMapper;
+  private final XmlMapper xmlMapper = new XmlMapper();
 
-  @BeforeEach
-  void setUp() {
-    xmlMapper = new XmlMapper();
-  }
-
+  /**
+   * Tests the deserialization of a Technical object from XML.
+   */
   @Test
-  void testDeserializeEmptyTechnical() throws Exception {
+  void testDeserializeTechnical() throws Exception {
     // Given
-    String xml = "<technical xmlns=\"http://ltsc.ieee.org/xsd/LOM\"></technical>";
+    File file = new File(
+        "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition/metadata_course.xml");
 
     // When
-    Technical technical = xmlMapper.readValue(xml, Technical.class);
+    LOM lom = xmlMapper.readValue(file, LOM.class);
 
     // Then
-    assertNotNull(technical);
-    assertNull(technical.getFormat());
-    assertNull(technical.getSize());
-    assertNull(technical.getLocation());
-    assertNull(technical.getRequirements());
-    assertNull(technical.getInstallationRemarks());
-    assertNull(technical.getOtherPlatformRequirements());
-    assertNull(technical.getDuration());
-    assertNull(technical.getPackageProperties());
-    assertNull(technical.getCustomElements());
-  }
+    assertNotNull(lom);
+    assertNotNull(lom.getTechnical());
 
-  @Test
-  void testDeserializeTechnicalWithFormat() throws Exception {
-    // Given
-    String xml = "<technical xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <format>text/html</format>"
-        + "  <format>application/pdf</format>"
-        + "</technical>";
+    Technical technical = lom.getTechnical();
 
-    // When
-    Technical technical = xmlMapper.readValue(xml, Technical.class);
-
-    // Then
-    assertNotNull(technical);
+    // Test format
     assertNotNull(technical.getFormat());
-    assertEquals(2, technical.getFormat().size());
-    assertEquals("text/html", technical.getFormat().get(0));
-    assertEquals("application/pdf", technical.getFormat().get(1));
-  }
+    assertFalse(technical
+        .getFormat()
+        .isEmpty());
+    assertTrue(technical
+        .getFormat()
+        .contains("text/html"));
+    assertTrue(technical
+        .getFormat()
+        .contains("image/jpeg"));
+    assertTrue(technical
+        .getFormat()
+        .contains("application/x-javascript"));
+    assertTrue(technical
+        .getFormat()
+        .contains("image/png"));
+    assertTrue(technical
+        .getFormat()
+        .contains("text/css"));
 
-  @Test
-  void testDeserializeTechnicalWithSize() throws Exception {
-    // Given
-    String xml = "<technical xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <size>1024</size>"
-        + "</technical>";
-
-    // When
-    Technical technical = xmlMapper.readValue(xml, Technical.class);
-
-    // Then
-    assertNotNull(technical);
+    // Test size
     assertNotNull(technical.getSize());
-    assertEquals(1024, technical.getSize());
-  }
+    assertEquals(516096, technical.getSize());
 
-  @Test
-  void testDeserializeTechnicalWithLocation() throws Exception {
-    // Given
-    String xml = "<technical xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <location>http://example.com/resource1</location>"
-        + "  <location>http://example.com/resource2</location>"
-        + "</technical>";
-
-    // When
-    Technical technical = xmlMapper.readValue(xml, Technical.class);
-
-    // Then
-    assertNotNull(technical);
+    // Test location
     assertNotNull(technical.getLocation());
-    assertEquals(2, technical.getLocation().size());
-    assertEquals("http://example.com/resource1", technical.getLocation().get(0));
-    assertEquals("http://example.com/resource2", technical.getLocation().get(1));
-  }
+    assertFalse(technical
+        .getLocation()
+        .isEmpty());
+    assertEquals("http://www.scorm.com", technical
+        .getLocation()
+        .get(0));
 
-  @Test
-  void testDeserializeTechnicalWithInstallationRemarks() throws Exception {
-    // Given
-    String xml = "<technical xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <installationRemarks>"
-        + "    <string language=\"en\">Extract the zip file and run setup.exe</string>"
-        + "  </installationRemarks>"
-        + "</technical>";
+    // Test requirement
+    assertNotNull(technical.getRequirements());
+    assertFalse(technical
+        .getRequirements()
+        .isEmpty());
 
-    // When
-    Technical technical = xmlMapper.readValue(xml, Technical.class);
+    Requirement requirement = technical
+        .getRequirements()
+        .get(0);
+    assertNotNull(requirement);
+    assertNotNull(requirement.getOrCompositeList());
+    assertFalse(requirement
+        .getOrCompositeList()
+        .isEmpty());
 
-    // Then
-    assertNotNull(technical);
+    OrComposite orComposite = requirement
+        .getOrCompositeList()
+        .get(0);
+    assertNotNull(orComposite);
+    assertNotNull(orComposite.getType());
+    assertEquals("LOMv1.0", orComposite
+        .getType()
+        .getSource());
+    assertEquals("BROWSER", orComposite
+        .getType()
+        .getValue()
+        .toString());
+
+    assertNotNull(orComposite.getName());
+    assertEquals("LOMv1.0", orComposite
+        .getName()
+        .getSource());
+    assertEquals(MS_INTERNET_EXPLORER, orComposite
+        .getName()
+        .getValue());
+
+    assertEquals("5.0", orComposite.getMinimumVersion());
+    assertEquals("7.0", orComposite.getMaximumVersion());
+
+    // Test installationRemarks
     assertNotNull(technical.getInstallationRemarks());
-    assertNotNull(technical.getInstallationRemarks().getLangString());
-    assertEquals("en", technical.getInstallationRemarks().getLangString().getLanguage());
-    assertEquals("Extract the zip file and run setup.exe",
-        technical.getInstallationRemarks().getLangString().getValue());
-  }
+    assertNotNull(technical
+        .getInstallationRemarks()
+        .getLangString());
+    assertEquals("en-us", technical
+        .getInstallationRemarks()
+        .getLangString()
+        .getLanguage());
+    assertEquals("Nothing to it, just put the file out there.",
+        technical
+            .getInstallationRemarks()
+            .getLangString()
+            .getValue());
 
-  @Test
-  void testDeserializeTechnicalWithOtherPlatformRequirements() throws Exception {
-    // Given
-    String xml = "<technical xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <otherPlatformRequirements>"
-        + "    <string language=\"en\">Requires Java Runtime Environment 8 or higher</string>"
-        + "  </otherPlatformRequirements>"
-        + "</technical>";
-
-    // When
-    Technical technical = xmlMapper.readValue(xml, Technical.class);
-
-    // Then
-    assertNotNull(technical);
+    // Test otherPlatformRequirements
     assertNotNull(technical.getOtherPlatformRequirements());
-    assertNotNull(technical.getOtherPlatformRequirements().getLangString());
-    assertEquals("en", technical.getOtherPlatformRequirements().getLangString().getLanguage());
-    assertEquals("Requires Java Runtime Environment 8 or higher",
-        technical.getOtherPlatformRequirements().getLangString().getValue());
-  }
+    assertNotNull(technical
+        .getOtherPlatformRequirements()
+        .getLangString());
+    assertEquals("en-us", technical
+        .getOtherPlatformRequirements()
+        .getLangString()
+        .getLanguage());
+    assertTrue(technical
+        .getOtherPlatformRequirements()
+        .getLangString()
+        .getValue()
+        .contains("This course has been tested in Firefox and IE"));
 
-  @Test
-  void testDeserializeTechnicalWithDuration() throws Exception {
-    // Given
-    String xml = "<technical xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <duration>"
-        + "    <duration>PT2H30M</duration>"
-        + "  </duration>"
-        + "</technical>";
-
-    // When
-    Technical technical = xmlMapper.readValue(xml, Technical.class);
-
-    // Then
-    assertNotNull(technical);
+    // Test duration
     assertNotNull(technical.getDuration());
-    assertEquals(java.time.Duration.parse("PT2H30M"), technical.getDuration().getDuration());
+    assertNotNull(technical
+        .getDuration()
+        .getDuration());
+    assertEquals(Duration.ofMinutes(10), technical
+        .getDuration()
+        .getDuration());
+    assertNotNull(technical
+        .getDuration()
+        .getDescription());
+    assertNotNull(technical
+        .getDuration()
+        .getDescription()
+        .getLangString());
+    assertEquals("en-us", technical
+        .getDuration()
+        .getDescription()
+        .getLangString()
+        .getLanguage());
+    assertTrue(technical
+        .getDuration()
+        .getDescription()
+        .getLangString()
+        .getValue()
+        .contains("This field isn't really applicable to the course as a whole"));
   }
 
+  /**
+   * Tests the deserialization of a Technical object from an inline LOM in the manifest.
+   */
   @Test
-  void testDeserializeTechnicalWithMultipleFields() throws Exception {
+  void testDeserializeTechnicalFromManifest() throws Exception {
     // Given
-    String xml = "<technical xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <format>text/html</format>"
-        + "  <size>1024</size>"
-        + "  <location>http://example.com/resource</location>"
-        + "  <installationRemarks>"
-        + "    <string language=\"en\">Extract the zip file and run setup.exe</string>"
-        + "  </installationRemarks>"
-        + "  <duration>"
-        + "    <duration>PT2H30M</duration>"
-        + "  </duration>"
-        + "</technical>";
+    String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition";
 
-    // When
-    Technical technical = xmlMapper.readValue(xml, Technical.class);
+    // First, try to parse the metadata_course.xml file which we know has educational data
+    File metadataFile = new File(modulePath + "/metadata_course.xml");
+
+    // Use the same approach as in testDeserializeEducational
+    LOM lom = xmlMapper.readValue(metadataFile, LOM.class);
 
     // Then
-    assertNotNull(technical);
+    assertNotNull(lom);
+    assertNotNull(lom.getTechnical());
 
-    // Check format
-    assertNotNull(technical.getFormat());
-    assertEquals(1, technical.getFormat().size());
-    assertEquals("text/html", technical.getFormat().get(0));
+    Technical technical = lom.getTechnical();
 
-    // Check size
-    assertNotNull(technical.getSize());
-    assertEquals(1024, technical.getSize());
+    // Test format
+    assertEquals("text/html", technical
+        .getFormat()
+        .get(0));
 
-    // Check location
-    assertNotNull(technical.getLocation());
-    assertEquals(1, technical.getLocation().size());
-    assertEquals("http://example.com/resource", technical.getLocation().get(0));
+    // Test size
+    assertEquals(516096, technical.getSize());
 
-    // Check installation remarks
+    // Test location
+    assertEquals("http://www.scorm.com", technical
+        .getLocation()
+        .get(0));
+
+    var requirement = technical
+        .getRequirements()
+        .get(0);
+    assertNotNull(requirement);
+    assertNotNull(requirement.getOrCompositeList());
+    assertFalse(requirement
+        .getOrCompositeList()
+        .isEmpty());
+
+    var orComposite = requirement
+        .getOrCompositeList()
+        .get(0);
+    assertNotNull(orComposite);
+    assertNotNull(orComposite.getType());
+    assertEquals("LOMv1.0", orComposite
+        .getType()
+        .getSource());
+    assertEquals(BROWSER, orComposite
+        .getType()
+        .getValue());
+    assertNotNull(orComposite.getName());
+    assertEquals("LOMv1.0", orComposite
+        .getName()
+        .getSource());
+    assertEquals(MS_INTERNET_EXPLORER, orComposite
+        .getName()
+        .getValue());
+    assertEquals("5.0", orComposite.getMinimumVersion());
+    assertEquals("7.0", orComposite.getMaximumVersion());
+
+    // Test installationRemarks
     assertNotNull(technical.getInstallationRemarks());
-    assertNotNull(technical.getInstallationRemarks().getLangString());
-    assertEquals("en", technical.getInstallationRemarks().getLangString().getLanguage());
-    assertEquals("Extract the zip file and run setup.exe",
-        technical.getInstallationRemarks().getLangString().getValue());
+    assertNotNull(technical
+        .getInstallationRemarks()
+        .getLangString());
+    assertEquals("en-us", technical
+        .getInstallationRemarks()
+        .getLangString()
+        .getLanguage());
+    assertEquals("Nothing to it, just put the file out there.",
+        technical
+            .getInstallationRemarks()
+            .getLangString()
+            .getValue());
 
-    // Check duration
+    // Test otherPlatformRequirements
+    assertNotNull(technical.getOtherPlatformRequirements());
+    assertNotNull(technical
+        .getOtherPlatformRequirements()
+        .getLangString());
+    assertEquals("en-us", technical
+        .getOtherPlatformRequirements()
+        .getLangString()
+        .getLanguage());
+    assertTrue(technical
+        .getOtherPlatformRequirements()
+        .getLangString()
+        .getValue()
+        .contains("This course has been tested in Firefox and IE"));
+
+    // Test duration
     assertNotNull(technical.getDuration());
-    assertEquals(java.time.Duration.parse("PT2H30M"), technical.getDuration().getDuration());
+    assertNotNull(technical
+        .getDuration()
+        .getDuration());
+    assertEquals(Duration.ofMinutes(10), technical
+        .getDuration()
+        .getDuration());
+    assertNotNull(technical
+        .getDuration()
+        .getDescription());
+    assertNotNull(technical
+        .getDuration()
+        .getDescription()
+        .getLangString());
+    assertEquals("en-us", technical
+        .getDuration()
+        .getDescription()
+        .getLangString()
+        .getLanguage());
+    assertTrue(technical
+        .getDuration()
+        .getDescription()
+        .getLangString()
+        .getValue()
+        .contains("This field isn't really applicable to the course as a whole"));
   }
 }

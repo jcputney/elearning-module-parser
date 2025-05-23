@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -41,15 +43,9 @@ import lombok.experimental.SuperBuilder;
  * </p>
  */
 @SuperBuilder
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@EqualsAndHashCode(doNotUseGetters = true, callSuper = true)
 public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
-
-  /**
-   * Default constructor for the Scorm2004Metadata class.
-   */
-  @SuppressWarnings("unused")
-  protected Scorm2004Metadata() {
-    // Default constructor
-  }
 
   /**
    * Creates a new Scorm2004Metadata instance with standard SCORM 2004 metadata components.
@@ -59,13 +55,12 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
    * @return A new Scorm2004Metadata instance.
    */
   public static Scorm2004Metadata create(Scorm2004Manifest manifest, boolean xapiEnabled) {
-    Scorm2004Metadata metadata =
-        Scorm2004Metadata
-            .builder()
-            .manifest(manifest)
-            .moduleType(ModuleType.SCORM_2004)
-            .xapiEnabled(xapiEnabled)
-            .build();
+    Scorm2004Metadata metadata = Scorm2004Metadata
+        .builder()
+        .manifest(manifest)
+        .moduleType(ModuleType.SCORM_2004)
+        .xapiEnabled(xapiEnabled)
+        .build();
 
     // Add SCORM 2004 specific metadata
     SimpleMetadata scorm2004Metadata = metadata.getSimpleMetadata(manifest);

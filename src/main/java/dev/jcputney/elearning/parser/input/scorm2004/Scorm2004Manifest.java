@@ -48,10 +48,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the SCORM IMS Content Packaging (IMSCP) elements according to the imscp_v1p1 schema.
@@ -250,6 +250,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JacksonXmlRootElement(localName = "manifest", namespace = Scorm2004Manifest.NAMESPACE_URI)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -299,14 +301,6 @@ public class Scorm2004Manifest implements PackageManifest {
    */
   @JacksonXmlProperty(localName = "sequencingCollection", namespace = IMSSS.NAMESPACE_URI)
   private SequencingCollection sequencingCollection;
-
-  /**
-   * Default constructor for the Scorm2004Manifest class.
-   */
-  @SuppressWarnings("unused")
-  public Scorm2004Manifest() {
-    // Default constructor
-  }
 
   /**
    * Returns the title of the content package, which is typically the name or title of the course.
@@ -486,40 +480,6 @@ public class Scorm2004Manifest implements PackageManifest {
    */
   public Optional<ActivityTree> buildActivityTree() {
     return ActivityTree.buildFromManifest(this);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Scorm2004Manifest that = (Scorm2004Manifest) o;
-
-    return new EqualsBuilder()
-        .append(identifier, that.identifier)
-        .append(version, that.version)
-        .append(metadata, that.metadata)
-        .append(organizations, that.organizations)
-        .append(resources, that.resources)
-        .append(sequencingCollection, that.sequencingCollection)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(identifier)
-        .append(version)
-        .append(metadata)
-        .append(organizations)
-        .append(resources)
-        .append(sequencingCollection)
-        .toHashCode();
   }
 
   /**

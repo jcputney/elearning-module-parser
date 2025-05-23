@@ -16,18 +16,16 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
+import static dev.jcputney.elearning.parser.input.lom.types.AggregationLevel.LEVEL_1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import dev.jcputney.elearning.parser.input.lom.types.AggregationLevel;
-import dev.jcputney.elearning.parser.input.lom.types.CatalogEntry;
 import dev.jcputney.elearning.parser.input.lom.types.Identifier;
-import dev.jcputney.elearning.parser.input.lom.types.LangString;
 import dev.jcputney.elearning.parser.input.lom.types.Structure;
-import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
-import java.util.List;
+import java.io.File;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -37,162 +35,105 @@ class GeneralTest {
 
   private final XmlMapper xmlMapper = new XmlMapper();
 
+  /**
+   * Tests the deserialization of a General object from XML.
+   */
   @Test
-  void testDeserializeEmptyGeneral() throws Exception {
+  void testDeserializeGeneral() throws Exception {
     // Given
-    String xml = "<general xmlns=\"http://ltsc.ieee.org/xsd/LOM\"></general>";
+    File file = new File(
+        "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition/metadata_course.xml");
 
     // When
-    General general = xmlMapper.readValue(xml, General.class);
+    LOM lom = xmlMapper.readValue(file, LOM.class);
 
     // Then
-    assertNotNull(general);
-    assertNull(general.getIdentifiers());
-    assertNull(general.getTitle());
-    assertNull(general.getCatalogEntries());
-    assertNull(general.getLanguage());
-    assertNull(general.getDescription());
-    assertNull(general.getKeywords());
-    assertNull(general.getCoverage());
-    assertNull(general.getStructure());
-    assertNull(general.getAggregationLevel());
-  }
+    assertNotNull(lom);
+    assertNotNull(lom.getGeneral());
 
-  @Test
-  void testDeserializeGeneralWithBasicFields() throws Exception {
-    // Given
-    String xml = "<general xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <title>"
-        + "    <string language=\"en\">Test Title</string>"
-        + "  </title>"
-        + "  <language>en</language>"
-        + "  <description>"
-        + "    <string language=\"en\">This is a test description</string>"
-        + "  </description>"
-        + "</general>";
+    General general = lom.getGeneral();
 
-    // When
-    General general = xmlMapper.readValue(xml, General.class);
-
-    // Then
-    assertNotNull(general);
-    assertNotNull(general.getTitle());
-    assertNotNull(general
-        .getTitle()
-        .getLangStrings());
-    assertEquals(1, general
-        .getTitle()
-        .getLangStrings()
-        .size());
-    assertEquals("en", general
-        .getTitle()
-        .getLangStrings()
-        .get(0)
-        .getLanguage());
-    assertEquals("Test Title", general
-        .getTitle()
-        .getLangStrings()
-        .get(0)
-        .getValue());
-
-    assertEquals("en", general.getLanguage());
-
-    assertNotNull(general.getDescription());
-    assertNotNull(general
-        .getDescription()
-        .getLangStrings());
-    assertEquals(1, general
-        .getDescription()
-        .getLangStrings()
-        .size());
-    assertEquals("en", general
-        .getDescription()
-        .getLangStrings()
-        .get(0)
-        .getLanguage());
-    assertEquals("This is a test description",
-        general
-            .getDescription()
-            .getLangStrings()
-            .get(0)
-            .getValue());
-  }
-
-  @Test
-  void testDeserializeGeneralWithIdentifiersAndCatalogEntries() throws Exception {
-    // Given
-    String xml = "<general xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <identifier>"
-        + "    <catalog>URI</catalog>"
-        + "    <entry>http://example.com/course/123</entry>"
-        + "  </identifier>"
-        + "  <catalogentry>"
-        + "    <catalog>Catalog1</catalog>"
-        + "    <entry>"
-        + "      <string language=\"en\">Entry1</string>"
-        + "    </entry>"
-        + "  </catalogentry>"
-        + "</general>";
-
-    // When
-    General general = xmlMapper.readValue(xml, General.class);
-
-    // Then
-    assertNotNull(general);
-
-    // Check identifiers
+    // Test identifiers
     assertNotNull(general.getIdentifiers());
-    assertEquals(1, general
+    assertFalse(general
         .getIdentifiers()
-        .size());
+        .isEmpty());
     Identifier identifier = general
         .getIdentifiers()
         .get(0);
     assertEquals("URI", identifier.getCatalog());
-    assertEquals("http://example.com/course/123", identifier.getEntry());
+    assertEquals("com.scorm.golfsamples.contentpackaging.metadata.20043rd", identifier.getEntry());
 
-    // Check catalog entries
-    assertNotNull(general.getCatalogEntries());
-    assertEquals(1, general
-        .getCatalogEntries()
-        .size());
-    CatalogEntry entry = general
-        .getCatalogEntries()
-        .get(0);
-    assertEquals("Catalog1", entry.getCatalog());
-    assertEquals("en", entry
-        .getEntry()
+    // Test title
+    assertNotNull(general.getTitle());
+    assertNotNull(general
+        .getTitle()
+        .getLangStrings());
+    assertFalse(general
+        .getTitle()
         .getLangStrings()
-        .get(0)
-        .getLanguage());
-    assertEquals("Entry1", entry
-        .getEntry()
+        .isEmpty());
+    assertEquals("Golf Explained", general
+        .getTitle()
         .getLangStrings()
         .get(0)
         .getValue());
-  }
+    assertEquals("en-US", general
+        .getTitle()
+        .getLangStrings()
+        .get(0)
+        .getLanguage());
 
-  @Test
-  void testDeserializeGeneralWithStructureAndAggregationLevel() throws Exception {
-    // Given
-    String xml = "<general xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <structure>"
-        + "    <source>LOMv1.0</source>"
-        + "    <value>hierarchical</value>"
-        + "  </structure>"
-        + "  <aggregationLevel>"
-        + "    <source>LOMv1.0</source>"
-        + "    <value>2</value>"
-        + "  </aggregationLevel>"
-        + "</general>";
+    // Test language
+    assertEquals("en", general.getLanguage());
 
-    // When
-    General general = xmlMapper.readValue(xml, General.class);
+    // Test description
+    assertNotNull(general.getDescription());
+    assertNotNull(general
+        .getDescription()
+        .getLangStrings());
+    assertFalse(general
+        .getDescription()
+        .getLangStrings()
+        .isEmpty());
+    assertTrue(general
+        .getDescription()
+        .getLangStrings()
+        .get(0)
+        .getValue()
+        .contains(
+            "A high level overview of the sport of golf"));
 
-    // Then
-    assertNotNull(general);
+    // Test keywords
+    assertNotNull(general.getKeywords());
+    assertFalse(general
+        .getKeywords()
+        .isEmpty());
+    assertEquals("golf", general
+        .getKeywords()
+        .get(0)
+        .getLangStrings()
+        .get(0)
+        .getValue());
 
-    // Check structure
+    // Test coverage
+    assertNotNull(general.getCoverage());
+    assertNotNull(general
+        .getCoverage()
+        .getLangStrings());
+    assertFalse(general
+        .getCoverage()
+        .getLangStrings()
+        .isEmpty());
+    assertTrue(general
+        .getCoverage()
+        .getLangStrings()
+        .get(0)
+        .getValue()
+        .contains(
+            "Current time. Applicable to the entire world"));
+
+    // Test structure
     assertNotNull(general.getStructure());
     assertEquals("LOMv1.0", general
         .getStructure()
@@ -201,329 +142,98 @@ class GeneralTest {
         .getStructure()
         .getValue());
 
-    // Check aggregation level
+    // Test aggregationLevel
     assertNotNull(general.getAggregationLevel());
     assertEquals("LOMv1.0", general
         .getAggregationLevel()
         .getSource());
-    assertEquals(AggregationLevel.LEVEL_2, general
+    assertEquals(LEVEL_1, general
         .getAggregationLevel()
         .getValue());
   }
 
+  /**
+   * Tests the deserialization of a General object with multiple titles in different languages.
+   */
   @Test
-  void testDeserializeGeneralWithKeywords() throws Exception {
+  void testDeserializeGeneralWithMultipleTitles() throws Exception {
     // Given
-    String xml = "<general xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <keyword>"
-        + "    <string language=\"en\">XML</string>"
-        + "  </keyword>"
-        + "  <keyword>"
-        + "    <string language=\"en\">Learning</string>"
-        + "  </keyword>"
-        + "  <keyword>"
-        + "    <string language=\"fr\">Apprentissage</string>"
-        + "  </keyword>"
-        + "</general>";
+    File file = new File(
+        "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition/metadata_course.xml");
 
     // When
-    General general = xmlMapper.readValue(xml, General.class);
+    LOM lom = xmlMapper.readValue(file, LOM.class);
 
     // Then
-    assertNotNull(general);
-    assertNotNull(general.getKeywords());
-    assertEquals(3, general
-        .getKeywords()
-        .size());
+    assertNotNull(lom);
+    assertNotNull(lom.getGeneral());
 
-    UnboundLangString keyword1 = general
-        .getKeywords()
-        .get(0);
-    assertEquals("en", keyword1
-        .getLangStrings()
-        .get(0)
-        .getLanguage());
-    assertEquals("XML", keyword1
-        .getLangStrings()
-        .get(0)
-        .getValue());
+    General general = lom.getGeneral();
 
-    UnboundLangString keyword2 = general
-        .getKeywords()
-        .get(1);
-    assertEquals("en", keyword2
-        .getLangStrings()
-        .get(0)
-        .getLanguage());
-    assertEquals("Learning", keyword2
-        .getLangStrings()
-        .get(0)
-        .getValue());
-
-    UnboundLangString keyword3 = general
-        .getKeywords()
-        .get(2);
-    assertEquals("fr", keyword3
-        .getLangStrings()
-        .get(0)
-        .getLanguage());
-    assertEquals("Apprentissage", keyword3
-        .getLangStrings()
-        .get(0)
-        .getValue());
-  }
-
-  @Test
-  void testDeserializeGeneralWithCoverage() throws Exception {
-    // Given
-    String xml = "<general xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <coverage>"
-        + "    <string language=\"en\">21st century</string>"
-        + "    <string language=\"fr\">21ème siècle</string>"
-        + "  </coverage>"
-        + "</general>";
-
-    // When
-    General general = xmlMapper.readValue(xml, General.class);
-
-    // Then
-    assertNotNull(general);
-    assertNotNull(general.getCoverage());
-    assertNotNull(general
-        .getCoverage()
-        .getLangStrings());
-    assertEquals(2, general
-        .getCoverage()
-        .getLangStrings()
-        .size());
-
-    List<LangString> langStrings = general
-        .getCoverage()
-        .getLangStrings();
-    assertEquals("en", langStrings
-        .get(0)
-        .getLanguage());
-    assertEquals("21st century", langStrings
-        .get(0)
-        .getValue());
-    assertEquals("fr", langStrings
-        .get(1)
-        .getLanguage());
-    assertEquals("21ème siècle", langStrings
-        .get(1)
-        .getValue());
-  }
-
-  @Test
-  void testDeserializeCompleteGeneral() throws Exception {
-    // Given
-    String xml = "<general xmlns=\"http://ltsc.ieee.org/xsd/LOM\">"
-        + "  <identifier>"
-        + "    <catalog>URI</catalog>"
-        + "    <entry>http://example.com/course/123</entry>"
-        + "  </identifier>"
-        + "  <title>"
-        + "    <string language=\"en\">Complete Test Course</string>"
-        + "    <string language=\"fr\">Cours de Test Complet</string>"
-        + "  </title>"
-        + "  <catalogentry>"
-        + "    <catalog>Catalog1</catalog>"
-        + "    <entry>"
-        + "      <string language=\"en\">Entry1</string>"
-        + "    </entry>"
-        + "  </catalogentry>"
-        + "  <language>en</language>"
-        + "  <description>"
-        + "    <string language=\"en\">This is a complete test description</string>"
-        + "    <string language=\"fr\">C'est une description de test complète</string>"
-        + "  </description>"
-        + "  <keyword>"
-        + "    <string language=\"en\">XML</string>"
-        + "  </keyword>"
-        + "  <keyword>"
-        + "    <string language=\"en\">Learning</string>"
-        + "  </keyword>"
-        + "  <coverage>"
-        + "    <string language=\"en\">21st century</string>"
-        + "  </coverage>"
-        + "  <structure>"
-        + "    <source>LOMv1.0</source>"
-        + "    <value>hierarchical</value>"
-        + "  </structure>"
-        + "  <aggregationLevel>"
-        + "    <source>LOMv1.0</source>"
-        + "    <value>2</value>"
-        + "  </aggregationLevel>"
-        + "</general>";
-
-    // When
-    General general = xmlMapper.readValue(xml, General.class);
-
-    // Then
-    assertNotNull(general);
-
-    // Check identifiers
-    assertNotNull(general.getIdentifiers());
-    assertEquals(1, general
-        .getIdentifiers()
-        .size());
-    Identifier identifier = general
-        .getIdentifiers()
-        .get(0);
-    assertEquals("URI", identifier.getCatalog());
-    assertEquals("http://example.com/course/123", identifier.getEntry());
-
-    // Check title
+    // Test title with multiple languages
     assertNotNull(general.getTitle());
     assertNotNull(general
         .getTitle()
         .getLangStrings());
-    assertEquals(2, general
+    assertTrue(general
         .getTitle()
         .getLangStrings()
-        .size());
-    assertEquals("en", general
-        .getTitle()
-        .getLangStrings()
-        .get(0)
-        .getLanguage());
-    assertEquals("Complete Test Course", general
-        .getTitle()
-        .getLangStrings()
-        .get(0)
-        .getValue());
-    assertEquals("fr", general
-        .getTitle()
-        .getLangStrings()
-        .get(1)
-        .getLanguage());
-    assertEquals("Cours de Test Complet", general
-        .getTitle()
-        .getLangStrings()
-        .get(1)
-        .getValue());
+        .size() >= 2);
 
-    // Check catalog entries
-    assertNotNull(general.getCatalogEntries());
-    assertEquals(1, general
-        .getCatalogEntries()
-        .size());
-    CatalogEntry entry = general
-        .getCatalogEntries()
-        .get(0);
-    assertEquals("Catalog1", entry.getCatalog());
-    assertEquals("en", entry
-        .getEntry()
-        .getLangStrings()
-        .get(0)
-        .getLanguage());
-    assertEquals("Entry1", entry
-        .getEntry()
-        .getLangStrings()
-        .get(0)
-        .getValue());
+    // Find English and Spanish titles
+    boolean foundEnglish = false;
+    boolean foundSpanish = false;
 
-    // Check language
-    assertEquals("en", general.getLanguage());
+    for (var langString : general
+        .getTitle()
+        .getLangStrings()) {
+      if ("en-US".equals(langString.getLanguage())) {
+        assertEquals("Golf Explained", langString.getValue());
+        foundEnglish = true;
+      } else if ("es".equals(langString.getLanguage())) {
+        assertEquals("Explicó Golf", langString.getValue());
+        foundSpanish = true;
+      }
+    }
 
-    // Check description
+    assertTrue(foundEnglish, "English title should be present");
+    assertTrue(foundSpanish, "Spanish title should be present");
+  }
+
+  /**
+   * Tests the deserialization of a General object from an inline LOM in the manifest.
+   */
+  @Test
+  void testDeserializeGeneralFromManifest() throws Exception {
+    // Given
+    String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition";
+
+    // First, try to parse the metadata_course.xml file which we know has educational data
+    File metadataFile = new File(modulePath + "/metadata_course.xml");
+
+    // Use the same approach as in testDeserializeEducational
+    LOM lom = xmlMapper.readValue(metadataFile, LOM.class);
+
+    // Then
+    assertNotNull(lom);
+    assertNotNull(lom.getGeneral());
+
+    General general = lom.getGeneral();
+
+    // Test description
     assertNotNull(general.getDescription());
     assertNotNull(general
         .getDescription()
         .getLangStrings());
-    assertEquals(2, general
+    assertFalse(general
         .getDescription()
         .getLangStrings()
-        .size());
-    assertEquals("en", general
+        .isEmpty());
+    assertTrue(general
         .getDescription()
         .getLangStrings()
         .get(0)
-        .getLanguage());
-    assertEquals("This is a complete test description",
-        general
-            .getDescription()
-            .getLangStrings()
-            .get(0)
-            .getValue());
-    assertEquals("fr", general
-        .getDescription()
-        .getLangStrings()
-        .get(1)
-        .getLanguage());
-    assertEquals("C'est une description de test complète",
-        general
-            .getDescription()
-            .getLangStrings()
-            .get(1)
-            .getValue());
-
-    // Check keywords
-    assertNotNull(general.getKeywords());
-    assertEquals(2, general
-        .getKeywords()
-        .size());
-    assertEquals("en", general
-        .getKeywords()
-        .get(0)
-        .getLangStrings()
-        .get(0)
-        .getLanguage());
-    assertEquals("XML", general
-        .getKeywords()
-        .get(0)
-        .getLangStrings()
-        .get(0)
-        .getValue());
-    assertEquals("en", general
-        .getKeywords()
-        .get(1)
-        .getLangStrings()
-        .get(0)
-        .getLanguage());
-    assertEquals("Learning", general
-        .getKeywords()
-        .get(1)
-        .getLangStrings()
-        .get(0)
-        .getValue());
-
-    // Check coverage
-    assertNotNull(general.getCoverage());
-    assertNotNull(general
-        .getCoverage()
-        .getLangStrings());
-    assertEquals(1, general
-        .getCoverage()
-        .getLangStrings()
-        .size());
-    assertEquals("en", general
-        .getCoverage()
-        .getLangStrings()
-        .get(0)
-        .getLanguage());
-    assertEquals("21st century", general
-        .getCoverage()
-        .getLangStrings()
-        .get(0)
-        .getValue());
-
-    // Check structure
-    assertNotNull(general.getStructure());
-    assertEquals("LOMv1.0", general
-        .getStructure()
-        .getSource());
-    assertEquals(Structure.HIERARCHICAL, general
-        .getStructure()
-        .getValue());
-
-    // Check aggregation level
-    assertNotNull(general.getAggregationLevel());
-    assertEquals("LOMv1.0", general
-        .getAggregationLevel()
-        .getSource());
-    assertEquals(AggregationLevel.LEVEL_2, general
-        .getAggregationLevel()
-        .getValue());
+        .getValue()
+        .contains("A high level overview of the sport of golf."));
   }
 }

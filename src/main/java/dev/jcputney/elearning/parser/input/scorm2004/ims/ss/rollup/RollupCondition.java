@@ -28,10 +28,10 @@ import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an individual rollup condition within a set of rollup conditions. Each condition
@@ -41,6 +41,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupCondition implements Serializable {
@@ -63,38 +65,4 @@ public class RollupCondition implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("condition")
   private RollupRuleConditionType condition;
-
-  /**
-   * Default constructor for the RollupCondition class.
-   */
-  @SuppressWarnings("unused")
-  public RollupCondition() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    RollupCondition that = (RollupCondition) o;
-
-    return new EqualsBuilder()
-        .append(operator, that.operator)
-        .append(condition, that.condition)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(operator)
-        .append(condition)
-        .toHashCode();
-  }
 }

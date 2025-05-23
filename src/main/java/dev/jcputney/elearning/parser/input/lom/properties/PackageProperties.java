@@ -26,10 +26,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Class representing the root element of the ScormEnginePackageProperties XML.</p>
@@ -53,6 +53,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -88,44 +90,4 @@ public class PackageProperties implements Serializable {
    */
   @JacksonXmlProperty(localName = "heuristics", namespace = NAMESPACE_URI)
   private HeuristicSpec heuristics;
-
-  /**
-   * Default constructor for the PackageProperties class.
-   */
-  @SuppressWarnings("unused")
-  public PackageProperties() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    PackageProperties that = (PackageProperties) o;
-
-    return new EqualsBuilder()
-        .append(controls, that.controls)
-        .append(appearance, that.appearance)
-        .append(behavior, that.behavior)
-        .append(rsop, that.rsop)
-        .append(heuristics, that.heuristics)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(controls)
-        .append(appearance)
-        .append(behavior)
-        .append(rsop)
-        .append(heuristics)
-        .toHashCode();
-  }
 }

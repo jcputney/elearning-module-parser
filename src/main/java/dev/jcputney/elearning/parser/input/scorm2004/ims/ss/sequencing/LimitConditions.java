@@ -32,10 +32,10 @@ import java.time.Duration;
 import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the limit conditions for a learning activity within the SCORM IMS Simple Sequencing
@@ -61,6 +61,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -158,48 +160,4 @@ public class LimitConditions implements Serializable {
   @JsonDeserialize(using = InstantDeserializer.class)
   @JsonProperty("endTimeLimit")
   private Instant endTimeLimit;
-
-  /**
-   * Default constructor for the LimitConditions class.
-   */
-  @SuppressWarnings("unused")
-  public LimitConditions() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    LimitConditions that = (LimitConditions) o;
-
-    return new EqualsBuilder()
-        .append(attemptLimit, that.attemptLimit)
-        .append(attemptAbsoluteDurationLimit, that.attemptAbsoluteDurationLimit)
-        .append(attemptExperiencedDurationLimit, that.attemptExperiencedDurationLimit)
-        .append(activityAbsoluteDurationLimit, that.activityAbsoluteDurationLimit)
-        .append(activityExperiencedDurationLimit, that.activityExperiencedDurationLimit)
-        .append(beginTimeLimit, that.beginTimeLimit)
-        .append(endTimeLimit, that.endTimeLimit)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(attemptLimit)
-        .append(attemptAbsoluteDurationLimit)
-        .append(attemptExperiencedDurationLimit)
-        .append(activityAbsoluteDurationLimit)
-        .append(activityExperiencedDurationLimit)
-        .append(beginTimeLimit)
-        .append(endTimeLimit)
-        .toHashCode();
-  }
 }

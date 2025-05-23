@@ -32,10 +32,10 @@ import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an individual condition within a set of rule conditions. Each condition specifies a
@@ -45,6 +45,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -83,42 +85,4 @@ public class RuleCondition implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("condition")
   private SequencingRuleConditionType condition;
-
-  /**
-   * Default constructor for the RuleCondition class.
-   */
-  @SuppressWarnings("unused")
-  public RuleCondition() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    RuleCondition that = (RuleCondition) o;
-
-    return new EqualsBuilder()
-        .append(referencedObjective, that.referencedObjective)
-        .append(measureThreshold, that.measureThreshold)
-        .append(operator, that.operator)
-        .append(condition, that.condition)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(referencedObjective)
-        .append(measureThreshold)
-        .append(operator)
-        .append(condition)
-        .toHashCode();
-  }
 }

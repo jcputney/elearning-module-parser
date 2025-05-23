@@ -30,10 +30,10 @@ import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the {@code <resources>} element in a SCORM 1.2 manifest file.
@@ -56,6 +56,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Resources implements Serializable {
@@ -79,14 +81,6 @@ public class Scorm12Resources implements Serializable {
   private List<Scorm12Resource> resourceList;
 
   /**
-   * Default constructor for the {@code Scorm12Resources} class.
-   */
-  @SuppressWarnings("unused")
-  public Scorm12Resources() {
-    // Default constructor
-  }
-
-  /**
    * Retrieves a resource by its identifier.
    *
    * @param id The identifier of the resource to retrieve.
@@ -102,31 +96,5 @@ public class Scorm12Resources implements Serializable {
         .stream()
         .filter(resource -> id.equals(resource.getIdentifier()))
         .findFirst();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Scorm12Resources that = (Scorm12Resources) o;
-
-    return new EqualsBuilder()
-        .append(base, that.base)
-        .append(resourceList, that.resourceList)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(base)
-        .append(resourceList)
-        .toHashCode();
   }
 }

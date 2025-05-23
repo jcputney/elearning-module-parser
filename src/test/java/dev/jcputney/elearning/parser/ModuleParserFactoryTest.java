@@ -189,6 +189,12 @@ class ModuleParserFactoryTest {
       throw new RuntimeException("Failed to walk files in directory: " + directoryToTest, e);
     }
 
+    int failureCount = rows
+        .stream()
+        .filter(row -> FAIL.equals(row.result))
+        .toList()
+        .size();
+
     // Build and print the ASCII table using freva/ascii-table
     AsciiTable.builder()
         // Use a built-in border style
@@ -220,6 +226,8 @@ class ModuleParserFactoryTest {
             )
         )
         .writeTo(System.out);
+
+    System.exit(failureCount);
   }
 
   static ObjectMapper createConfiguredObjectMapper() {

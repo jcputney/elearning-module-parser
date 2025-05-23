@@ -21,15 +21,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a percentage value constrained between 0 and 1, inclusive. This type enforces the
  * range but does not enforce specific decimal precision.
  */
 @Getter
+@EqualsAndHashCode(doNotUseGetters = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class PercentType implements Serializable {
@@ -84,30 +84,6 @@ public class PercentType implements Serializable {
     } catch (NumberFormatException e) {
       throw new IllegalArgumentException("Invalid percent format: " + value, e);
     }
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    PercentType that = (PercentType) o;
-
-    return new EqualsBuilder()
-        .append(value, that.value)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(value)
-        .toHashCode();
   }
 
   /**

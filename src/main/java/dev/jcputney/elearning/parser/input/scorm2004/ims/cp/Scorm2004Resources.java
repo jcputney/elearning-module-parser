@@ -29,10 +29,10 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the collection of resources within the content package. Each resource defines a
@@ -41,6 +41,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -60,38 +62,4 @@ public class Scorm2004Resources implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "resource", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private List<Scorm2004Resource> resourceList;
-
-  /**
-   * Default constructor for the Scorm2004Resources class.
-   */
-  @SuppressWarnings("unused")
-  public Scorm2004Resources() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Scorm2004Resources that = (Scorm2004Resources) o;
-
-    return new EqualsBuilder()
-        .append(base, that.base)
-        .append(resourceList, that.resourceList)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(base)
-        .append(resourceList)
-        .toHashCode();
-  }
 }

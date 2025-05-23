@@ -27,10 +27,10 @@ import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the constrainedChoiceConsiderationsType complex type, defining choice and activation
@@ -46,6 +46,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -65,38 +67,4 @@ public class ConstrainChoiceConsiderations implements Serializable {
   @JsonProperty("constrainChoice")
   @Default
   private boolean constrainChoice = false;
-
-  /**
-   * Default constructor for the ConstrainChoiceConsiderations class.
-   */
-  @SuppressWarnings("unused")
-  public ConstrainChoiceConsiderations() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    ConstrainChoiceConsiderations that = (ConstrainChoiceConsiderations) o;
-
-    return new EqualsBuilder()
-        .append(preventActivation, that.preventActivation)
-        .append(constrainChoice, that.constrainChoice)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(preventActivation)
-        .append(constrainChoice)
-        .toHashCode();
-  }
 }

@@ -26,12 +26,12 @@ import dev.jcputney.elearning.parser.input.lom.LOM;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12ADLCP;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the metadata element in SCORM 1.2.
@@ -72,6 +72,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @SuperBuilder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Metadata implements LoadableMetadata {
@@ -98,42 +100,4 @@ public class Scorm12Metadata implements LoadableMetadata {
    */
   @JacksonXmlProperty(localName = "location", namespace = Scorm12ADLCP.NAMESPACE_URI)
   private String location;
-
-  /**
-   * Default constructor for the Scorm12Metadata class.
-   */
-  @SuppressWarnings("unused")
-  public Scorm12Metadata() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Scorm12Metadata that = (Scorm12Metadata) o;
-
-    return new EqualsBuilder()
-        .append(schema, that.schema)
-        .append(schemaVersion, that.schemaVersion)
-        .append(lom, that.lom)
-        .append(location, that.location)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(schema)
-        .append(schemaVersion)
-        .append(lom)
-        .append(location)
-        .toHashCode();
-  }
 }

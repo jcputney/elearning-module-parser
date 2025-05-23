@@ -31,10 +31,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a node in the SCORM 2004 Activity Tree.
@@ -47,6 +46,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@EqualsAndHashCode(doNotUseGetters = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ActivityNode implements Serializable {
 
@@ -195,79 +195,5 @@ public class ActivityNode implements Serializable {
    */
   public Optional<String> getResourceIdentifier() {
     return Optional.ofNullable(resourceIdentifier);
-  }
-
-  /**
-   * Checks if this node is a leaf node (has no children).
-   *
-   * @return true if this is a leaf node, false otherwise
-   */
-  public boolean isLeaf() {
-    return isLeaf;
-  }
-
-  /**
-   * Checks if this node is visible.
-   *
-   * @return true if this node is visible, false otherwise
-   */
-  public boolean isVisible() {
-    return isVisible;
-  }
-
-  /**
-   * Gets the identifier of this node.
-   *
-   * @return The identifier
-   */
-  public String getIdentifier() {
-    return identifier;
-  }
-
-  /**
-   * Gets the title of this node.
-   *
-   * @return The title
-   */
-  public String getTitle() {
-    return title;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    ActivityNode that = (ActivityNode) o;
-
-    return new EqualsBuilder()
-        .append(isLeaf, that.isLeaf)
-        .append(isVisible, that.isVisible)
-        .append(identifier, that.identifier)
-        .append(title, that.title)
-        .append(parent, that.parent)
-        .append(children, that.children)
-        .append(sequencing, that.sequencing)
-        .append(resourceIdentifier, that.resourceIdentifier)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(identifier)
-        .append(title)
-        .append(parent)
-        .append(children)
-        .append(sequencing)
-        .append(isLeaf)
-        .append(resourceIdentifier)
-        .append(isVisible)
-        .toHashCode();
   }
 }

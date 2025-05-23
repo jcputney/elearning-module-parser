@@ -155,6 +155,8 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
 
     // If it gets here, either have exactly one top-level directory or none.
     // "None" shouldn't happen in a typical ZIP but handle the edge case.
-    return topLevelDirs.size() == 1 ? topLevelDirs.iterator().next() : "";
+    return topLevelDirs.size() == 1 ? topLevelDirs
+        .iterator()
+        .next() : "";
   }
 }

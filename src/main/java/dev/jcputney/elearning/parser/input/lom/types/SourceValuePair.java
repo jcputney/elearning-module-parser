@@ -24,10 +24,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a source-value pair, commonly used in the LOM schema to describe a value and its
@@ -50,6 +50,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class SourceValuePair<T> implements Serializable {
@@ -74,37 +76,4 @@ public class SourceValuePair<T> implements Serializable {
    */
   @JsonProperty("value")
   private T value;
-
-  /**
-   * Default constructor for SourceValuePair.
-   */
-  public SourceValuePair() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    SourceValuePair<?> that = (SourceValuePair<?>) o;
-
-    return new EqualsBuilder()
-        .append(source, that.source)
-        .append(value, that.value)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(source)
-        .append(value)
-        .toHashCode();
-  }
 }

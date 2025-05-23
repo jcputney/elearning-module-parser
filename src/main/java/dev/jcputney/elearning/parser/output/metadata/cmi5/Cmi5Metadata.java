@@ -27,6 +27,8 @@ import dev.jcputney.elearning.parser.output.metadata.BaseModuleMetadata;
 import dev.jcputney.elearning.parser.output.metadata.SimpleMetadata;
 import java.util.List;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -39,15 +41,9 @@ import lombok.experimental.SuperBuilder;
  * </p>
  */
 @SuperBuilder
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@EqualsAndHashCode(doNotUseGetters = true, callSuper = true)
 public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
-
-  /**
-   * Default constructor for the Cmi5Metadata class.
-   */
-  @SuppressWarnings("unused")
-  protected Cmi5Metadata() {
-    // Default constructor
-  }
 
   /**
    * Creates a new Cmi5Metadata instance with standard cmi5 metadata components.
@@ -57,7 +53,8 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
    * @return A new Cmi5Metadata instance.
    */
   public static Cmi5Metadata create(Cmi5Manifest manifest, boolean xapiEnabled) {
-    Cmi5Metadata metadata = Cmi5Metadata.builder()
+    Cmi5Metadata metadata = Cmi5Metadata
+        .builder()
         .manifest(manifest)
         .moduleType(ModuleType.CMI5)
         .xapiEnabled(xapiEnabled)
@@ -72,13 +69,15 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
     List<AU> assignableUnits = manifest.getAssignableUnits();
     if (assignableUnits != null && !assignableUnits.isEmpty()) {
       // Add assignable unit IDs
-      List<String> assignableUnitIds = assignableUnits.stream()
+      List<String> assignableUnitIds = assignableUnits
+          .stream()
           .map(AU::getId)
           .toList();
       cmi5Metadata.addMetadata("assignableUnitIds", assignableUnitIds);
 
       // Add assignable unit URLs
-      List<String> assignableUnitUrls = assignableUnits.stream()
+      List<String> assignableUnitUrls = assignableUnits
+          .stream()
           .map(AU::getUrl)
           .toList();
       cmi5Metadata.addMetadata("assignableUnitUrls", assignableUnitUrls);
@@ -88,19 +87,22 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
     List<Block> blocks = manifest.getBlocks();
     if (blocks != null && !blocks.isEmpty()) {
       // Add block IDs
-      List<String> blockIds = blocks.stream()
+      List<String> blockIds = blocks
+          .stream()
           .map(Block::getId)
           .toList();
       cmi5Metadata.addMetadata("blockIds", blockIds);
     }
 
     // Add objectives if available
-    Optional.ofNullable(manifest.getObjectives())
+    Optional
+        .ofNullable(manifest.getObjectives())
         .map(ObjectivesList::getObjectives)
         .filter(objectiveList -> !objectiveList.isEmpty())
         .ifPresent(objectiveList -> {
           // Add objective IDs
-          List<String> objectiveIds = objectiveList.stream()
+          List<String> objectiveIds = objectiveList
+              .stream()
               .map(Objective::getId)
               .toList();
           cmi5Metadata.addMetadata("objectiveIds", objectiveIds);

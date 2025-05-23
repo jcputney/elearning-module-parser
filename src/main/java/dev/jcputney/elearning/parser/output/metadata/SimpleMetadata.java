@@ -20,9 +20,9 @@ package dev.jcputney.elearning.parser.output.metadata;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A simple implementation of the MetadataComponent interface that stores metadata in a map.
@@ -30,20 +30,14 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * This class represents a leaf node in the composite pattern, containing basic metadata values.
  * </p>
  */
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 public class SimpleMetadata implements MetadataComponent {
 
   /**
    * The map that stores metadata key-value pairs.
    */
   private final Map<String, Object> metadata = new HashMap<>();
-
-  /**
-   * Default constructor for SimpleMetadata.
-   */
-  @SuppressWarnings("unused")
-  public SimpleMetadata() {
-    // Default constructor
-  }
 
   /**
    * Adds a metadata value with the given key.
@@ -84,29 +78,5 @@ public class SimpleMetadata implements MetadataComponent {
   @Override
   public boolean hasMetadata(String key) {
     return metadata.containsKey(key);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    SimpleMetadata that = (SimpleMetadata) o;
-
-    return new EqualsBuilder()
-        .append(metadata, that.metadata)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(metadata)
-        .toHashCode();
   }
 }

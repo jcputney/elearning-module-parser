@@ -23,6 +23,7 @@ import dev.jcputney.elearning.parser.input.PackageManifest;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import java.util.Optional;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -41,6 +42,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(doNotUseGetters = true, callSuper = true, exclude = "compositeMetadata")
 public abstract class BaseModuleMetadata<M extends PackageManifest> extends
     ModuleMetadata<M> implements MetadataComponent {
 
@@ -109,14 +111,12 @@ public abstract class BaseModuleMetadata<M extends PackageManifest> extends
    * Adds a metadata component to this module's composite metadata.
    *
    * @param component The component to add.
-   * @return This BaseModuleMetadata instance for method chaining.
    */
-  public BaseModuleMetadata<M> addMetadataComponent(@NonNull MetadataComponent component) {
+  public void addMetadataComponent(@NonNull MetadataComponent component) {
     if (compositeMetadata == null) {
       compositeMetadata = new CompositeMetadata();
     }
     compositeMetadata.addComponent(component);
-    return this;
   }
 
   @Override

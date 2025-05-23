@@ -29,10 +29,10 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a block within a CMI5 course structure. Blocks can contain nested blocks or AUs
@@ -60,6 +60,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Block implements Serializable {
@@ -122,45 +124,4 @@ public class Block implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("id")
   private String id;
-
-  /**
-   * Default constructor for the Block class.
-   */
-  public Block() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Block block = (Block) o;
-
-    return new EqualsBuilder()
-        .append(title, block.title)
-        .append(description, block.description)
-        .append(objectives, block.objectives)
-        .append(assignableUnits, block.assignableUnits)
-        .append(nestedBlocks, block.nestedBlocks)
-        .append(id, block.id)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(title)
-        .append(description)
-        .append(objectives)
-        .append(assignableUnits)
-        .append(nestedBlocks)
-        .append(id)
-        .toHashCode();
-  }
 }

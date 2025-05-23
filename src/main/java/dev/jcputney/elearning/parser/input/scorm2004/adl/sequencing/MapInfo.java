@@ -26,10 +26,10 @@ import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a mapping to a global objective or another objective within the LMS. Maps allow
@@ -54,6 +54,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Builder
 @Getter
 @Jacksonized
+@NoArgsConstructor
+@EqualsAndHashCode(doNotUseGetters = true)
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class MapInfo implements Serializable {
@@ -145,56 +147,4 @@ public class MapInfo implements Serializable {
   @JsonProperty("writeProgressMeasure")
   @Default
   private boolean writeProgressMeasure = false;
-
-  /**
-   * Default constructor for the MapInfo class.
-   */
-  @SuppressWarnings("unused")
-  public MapInfo() {
-    // Default constructor
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    MapInfo mapInfo = (MapInfo) o;
-
-    return new EqualsBuilder()
-        .append(readRawScore, mapInfo.readRawScore)
-        .append(readMinScore, mapInfo.readMinScore)
-        .append(readMaxScore, mapInfo.readMaxScore)
-        .append(readCompletionStatus, mapInfo.readCompletionStatus)
-        .append(readProgressMeasure, mapInfo.readProgressMeasure)
-        .append(writeRawScore, mapInfo.writeRawScore)
-        .append(writeMinScore, mapInfo.writeMinScore)
-        .append(writeMaxScore, mapInfo.writeMaxScore)
-        .append(writeCompletionStatus, mapInfo.writeCompletionStatus)
-        .append(writeProgressMeasure, mapInfo.writeProgressMeasure)
-        .append(targetObjectiveID, mapInfo.targetObjectiveID)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(targetObjectiveID)
-        .append(readRawScore)
-        .append(readMinScore)
-        .append(readMaxScore)
-        .append(readCompletionStatus)
-        .append(readProgressMeasure)
-        .append(writeRawScore)
-        .append(writeMinScore)
-        .append(writeMaxScore)
-        .append(writeCompletionStatus)
-        .append(writeProgressMeasure)
-        .toHashCode();
-  }
 }

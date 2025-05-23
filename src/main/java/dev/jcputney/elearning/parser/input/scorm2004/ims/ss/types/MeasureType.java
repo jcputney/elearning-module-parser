@@ -22,9 +22,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a decimal measure with a value between -1 and 1, inclusive, with at least four
@@ -34,6 +33,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * Valid values for this type fall within the range of -1 to 1.</p>
  */
 @Getter
+@EqualsAndHashCode(doNotUseGetters = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class MeasureType implements Serializable {
@@ -111,29 +111,5 @@ public class MeasureType implements Serializable {
     return value
         .setScale(SCALE, RoundingMode.HALF_UP)
         .toPlainString();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    MeasureType that = (MeasureType) o;
-
-    return new EqualsBuilder()
-        .append(value, that.value)
-        .isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(value)
-        .toHashCode();
   }
 }
