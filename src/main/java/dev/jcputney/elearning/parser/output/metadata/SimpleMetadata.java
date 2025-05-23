@@ -27,7 +27,7 @@ import lombok.NonNull;
 /**
  * A simple implementation of the MetadataComponent interface that stores metadata in a map.
  * <p>
- * This class represents a leaf node in the composite pattern, containing basic metadata values.
+ * This class represents a leaf node in the composite pattern containing basic metadata values.
  * </p>
  */
 @NoArgsConstructor
@@ -48,17 +48,6 @@ public class SimpleMetadata implements MetadataComponent {
    */
   public SimpleMetadata addMetadata(@NonNull String key, Object value) {
     metadata.put(key, value);
-    return this;
-  }
-
-  /**
-   * Adds all entries from the provided map to this metadata component.
-   *
-   * @param metadataMap The map containing metadata entries to add.
-   * @return This SimpleMetadata instance for method chaining.
-   */
-  public SimpleMetadata addAllMetadata(@NonNull Map<String, Object> metadataMap) {
-    metadata.putAll(metadataMap);
     return this;
   }
 
