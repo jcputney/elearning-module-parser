@@ -23,9 +23,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.lom.types.Contribute;
-import dev.jcputney.elearning.parser.input.lom.types.SingleLangString;
 import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import dev.jcputney.elearning.parser.input.lom.types.Status;
+import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
 import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -79,7 +79,7 @@ public class LifeCycle implements Serializable {
    * }</pre>
    */
   @JacksonXmlProperty(localName = "version")
-  private SingleLangString version;
+  private UnboundLangString version;
   /**
    * The status of the learning object, indicating its stage in the lifecycle (e.g., draft, final,
    * revised).

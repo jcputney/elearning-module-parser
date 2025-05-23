@@ -25,8 +25,8 @@ import dev.jcputney.elearning.parser.input.lom.types.AggregationLevel;
 import dev.jcputney.elearning.parser.input.lom.types.CatalogEntry;
 import dev.jcputney.elearning.parser.input.lom.types.Identifier;
 import dev.jcputney.elearning.parser.input.lom.types.LangString;
-import dev.jcputney.elearning.parser.input.lom.types.SingleLangString;
 import dev.jcputney.elearning.parser.input.lom.types.Structure;
+import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -77,19 +77,45 @@ class GeneralTest {
     // Then
     assertNotNull(general);
     assertNotNull(general.getTitle());
-    assertNotNull(general.getTitle().getLangStrings());
-    assertEquals(1, general.getTitle().getLangStrings().size());
-    assertEquals("en", general.getTitle().getLangStrings().get(0).getLanguage());
-    assertEquals("Test Title", general.getTitle().getLangStrings().get(0).getValue());
+    assertNotNull(general
+        .getTitle()
+        .getLangStrings());
+    assertEquals(1, general
+        .getTitle()
+        .getLangStrings()
+        .size());
+    assertEquals("en", general
+        .getTitle()
+        .getLangStrings()
+        .get(0)
+        .getLanguage());
+    assertEquals("Test Title", general
+        .getTitle()
+        .getLangStrings()
+        .get(0)
+        .getValue());
 
     assertEquals("en", general.getLanguage());
 
     assertNotNull(general.getDescription());
-    assertNotNull(general.getDescription().getLangStrings());
-    assertEquals(1, general.getDescription().getLangStrings().size());
-    assertEquals("en", general.getDescription().getLangStrings().get(0).getLanguage());
+    assertNotNull(general
+        .getDescription()
+        .getLangStrings());
+    assertEquals(1, general
+        .getDescription()
+        .getLangStrings()
+        .size());
+    assertEquals("en", general
+        .getDescription()
+        .getLangStrings()
+        .get(0)
+        .getLanguage());
     assertEquals("This is a test description",
-        general.getDescription().getLangStrings().get(0).getValue());
+        general
+            .getDescription()
+            .getLangStrings()
+            .get(0)
+            .getValue());
   }
 
   @Test
@@ -116,18 +142,34 @@ class GeneralTest {
 
     // Check identifiers
     assertNotNull(general.getIdentifiers());
-    assertEquals(1, general.getIdentifiers().size());
-    Identifier identifier = general.getIdentifiers().get(0);
+    assertEquals(1, general
+        .getIdentifiers()
+        .size());
+    Identifier identifier = general
+        .getIdentifiers()
+        .get(0);
     assertEquals("URI", identifier.getCatalog());
     assertEquals("http://example.com/course/123", identifier.getEntry());
 
     // Check catalog entries
     assertNotNull(general.getCatalogEntries());
-    assertEquals(1, general.getCatalogEntries().size());
-    CatalogEntry entry = general.getCatalogEntries().get(0);
+    assertEquals(1, general
+        .getCatalogEntries()
+        .size());
+    CatalogEntry entry = general
+        .getCatalogEntries()
+        .get(0);
     assertEquals("Catalog1", entry.getCatalog());
-    assertEquals("en", entry.getEntry().getLangString().getLanguage());
-    assertEquals("Entry1", entry.getEntry().getLangString().getValue());
+    assertEquals("en", entry
+        .getEntry()
+        .getLangStrings()
+        .get(0)
+        .getLanguage());
+    assertEquals("Entry1", entry
+        .getEntry()
+        .getLangStrings()
+        .get(0)
+        .getValue());
   }
 
   @Test
@@ -152,13 +194,21 @@ class GeneralTest {
 
     // Check structure
     assertNotNull(general.getStructure());
-    assertEquals("LOMv1.0", general.getStructure().getSource());
-    assertEquals(Structure.HIERARCHICAL, general.getStructure().getValue());
+    assertEquals("LOMv1.0", general
+        .getStructure()
+        .getSource());
+    assertEquals(Structure.HIERARCHICAL, general
+        .getStructure()
+        .getValue());
 
     // Check aggregation level
     assertNotNull(general.getAggregationLevel());
-    assertEquals("LOMv1.0", general.getAggregationLevel().getSource());
-    assertEquals(AggregationLevel.LEVEL_2, general.getAggregationLevel().getValue());
+    assertEquals("LOMv1.0", general
+        .getAggregationLevel()
+        .getSource());
+    assertEquals(AggregationLevel.LEVEL_2, general
+        .getAggregationLevel()
+        .getValue());
   }
 
   @Test
@@ -182,19 +232,45 @@ class GeneralTest {
     // Then
     assertNotNull(general);
     assertNotNull(general.getKeywords());
-    assertEquals(3, general.getKeywords().size());
+    assertEquals(3, general
+        .getKeywords()
+        .size());
 
-    SingleLangString keyword1 = general.getKeywords().get(0);
-    assertEquals("en", keyword1.getLangString().getLanguage());
-    assertEquals("XML", keyword1.getLangString().getValue());
+    UnboundLangString keyword1 = general
+        .getKeywords()
+        .get(0);
+    assertEquals("en", keyword1
+        .getLangStrings()
+        .get(0)
+        .getLanguage());
+    assertEquals("XML", keyword1
+        .getLangStrings()
+        .get(0)
+        .getValue());
 
-    SingleLangString keyword2 = general.getKeywords().get(1);
-    assertEquals("en", keyword2.getLangString().getLanguage());
-    assertEquals("Learning", keyword2.getLangString().getValue());
+    UnboundLangString keyword2 = general
+        .getKeywords()
+        .get(1);
+    assertEquals("en", keyword2
+        .getLangStrings()
+        .get(0)
+        .getLanguage());
+    assertEquals("Learning", keyword2
+        .getLangStrings()
+        .get(0)
+        .getValue());
 
-    SingleLangString keyword3 = general.getKeywords().get(2);
-    assertEquals("fr", keyword3.getLangString().getLanguage());
-    assertEquals("Apprentissage", keyword3.getLangString().getValue());
+    UnboundLangString keyword3 = general
+        .getKeywords()
+        .get(2);
+    assertEquals("fr", keyword3
+        .getLangStrings()
+        .get(0)
+        .getLanguage());
+    assertEquals("Apprentissage", keyword3
+        .getLangStrings()
+        .get(0)
+        .getValue());
   }
 
   @Test
@@ -213,14 +289,29 @@ class GeneralTest {
     // Then
     assertNotNull(general);
     assertNotNull(general.getCoverage());
-    assertNotNull(general.getCoverage().getLangStrings());
-    assertEquals(2, general.getCoverage().getLangStrings().size());
+    assertNotNull(general
+        .getCoverage()
+        .getLangStrings());
+    assertEquals(2, general
+        .getCoverage()
+        .getLangStrings()
+        .size());
 
-    List<LangString> langStrings = general.getCoverage().getLangStrings();
-    assertEquals("en", langStrings.get(0).getLanguage());
-    assertEquals("21st century", langStrings.get(0).getValue());
-    assertEquals("fr", langStrings.get(1).getLanguage());
-    assertEquals("21ème siècle", langStrings.get(1).getValue());
+    List<LangString> langStrings = general
+        .getCoverage()
+        .getLangStrings();
+    assertEquals("en", langStrings
+        .get(0)
+        .getLanguage());
+    assertEquals("21st century", langStrings
+        .get(0)
+        .getValue());
+    assertEquals("fr", langStrings
+        .get(1)
+        .getLanguage());
+    assertEquals("21ème siècle", langStrings
+        .get(1)
+        .getValue());
   }
 
   @Test
@@ -273,65 +364,166 @@ class GeneralTest {
 
     // Check identifiers
     assertNotNull(general.getIdentifiers());
-    assertEquals(1, general.getIdentifiers().size());
-    Identifier identifier = general.getIdentifiers().get(0);
+    assertEquals(1, general
+        .getIdentifiers()
+        .size());
+    Identifier identifier = general
+        .getIdentifiers()
+        .get(0);
     assertEquals("URI", identifier.getCatalog());
     assertEquals("http://example.com/course/123", identifier.getEntry());
 
     // Check title
     assertNotNull(general.getTitle());
-    assertNotNull(general.getTitle().getLangStrings());
-    assertEquals(2, general.getTitle().getLangStrings().size());
-    assertEquals("en", general.getTitle().getLangStrings().get(0).getLanguage());
-    assertEquals("Complete Test Course", general.getTitle().getLangStrings().get(0).getValue());
-    assertEquals("fr", general.getTitle().getLangStrings().get(1).getLanguage());
-    assertEquals("Cours de Test Complet", general.getTitle().getLangStrings().get(1).getValue());
+    assertNotNull(general
+        .getTitle()
+        .getLangStrings());
+    assertEquals(2, general
+        .getTitle()
+        .getLangStrings()
+        .size());
+    assertEquals("en", general
+        .getTitle()
+        .getLangStrings()
+        .get(0)
+        .getLanguage());
+    assertEquals("Complete Test Course", general
+        .getTitle()
+        .getLangStrings()
+        .get(0)
+        .getValue());
+    assertEquals("fr", general
+        .getTitle()
+        .getLangStrings()
+        .get(1)
+        .getLanguage());
+    assertEquals("Cours de Test Complet", general
+        .getTitle()
+        .getLangStrings()
+        .get(1)
+        .getValue());
 
     // Check catalog entries
     assertNotNull(general.getCatalogEntries());
-    assertEquals(1, general.getCatalogEntries().size());
-    CatalogEntry entry = general.getCatalogEntries().get(0);
+    assertEquals(1, general
+        .getCatalogEntries()
+        .size());
+    CatalogEntry entry = general
+        .getCatalogEntries()
+        .get(0);
     assertEquals("Catalog1", entry.getCatalog());
-    assertEquals("en", entry.getEntry().getLangString().getLanguage());
-    assertEquals("Entry1", entry.getEntry().getLangString().getValue());
+    assertEquals("en", entry
+        .getEntry()
+        .getLangStrings()
+        .get(0)
+        .getLanguage());
+    assertEquals("Entry1", entry
+        .getEntry()
+        .getLangStrings()
+        .get(0)
+        .getValue());
 
     // Check language
     assertEquals("en", general.getLanguage());
 
     // Check description
     assertNotNull(general.getDescription());
-    assertNotNull(general.getDescription().getLangStrings());
-    assertEquals(2, general.getDescription().getLangStrings().size());
-    assertEquals("en", general.getDescription().getLangStrings().get(0).getLanguage());
+    assertNotNull(general
+        .getDescription()
+        .getLangStrings());
+    assertEquals(2, general
+        .getDescription()
+        .getLangStrings()
+        .size());
+    assertEquals("en", general
+        .getDescription()
+        .getLangStrings()
+        .get(0)
+        .getLanguage());
     assertEquals("This is a complete test description",
-        general.getDescription().getLangStrings().get(0).getValue());
-    assertEquals("fr", general.getDescription().getLangStrings().get(1).getLanguage());
+        general
+            .getDescription()
+            .getLangStrings()
+            .get(0)
+            .getValue());
+    assertEquals("fr", general
+        .getDescription()
+        .getLangStrings()
+        .get(1)
+        .getLanguage());
     assertEquals("C'est une description de test complète",
-        general.getDescription().getLangStrings().get(1).getValue());
+        general
+            .getDescription()
+            .getLangStrings()
+            .get(1)
+            .getValue());
 
     // Check keywords
     assertNotNull(general.getKeywords());
-    assertEquals(2, general.getKeywords().size());
-    assertEquals("en", general.getKeywords().get(0).getLangString().getLanguage());
-    assertEquals("XML", general.getKeywords().get(0).getLangString().getValue());
-    assertEquals("en", general.getKeywords().get(1).getLangString().getLanguage());
-    assertEquals("Learning", general.getKeywords().get(1).getLangString().getValue());
+    assertEquals(2, general
+        .getKeywords()
+        .size());
+    assertEquals("en", general
+        .getKeywords()
+        .get(0)
+        .getLangStrings()
+        .get(0)
+        .getLanguage());
+    assertEquals("XML", general
+        .getKeywords()
+        .get(0)
+        .getLangStrings()
+        .get(0)
+        .getValue());
+    assertEquals("en", general
+        .getKeywords()
+        .get(1)
+        .getLangStrings()
+        .get(0)
+        .getLanguage());
+    assertEquals("Learning", general
+        .getKeywords()
+        .get(1)
+        .getLangStrings()
+        .get(0)
+        .getValue());
 
     // Check coverage
     assertNotNull(general.getCoverage());
-    assertNotNull(general.getCoverage().getLangStrings());
-    assertEquals(1, general.getCoverage().getLangStrings().size());
-    assertEquals("en", general.getCoverage().getLangStrings().get(0).getLanguage());
-    assertEquals("21st century", general.getCoverage().getLangStrings().get(0).getValue());
+    assertNotNull(general
+        .getCoverage()
+        .getLangStrings());
+    assertEquals(1, general
+        .getCoverage()
+        .getLangStrings()
+        .size());
+    assertEquals("en", general
+        .getCoverage()
+        .getLangStrings()
+        .get(0)
+        .getLanguage());
+    assertEquals("21st century", general
+        .getCoverage()
+        .getLangStrings()
+        .get(0)
+        .getValue());
 
     // Check structure
     assertNotNull(general.getStructure());
-    assertEquals("LOMv1.0", general.getStructure().getSource());
-    assertEquals(Structure.HIERARCHICAL, general.getStructure().getValue());
+    assertEquals("LOMv1.0", general
+        .getStructure()
+        .getSource());
+    assertEquals(Structure.HIERARCHICAL, general
+        .getStructure()
+        .getValue());
 
     // Check aggregation level
     assertNotNull(general.getAggregationLevel());
-    assertEquals("LOMv1.0", general.getAggregationLevel().getSource());
-    assertEquals(AggregationLevel.LEVEL_2, general.getAggregationLevel().getValue());
+    assertEquals("LOMv1.0", general
+        .getAggregationLevel()
+        .getSource());
+    assertEquals(AggregationLevel.LEVEL_2, general
+        .getAggregationLevel()
+        .getValue());
   }
 }

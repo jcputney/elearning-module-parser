@@ -63,7 +63,7 @@ public class CatalogEntry implements Serializable {
    * <p>Example: "LOMv1.0" or "Dublin Core v1.0".
    */
   @JacksonXmlProperty(localName = "entry")
-  private SingleLangString entry;
+  private UnboundLangString entry;
 
   /**
    * Default constructor for the CatalogEntry class.

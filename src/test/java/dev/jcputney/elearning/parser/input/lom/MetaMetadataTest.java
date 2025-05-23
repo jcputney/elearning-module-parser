@@ -23,11 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import dev.jcputney.elearning.parser.input.lom.types.CatalogEntry;
 import dev.jcputney.elearning.parser.input.lom.types.ContributeMeta;
-import dev.jcputney.elearning.parser.input.lom.types.Date;
 import dev.jcputney.elearning.parser.input.lom.types.Identifier;
 import dev.jcputney.elearning.parser.input.lom.types.RoleMeta;
-import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -77,9 +74,13 @@ class MetaMetadataTest {
     // Then
     assertNotNull(metaMetadata);
     assertNotNull(metaMetadata.getIdentifier());
-    assertEquals(1, metaMetadata.getIdentifier().size());
+    assertEquals(1, metaMetadata
+        .getIdentifier()
+        .size());
 
-    Identifier identifier = metaMetadata.getIdentifier().get(0);
+    Identifier identifier = metaMetadata
+        .getIdentifier()
+        .get(0);
     assertEquals("URI", identifier.getCatalog());
     assertEquals("http://example.com/metadata/123", identifier.getEntry());
   }
@@ -102,14 +103,29 @@ class MetaMetadataTest {
     // Then
     assertNotNull(metaMetadata);
     assertNotNull(metaMetadata.getCatalogEntries());
-    assertEquals(1, metaMetadata.getCatalogEntries().size());
+    assertEquals(1, metaMetadata
+        .getCatalogEntries()
+        .size());
 
-    CatalogEntry entry = metaMetadata.getCatalogEntries().get(0);
+    CatalogEntry entry = metaMetadata
+        .getCatalogEntries()
+        .get(0);
     assertEquals("Catalog1", entry.getCatalog());
     assertNotNull(entry.getEntry());
-    assertNotNull(entry.getEntry().getLangString());
-    assertEquals("en", entry.getEntry().getLangString().getLanguage());
-    assertEquals("Entry1", entry.getEntry().getLangString().getValue());
+    assertNotNull(entry
+        .getEntry()
+        .getLangStrings()
+        .get(0));
+    assertEquals("en", entry
+        .getEntry()
+        .getLangStrings()
+        .get(0)
+        .getLanguage());
+    assertEquals("Entry1", entry
+        .getEntry()
+        .getLangStrings()
+        .get(0)
+        .getValue());
   }
 
   @Test
@@ -134,19 +150,33 @@ class MetaMetadataTest {
     // Then
     assertNotNull(metaMetadata);
     assertNotNull(metaMetadata.getContribute());
-    assertEquals(1, metaMetadata.getContribute().size());
+    assertEquals(1, metaMetadata
+        .getContribute()
+        .size());
 
-    ContributeMeta contribute = metaMetadata.getContribute().get(0);
+    ContributeMeta contribute = metaMetadata
+        .getContribute()
+        .get(0);
     assertNotNull(contribute.getRole());
-    assertEquals("LOMv1.0", contribute.getRole().getSource());
-    assertEquals(RoleMeta.CREATOR, contribute.getRole().getValue());
+    assertEquals("LOMv1.0", contribute
+        .getRole()
+        .getSource());
+    assertEquals(RoleMeta.CREATOR, contribute
+        .getRole()
+        .getValue());
 
     assertNotNull(contribute.getEntities());
-    assertEquals(1, contribute.getEntities().size());
-    assertEquals("John Doe", contribute.getEntities().get(0));
+    assertEquals(1, contribute
+        .getEntities()
+        .size());
+    assertEquals("John Doe", contribute
+        .getEntities()
+        .get(0));
 
     assertNotNull(contribute.getDate());
-    assertEquals("2023-01-15", contribute.getDate().getDateTime());
+    assertEquals("2023-01-15", contribute
+        .getDate()
+        .getDateTime());
   }
 
   @Test
@@ -163,9 +193,15 @@ class MetaMetadataTest {
     // Then
     assertNotNull(metaMetadata);
     assertNotNull(metaMetadata.getMetadataSchema());
-    assertEquals(2, metaMetadata.getMetadataSchema().size());
-    assertEquals("LOMv1.0", metaMetadata.getMetadataSchema().get(0));
-    assertEquals("SCORM 1.2", metaMetadata.getMetadataSchema().get(1));
+    assertEquals(2, metaMetadata
+        .getMetadataSchema()
+        .size());
+    assertEquals("LOMv1.0", metaMetadata
+        .getMetadataSchema()
+        .get(0));
+    assertEquals("SCORM 1.2", metaMetadata
+        .getMetadataSchema()
+        .get(1));
   }
 
   @Test
@@ -214,28 +250,50 @@ class MetaMetadataTest {
 
     // Check identifier
     assertNotNull(metaMetadata.getIdentifier());
-    assertEquals(1, metaMetadata.getIdentifier().size());
-    Identifier identifier = metaMetadata.getIdentifier().get(0);
+    assertEquals(1, metaMetadata
+        .getIdentifier()
+        .size());
+    Identifier identifier = metaMetadata
+        .getIdentifier()
+        .get(0);
     assertEquals("URI", identifier.getCatalog());
     assertEquals("http://example.com/metadata/123", identifier.getEntry());
 
     // Check contribute
     assertNotNull(metaMetadata.getContribute());
-    assertEquals(1, metaMetadata.getContribute().size());
-    ContributeMeta contribute = metaMetadata.getContribute().get(0);
+    assertEquals(1, metaMetadata
+        .getContribute()
+        .size());
+    ContributeMeta contribute = metaMetadata
+        .getContribute()
+        .get(0);
     assertNotNull(contribute.getRole());
-    assertEquals("LOMv1.0", contribute.getRole().getSource());
-    assertEquals(RoleMeta.CREATOR, contribute.getRole().getValue());
+    assertEquals("LOMv1.0", contribute
+        .getRole()
+        .getSource());
+    assertEquals(RoleMeta.CREATOR, contribute
+        .getRole()
+        .getValue());
     assertNotNull(contribute.getEntities());
-    assertEquals(1, contribute.getEntities().size());
-    assertEquals("John Doe", contribute.getEntities().get(0));
+    assertEquals(1, contribute
+        .getEntities()
+        .size());
+    assertEquals("John Doe", contribute
+        .getEntities()
+        .get(0));
     assertNotNull(contribute.getDate());
-    assertEquals("2023-01-15", contribute.getDate().getDateTime());
+    assertEquals("2023-01-15", contribute
+        .getDate()
+        .getDateTime());
 
     // Check metadata schema
     assertNotNull(metaMetadata.getMetadataSchema());
-    assertEquals(1, metaMetadata.getMetadataSchema().size());
-    assertEquals("LOMv1.0", metaMetadata.getMetadataSchema().get(0));
+    assertEquals(1, metaMetadata
+        .getMetadataSchema()
+        .size());
+    assertEquals("LOMv1.0", metaMetadata
+        .getMetadataSchema()
+        .get(0));
 
     // Check language
     assertNotNull(metaMetadata.getLanguage());

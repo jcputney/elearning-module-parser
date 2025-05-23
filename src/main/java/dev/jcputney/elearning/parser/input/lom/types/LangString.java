@@ -26,7 +26,9 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import dev.jcputney.elearning.parser.input.common.TrimAndPreserveIndentationDeserializer;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -51,6 +53,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * </xs:complexType>
  * }</pre>
  */
+@Builder
+@Jacksonized
 @Data
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)

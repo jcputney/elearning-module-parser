@@ -23,7 +23,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.lom.types.Purpose;
-import dev.jcputney.elearning.parser.input.lom.types.SingleLangString;
 import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import dev.jcputney.elearning.parser.input.lom.types.TaxonPath;
 import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
@@ -113,7 +112,7 @@ public class Classification implements Serializable {
    * }</pre>
    */
   @JacksonXmlProperty(localName = "description")
-  private SingleLangString description;
+  private UnboundLangString description;
   /**
    * Keywords associated with this classification, represented as a list of language-specific
    * strings.

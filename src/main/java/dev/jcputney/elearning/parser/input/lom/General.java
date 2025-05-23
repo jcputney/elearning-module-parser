@@ -26,7 +26,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.lom.types.AggregationLevel;
 import dev.jcputney.elearning.parser.input.lom.types.CatalogEntry;
 import dev.jcputney.elearning.parser.input.lom.types.Identifier;
-import dev.jcputney.elearning.parser.input.lom.types.SingleLangString;
 import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import dev.jcputney.elearning.parser.input.lom.types.Structure;
 import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
@@ -125,7 +124,7 @@ public class General implements Serializable {
    */
   @JacksonXmlElementWrapper(localName = "keyword", useWrapping = false)
   @JacksonXmlProperty(localName = "keyword")
-  private List<SingleLangString> keywords;
+  private List<UnboundLangString> keywords;
   /**
    * A wrapper for a list of coverage statements for the learning object, represented as
    * language-specific strings. Coverage defines the extent or scope of the content.

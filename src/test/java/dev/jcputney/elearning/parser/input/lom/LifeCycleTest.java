@@ -22,13 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import dev.jcputney.elearning.parser.input.lom.types.Contribute;
-import dev.jcputney.elearning.parser.input.lom.types.ContributeEntity;
-import dev.jcputney.elearning.parser.input.lom.types.Date;
 import dev.jcputney.elearning.parser.input.lom.types.Role;
-import dev.jcputney.elearning.parser.input.lom.types.SingleLangString;
-import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import dev.jcputney.elearning.parser.input.lom.types.Status;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -75,9 +70,20 @@ class LifeCycleTest {
     // Then
     assertNotNull(lifeCycle);
     assertNotNull(lifeCycle.getVersion());
-    assertNotNull(lifeCycle.getVersion().getLangString());
-    assertEquals("en", lifeCycle.getVersion().getLangString().getLanguage());
-    assertEquals("1.0.0", lifeCycle.getVersion().getLangString().getValue());
+    assertNotNull(lifeCycle
+        .getVersion()
+        .getLangStrings()
+        .get(0));
+    assertEquals("en", lifeCycle
+        .getVersion()
+        .getLangStrings()
+        .get(0)
+        .getLanguage());
+    assertEquals("1.0.0", lifeCycle
+        .getVersion()
+        .getLangStrings()
+        .get(0)
+        .getValue());
   }
 
   @Test
@@ -96,8 +102,12 @@ class LifeCycleTest {
     // Then
     assertNotNull(lifeCycle);
     assertNotNull(lifeCycle.getStatus());
-    assertEquals("LOMv1.0", lifeCycle.getStatus().getSource());
-    assertEquals(Status.FINAL, lifeCycle.getStatus().getValue());
+    assertEquals("LOMv1.0", lifeCycle
+        .getStatus()
+        .getSource());
+    assertEquals(Status.FINAL, lifeCycle
+        .getStatus()
+        .getValue());
   }
 
   @Test
@@ -122,19 +132,33 @@ class LifeCycleTest {
     // Then
     assertNotNull(lifeCycle);
     assertNotNull(lifeCycle.getContribute());
-    assertEquals(1, lifeCycle.getContribute().size());
+    assertEquals(1, lifeCycle
+        .getContribute()
+        .size());
 
-    Contribute contribute = lifeCycle.getContribute().get(0);
+    Contribute contribute = lifeCycle
+        .getContribute()
+        .get(0);
     assertNotNull(contribute.getRole());
-    assertEquals("LOMv1.0", contribute.getRole().getSource());
-    assertEquals(Role.AUTHOR, contribute.getRole().getValue());
+    assertEquals("LOMv1.0", contribute
+        .getRole()
+        .getSource());
+    assertEquals(Role.AUTHOR, contribute
+        .getRole()
+        .getValue());
 
     assertNotNull(contribute.getEntities());
-    assertEquals(1, contribute.getEntities().size());
-    assertEquals("John Doe", contribute.getEntities().get(0));
+    assertEquals(1, contribute
+        .getEntities()
+        .size());
+    assertEquals("John Doe", contribute
+        .getEntities()
+        .get(0));
 
     assertNotNull(contribute.getDate());
-    assertEquals("2023-01-15", contribute.getDate().getDateTime());
+    assertEquals("2023-01-15", contribute
+        .getDate()
+        .getDateTime());
   }
 
   @Test
@@ -169,29 +193,55 @@ class LifeCycleTest {
     // Then
     assertNotNull(lifeCycle);
     assertNotNull(lifeCycle.getContribute());
-    assertEquals(2, lifeCycle.getContribute().size());
+    assertEquals(2, lifeCycle
+        .getContribute()
+        .size());
 
     // First contribution
-    Contribute contribute1 = lifeCycle.getContribute().get(0);
+    Contribute contribute1 = lifeCycle
+        .getContribute()
+        .get(0);
     assertNotNull(contribute1.getRole());
-    assertEquals("LOMv1.0", contribute1.getRole().getSource());
-    assertEquals(Role.AUTHOR, contribute1.getRole().getValue());
+    assertEquals("LOMv1.0", contribute1
+        .getRole()
+        .getSource());
+    assertEquals(Role.AUTHOR, contribute1
+        .getRole()
+        .getValue());
     assertNotNull(contribute1.getEntities());
-    assertEquals(1, contribute1.getEntities().size());
-    assertEquals("John Doe", contribute1.getEntities().get(0));
+    assertEquals(1, contribute1
+        .getEntities()
+        .size());
+    assertEquals("John Doe", contribute1
+        .getEntities()
+        .get(0));
     assertNotNull(contribute1.getDate());
-    assertEquals("2023-01-15", contribute1.getDate().getDateTime());
+    assertEquals("2023-01-15", contribute1
+        .getDate()
+        .getDateTime());
 
     // Second contribution
-    Contribute contribute2 = lifeCycle.getContribute().get(1);
+    Contribute contribute2 = lifeCycle
+        .getContribute()
+        .get(1);
     assertNotNull(contribute2.getRole());
-    assertEquals("LOMv1.0", contribute2.getRole().getSource());
-    assertEquals(Role.PUBLISHER, contribute2.getRole().getValue());
+    assertEquals("LOMv1.0", contribute2
+        .getRole()
+        .getSource());
+    assertEquals(Role.PUBLISHER, contribute2
+        .getRole()
+        .getValue());
     assertNotNull(contribute2.getEntities());
-    assertEquals(1, contribute2.getEntities().size());
-    assertEquals("ACME Publishing", contribute2.getEntities().get(0));
+    assertEquals(1, contribute2
+        .getEntities()
+        .size());
+    assertEquals("ACME Publishing", contribute2
+        .getEntities()
+        .get(0));
     assertNotNull(contribute2.getDate());
-    assertEquals("2023-02-20", contribute2.getDate().getDateTime());
+    assertEquals("2023-02-20", contribute2
+        .getDate()
+        .getDateTime());
   }
 
   @Test
@@ -225,26 +275,55 @@ class LifeCycleTest {
 
     // Check version
     assertNotNull(lifeCycle.getVersion());
-    assertNotNull(lifeCycle.getVersion().getLangString());
-    assertEquals("en", lifeCycle.getVersion().getLangString().getLanguage());
-    assertEquals("1.0.0", lifeCycle.getVersion().getLangString().getValue());
+    assertNotNull(lifeCycle
+        .getVersion()
+        .getLangStrings()
+        .get(0));
+    assertEquals("en", lifeCycle
+        .getVersion()
+        .getLangStrings()
+        .get(0)
+        .getLanguage());
+    assertEquals("1.0.0", lifeCycle
+        .getVersion()
+        .getLangStrings()
+        .get(0)
+        .getValue());
 
     // Check status
     assertNotNull(lifeCycle.getStatus());
-    assertEquals("LOMv1.0", lifeCycle.getStatus().getSource());
-    assertEquals(Status.FINAL, lifeCycle.getStatus().getValue());
+    assertEquals("LOMv1.0", lifeCycle
+        .getStatus()
+        .getSource());
+    assertEquals(Status.FINAL, lifeCycle
+        .getStatus()
+        .getValue());
 
     // Check contribute
     assertNotNull(lifeCycle.getContribute());
-    assertEquals(1, lifeCycle.getContribute().size());
-    Contribute contribute = lifeCycle.getContribute().get(0);
+    assertEquals(1, lifeCycle
+        .getContribute()
+        .size());
+    Contribute contribute = lifeCycle
+        .getContribute()
+        .get(0);
     assertNotNull(contribute.getRole());
-    assertEquals("LOMv1.0", contribute.getRole().getSource());
-    assertEquals(Role.AUTHOR, contribute.getRole().getValue());
+    assertEquals("LOMv1.0", contribute
+        .getRole()
+        .getSource());
+    assertEquals(Role.AUTHOR, contribute
+        .getRole()
+        .getValue());
     assertNotNull(contribute.getEntities());
-    assertEquals(1, contribute.getEntities().size());
-    assertEquals("John Doe", contribute.getEntities().get(0));
+    assertEquals(1, contribute
+        .getEntities()
+        .size());
+    assertEquals("John Doe", contribute
+        .getEntities()
+        .get(0));
     assertNotNull(contribute.getDate());
-    assertEquals("2023-01-15", contribute.getDate().getDateTime());
+    assertEquals("2023-01-15", contribute
+        .getDate()
+        .getDateTime());
   }
 }
