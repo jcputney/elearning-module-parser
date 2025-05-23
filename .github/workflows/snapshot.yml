@@ -1,5 +1,5 @@
 ---
-name: Publish Snapshot to Maven Repositories
+name: Run Test Build
 
 permissions:
   contents: read
@@ -14,7 +14,7 @@ on:
   pull_request:
 
 jobs:
-  publish-snapshot:
+  test-build:
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -49,6 +49,7 @@ jobs:
         if: always()
 
       - uses: qltysh/qlty-action/coverage@main
+        if: github.event_name != 'pull_request'
         with:
           coverage-token: ${{secrets.QLTY_COVERAGE_TOKEN}}
           files: target/site/jacoco/jacoco.xml
