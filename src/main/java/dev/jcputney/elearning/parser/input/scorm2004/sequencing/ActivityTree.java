@@ -21,16 +21,20 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.sequencing;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organization;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organizations;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -42,10 +46,20 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * methods to navigate and manipulate the tree.
  * </p>
  */
+@Builder
 @Getter
-public class ActivityTree {
+@Jacksonized
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
+public class ActivityTree implements Serializable {
 
+  /**
+   * The root node of the activity tree.
+   */
   private final ActivityNode root;
+
+  /**
+   * A map for quick lookup of nodes by their identifier.
+   */
   private final Map<String, ActivityNode> nodeMap = new HashMap<>();
 
   /**

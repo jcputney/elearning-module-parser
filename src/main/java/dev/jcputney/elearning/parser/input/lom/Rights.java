@@ -26,6 +26,7 @@ import dev.jcputney.elearning.parser.input.lom.types.CopyrightAndOtherRestrictio
 import dev.jcputney.elearning.parser.input.lom.types.Cost;
 import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -56,7 +57,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Jacksonized
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Rights {
+public class Rights implements Serializable {
 
   /**
    * The cost information associated with the learning object, represented as a source-value pair.

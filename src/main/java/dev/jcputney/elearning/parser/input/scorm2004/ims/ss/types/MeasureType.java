@@ -19,6 +19,7 @@ package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import lombok.Getter;
@@ -32,11 +33,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * <p>This type enforces the range and precision for a measure as defined in the XML schema.
  * Valid values for this type fall within the range of -1 to 1.</p>
  */
-@SuppressWarnings("ClassCanBeRecord")
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class MeasureType {
+public class MeasureType implements Serializable {
 
   /**
    * The minimum and maximum values for the measure type.

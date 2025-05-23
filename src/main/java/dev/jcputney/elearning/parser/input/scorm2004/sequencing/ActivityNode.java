@@ -21,14 +21,18 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.sequencing;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organization;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.Sequencing;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.jackson.Jacksonized;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -40,16 +44,50 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * with the node.
  * </p>
  */
+@Builder
 @Getter
-public class ActivityNode {
+@Jacksonized
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
+public class ActivityNode implements Serializable {
 
+  /**
+   * The unique identifier for this activity node.
+   */
   private final String identifier;
+
+  /**
+   * The title or name of this activity node.
+   */
   private final String title;
+
+  /**
+   * The parent node of this activity node in the activity tree.
+   */
   private final ActivityNode parent;
+
+  /**
+   * The list of child nodes of this activity node.
+   */
   private final List<ActivityNode> children = new ArrayList<>();
+
+  /**
+   * The sequencing information associated with this activity node.
+   */
   private final Sequencing sequencing;
+
+  /**
+   * Indicates whether this node is a leaf node (has no children).
+   */
   private final boolean isLeaf;
+
+  /**
+   * The identifier of the resource associated with this activity node.
+   */
   private final String resourceIdentifier;
+
+  /**
+   * Indicates whether this activity node is visible in the activity tree.
+   */
   private final boolean isVisible;
 
   /**

@@ -26,6 +26,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.lom.types.CatalogEntry;
 import dev.jcputney.elearning.parser.input.lom.types.ContributeMeta;
 import dev.jcputney.elearning.parser.input.lom.types.Identifier;
+import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,7 +59,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Jacksonized
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class MetaMetadata {
+public class MetaMetadata implements Serializable {
 
   /**
    * The list of unique identifiers for the metadata. Each identifier typically includes a catalog

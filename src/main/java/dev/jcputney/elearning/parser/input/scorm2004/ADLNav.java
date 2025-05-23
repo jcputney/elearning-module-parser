@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004;
 
+import java.io.Serializable;
+
 /**
  * Represents the navigation control elements within the SCORM ADL Navigation schema (adlnav_v1p3).
  * This class captures data related to navigation presentation and control within an LMS context.
@@ -69,7 +71,7 @@ package dev.jcputney.elearning.parser.input.scorm2004;
  *   </xs:schema>
  * }</pre>
  */
-public class ADLNav {
+public class ADLNav implements Serializable {
 
   /**
    * Default constructor for the ADLNav class.

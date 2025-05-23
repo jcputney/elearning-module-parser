@@ -94,7 +94,9 @@ public class AiccManifest implements PackageManifest {
 
     for (Descriptor descriptor : descriptors) {
       for (AssignableUnit assignableUnit : assignableUnits) {
-        if (descriptor.getSystemId().equals(assignableUnit.getSystemId())) {
+        if (descriptor
+            .getSystemId()
+            .equals(assignableUnit.getSystemId())) {
           assignableUnit.setDescriptor(descriptor);
         }
       }
@@ -102,7 +104,9 @@ public class AiccManifest implements PackageManifest {
 
     CourseStructure root = courseStructures
         .stream()
-        .filter(cs -> cs.getBlock().equalsIgnoreCase("ROOT"))
+        .filter(cs -> cs
+            .getBlock()
+            .equalsIgnoreCase("ROOT"))
         .findFirst()
         .orElse(null);
 
@@ -116,7 +120,9 @@ public class AiccManifest implements PackageManifest {
 
     AssignableUnit rootAssignableUnit = assignableUnits
         .stream()
-        .filter(au -> au.getSystemId().equals(rootAssignableUnitId))
+        .filter(au -> au
+            .getSystemId()
+            .equals(rootAssignableUnitId))
         .findFirst()
         .orElseThrow(() -> new ModuleParsingException(
             "No assignable unit found with ID: " + rootAssignableUnitId));
@@ -127,7 +133,9 @@ public class AiccManifest implements PackageManifest {
   @Override
   @JsonIgnore
   public String getTitle() {
-    return this.course.getCourse().getCourseTitle();
+    return this.course
+        .getCourse()
+        .getCourseTitle();
   }
 
   @Override
@@ -137,7 +145,6 @@ public class AiccManifest implements PackageManifest {
   }
 
   @Override
-  @JsonIgnore
   public String getLaunchUrl() {
     return launchUrl;
   }
@@ -145,13 +152,17 @@ public class AiccManifest implements PackageManifest {
   @Override
   @JsonIgnore
   public String getIdentifier() {
-    return this.course.getCourse().getCourseId();
+    return this.course
+        .getCourse()
+        .getCourseId();
   }
 
   @Override
   @JsonIgnore
   public String getVersion() {
-    return this.course.getCourse().getVersion();
+    return this.course
+        .getCourse()
+        .getVersion();
   }
 
   @Override

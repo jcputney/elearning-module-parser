@@ -27,6 +27,7 @@ import dev.jcputney.elearning.parser.input.lom.types.SingleLangString;
 import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import dev.jcputney.elearning.parser.input.lom.types.TaxonPath;
 import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
+import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,7 +60,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Jacksonized
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Classification {
+public class Classification implements Serializable {
 
   /**
    * The purpose of this classification, typically represented as a source-value pair.

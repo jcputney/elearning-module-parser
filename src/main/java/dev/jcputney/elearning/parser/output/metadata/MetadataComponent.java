@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.output.metadata;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 /**
@@ -27,7 +28,7 @@ import java.util.Optional;
  * component can be either a leaf (simple metadata) or a composite (containing other components).
  * </p>
  */
-public interface MetadataComponent {
+public interface MetadataComponent extends Serializable {
 
   /**
    * Gets a metadata value by key.

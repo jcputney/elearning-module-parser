@@ -18,6 +18,7 @@
 package dev.jcputney.elearning.parser.api;
 
 import dev.jcputney.elearning.parser.input.lom.LOM;
+import java.io.Serializable;
 
 /**
  * Interface representing metadata that can be loaded.
@@ -26,7 +27,7 @@ import dev.jcputney.elearning.parser.input.lom.LOM;
  * (Learning Object Metadata) object associated with it.
  * </p>
  */
-public interface LoadableMetadata {
+public interface LoadableMetadata extends Serializable {
 
   /**
    * Gets the location of the metadata.

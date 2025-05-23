@@ -25,6 +25,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.lom.types.Kind;
 import dev.jcputney.elearning.parser.input.lom.types.Resource;
 import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
+import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,7 +56,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Jacksonized
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Relation {
+public class Relation implements Serializable {
 
   /**
    * The kind of relationship, represented as a source-value pair, specifying the type of connection

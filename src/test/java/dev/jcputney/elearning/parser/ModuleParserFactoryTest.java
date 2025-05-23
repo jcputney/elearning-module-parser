@@ -33,7 +33,6 @@ import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.DefaultModuleParserFactory;
 import dev.jcputney.elearning.parser.impl.ZipFileAccess;
-import dev.jcputney.elearning.parser.input.aicc.Descriptor;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import dev.jcputney.elearning.parser.output.metadata.CompositeMetadata;
 import dev.jcputney.elearning.parser.output.metadata.aicc.AiccMetadata;
@@ -135,25 +134,21 @@ class ModuleParserFactoryTest {
               .assertThat(metadata)
               .usingRecursiveComparison()
               .ignoringFieldsOfTypes(
-                  CompositeMetadata.class,
-                  Descriptor.class
+                  CompositeMetadata.class
               )
               .withComparatorForType(
                   (o1, o2) -> {
-                    if (o1 instanceof Duration && o2 instanceof Duration) {
+                    if (o1 != null && o2 != null) {
                       return (o1).compareTo(o2);
                     }
                     return 0;
                   }, Duration.class
               )
-              .ignoringFields(
-                  "manifest.launchUrl"
-              )
               .isEqualTo(result);
 
-          // PASS row
+          boolean jsonParsedEquals = metadata.equals(result);
           rows.add(new RowData(
-              PASS,
+              jsonParsedEquals ? PASS : FAIL,
               shortFileName,
               metadata.getTitle(),
               metadata.getDescription(),
@@ -161,7 +156,7 @@ class ModuleParserFactoryTest {
               metadata
                   .getModuleType()
                   .name(),
-              metadata.equals(result)
+              jsonParsedEquals
           ));
 
         } catch (IOException e) {

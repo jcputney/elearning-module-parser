@@ -29,12 +29,15 @@ import dev.jcputney.elearning.parser.input.common.PercentTypeDeserializer;
 import dev.jcputney.elearning.parser.input.common.PercentTypeSerializer;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.ChildActivitySet;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an individual rollup rule within a set of rollup rules. Each rule defines conditions
@@ -45,7 +48,7 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class RollupRule {
+public class RollupRule implements Serializable {
 
   /**
    * The conditions that must be met for the rollup rule to apply. These conditions specify criteria
@@ -101,5 +104,37 @@ public class RollupRule {
   @SuppressWarnings("unused")
   public RollupRule() {
     // Default constructor
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    RollupRule that = (RollupRule) o;
+
+    return new EqualsBuilder()
+        .append(minimumCount, that.minimumCount)
+        .append(rollupConditions, that.rollupConditions)
+        .append(rollupAction, that.rollupAction)
+        .append(childActivitySet, that.childActivitySet)
+        .append(minimumPercent, that.minimumPercent)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(rollupConditions)
+        .append(rollupAction)
+        .append(childActivitySet)
+        .append(minimumCount)
+        .append(minimumPercent)
+        .toHashCode();
   }
 }

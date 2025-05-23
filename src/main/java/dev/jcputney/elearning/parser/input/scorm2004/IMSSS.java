@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004;
 
+import java.io.Serializable;
+
 /**
  * Represents the SCORM IMS Simple Sequencing (IMSSS) schema, which defines the sequencing and
  * navigation rules for SCORM-compliant content. This schema is designed to control the progression
@@ -31,7 +33,7 @@ package dev.jcputney.elearning.parser.input.scorm2004;
  *
  * @see <a href="https://www.imsglobal.org">IMS Global Learning Consortium</a>
  */
-public class IMSSS {
+public class IMSSS implements Serializable {
 
   /**
    * The XML namespace URI for SCORM IMS Simple Sequencing (imsss).

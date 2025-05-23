@@ -19,6 +19,7 @@ package dev.jcputney.elearning.parser.input.common;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import lombok.Getter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -31,7 +32,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class PercentType {
+public class PercentType implements Serializable {
 
   /**
    * The minimum and maximum values for the percentage.

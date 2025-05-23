@@ -20,6 +20,7 @@ package dev.jcputney.elearning.parser.input.lom.types;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -40,7 +41,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Data
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class SingleLangString {
+public class SingleLangString implements Serializable {
 
   /**
    * The string value for a given language.

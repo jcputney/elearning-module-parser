@@ -17,13 +17,14 @@
 
 package dev.jcputney.elearning.parser.input;
 
+import java.io.Serializable;
 import java.time.Duration;
 
 /**
  * Represents the manifest of a package, containing metadata about the package. This interface
  * defines methods to retrieve various attributes of the package manifest.
  */
-public interface PackageManifest {
+public interface PackageManifest extends Serializable {
 
   /**
    * The title of the package, which is a human-readable name.

@@ -29,6 +29,7 @@ import dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing.RollupConsid
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004Objectives;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.random.RandomizationControls;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup.RollupRules;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,7 +47,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Sequencing {
+public class Sequencing implements Serializable {
 
   /**
    * Control modes that specify the navigation options available to the learner.

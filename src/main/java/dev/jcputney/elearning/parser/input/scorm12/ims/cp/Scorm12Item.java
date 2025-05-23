@@ -29,6 +29,7 @@ import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.input.scorm12.adl.Scorm12Prerequisites;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.TimeLimitAction;
 import dev.jcputney.elearning.parser.util.DurationHHMMSSDeserializer;
+import java.io.Serializable;
 import java.time.Duration;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -80,7 +81,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Jacksonized
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm12Item {
+public class Scorm12Item implements Serializable {
 
   /**
    * The unique identifier for this item within the organization.

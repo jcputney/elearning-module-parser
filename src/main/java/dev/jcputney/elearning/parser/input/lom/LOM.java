@@ -26,6 +26,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -66,7 +67,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @JacksonXmlRootElement(localName = "lom", namespace = LOM.NAMESPACE_URI)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class LOM {
+public class LOM implements Serializable {
 
   /**
    * The namespace URI for the LOM schema.

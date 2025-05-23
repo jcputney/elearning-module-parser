@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -57,7 +58,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Jacksonized
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm12Resources {
+public class Scorm12Resources implements Serializable {
 
   /**
    * The base URL for all resources in the content package. This URL is used to resolve relative
@@ -67,10 +68,10 @@ public class Scorm12Resources {
   @JsonProperty("base")
   private String base;
   /**
-   * A list of all <resource> elements defined within the <resources> element.
+   * A list of all {@code <resources>} elements defined within the {@code <resources>} element.
    * <p>
-   * Each <resource> specifies a particular resource (e.g., SCO, asset, or other content) in the
-   * package.
+   * Each {@code <resources>} specifies a particular resource (e.g., SCO, asset, or other content)
+   * in the package.
    * </p>
    */
   @JacksonXmlElementWrapper(useWrapping = false)

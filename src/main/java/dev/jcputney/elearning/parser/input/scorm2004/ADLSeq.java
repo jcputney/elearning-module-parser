@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004;
 
+import java.io.Serializable;
+
 /**
  * Represents the SCORM ADL Sequencing (ADLSeq) elements in the adlseq_v1p3 schema.
  *
@@ -94,7 +96,7 @@ package dev.jcputney.elearning.parser.input.scorm2004;
  *   </xs:schema>
  * }</pre>
  */
-public class ADLSeq {
+public class ADLSeq implements Serializable {
 
   /**
    * The namespace URI for the ADLSeq schema.

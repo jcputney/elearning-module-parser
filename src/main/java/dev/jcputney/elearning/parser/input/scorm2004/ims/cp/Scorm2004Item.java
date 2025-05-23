@@ -33,6 +33,7 @@ import dev.jcputney.elearning.parser.input.scorm2004.adl.cp.CompletionThreshold;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.navigation.Presentation;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.TimeLimitAction;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.Sequencing;
+import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,7 +53,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm2004Item {
+public class Scorm2004Item implements Serializable {
 
   /**
    * The unique identifier for this item within the organization.

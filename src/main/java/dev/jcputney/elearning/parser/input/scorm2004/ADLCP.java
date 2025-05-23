@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004;
 
+import java.io.Serializable;
+
 /**
  * Represents the SCORM ADL Content Packaging (ADLCP) elements in the adlcp_v1p3 schema.
  *
@@ -108,7 +110,7 @@ package dev.jcputney.elearning.parser.input.scorm2004;
  *   </xs:schema>
  * }</pre>
  */
-public class ADLCP {
+public class ADLCP implements Serializable {
 
   /**
    * The namespace URI for the ADLCP schema.

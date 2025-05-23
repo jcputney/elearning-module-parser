@@ -28,6 +28,7 @@ import dev.jcputney.elearning.parser.input.lom.types.LomDuration;
 import dev.jcputney.elearning.parser.input.lom.types.OrComposite;
 import dev.jcputney.elearning.parser.input.lom.types.Requirement;
 import dev.jcputney.elearning.parser.input.lom.types.SingleLangString;
+import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -63,7 +64,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Jacksonized
 @AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Technical {
+public class Technical implements Serializable {
 
   /**
    * The list of MIME types representing the formats used by the learning object.
@@ -182,8 +183,23 @@ public class Technical {
    */
   @JacksonXmlProperty(localName = "duration")
   private LomDuration duration;
+
+  /**
+   * Represents the package properties contained within the `Technical` class.
+   * <p>
+   * This attribute maps to the `ScormEnginePackageProperties` element in the corresponding XML
+   * schema as defined by the provided namespace URI. The `PackageProperties` instance encapsulates
+   * various configuration details such as controls, appearance, behavior, RSOP (Run-Time State of
+   * the Package), and heuristics related to SCORM (Sharable Content Object Reference Model) engine
+   * packages.
+   * <p>
+   * The field is annotated with `@JacksonXmlProperty` to define how it should be serialized or
+   * deserialized when working with XML representations. It utilizes the custom namespace defined by
+   * `PackageProperties.NAMESPACE_URI`.
+   */
   @JacksonXmlProperty(localName = "ScormEnginePackageProperties", namespace = PackageProperties.NAMESPACE_URI)
   private PackageProperties packageProperties;
+
   /**
    * A placeholder for custom elements that extend the technical information. This allows for
    * additional metadata to be included that is not part of the standard schema.
