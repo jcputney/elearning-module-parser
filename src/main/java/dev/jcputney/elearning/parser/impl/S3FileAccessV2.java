@@ -21,31 +21,59 @@ import dev.jcputney.elearning.parser.api.FileAccess;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import dev.jcputney.elearning.parser.util.LogMarkers;
 import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.CommonPrefix;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
 /**
- * Implementation of FileAccess using AWS S3 SDK v2.
+ * Optimized implementation of FileAccess using AWS S3 SDK v2 with batch operations,
+ * streaming support, and intelligent caching.
  */
+@Slf4j
 @SuppressWarnings("unused")
 public class S3FileAccessV2 implements FileAccess {
 
+  private static final long STREAMING_THRESHOLD = 5 * 1024 * 1024; // 5MB
+  private static final int MAX_CACHE_SIZE = 1000;
+  private static final Set<String> COMMON_MODULE_FILES = Set.of(
+      "imsmanifest.xml", "cmi5.xml", "xAPI.js", "sendStatement.js",
+      "manifest.xml", "tincan.xml", "MANIFEST.MF"
+  );
+
   private final S3Client s3Client;
   private final String bucketName;
+  private final ExecutorService executorService;
+  
+  // Caches for performance
+  private final Map<String, Boolean> fileExistsCache = new ConcurrentHashMap<>();
+  private final Map<String, List<String>> directoryListCache = new ConcurrentHashMap<>();
+  private final Map<String, byte[]> smallFileCache = new ConcurrentHashMap<>();
+  private final Map<String, Long> fileSizeCache = new ConcurrentHashMap<>();
 
   @Getter
-  private final String rootPath;
+  private volatile String rootPath;
 
   /**
-   * Constructs an S3FileAccessV2 instance with the specified S3 client and bucket name.
+   * Constructs an optimized S3FileAccessV2 instance with the specified S3 client and bucket name.
    *
    * @param s3Client The S3 client to use for accessing files.
    * @param bucketName The name of the S3 bucket to access.
@@ -54,42 +82,119 @@ public class S3FileAccessV2 implements FileAccess {
   public S3FileAccessV2(S3Client s3Client, String bucketName, String rootPath) {
     this.s3Client = s3Client;
     this.bucketName = bucketName;
+    this.executorService = Executors.newFixedThreadPool(10);
 
     String processedPath = rootPath;
     if (processedPath == null) {
       processedPath = "";
     }
 
-    processedPath = getInternalRootDirectory(processedPath);
-
-    if (processedPath.endsWith("/")) {
-      processedPath = processedPath.substring(0, processedPath.length() - 1);
-    }
+    // Lazy initialization of root path detection
     this.rootPath = processedPath;
+    
+    if (this.rootPath.endsWith("/")) {
+      this.rootPath = this.rootPath.substring(0, this.rootPath.length() - 1);
+    }
   }
 
   /**
-   * Checks if a file exists at the specified path.
+   * Checks if a file exists at the specified path with caching.
    *
    * @param path The path of the file to check (guaranteed to be non-null).
    * @return True if the file exists, false otherwise.
    */
   @Override
   public boolean fileExistsInternal(String path) {
-    try {
-      s3Client.headObject(HeadObjectRequest
-          .builder()
-          .bucket(bucketName)
-          .key(fullPath(path))
-          .build());
-      return true;
-    } catch (NoSuchKeyException e) {
-      return false;
-    }
+    return fileExistsCache.computeIfAbsent(path, this::checkFileExistsOnS3);
   }
 
   /**
-   * Lists the files in the specified directory path.
+   * Batch check if multiple files exist - much more efficient for module parsing.
+   *
+   * @param paths List of file paths to check
+   * @return Map of path to existence boolean
+   */
+  public Map<String, Boolean> fileExistsBatch(List<String> paths) {
+    // Get cached results first
+    Map<String, Boolean> results = new ConcurrentHashMap<>();
+    List<String> uncachedPaths = new ArrayList<>();
+    
+    for (String path : paths) {
+      Boolean cached = fileExistsCache.get(path);
+      if (cached != null) {
+        results.put(path, cached);
+      } else {
+        uncachedPaths.add(path);
+      }
+    }
+    
+    // Check uncached paths in parallel
+    if (!uncachedPaths.isEmpty()) {
+      List<CompletableFuture<Map.Entry<String, Boolean>>> futures = uncachedPaths.stream()
+          .map(path -> CompletableFuture.supplyAsync(() -> {
+            boolean exists = checkFileExistsOnS3(path);
+            fileExistsCache.put(path, exists);
+            return Map.entry(path, exists);
+          }, executorService))
+          .toList();
+      
+      futures.forEach(future -> {
+        try {
+          Map.Entry<String, Boolean> result = future.join();
+          results.put(result.getKey(), result.getValue());
+        } catch (Exception e) {
+          log.debug("Failed to check file existence for batch operation", e);
+        }
+      });
+    }
+    
+    return results;
+  }
+
+  /**
+   * Prefetch common module files in parallel for faster subsequent access.
+   */
+  public void prefetchCommonFiles() {
+    List<String> commonFiles = COMMON_MODULE_FILES.stream()
+        .filter(file -> !smallFileCache.containsKey(file))
+        .toList();
+    
+    if (commonFiles.isEmpty()) {
+      return;
+    }
+    
+    log.debug(LogMarkers.S3_VERBOSE, "Prefetching {} common module files", commonFiles.size());
+    
+    List<CompletableFuture<Void>> futures = commonFiles.stream()
+        .map(file -> CompletableFuture.runAsync(() -> {
+          try {
+            String fullFilePath = fullPath(file);
+            if (checkFileExistsOnS3(file)) {
+              // Get file size first
+              long size = getFileSizeOnS3(file);
+              fileSizeCache.put(file, size);
+              
+              // Only cache small files
+              if (size <= STREAMING_THRESHOLD) {
+                byte[] content = s3Client.getObjectAsBytes(builder -> {
+                  builder.bucket(bucketName);
+                  builder.key(fullFilePath);
+                }).asByteArray();
+                smallFileCache.put(file, content);
+                log.debug(LogMarkers.S3_VERBOSE, "Prefetched file: {} ({} bytes)", file, content.length);
+              }
+            }
+          } catch (Exception e) {
+            // Failed to prefetch file - this is expected for missing files
+          }
+        }, executorService))
+        .toList();
+    
+    CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+  }
+
+  /**
+   * Lists the files in the specified directory path with caching and pagination support.
    *
    * @param directoryPath The path of the directory to list files from (guaranteed to be non-null).
    * @return A list of file paths in the specified directory.
@@ -97,24 +202,11 @@ public class S3FileAccessV2 implements FileAccess {
    */
   @Override
   public List<String> listFilesInternal(String directoryPath) throws IOException {
-    try {
-      return s3Client
-          .listObjectsV2(ListObjectsV2Request
-              .builder()
-              .bucket(bucketName)
-              .prefix(fullPath(directoryPath))
-              .build())
-          .contents()
-          .stream()
-          .map(S3Object::key)
-          .toList();
-    } catch (SdkException e) {
-      throw new IOException("Failed to list files in directory: " + directoryPath, e);
-    }
+    return directoryListCache.computeIfAbsent(directoryPath, this::listFilesOnS3);
   }
 
   /**
-   * Gets the contents of a file as an InputStream.
+   * Gets the contents of a file as an InputStream with intelligent streaming/caching.
    *
    * @param path The path of the file to get contents from (guaranteed to be non-null).
    * @return An InputStream containing the file contents.
@@ -122,41 +214,181 @@ public class S3FileAccessV2 implements FileAccess {
    */
   @Override
   public InputStream getFileContentsInternal(String path) throws IOException {
-    try {
-      var response = s3Client.getObjectAsBytes(builder -> {
-        builder.bucket(bucketName);
-        builder.key(fullPath(path));
-      });
-      return new ByteArrayInputStream(response.asByteArray());
-    } catch (S3Exception e) {
-      throw new IOException("Failed to get file contents for path: " + path, e);
+    // Check cache first for small files
+    byte[] cachedContent = smallFileCache.get(path);
+    if (cachedContent != null) {
+      log.debug(LogMarkers.S3_VERBOSE, "Returning cached content for file: {}", path);
+      return new ByteArrayInputStream(cachedContent);
+    }
+    
+    // Get file size to determine strategy
+    Long cachedSize = fileSizeCache.get(path);
+    long fileSize = cachedSize != null ? cachedSize : getFileSizeOnS3(path);
+    
+    if (cachedSize == null) {
+      fileSizeCache.put(path, fileSize);
+    }
+    
+    String fullFilePath = fullPath(path);
+    
+    if (fileSize <= STREAMING_THRESHOLD) {
+      // Cache small files for future use
+      log.debug(LogMarkers.S3_VERBOSE, "Caching small file: {} ({} bytes)", path, fileSize);
+      try {
+        byte[] content = s3Client.getObjectAsBytes(builder -> {
+          builder.bucket(bucketName);
+          builder.key(fullFilePath);
+        }).asByteArray();
+        
+        // Implement simple cache size management
+        if (smallFileCache.size() >= MAX_CACHE_SIZE) {
+          // Remove oldest entry (simple FIFO)
+          String oldestKey = smallFileCache.keySet().iterator().next();
+          smallFileCache.remove(oldestKey);
+        }
+        
+        smallFileCache.put(path, content);
+        return new ByteArrayInputStream(content);
+      } catch (S3Exception e) {
+        throw new IOException("Failed to get file contents for path: " + path, e);
+      }
+    } else {
+      // Stream large files directly
+      log.debug(LogMarkers.S3_VERBOSE, "Streaming large file: {} ({} bytes)", path, fileSize);
+      try {
+        return s3Client.getObject(GetObjectRequest.builder()
+            .bucket(bucketName)
+            .key(fullFilePath)
+            .build());
+      } catch (S3Exception e) {
+        throw new IOException("Failed to stream file contents for path: " + path, e);
+      }
     }
   }
 
   /**
-   * Determines the internal root directory within the S3 bucket.
+   * Determines the internal root directory within the S3 bucket with lazy initialization.
    *
-   * <p>This method checks if there is a single common prefix at the specified path,
-   * which indicates a directory structure. If found, it returns that prefix as the root. Otherwise,
-   * it returns the original path.</p>
-   *
-   * @param rootPath The initial root path to check.
    * @return The detected internal root directory or the original path if none is detected.
    */
-  public String getInternalRootDirectory(String rootPath) {
-    List<CommonPrefix> commonPrefixes = s3Client
-        .listObjectsV2(ListObjectsV2Request
-            .builder()
-            .bucket(bucketName)
-            .prefix(rootPath)
-            .delimiter("/")
-            .build())
-        .commonPrefixes();
-    if (commonPrefixes.size() != 1) {
+  public String getInternalRootDirectory() {
+    if (rootPath == null || rootPath.isEmpty()) {
+      synchronized (this) {
+        if (rootPath == null || rootPath.isEmpty()) {
+          rootPath = detectInternalRootDirectory("");
+        }
+      }
+    }
+    return rootPath;
+  }
+
+  /**
+   * Clear all caches - useful for testing or when bucket contents change.
+   */
+  public void clearCaches() {
+    fileExistsCache.clear();
+    directoryListCache.clear();
+    smallFileCache.clear();
+    fileSizeCache.clear();
+    // All caches cleared
+  }
+
+  /**
+   * Get cache statistics for monitoring.
+   */
+  public Map<String, Integer> getCacheStats() {
+    return Map.of(
+        "fileExistsCache", fileExistsCache.size(),
+        "directoryListCache", directoryListCache.size(),
+        "smallFileCache", smallFileCache.size(),
+        "fileSizeCache", fileSizeCache.size()
+    );
+  }
+
+  /**
+   * Shutdown the executor service when the instance is no longer needed.
+   */
+  public void shutdown() {
+    executorService.shutdown();
+  }
+
+  // Private helper methods
+
+  private boolean checkFileExistsOnS3(String path) {
+    try {
+      s3Client.headObject(HeadObjectRequest.builder()
+          .bucket(bucketName)
+          .key(fullPath(path))
+          .build());
+      return true;
+    } catch (NoSuchKeyException e) {
+      return false;
+    } catch (SdkException e) {
+      log.debug("Failed to check file existence for path: {}", path, e);
+      return false;
+    }
+  }
+
+  private long getFileSizeOnS3(String path) {
+    try {
+      return s3Client.headObject(HeadObjectRequest.builder()
+          .bucket(bucketName)
+          .key(fullPath(path))
+          .build()).contentLength();
+    } catch (SdkException e) {
+      log.debug("Failed to get file size for path: {}", path, e);
+      return 0;
+    }
+  }
+
+  private List<String> listFilesOnS3(String directoryPath) {
+    try {
+      List<String> allKeys = new ArrayList<>();
+      String prefix = fullPath(directoryPath);
+      
+      ListObjectsV2Request.Builder requestBuilder = ListObjectsV2Request.builder()
+          .bucket(bucketName)
+          .prefix(prefix)
+          .maxKeys(1000);
+      
+      String continuationToken = null;
+      do {
+        if (continuationToken != null) {
+          requestBuilder.continuationToken(continuationToken);
+        }
+        
+        ListObjectsV2Response response = s3Client.listObjectsV2(requestBuilder.build());
+        allKeys.addAll(response.contents().stream()
+            .map(S3Object::key)
+            .collect(Collectors.toList()));
+        
+        continuationToken = response.nextContinuationToken();
+      } while (continuationToken != null);
+      
+      log.debug(LogMarkers.S3_VERBOSE, "Listed {} files in directory: {}", allKeys.size(), directoryPath);
+      return allKeys;
+    } catch (SdkException e) {
+      log.debug("Failed to list files in directory: {}", directoryPath, e);
+      return List.of();
+    }
+  }
+
+  private String detectInternalRootDirectory(String rootPath) {
+    try {
+      List<CommonPrefix> commonPrefixes = s3Client
+          .listObjectsV2(ListObjectsV2Request.builder()
+              .bucket(bucketName)
+              .prefix(rootPath)
+              .delimiter("/")
+              .build())
+          .commonPrefixes();
+      if (commonPrefixes.size() != 1) {
+        return rootPath;
+      }
+      return commonPrefixes.get(0).prefix();
+    } catch (SdkException e) {
+      log.debug("Failed to detect internal root directory", e);
       return rootPath;
     }
-    return commonPrefixes
-        .get(0)
-        .prefix();
   }
 }

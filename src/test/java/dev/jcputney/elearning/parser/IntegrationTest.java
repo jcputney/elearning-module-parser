@@ -21,10 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import dev.jcputney.elearning.parser.api.ModuleParserFactory;
+import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.DefaultModuleParserFactory;
+import dev.jcputney.elearning.parser.impl.LocalFileAccess;
 import dev.jcputney.elearning.parser.impl.ZipFileAccess;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import java.io.IOException;
@@ -210,5 +212,102 @@ public class IntegrationTest {
     ModuleMetadata<?> cmi5Metadata = cmi5Parser.parse();
     assertNotNull(cmi5Metadata);
     assertEquals(ModuleType.CMI5, cmi5Metadata.getModuleType());
+  }
+
+  /**
+   * Tests the edition detection for SCORM 2004 2nd Edition modules.
+   */
+  @Test
+  void testScorm2004SecondEditionDetection()
+      throws IOException, ModuleDetectionException, ModuleParsingException {
+    // Arrange
+    String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingSingleSCO_SCORM20042ndEdition";
+
+    // Act
+    ModuleParserFactory parserFactory = new DefaultModuleParserFactory(
+        new LocalFileAccess(modulePath));
+    ModuleParser<?> parser = parserFactory.getParser();
+    ModuleMetadata<?> metadata = parser.parse();
+
+    // Assert
+    assertNotNull(metadata);
+    assertEquals(ModuleType.SCORM_2004, metadata.getModuleType());
+    assertEquals(ModuleEditionType.SCORM_2004_2ND_EDITION, metadata.getModuleEditionType());
+    assertNotNull(metadata.getTitle());
+    assertNotNull(metadata.getLaunchUrl());
+  }
+
+  /**
+   * Tests the edition detection for SCORM 2004 3rd Edition modules.
+   */
+  @Test
+  void testScorm2004ThirdEditionDetection()
+      throws IOException, ModuleDetectionException, ModuleParsingException {
+    // Arrange
+    String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingSingleSCO_SCORM20043rdEdition";
+
+    // Act
+    ModuleParserFactory parserFactory = new DefaultModuleParserFactory(
+        new LocalFileAccess(modulePath));
+    ModuleParser<?> parser = parserFactory.getParser();
+    ModuleMetadata<?> metadata = parser.parse();
+
+    // Assert
+    assertNotNull(metadata);
+    assertEquals(ModuleType.SCORM_2004, metadata.getModuleType());
+    assertEquals(ModuleEditionType.SCORM_2004_3RD_EDITION, metadata.getModuleEditionType());
+    assertNotNull(metadata.getTitle());
+    assertNotNull(metadata.getLaunchUrl());
+  }
+
+  /**
+   * Tests the edition detection for SCORM 2004 4th Edition modules.
+   */
+  @Test
+  void testScorm2004FourthEditionDetection()
+      throws IOException, ModuleDetectionException, ModuleParsingException {
+    // Arrange
+    String modulePath = "src/test/resources/modules/scorm2004/SequencingPostTestRollup4thEd_SCORM20044thEdition";
+
+    // Act
+    ModuleParserFactory parserFactory = new DefaultModuleParserFactory(
+        new LocalFileAccess(modulePath));
+    ModuleParser<?> parser = parserFactory.getParser();
+    ModuleMetadata<?> metadata = parser.parse();
+
+    // Assert
+    assertNotNull(metadata);
+    assertEquals(ModuleType.SCORM_2004, metadata.getModuleType());
+    assertEquals(ModuleEditionType.SCORM_2004_4TH_EDITION, metadata.getModuleEditionType());
+    assertNotNull(metadata.getTitle());
+    assertNotNull(metadata.getLaunchUrl());
+  }
+
+  /**
+   * Tests that other module types have their edition type set correctly.
+   */
+  @Test
+  void testNonScorm2004EditionTypes()
+      throws IOException, ModuleDetectionException, ModuleParsingException {
+    // Test SCORM 1.2
+    ModuleParserFactory scorm12Factory = new DefaultModuleParserFactory(
+        new ZipFileAccess("src/test/resources/modules/zips/scorm12.zip"));
+    ModuleParser<?> scorm12Parser = scorm12Factory.getParser();
+    ModuleMetadata<?> scorm12Metadata = scorm12Parser.parse();
+    assertEquals(ModuleEditionType.SCORM_12, scorm12Metadata.getModuleEditionType());
+
+    // Test AICC
+    ModuleParserFactory aiccFactory = new DefaultModuleParserFactory(
+        new ZipFileAccess("src/test/resources/modules/zips/aicc.zip"));
+    ModuleParser<?> aiccParser = aiccFactory.getParser();
+    ModuleMetadata<?> aiccMetadata = aiccParser.parse();
+    assertEquals(ModuleEditionType.AICC, aiccMetadata.getModuleEditionType());
+
+    // Test CMI5
+    ModuleParserFactory cmi5Factory = new DefaultModuleParserFactory(
+        new ZipFileAccess("src/test/resources/modules/zips/cmi5.zip"));
+    ModuleParser<?> cmi5Parser = cmi5Factory.getParser();
+    ModuleMetadata<?> cmi5Metadata = cmi5Parser.parse();
+    assertEquals(ModuleEditionType.CMI5, cmi5Metadata.getModuleEditionType());
   }
 }

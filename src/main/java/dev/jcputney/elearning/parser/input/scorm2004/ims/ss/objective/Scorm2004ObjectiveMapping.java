@@ -106,4 +106,35 @@ public class Scorm2004ObjectiveMapping implements Serializable {
   @JsonProperty("writeNormalizedMeasure")
   @Default
   private boolean writeNormalizedMeasure = false;
+
+  /**
+   * Specifies whether this local objective should read the completion status of the target global
+   * objective.
+   * <p>When set to <code>true</code>, this objective reads the completion status from the
+   * target global objective, allowing the local objective to reflect the global completion status.</p>
+   * 
+   * <p>This field was introduced in SCORM 2004 4th Edition.</p>
+   *
+   * <p>Defaults to <code>true</code>.</p>
+   */
+  @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("readCompletionStatus")
+  @Default
+  private boolean readCompletionStatus = true;
+
+  /**
+   * Specifies whether this local objective should write its completion status to the target global
+   * objective.
+   * <p>When set to <code>true</code>, the completion status of this objective is
+   * shared with the target global objective, allowing the global objective to reflect this local
+   * objective's completion status.</p>
+   * 
+   * <p>This field was introduced in SCORM 2004 4th Edition.</p>
+   *
+   * <p>Defaults to <code>false</code>.</p>
+   */
+  @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("writeCompletionStatus")
+  @Default
+  private boolean writeCompletionStatus = false;
 }

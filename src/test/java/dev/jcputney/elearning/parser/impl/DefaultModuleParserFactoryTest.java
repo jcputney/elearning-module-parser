@@ -325,7 +325,7 @@ class DefaultModuleParserFactoryTest {
   private static class MockModuleMetadata extends ModuleMetadata<PackageManifest> {
 
     public MockModuleMetadata(PackageManifest manifest) {
-      super(manifest, ModuleType.SCORM_12, false);
+      super(manifest, ModuleType.SCORM_12, dev.jcputney.elearning.parser.enums.ModuleEditionType.SCORM_12, false);
     }
   }
 

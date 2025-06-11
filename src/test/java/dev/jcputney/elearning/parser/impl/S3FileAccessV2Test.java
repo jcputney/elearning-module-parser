@@ -202,7 +202,7 @@ class S3FileAccessV2Test {
 
   @Test
   void getInternalRootDirectory_withValidPath_returnsPath() {
-    String rootPath = s3FileAccess.getInternalRootDirectory("");
+    String rootPath = s3FileAccess.getInternalRootDirectory();
     assertEquals("", rootPath);
   }
 

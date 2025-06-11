@@ -16,6 +16,12 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
+<!-- 
+  This is a TEST-ONLY configuration file for development and testing.
+  This file should NOT be included in the production JAR.
+  Libraries should not include logging configuration files as they can
+  conflict with the consuming application's configuration.
+-->
 <configuration>
   <!-- Console Appender -->
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">

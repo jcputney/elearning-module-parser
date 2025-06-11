@@ -18,6 +18,7 @@
 package dev.jcputney.elearning.parser.output;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import java.time.Duration;
@@ -54,6 +55,11 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
   @NonNull
   protected ModuleType moduleType;
   /**
+   * The specific edition type of the module, including SCORM 2004 edition information.
+   */
+  @NonNull
+  protected ModuleEditionType moduleEditionType;
+  /**
    * Indicates whether xAPI is enabled for the module.
    */
   @Default
@@ -64,11 +70,13 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
    *
    * @param manifest the package manifest
    * @param moduleType the module type
+   * @param moduleEditionType the module edition type
    * @param xapiEnabled whether xAPI is enabled
    */
-  protected ModuleMetadata(M manifest, ModuleType moduleType, boolean xapiEnabled) {
+  protected ModuleMetadata(M manifest, ModuleType moduleType, ModuleEditionType moduleEditionType, boolean xapiEnabled) {
     this.manifest = manifest;
     this.moduleType = moduleType;
+    this.moduleEditionType = moduleEditionType;
     this.xapiEnabled = xapiEnabled;
   }
 
@@ -124,6 +132,7 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
         .append(xapiEnabled, that.xapiEnabled)
         .append(manifest, that.manifest)
         .append(moduleType, that.moduleType)
+        .append(moduleEditionType, that.moduleEditionType)
         .isEquals();
   }
 
@@ -132,6 +141,7 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
     return new HashCodeBuilder(17, 37)
         .append(manifest)
         .append(moduleType)
+        .append(moduleEditionType)
         .append(xapiEnabled)
         .toHashCode();
   }

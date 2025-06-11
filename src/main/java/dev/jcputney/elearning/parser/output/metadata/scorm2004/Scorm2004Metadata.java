@@ -18,6 +18,7 @@
 package dev.jcputney.elearning.parser.output.metadata.scorm2004;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004Objective;
@@ -55,10 +56,20 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
    * @return A new Scorm2004Metadata instance.
    */
   public static Scorm2004Metadata create(Scorm2004Manifest manifest, boolean xapiEnabled) {
+    // Detect the SCORM 2004 edition from the manifest metadata
+    String schemaVersion = null;
+    if (manifest.getMetadata() != null) {
+      schemaVersion = manifest.getMetadata().getSchemaVersion();
+    }
+    
+    // Determine the specific edition type
+    ModuleEditionType editionType = ModuleEditionType.fromModuleType(ModuleType.SCORM_2004, schemaVersion);
+    
     Scorm2004Metadata metadata = Scorm2004Metadata
         .builder()
         .manifest(manifest)
         .moduleType(ModuleType.SCORM_2004)
+        .moduleEditionType(editionType)
         .xapiEnabled(xapiEnabled)
         .build();
 

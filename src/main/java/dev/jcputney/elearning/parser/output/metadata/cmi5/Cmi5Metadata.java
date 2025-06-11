@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.output.metadata.cmi5;
 
+import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.cmi5.AU;
 import dev.jcputney.elearning.parser.input.cmi5.Block;
@@ -57,6 +58,7 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
         .builder()
         .manifest(manifest)
         .moduleType(ModuleType.CMI5)
+        .moduleEditionType(ModuleEditionType.CMI5)
         .xapiEnabled(xapiEnabled)
         .build();
 

@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.output.metadata.scorm12;
 
+import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.output.metadata.BaseModuleMetadata;
@@ -51,6 +52,7 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
             .builder()
             .manifest(manifest)
             .moduleType(ModuleType.SCORM_12)
+            .moduleEditionType(ModuleEditionType.SCORM_12)
             .xapiEnabled(xapiEnabled)
             .build();
 

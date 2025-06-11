@@ -38,10 +38,10 @@ public class RandomizationControlsTest {
     // Verify the instance is created
     assertNotNull(controls);
 
-    // The default constructor doesn't initialize fields with default values,
-    // so we expect null values for the fields
-    assertNull(controls.getRandomizationTiming());
-    assertNull(controls.getSelectionTiming());
+    // With Lombok @Default annotations, the default constructor initializes fields
+    // with their default values
+    assertEquals(RandomizationTiming.NEVER, controls.getRandomizationTiming());
+    assertEquals(RandomizationTiming.NEVER, controls.getSelectionTiming());
     assertFalse(controls.isReorderChildren()); // boolean defaults to false in Java
     assertNull(controls.getSelectCount());
   }

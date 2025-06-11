@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.output.metadata.aicc;
 
+import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.aicc.AiccManifest;
 import dev.jcputney.elearning.parser.input.aicc.AssignableUnit;
@@ -51,6 +52,7 @@ public class AiccMetadata extends BaseModuleMetadata<AiccManifest> {
         .builder()
         .manifest(manifest)
         .moduleType(ModuleType.AICC)
+        .moduleEditionType(ModuleEditionType.AICC)
         .xapiEnabled(xapiEnabled)
         .build();
 

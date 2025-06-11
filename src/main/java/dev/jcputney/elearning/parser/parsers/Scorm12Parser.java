@@ -28,6 +28,7 @@ import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resource;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import dev.jcputney.elearning.parser.output.metadata.scorm12.Scorm12Metadata;
 import dev.jcputney.elearning.parser.util.LoggingUtils;
+import dev.jcputney.elearning.parser.util.LogMarkers;
 import java.io.IOException;
 import java.util.List;
 import javax.xml.stream.XMLStreamException;
@@ -81,7 +82,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    */
   @Override
   public Scorm12Metadata parse() throws ModuleParsingException {
-    log.info("Starting to parse SCORM 1.2 module");
+    log.debug(LogMarkers.PARSER_VERBOSE, "Starting to parse SCORM 1.2 module");
     try {
       // Parse and validate the manifest
       var manifest = parseAndValidateManifest();
@@ -96,7 +97,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
       boolean hasXapi = checkForXapi();
 
       // Build and return ModuleMetadata
-      log.info("Successfully parsed SCORM 1.2 module with title: {}", manifest.getTitle());
+      log.debug(LogMarkers.PARSER_VERBOSE, "Successfully parsed SCORM 1.2 module with title: {}", manifest.getTitle());
       return createMetadata(manifest, hasXapi);
     } catch (IOException | XMLStreamException e) {
       log.error("Error parsing SCORM 1.2 module: {}", e.getMessage());
@@ -127,7 +128,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
       return;
     }
 
-    log.debug("Loading external metadata for SCORM 1.2 manifest");
+    log.debug(LogMarkers.PARSER_VERBOSE, "Loading external metadata for SCORM 1.2 manifest");
     loadExternalMetadataIntoMetadata(manifest.getMetadata());
 
     loadResourcesMetadata(manifest
@@ -154,7 +155,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
   private Scorm12Manifest parseAndValidateManifest()
       throws IOException, XMLStreamException, ModuleParsingException {
     // Define the manifest path and verify its existence
-    log.debug("Checking for SCORM 1.2 manifest file: {}", MANIFEST_FILE);
+    log.debug(LogMarkers.PARSER_VERBOSE, "Checking for SCORM 1.2 manifest file: {}", MANIFEST_FILE);
     if (!moduleFileProvider.fileExists(MANIFEST_FILE)) {
       log.error("SCORM 1.2 manifest file not found: {}", MANIFEST_FILE);
       throw new ModuleParsingException(
@@ -162,7 +163,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
     }
 
     // Parse the manifest XML file using a secure parser from BaseParser
-    log.debug("Parsing SCORM 1.2 manifest file");
+    log.debug(LogMarkers.PARSER_VERBOSE, "Parsing SCORM 1.2 manifest file");
     return parseManifest(MANIFEST_FILE);
   }
 
@@ -175,7 +176,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
   private void validateRequiredFields(Scorm12Manifest manifest) throws ModuleParsingException {
     String title = manifest.getTitle();
     String launchUrl = manifest.getLaunchUrl();
-    log.debug("Validating required fields - title: {}, launchUrl: {}", title, launchUrl);
+    log.debug(LogMarkers.PARSER_VERBOSE, "Validating required fields - title: {}, launchUrl: {}", title, launchUrl);
 
     if (title == null || title.isEmpty()) {
       log.error("SCORM 1.2 manifest is missing a required <title> element");
@@ -212,7 +213,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
       return;
     }
 
-    log.debug("Processing {} resources for external metadata", resources.size());
+    log.debug(LogMarkers.PARSER_VERBOSE, "Processing {} resources for external metadata", resources.size());
     for (Scorm12Resource resource : resources) {
       loadExternalMetadataIntoMetadata(resource.getMetadata());
       loadFilesMetadata(resource.getFiles());
@@ -231,14 +232,14 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
       return;
     }
 
-    log.debug("Processing {} files in resource for external metadata", files.size());
+    log.debug(LogMarkers.PARSER_VERBOSE, "Processing {} files in resource for external metadata", files.size());
     for (Scorm12File file : files) {
       boolean exists = moduleFileProvider.fileExists(file.getHref());
       file.setExists(exists);
       if (exists) {
-        log.debug("File exists: {}", file.getHref());
+        log.debug(LogMarkers.PARSER_VERBOSE, "File exists: {}", file.getHref());
       } else {
-        log.warn("File does not exist: {}", file.getHref());
+        log.debug(LogMarkers.PARSER_VERBOSE, "File does not exist: {}", file.getHref());
       }
       loadExternalMetadataIntoMetadata(file.getMetadata());
     }
@@ -257,7 +258,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
       return;
     }
 
-    log.debug("Processing {} organizations for external metadata", organizations.size());
+    log.debug(LogMarkers.PARSER_VERBOSE, "Processing {} organizations for external metadata", organizations.size());
     for (Scorm12Organization organization : organizations) {
       loadExternalMetadataIntoMetadata(organization.getMetadata());
       loadExternalMetadataForItems(organization.getItems());
@@ -272,14 +273,14 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
   private void loadExternalMetadataForItems(List<Scorm12Item> items)
       throws XMLStreamException, IOException {
     if (items != null) {
-      log.debug("Processing {} items for external metadata", items.size());
+      log.debug(LogMarkers.PARSER_VERBOSE, "Processing {} items for external metadata", items.size());
       for (Scorm12Item item : items) {
         loadExternalMetadataIntoMetadata(item.getMetadata());
 
         // Recursively process child items
         List<Scorm12Item> childItems = item.getItems();
         if (childItems != null && !childItems.isEmpty()) {
-          log.debug("Processing {} child items for item: {}", childItems.size(),
+          log.debug(LogMarkers.PARSER_VERBOSE, "Processing {} child items for item: {}", childItems.size(),
               item.getIdentifier());
           loadExternalMetadataForItems(childItems);
         }

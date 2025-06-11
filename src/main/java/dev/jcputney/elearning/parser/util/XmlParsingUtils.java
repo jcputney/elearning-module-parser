@@ -124,7 +124,7 @@ public final class XmlParsingUtils {
           subMetadata.setLom(lom);
           log.debug("Successfully loaded external metadata from: {}", metadataPath);
         } catch (IOException | XMLStreamException e) {
-          log.warn("Error loading external metadata from {}: {}", metadataPath, e.getMessage());
+          log.debug("Error loading external metadata from {}: {}", metadataPath, e.getMessage());
           throw e;
         }
       } else {
@@ -172,7 +172,7 @@ public final class XmlParsingUtils {
           subMetadata.setLom(lom);
           log.debug("Successfully loaded external metadata from: {}", metadataPath);
         } catch (IOException | XMLStreamException e) {
-          log.warn("Error loading external metadata from {}: {}", metadataPath, e.getMessage());
+          log.debug("Error loading external metadata from {}: {}", metadataPath, e.getMessage());
           throw e;
         }
       } else {

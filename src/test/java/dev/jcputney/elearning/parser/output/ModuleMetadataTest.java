@@ -258,7 +258,7 @@ class ModuleMetadataTest {
 
     public TestModuleMetadata(TestPackageManifest manifest, ModuleType moduleType,
         boolean xapiEnabled) {
-      super(manifest, moduleType, xapiEnabled);
+      super(manifest, moduleType, dev.jcputney.elearning.parser.enums.ModuleEditionType.fromModuleType(moduleType, null), xapiEnabled);
     }
 
     @Override

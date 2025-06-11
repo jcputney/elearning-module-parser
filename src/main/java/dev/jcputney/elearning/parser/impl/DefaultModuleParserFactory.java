@@ -128,7 +128,7 @@ public class DefaultModuleParserFactory implements ModuleParserFactory {
   public ModuleParser<?> getParser() throws ModuleDetectionException {
     log.debug("Detecting module type");
     ModuleType moduleType = moduleTypeDetector.detectModuleType();
-    log.info("Detected module type: {}", moduleType);
+    log.debug("Detected module type: {}", moduleType);
 
     log.debug("Creating parser for module type: {}", moduleType);
     Function<FileAccess, ModuleParser<?>> parserFactory = parserRegistry.get(moduleType);
@@ -150,14 +150,14 @@ public class DefaultModuleParserFactory implements ModuleParserFactory {
   @Override
   public ModuleMetadata<?> parseModule()
       throws ModuleDetectionException, ModuleParsingException {
-    log.info("Starting module parsing");
+    log.debug("Starting module parsing");
     try {
       ModuleParser<?> parser = getParser();
       log.debug("Parsing module with parser: {}", parser
           .getClass()
           .getSimpleName());
       ModuleMetadata<?> metadata = parser.parse();
-      log.info("Module parsing completed successfully");
+      log.debug("Module parsing completed successfully");
       return metadata;
     } catch (ModuleDetectionException | ModuleParsingException e) {
       log.error("Error parsing module: {}", e.getMessage());
