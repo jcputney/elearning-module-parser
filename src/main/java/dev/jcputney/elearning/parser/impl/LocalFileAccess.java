@@ -18,6 +18,8 @@
 package dev.jcputney.elearning.parser.impl;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.api.StreamingProgressListener;
+import dev.jcputney.elearning.parser.util.StreamingUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -57,7 +59,12 @@ public class LocalFileAccess implements FileAccess {
     }
     this.rootPath = rootPath;
     if (!Files.isDirectory(Paths.get(rootPath))) {
-      throw new IllegalArgumentException("Provided path is not a valid directory: " + rootPath);
+      Path path = Paths.get(rootPath);
+      String context = Files.exists(path) ? 
+          (Files.isRegularFile(path) ? "path points to a file" : "path exists but is not a directory") :
+          "path does not exist";
+      throw new IllegalArgumentException(
+          "Invalid root directory for LocalFileAccess: '" + rootPath + "' (" + context + ")");
     }
   }
 
@@ -82,8 +89,14 @@ public class LocalFileAccess implements FileAccess {
     Path dirPath = Paths.get(fullPath(directoryPath));
 
     // Validate directory
-    if (!Files.exists(dirPath) || !Files.isDirectory(dirPath)) {
-      throw new IOException("Provided path is not a valid directory: " + directoryPath);
+    if (!Files.exists(dirPath)) {
+      throw new IOException("Directory not found: '" + directoryPath + "' (full path: '" + 
+          dirPath.toAbsolutePath() + "') in root '" + getRootPath() + "'");
+    }
+    if (!Files.isDirectory(dirPath)) {
+      String fileType = Files.isRegularFile(dirPath) ? "regular file" : "special file";
+      throw new IOException("Path is not a directory: '" + directoryPath + "' (is a " + fileType + 
+          ") in root '" + getRootPath() + "'");
     }
 
     try (Stream<Path> paths = Files.list(dirPath)) {
@@ -95,7 +108,9 @@ public class LocalFileAccess implements FileAccess {
           .map(Path::toString)
           .toList();
     } catch (IOException e) {
-      throw new IOException("Failed to list files in directory: " + directoryPath, e);
+      throw new IOException("Failed to list files in directory: '" + directoryPath + 
+          "' (full path: '" + dirPath.toAbsolutePath() + "') in root '" + getRootPath() + 
+          "': " + e.getMessage(), e);
     }
   }
 
@@ -108,16 +123,44 @@ public class LocalFileAccess implements FileAccess {
    */
   @Override
   public InputStream getFileContentsInternal(String path) throws IOException {
+    return getFileContentsInternal(path, null);
+  }
+
+  /**
+   * Gets the contents of a file as an InputStream with optional progress tracking.
+   *
+   * @param path The path of the file to read.
+   * @param progressListener Optional progress listener for tracking large file operations.
+   * @return An InputStream for reading the file contents.
+   * @throws IOException if an error occurs while reading the file.
+   */
+  public InputStream getFileContentsInternal(String path, StreamingProgressListener progressListener) throws IOException {
     Path filePath = Paths.get(fullPath(path));
 
     // Check file existence and read permissions
     if (!fileExistsInternal(path)) {
-      throw new NoSuchFileException("File not found: " + path);
+      throw new NoSuchFileException("File not found: '" + path + "' (full path: '" + 
+          filePath.toAbsolutePath() + "') in root '" + getRootPath() + "'");
     }
     if (!Files.isReadable(filePath)) {
-      throw new IOException("File is not readable: " + path);
+      String details = "";
+      try {
+        long size = Files.size(filePath);
+        boolean isDirectory = Files.isDirectory(filePath);
+        details = " (size: " + size + " bytes, type: " + (isDirectory ? "directory" : "file") + ")";
+      } catch (IOException ignored) {
+        details = " (unable to read file attributes)";
+      }
+      throw new IOException("File is not readable: '" + path + "' (full path: '" + 
+          filePath.toAbsolutePath() + "')" + details + " in root '" + getRootPath() + "'");
     }
 
-    return Files.newInputStream(filePath, StandardOpenOption.READ);
+    InputStream inputStream = Files.newInputStream(filePath, StandardOpenOption.READ);
+    
+    // Get file size for progress tracking
+    long fileSize = Files.size(filePath);
+    
+    // Apply streaming enhancements
+    return StreamingUtils.createEnhancedStream(inputStream, fileSize, progressListener);
   }
 }

@@ -18,6 +18,8 @@
 package dev.jcputney.elearning.parser.impl;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.api.StreamingProgressListener;
+import dev.jcputney.elearning.parser.util.StreamingUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
   private final String rootPath;
 
   private final ZipFile zipFile;
+  private final String zipFilePath;
 
   /**
    * Constructs a new {@link ZipFileAccess} instance for the specified ZIP path.
@@ -48,7 +51,12 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
    * @throws IOException If the ZIP file can't be opened.
    */
   public ZipFileAccess(String zipFilePath) throws IOException {
-    this.zipFile = new ZipFile(zipFilePath);
+    this.zipFilePath = zipFilePath;
+    try {
+      this.zipFile = new ZipFile(zipFilePath);
+    } catch (IOException e) {
+      throw new IOException("Failed to open ZIP file: '" + zipFilePath + "' (" + e.getMessage() + ")", e);
+    }
     this.rootPath = getInternalRootDirectory();
   }
 
@@ -96,13 +104,35 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
    */
   @Override
   public InputStream getFileContentsInternal(String path) throws IOException {
+    return getFileContentsInternal(path, null);
+  }
+
+  /**
+   * Retrieves the contents of a file within the ZIP archive as an InputStream with optional progress tracking.
+   *
+   * @param path The path to retrieve contents from (guaranteed to be non-null).
+   * @param progressListener Optional progress listener for tracking large file operations.
+   * @return An InputStream of the file contents.
+   * @throws IOException if the file can't be read.
+   */
+  public InputStream getFileContentsInternal(String path, StreamingProgressListener progressListener) throws IOException {
     ZipEntry entry = zipFile.getEntry(fullPath(path));
 
     if (entry == null) {
-      throw new IOException("File not found in ZIP archive: " + path);
+      // Provide helpful information about available files
+      String suggestion = getSimilarFiles(path);
+      throw new IOException("File not found in ZIP archive: '" + path + "' (full path: '" + 
+          fullPath(path) + "') in ZIP file '" + zipFilePath + "'" + 
+          (rootPath.isEmpty() ? "" : " with internal root '" + rootPath + "'") + suggestion);
     }
 
-    return zipFile.getInputStream(entry);
+    InputStream inputStream = zipFile.getInputStream(entry);
+    
+    // Get file size for progress tracking
+    long fileSize = entry.getSize();
+    
+    // Apply streaming enhancements
+    return StreamingUtils.createEnhancedStream(inputStream, fileSize, progressListener);
   }
 
   /**
@@ -111,7 +141,11 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
    * @throws IOException if an error occurs while closing the ZIP file.
    */
   public void close() throws IOException {
-    zipFile.close();
+    try {
+      zipFile.close();
+    } catch (IOException e) {
+      throw new IOException("Failed to close ZIP file: '" + zipFilePath + "' (" + e.getMessage() + ")", e);
+    }
   }
 
   /**
@@ -158,5 +192,46 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
     return topLevelDirs.size() == 1 ? topLevelDirs
         .iterator()
         .next() : "";
+  }
+
+  /**
+   * Provides suggestions for similar files when a file is not found.
+   *
+   * @param targetPath The path that was not found.
+   * @return A string with suggestions or empty string if no suggestions available.
+   */
+  private String getSimilarFiles(String targetPath) {
+    List<String> allFiles = new ArrayList<>();
+    Enumeration<? extends ZipEntry> entries = zipFile.entries();
+    
+    while (entries.hasMoreElements()) {
+      ZipEntry entry = entries.nextElement();
+      if (!entry.isDirectory()) {
+        allFiles.add(entry.getName());
+      }
+    }
+    
+    if (allFiles.isEmpty()) {
+      return ". ZIP archive appears to be empty or contains only directories.";
+    }
+    
+    // Find files with similar names or in same directory
+    String targetName = targetPath.contains("/") ? 
+        targetPath.substring(targetPath.lastIndexOf("/") + 1) : targetPath;
+    String targetDir = targetPath.contains("/") ? 
+        targetPath.substring(0, targetPath.lastIndexOf("/")) : "";
+    
+    List<String> suggestions = allFiles.stream()
+        .filter(file -> file.toLowerCase().contains(targetName.toLowerCase()) ||
+                       (targetDir.isEmpty() || file.startsWith(targetDir)))
+        .limit(3)
+        .toList();
+    
+    if (!suggestions.isEmpty()) {
+      return ". Similar files: " + String.join(", ", suggestions);
+    } else {
+      return ". Available files: " + allFiles.stream().limit(5).reduce((a, b) -> a + ", " + b).orElse("none") +
+             (allFiles.size() > 5 ? " (and " + (allFiles.size() - 5) + " more)" : "");
+    }
   }
 }

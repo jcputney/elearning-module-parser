@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="test_prerequisites_manifest" version="1.0"
+          xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+          xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd
+                              http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
+    
+    <metadata>
+        <schema>ADL SCORM</schema>
+        <schemaversion>1.2</schemaversion>
+    </metadata>
+    
+    <organizations default="org1">
+        <organization identifier="org1" structure="hierarchical">
+            <title>Prerequisites Test Course</title>
+            <item identifier="module1" identifierref="res_module1">
+                <title>Module 1: Introduction</title>
+                <adlcp:prerequisites type="aicc_script"></adlcp:prerequisites>
+                <adlcp:maxtimeallowed>02:30:00</adlcp:maxtimeallowed>
+                <adlcp:masteryscore>80</adlcp:masteryscore>
+            </item>
+            <item identifier="module2" identifierref="res_module2">
+                <title>Module 2: Basic Concepts</title>
+                <adlcp:prerequisites type="aicc_script">module1</adlcp:prerequisites>
+                <adlcp:dataFromLMS>custom_data_for_module2</adlcp:dataFromLMS>
+            </item>
+            <item identifier="module3" identifierref="res_module3">
+                <title>Module 3: Advanced Topics</title>
+                <adlcp:prerequisites type="aicc_script">module1 AND module2</adlcp:prerequisites>
+                <adlcp:timelimitaction>exit,message</adlcp:timelimitaction>
+            </item>
+            <item identifier="module4" identifierref="res_module4">
+                <title>Module 4: Assessment</title>
+                <adlcp:prerequisites type="aicc_script">(module1 AND module2) OR module3</adlcp:prerequisites>
+                <adlcp:masteryscore>90</adlcp:masteryscore>
+            </item>
+        </organization>
+    </organizations>
+    
+    <resources>
+        <resource identifier="res_module1" type="webcontent" adlcp:scormtype="sco" href="module1.html">
+            <file href="module1.html"/>
+        </resource>
+        <resource identifier="res_module2" type="webcontent" adlcp:scormtype="sco" href="module2.html">
+            <file href="module2.html"/>
+        </resource>
+        <resource identifier="res_module3" type="webcontent" adlcp:scormtype="sco" href="module3.html">
+            <file href="module3.html"/>
+        </resource>
+        <resource identifier="res_module4" type="webcontent" adlcp:scormtype="sco" href="module4.html">
+            <file href="module4.html"/>
+        </resource>
+    </resources>
+</manifest>

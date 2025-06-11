@@ -77,13 +77,7 @@ public class Cmi5Parser extends BaseParser<Cmi5Metadata, Cmi5Manifest> {
       }
 
       // Build and return the Cmi5Metadata
-      return Cmi5Metadata
-          .builder()
-          .manifest(manifest)
-          .moduleType(ModuleType.CMI5)
-          .moduleEditionType(dev.jcputney.elearning.parser.enums.ModuleEditionType.CMI5)
-          .xapiEnabled(true) // cmi5 modules are always xAPI-enabled
-          .build();
+      return Cmi5Metadata.create(manifest, true); // cmi5 modules are always xAPI-enabled
 
     } catch (Exception e) {
       throw new ModuleParsingException(

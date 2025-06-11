@@ -100,25 +100,28 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
       String title = aiccManifest.getTitle();
       String launchUrl = aiccManifest.getLaunchUrl();
       if (title == null || title.isEmpty()) {
-        throw new ModuleParsingException("AICC module title is empty.");
+        throw new ModuleParsingException("AICC module at '" + this.moduleFileProvider.getRootPath() + 
+            "' has empty or missing title in course file (expected in [Course_Data] section)");
       }
       if (launchUrl == null || launchUrl.isEmpty()) {
-        throw new ModuleParsingException("AICC module launch URL is empty.");
+        throw new ModuleParsingException("AICC module at '" + this.moduleFileProvider.getRootPath() + 
+            "' has empty or missing launch URL in course file (expected in [Course_Data] section)");
       }
 
       // Build and return metadata
       return AiccMetadata.create(aiccManifest, checkForXapi());
     } catch (IOException | ManifestParseException e) {
       throw new ModuleParsingException(
-          "Error parsing AICC module at path: " + this.moduleFileProvider.getRootPath(), e);
+          "Error parsing AICC module at '" + this.moduleFileProvider.getRootPath() + 
+          "' (requires .crs, .des, .au, and .cst files): " + e.getMessage(), e);
     } catch (ModuleParsingException e) {
       // Re-throw ModuleParsingException directly without wrapping
       throw e;
     } catch (Exception e) {
       // Catch any other unexpected exceptions
       throw new ModuleParsingException(
-          "Unexpected error parsing AICC module at path: " + this.moduleFileProvider.getRootPath(),
-          e);
+          "Unexpected error parsing AICC module at '" + this.moduleFileProvider.getRootPath() + 
+          "': " + e.getClass().getSimpleName() + " - " + e.getMessage(), e);
     }
   }
 
@@ -164,7 +167,15 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
       throws IOException {
     String fileName = findFileByExtension(extension);
     if (fileName == null) {
-      throw new IOException("CSV file with extension " + extension + " not found.");
+      List<String> availableFiles = moduleFileProvider.listFiles("");
+      String suggestion = availableFiles.stream()
+          .filter(f -> f.toLowerCase().contains(extension.substring(1)))
+          .findFirst()
+          .map(f -> " Did you mean: " + f + "?")
+          .orElse(" Available files: " + String.join(", ", availableFiles.stream().limit(5).toList()) + 
+                 (availableFiles.size() > 5 ? " (and " + (availableFiles.size() - 5) + " more)" : ""));
+      throw new IOException("AICC CSV file with extension '" + extension + "' not found in module at '" + 
+          moduleFileProvider.getRootPath() + "'." + suggestion);
     }
 
     try (InputStream inputStream = moduleFileProvider.getFileContents(fileName)) {
@@ -187,7 +198,15 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
       throws IOException, ManifestParseException {
     String fileName = findFileByExtension(extension);
     if (fileName == null) {
-      throw new IOException("INI file with extension " + extension + " not found.");
+      List<String> availableFiles = moduleFileProvider.listFiles("");
+      String suggestion = availableFiles.stream()
+          .filter(f -> f.toLowerCase().contains(extension.substring(1)))
+          .findFirst()
+          .map(f -> " Did you mean: " + f + "?")
+          .orElse(" Available files: " + String.join(", ", availableFiles.stream().limit(5).toList()) + 
+                 (availableFiles.size() > 5 ? " (and " + (availableFiles.size() - 5) + " more)" : ""));
+      throw new IOException("AICC INI file with extension '" + extension + "' not found in module at '" + 
+          moduleFileProvider.getRootPath() + "'." + suggestion);
     }
 
     try (InputStream inputStream = moduleFileProvider.getFileContents(
@@ -211,7 +230,8 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
       ObjectMapper objectMapper = new ObjectMapper();
       return objectMapper.convertValue(mapData, clazz);
     } catch (ConfigurationException e) {
-      throw new ManifestParseException("Error parsing INI file: " + fileName, e);
+      throw new ManifestParseException("Error parsing AICC INI file '" + fileName + "' in module at '" + 
+          moduleFileProvider.getRootPath() + "' (check file format and encoding): " + e.getMessage(), e);
     }
   }
 

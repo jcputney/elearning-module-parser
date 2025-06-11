@@ -56,17 +56,18 @@ public class IntegrationTest {
     // Arrange
     String modulePath = "src/test/resources/modules/zips/scorm12.zip";
 
-    // Act
-    ModuleParserFactory parserFactory = new DefaultModuleParserFactory(
-        new ZipFileAccess(modulePath));
-    ModuleParser<?> parser = parserFactory.getParser();
-    ModuleMetadata<?> metadata = parser.parse();
+    // Act - Use try-with-resources to ensure ZipFileAccess is closed
+    try (ZipFileAccess zipAccess = new ZipFileAccess(modulePath)) {
+      ModuleParserFactory parserFactory = new DefaultModuleParserFactory(zipAccess);
+      ModuleParser<?> parser = parserFactory.getParser();
+      ModuleMetadata<?> metadata = parser.parse();
 
-    // Assert
-    assertNotNull(metadata);
-    assertEquals(ModuleType.SCORM_12, metadata.getModuleType());
-    assertNotNull(metadata.getTitle());
-    assertNotNull(metadata.getLaunchUrl());
+      // Assert
+      assertNotNull(metadata);
+      assertEquals(ModuleType.SCORM_12, metadata.getModuleType());
+      assertNotNull(metadata.getTitle());
+      assertNotNull(metadata.getLaunchUrl());
+    }
   }
 
   /**
@@ -83,17 +84,18 @@ public class IntegrationTest {
     // Arrange
     String modulePath = "src/test/resources/modules/zips/scorm2004.zip";
 
-    // Act
-    ModuleParserFactory parserFactory = new DefaultModuleParserFactory(
-        new ZipFileAccess(modulePath));
-    ModuleParser<?> parser = parserFactory.getParser();
-    ModuleMetadata<?> metadata = parser.parse();
+    // Act - Use try-with-resources to ensure ZipFileAccess is closed
+    try (ZipFileAccess zipAccess = new ZipFileAccess(modulePath)) {
+      ModuleParserFactory parserFactory = new DefaultModuleParserFactory(zipAccess);
+      ModuleParser<?> parser = parserFactory.getParser();
+      ModuleMetadata<?> metadata = parser.parse();
 
-    // Assert
-    assertNotNull(metadata);
-    assertEquals(ModuleType.SCORM_2004, metadata.getModuleType());
-    assertNotNull(metadata.getTitle());
-    assertNotNull(metadata.getLaunchUrl());
+      // Assert
+      assertNotNull(metadata);
+      assertEquals(ModuleType.SCORM_2004, metadata.getModuleType());
+      assertNotNull(metadata.getTitle());
+      assertNotNull(metadata.getLaunchUrl());
+    }
   }
 
   /**
@@ -110,17 +112,18 @@ public class IntegrationTest {
     // Arrange
     String modulePath = "src/test/resources/modules/zips/aicc.zip";
 
-    // Act
-    ModuleParserFactory parserFactory = new DefaultModuleParserFactory(
-        new ZipFileAccess(modulePath));
-    ModuleParser<?> parser = parserFactory.getParser();
-    ModuleMetadata<?> metadata = parser.parse();
+    // Act - Use try-with-resources to ensure ZipFileAccess is closed
+    try (ZipFileAccess zipAccess = new ZipFileAccess(modulePath)) {
+      ModuleParserFactory parserFactory = new DefaultModuleParserFactory(zipAccess);
+      ModuleParser<?> parser = parserFactory.getParser();
+      ModuleMetadata<?> metadata = parser.parse();
 
-    // Assert
-    assertNotNull(metadata);
-    assertEquals(ModuleType.AICC, metadata.getModuleType());
-    assertNotNull(metadata.getTitle());
-    assertNotNull(metadata.getLaunchUrl());
+      // Assert
+      assertNotNull(metadata);
+      assertEquals(ModuleType.AICC, metadata.getModuleType());
+      assertNotNull(metadata.getTitle());
+      assertNotNull(metadata.getLaunchUrl());
+    }
   }
 
   /**
@@ -137,17 +140,18 @@ public class IntegrationTest {
     // Arrange
     String modulePath = "src/test/resources/modules/zips/cmi5.zip";
 
-    // Act
-    ModuleParserFactory parserFactory = new DefaultModuleParserFactory(
-        new ZipFileAccess(modulePath));
-    ModuleParser<?> parser = parserFactory.getParser();
-    ModuleMetadata<?> metadata = parser.parse();
+    // Act - Use try-with-resources to ensure ZipFileAccess is closed
+    try (ZipFileAccess zipAccess = new ZipFileAccess(modulePath)) {
+      ModuleParserFactory parserFactory = new DefaultModuleParserFactory(zipAccess);
+      ModuleParser<?> parser = parserFactory.getParser();
+      ModuleMetadata<?> metadata = parser.parse();
 
-    // Assert
-    assertNotNull(metadata);
-    assertEquals(ModuleType.CMI5, metadata.getModuleType());
-    assertNotNull(metadata.getTitle());
-    assertNotNull(metadata.getLaunchUrl());
+      // Assert
+      assertNotNull(metadata);
+      assertEquals(ModuleType.CMI5, metadata.getModuleType());
+      assertNotNull(metadata.getTitle());
+      assertNotNull(metadata.getLaunchUrl());
+    }
   }
 
   /**
@@ -164,9 +168,10 @@ public class IntegrationTest {
 
     // Act & Assert
     assertThrows(IOException.class, () -> {
-      ModuleParserFactory parserFactory = new DefaultModuleParserFactory(
-          new ZipFileAccess(modulePath));
-      parserFactory.getParser();
+      try (ZipFileAccess zipAccess = new ZipFileAccess(modulePath)) {
+        ModuleParserFactory parserFactory = new DefaultModuleParserFactory(zipAccess);
+        parserFactory.getParser();
+      }
     });
   }
 
@@ -182,36 +187,40 @@ public class IntegrationTest {
   void testEndToEndParsingAllModuleTypes()
       throws IOException, ModuleDetectionException, ModuleParsingException {
     // Test SCORM 1.2
-    ModuleParserFactory scorm12Factory = new DefaultModuleParserFactory(
-        new ZipFileAccess("src/test/resources/modules/zips/scorm12.zip"));
-    ModuleParser<?> scorm12Parser = scorm12Factory.getParser();
-    ModuleMetadata<?> scorm12Metadata = scorm12Parser.parse();
-    assertNotNull(scorm12Metadata);
-    assertEquals(ModuleType.SCORM_12, scorm12Metadata.getModuleType());
+    try (ZipFileAccess scorm12Zip = new ZipFileAccess("src/test/resources/modules/zips/scorm12.zip")) {
+      ModuleParserFactory scorm12Factory = new DefaultModuleParserFactory(scorm12Zip);
+      ModuleParser<?> scorm12Parser = scorm12Factory.getParser();
+      ModuleMetadata<?> scorm12Metadata = scorm12Parser.parse();
+      assertNotNull(scorm12Metadata);
+      assertEquals(ModuleType.SCORM_12, scorm12Metadata.getModuleType());
+    }
 
     // Test SCORM 2004
-    ModuleParserFactory scorm2004Factory = new DefaultModuleParserFactory(
-        new ZipFileAccess("src/test/resources/modules/zips/scorm2004.zip"));
-    ModuleParser<?> scorm2004Parser = scorm2004Factory.getParser();
-    ModuleMetadata<?> scorm2004Metadata = scorm2004Parser.parse();
-    assertNotNull(scorm2004Metadata);
-    assertEquals(ModuleType.SCORM_2004, scorm2004Metadata.getModuleType());
+    try (ZipFileAccess scorm2004Zip = new ZipFileAccess("src/test/resources/modules/zips/scorm2004.zip")) {
+      ModuleParserFactory scorm2004Factory = new DefaultModuleParserFactory(scorm2004Zip);
+      ModuleParser<?> scorm2004Parser = scorm2004Factory.getParser();
+      ModuleMetadata<?> scorm2004Metadata = scorm2004Parser.parse();
+      assertNotNull(scorm2004Metadata);
+      assertEquals(ModuleType.SCORM_2004, scorm2004Metadata.getModuleType());
+    }
 
     // Test AICC
-    ModuleParserFactory aiccFactory = new DefaultModuleParserFactory(
-        new ZipFileAccess("src/test/resources/modules/zips/aicc.zip"));
-    ModuleParser<?> aiccParser = aiccFactory.getParser();
-    ModuleMetadata<?> aiccMetadata = aiccParser.parse();
-    assertNotNull(aiccMetadata);
-    assertEquals(ModuleType.AICC, aiccMetadata.getModuleType());
+    try (ZipFileAccess aiccZip = new ZipFileAccess("src/test/resources/modules/zips/aicc.zip")) {
+      ModuleParserFactory aiccFactory = new DefaultModuleParserFactory(aiccZip);
+      ModuleParser<?> aiccParser = aiccFactory.getParser();
+      ModuleMetadata<?> aiccMetadata = aiccParser.parse();
+      assertNotNull(aiccMetadata);
+      assertEquals(ModuleType.AICC, aiccMetadata.getModuleType());
+    }
 
     // Test CMI5
-    ModuleParserFactory cmi5Factory = new DefaultModuleParserFactory(
-        new ZipFileAccess("src/test/resources/modules/zips/cmi5.zip"));
-    ModuleParser<?> cmi5Parser = cmi5Factory.getParser();
-    ModuleMetadata<?> cmi5Metadata = cmi5Parser.parse();
-    assertNotNull(cmi5Metadata);
-    assertEquals(ModuleType.CMI5, cmi5Metadata.getModuleType());
+    try (ZipFileAccess cmi5Zip = new ZipFileAccess("src/test/resources/modules/zips/cmi5.zip")) {
+      ModuleParserFactory cmi5Factory = new DefaultModuleParserFactory(cmi5Zip);
+      ModuleParser<?> cmi5Parser = cmi5Factory.getParser();
+      ModuleMetadata<?> cmi5Metadata = cmi5Parser.parse();
+      assertNotNull(cmi5Metadata);
+      assertEquals(ModuleType.CMI5, cmi5Metadata.getModuleType());
+    }
   }
 
   /**

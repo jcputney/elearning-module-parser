@@ -22,6 +22,7 @@ import static lombok.AccessLevel.PRIVATE;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,7 +47,7 @@ public class Scorm12Prerequisites implements Serializable {
   /**
    * The string content of the "prerequisites" element.
    */
-  @JacksonXmlProperty(localName = "value")
+  @JacksonXmlText
   private String value;
   /**
    * The type attribute of the prerequisites element, which is optional. Example value:

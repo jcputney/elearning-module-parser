@@ -18,6 +18,8 @@
 package dev.jcputney.elearning.parser.impl;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.api.StreamingProgressListener;
+import dev.jcputney.elearning.parser.util.StreamingUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -214,6 +216,18 @@ public class S3FileAccessV2 implements FileAccess {
    */
   @Override
   public InputStream getFileContentsInternal(String path) throws IOException {
+    return getFileContentsInternal(path, null);
+  }
+
+  /**
+   * Gets the contents of a file as an InputStream with optional progress tracking.
+   *
+   * @param path The path of the file to get contents from (guaranteed to be non-null).
+   * @param progressListener Optional progress listener for tracking large file operations.
+   * @return An InputStream containing the file contents.
+   * @throws IOException If an error occurs while getting file contents.
+   */
+  public InputStream getFileContentsInternal(String path, StreamingProgressListener progressListener) throws IOException {
     // Check cache first for small files
     byte[] cachedContent = smallFileCache.get(path);
     if (cachedContent != null) {
@@ -248,20 +262,30 @@ public class S3FileAccessV2 implements FileAccess {
         }
         
         smallFileCache.put(path, content);
-        return new ByteArrayInputStream(content);
+        InputStream inputStream = new ByteArrayInputStream(content);
+        
+        // Apply streaming enhancements for progress tracking
+        return StreamingUtils.createEnhancedStream(inputStream, fileSize, progressListener);
       } catch (S3Exception e) {
-        throw new IOException("Failed to get file contents for path: " + path, e);
+        throw new IOException("Failed to get file contents from S3: '" + path + "' (bucket: '" + 
+            bucketName + "', key: '" + fullFilePath + "', size: " + fileSize + " bytes) - " + 
+            e.getMessage(), e);
       }
     } else {
       // Stream large files directly
       log.debug(LogMarkers.S3_VERBOSE, "Streaming large file: {} ({} bytes)", path, fileSize);
       try {
-        return s3Client.getObject(GetObjectRequest.builder()
+        InputStream inputStream = s3Client.getObject(GetObjectRequest.builder()
             .bucket(bucketName)
             .key(fullFilePath)
             .build());
+        
+        // Apply streaming enhancements for large files
+        return StreamingUtils.createEnhancedStream(inputStream, fileSize, progressListener);
       } catch (S3Exception e) {
-        throw new IOException("Failed to stream file contents for path: " + path, e);
+        throw new IOException("Failed to stream large file from S3: '" + path + "' (bucket: '" + 
+            bucketName + "', key: '" + fullFilePath + "', size: " + fileSize + " bytes) - " + 
+            e.getMessage(), e);
       }
     }
   }
@@ -324,7 +348,8 @@ public class S3FileAccessV2 implements FileAccess {
     } catch (NoSuchKeyException e) {
       return false;
     } catch (SdkException e) {
-      log.debug("Failed to check file existence for path: {}", path, e);
+      log.debug("Failed to check existence of file '{}' in S3 bucket '{}' with key '{}': {}", 
+          path, bucketName, fullPath(path), e.getMessage(), e);
       return false;
     }
   }
@@ -336,7 +361,8 @@ public class S3FileAccessV2 implements FileAccess {
           .key(fullPath(path))
           .build()).contentLength();
     } catch (SdkException e) {
-      log.debug("Failed to get file size for path: {}", path, e);
+      log.debug("Failed to get size of file '{}' in S3 bucket '{}' with key '{}': {}", 
+          path, bucketName, fullPath(path), e.getMessage(), e);
       return 0;
     }
   }
@@ -368,7 +394,8 @@ public class S3FileAccessV2 implements FileAccess {
       log.debug(LogMarkers.S3_VERBOSE, "Listed {} files in directory: {}", allKeys.size(), directoryPath);
       return allKeys;
     } catch (SdkException e) {
-      log.debug("Failed to list files in directory: {}", directoryPath, e);
+      log.debug("Failed to list files in S3 directory '{}' (bucket: '{}', prefix: '{}'): {}", 
+          directoryPath, bucketName, fullPath(directoryPath), e.getMessage(), e);
       return List.of();
     }
   }
@@ -387,7 +414,8 @@ public class S3FileAccessV2 implements FileAccess {
       }
       return commonPrefixes.get(0).prefix();
     } catch (SdkException e) {
-      log.debug("Failed to detect internal root directory", e);
+      log.debug("Failed to detect internal root directory in S3 bucket '{}' with prefix '{}': {}", 
+          bucketName, rootPath, e.getMessage(), e);
       return rootPath;
     }
   }

@@ -41,6 +41,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -77,6 +78,23 @@ public class Cmi5ParserTest {
     assertEquals(1, manifest.getAssignableUnits().size());
     assertEquals(MoveOn.COMPLETED_OR_PASSED, manifest.getAssignableUnits().get(0).getMoveOn());
     assertEquals(LaunchMethod.OWN_WINDOW, manifest.getAssignableUnits().get(0).getLaunchMethod());
+    
+    // Test metadata extraction
+    @SuppressWarnings("unchecked")
+    Map<String, Double> masteryScores = (Map<String, Double>) metadata.getMetadata("cmi5.masteryScores").orElse(null);
+    assertNotNull(masteryScores);
+    assertEquals(1, masteryScores.size());
+    assertEquals(0.3, masteryScores.get("https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-single-au-mastery-score-framed/1"));
+    
+    @SuppressWarnings("unchecked")
+    Map<String, String> moveOnCriteria = (Map<String, String>) metadata.getMetadata("cmi5.moveOnCriteria").orElse(null);
+    assertNotNull(moveOnCriteria);
+    assertEquals("COMPLETED_OR_PASSED", moveOnCriteria.get("https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-single-au-mastery-score-framed/1"));
+    
+    @SuppressWarnings("unchecked")
+    Map<String, String> launchMethods = (Map<String, String>) metadata.getMetadata("cmi5.launchMethods").orElse(null);
+    assertNotNull(launchMethods);
+    assertEquals("OWN_WINDOW", launchMethods.get("https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-single-au-mastery-score-framed/1"));
   }
 
   /**
@@ -128,6 +146,26 @@ public class Cmi5ParserTest {
     assertNull(manifest.getAssignableUnits().get(0).getLaunchMethod());
     assertEquals(MoveOn.COMPLETED_AND_PASSED, manifest.getAssignableUnits().get(7).getMoveOn());
     assertNull(manifest.getAssignableUnits().get(7).getLaunchMethod());
+    
+    // Test metadata extraction for multiple AUs
+    @SuppressWarnings("unchecked")
+    Map<String, Map<String, Object>> auDetails = (Map<String, Map<String, Object>>) metadata.getMetadata("cmi5.auDetails").orElse(null);
+    assertNotNull(auDetails);
+    assertEquals(8, auDetails.size());
+    
+    // Check a specific AU's details
+    Map<String, Object> firstAuDetails = auDetails.get("https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-multi-au-framed/1");
+    assertNotNull(firstAuDetails);
+    assertEquals("index.html?pages=1&complete=launch", firstAuDetails.get("url"));
+    assertEquals("Introduction to Geology", firstAuDetails.get("title"));
+    assertEquals("This course will introduce you into the basics of geology. This includes subjects such as\nplate tectonics, geological materials and the history of the Earth.", firstAuDetails.get("description"));
+    
+    @SuppressWarnings("unchecked")
+    Map<String, String> moveOnCriteria = (Map<String, String>) metadata.getMetadata("cmi5.moveOnCriteria").orElse(null);
+    assertNotNull(moveOnCriteria);
+    assertEquals(8, moveOnCriteria.size());
+    assertEquals("COMPLETED_OR_PASSED", moveOnCriteria.get("https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-multi-au-framed/1"));
+    assertEquals("COMPLETED_AND_PASSED", moveOnCriteria.get("https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-multi-au-framed/quiz"));
   }
 
   /**
