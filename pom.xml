@@ -1,9 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>dev.jcputney</groupId>
   <artifactId>elearning-module-parser</artifactId>
   <version>0.0.13-SNAPSHOT</version>
+  <name>elearning-module-parser</name>
 
   <description>A library for parsing eLearning module configuration files and packages</description>
   <url>https://github.com/jcputney/elearning-module-parser</url>
@@ -270,7 +273,7 @@
           <version>${version.plugin.release}</version>
           <configuration>
             <arguments>-ntp</arguments>
-            <scmCommentPrefix />
+            <scmCommentPrefix/>
             <tagNameFormat>v@{project.version}</tagNameFormat>
             <releaseProfiles>central</releaseProfiles>
           </configuration>
@@ -419,7 +422,8 @@
                 <configuration>
                   <finalName>benchmarks</finalName>
                   <transformers>
-                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                    <transformer
+                      implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                       <mainClass>org.openjdk.jmh.Main</mainClass>
                     </transformer>
                   </transformers>
@@ -460,9 +464,9 @@
             <version>${version.plugin.central-publishing}</version>
             <extensions>true</extensions>
             <configuration>
-              <autoPublish>false</autoPublish>
+              <autoPublish>true</autoPublish>
+              <waitUntil>published</waitUntil>
               <deploymentName>${project.artifactId}:${project.version}</deploymentName>
-              <waitUntil>validated</waitUntil>
             </configuration>
           </plugin>
         </plugins>
