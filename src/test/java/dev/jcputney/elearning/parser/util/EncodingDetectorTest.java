@@ -38,16 +38,16 @@ class EncodingDetectorTest {
     // UTF-8 BOM followed by XML content
     byte[] bom = new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF};
     String xmlContent = "<?xml version=\"1.0\"?><root>Test</root>";
-    
+
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     baos.write(bom);
     baos.write(xmlContent.getBytes(StandardCharsets.UTF_8));
-    
+
     InputStream input = new ByteArrayInputStream(baos.toByteArray());
     EncodingDetector.EncodingAwareInputStream result = EncodingDetector.detectEncoding(input);
-    
+
     assertNotNull(result);
-    assertEquals(StandardCharsets.UTF_8, result.getCharset());
+    assertEquals(StandardCharsets.UTF_8, result.charset());
   }
 
   @Test
@@ -55,16 +55,16 @@ class EncodingDetectorTest {
     // UTF-16 BE BOM
     byte[] bom = new byte[]{(byte) 0xFE, (byte) 0xFF};
     String xmlContent = "<?xml version=\"1.0\"?><root>Test</root>";
-    
+
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     baos.write(bom);
     baos.write(xmlContent.getBytes(StandardCharsets.UTF_16BE));
-    
+
     InputStream input = new ByteArrayInputStream(baos.toByteArray());
     EncodingDetector.EncodingAwareInputStream result = EncodingDetector.detectEncoding(input);
-    
+
     assertNotNull(result);
-    assertEquals(StandardCharsets.UTF_16BE, result.getCharset());
+    assertEquals(StandardCharsets.UTF_16BE, result.charset());
   }
 
   @Test
@@ -72,28 +72,28 @@ class EncodingDetectorTest {
     // UTF-16 LE BOM
     byte[] bom = new byte[]{(byte) 0xFF, (byte) 0xFE};
     String xmlContent = "<?xml version=\"1.0\"?><root>Test</root>";
-    
+
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     baos.write(bom);
     baos.write(xmlContent.getBytes(StandardCharsets.UTF_16LE));
-    
+
     InputStream input = new ByteArrayInputStream(baos.toByteArray());
     EncodingDetector.EncodingAwareInputStream result = EncodingDetector.detectEncoding(input);
-    
+
     assertNotNull(result);
-    assertEquals(StandardCharsets.UTF_16LE, result.getCharset());
+    assertEquals(StandardCharsets.UTF_16LE, result.charset());
   }
 
   @Test
   void testXMLDeclarationEncodingDetection() throws IOException {
     // XML with encoding declaration
     String xmlContent = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><root>Test</root>";
-    
+
     InputStream input = new ByteArrayInputStream(xmlContent.getBytes(StandardCharsets.ISO_8859_1));
     EncodingDetector.EncodingAwareInputStream result = EncodingDetector.detectEncoding(input);
-    
+
     assertNotNull(result);
-    assertEquals(StandardCharsets.ISO_8859_1, result.getCharset());
+    assertEquals(StandardCharsets.ISO_8859_1, result.charset());
   }
 
   @Test
@@ -101,42 +101,44 @@ class EncodingDetectorTest {
     // XML with UTF-16 encoding declaration
     // Note: When encoding to UTF-16 without BOM, Java uses UTF-16BE by default
     String xmlContent = "<?xml version=\"1.0\" encoding=\"UTF-16\"?><root>Test</root>";
-    
+
     InputStream input = new ByteArrayInputStream(xmlContent.getBytes(StandardCharsets.UTF_16));
     EncodingDetector.EncodingAwareInputStream result = EncodingDetector.detectEncoding(input);
-    
+
     assertNotNull(result);
     // The actual result will be UTF-16BE because that's what Java encoded it as
-    assertEquals(StandardCharsets.UTF_16BE, result.getCharset());
+    assertEquals(StandardCharsets.UTF_16BE, result.charset());
   }
 
   @Test
   void testDefaultToUTF8WhenNoEncodingFound() throws IOException {
     // XML without encoding declaration or BOM
     String xmlContent = "<?xml version=\"1.0\"?><root>Test</root>";
-    
+
     InputStream input = new ByteArrayInputStream(xmlContent.getBytes(StandardCharsets.UTF_8));
     EncodingDetector.EncodingAwareInputStream result = EncodingDetector.detectEncoding(input);
-    
+
     assertNotNull(result);
-    assertEquals(StandardCharsets.UTF_8, result.getCharset());
+    assertEquals(StandardCharsets.UTF_8, result.charset());
   }
 
   @Test
   void testUnicodeContent() throws IOException {
     // XML with Unicode characters
     String xmlContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><root>测试 テスト тест</root>";
-    
+
     InputStream input = new ByteArrayInputStream(xmlContent.getBytes(StandardCharsets.UTF_8));
     EncodingDetector.EncodingAwareInputStream result = EncodingDetector.detectEncoding(input);
-    
+
     assertNotNull(result);
-    assertEquals(StandardCharsets.UTF_8, result.getCharset());
-    
+    assertEquals(StandardCharsets.UTF_8, result.charset());
+
     // Verify content can be read correctly
     byte[] buffer = new byte[1024];
-    int bytesRead = result.getInputStream().read(buffer);
-    String readContent = new String(buffer, 0, bytesRead, result.getCharset());
+    int bytesRead = result
+        .inputStream()
+        .read(buffer);
+    String readContent = new String(buffer, 0, bytesRead, result.charset());
     assertEquals(xmlContent, readContent);
   }
 
@@ -144,10 +146,10 @@ class EncodingDetectorTest {
   void testEmptyInputStream() throws IOException {
     InputStream input = new ByteArrayInputStream(new byte[0]);
     EncodingDetector.EncodingAwareInputStream result = EncodingDetector.detectEncoding(input);
-    
+
     assertNotNull(result);
     // Should default to UTF-8 for empty stream
-    assertEquals(StandardCharsets.UTF_8, result.getCharset());
+    assertEquals(StandardCharsets.UTF_8, result.charset());
   }
 
   @Test
@@ -155,16 +157,16 @@ class EncodingDetectorTest {
     // UTF-32 BE BOM
     byte[] bom = new byte[]{0x00, 0x00, (byte) 0xFE, (byte) 0xFF};
     String xmlContent = "<?xml version=\"1.0\"?><root>Test</root>";
-    
+
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     baos.write(bom);
     baos.write(xmlContent.getBytes(Charset.forName("UTF-32BE")));
-    
+
     InputStream input = new ByteArrayInputStream(baos.toByteArray());
     EncodingDetector.EncodingAwareInputStream result = EncodingDetector.detectEncoding(input);
-    
+
     assertNotNull(result);
-    assertEquals(Charset.forName("UTF-32BE"), result.getCharset());
+    assertEquals(Charset.forName("UTF-32BE"), result.charset());
   }
 
   @Test
@@ -172,15 +174,57 @@ class EncodingDetectorTest {
     // UTF-32 LE BOM
     byte[] bom = new byte[]{(byte) 0xFF, (byte) 0xFE, 0x00, 0x00};
     String xmlContent = "<?xml version=\"1.0\"?><root>Test</root>";
-    
+
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     baos.write(bom);
     baos.write(xmlContent.getBytes(Charset.forName("UTF-32LE")));
-    
+
     InputStream input = new ByteArrayInputStream(baos.toByteArray());
     EncodingDetector.EncodingAwareInputStream result = EncodingDetector.detectEncoding(input);
-    
+
     assertNotNull(result);
-    assertEquals(Charset.forName("UTF-32LE"), result.getCharset());
+    assertEquals(Charset.forName("UTF-32LE"), result.charset());
+  }
+
+  @Test
+  void testUTF8BOMIsConsumed() throws IOException {
+    // UTF-8 BOM followed by XML content
+    byte[] bom = new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF};
+    String xmlContent = "<?xml version=\"1.0\"?><root>Test</root>";
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    baos.write(bom);
+    baos.write(xmlContent.getBytes(StandardCharsets.UTF_8));
+
+    InputStream input = new ByteArrayInputStream(baos.toByteArray());
+    EncodingDetector.EncodingAwareInputStream result = EncodingDetector.detectEncoding(input);
+
+    assertNotNull(result);
+    assertEquals(StandardCharsets.UTF_8, result.charset());
+
+    // Verify BOM is consumed - first byte should be '<' not 0xEF
+    int firstByte = result.inputStream().read();
+    assertEquals('<', firstByte, "BOM should be consumed, first byte should be '<'");
+    
+    // Read rest of the content to verify it's valid XML
+    byte[] remainingBytes = result.inputStream().readAllBytes();
+    String content = new String(remainingBytes, StandardCharsets.UTF_8);
+    assertEquals("?xml version=\"1.0\"?><root>Test</root>", content);
+  }
+
+  @Test
+  void testNoBOMContent() throws IOException {
+    // XML content without BOM
+    String xmlContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><root>Test</root>";
+
+    InputStream input = new ByteArrayInputStream(xmlContent.getBytes(StandardCharsets.UTF_8));
+    EncodingDetector.EncodingAwareInputStream result = EncodingDetector.detectEncoding(input);
+
+    assertNotNull(result);
+    assertEquals(StandardCharsets.UTF_8, result.charset());
+
+    // Verify content is unchanged
+    byte[] content = result.inputStream().readAllBytes();
+    assertEquals(xmlContent, new String(content, StandardCharsets.UTF_8));
   }
 }

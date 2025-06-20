@@ -25,6 +25,7 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.util.LogMarkers;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,11 +40,10 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import dev.jcputney.elearning.parser.util.LogMarkers;
 
 /**
- * Optimized implementation of FileAccess using AWS S3 SDK v1 with batch operations,
- * streaming support, and intelligent caching.
+ * Optimized implementation of FileAccess using AWS S3 SDK v1 with batch operations, streaming
+ * support, and intelligent caching.
  */
 @Slf4j
 @SuppressWarnings("unused")
@@ -59,7 +59,7 @@ public class S3FileAccessV1 implements FileAccess {
   private final AmazonS3 s3Client;
   private final String bucketName;
   private final ExecutorService executorService;
-  
+
   // Caches for performance
   private final Map<String, Boolean> fileExistsCache = new ConcurrentHashMap<>();
   private final Map<String, List<String>> directoryListCache = new ConcurrentHashMap<>();
@@ -88,7 +88,7 @@ public class S3FileAccessV1 implements FileAccess {
 
     // Lazy initialization of root path detection
     this.rootPath = processedPath;
-    
+
     if (this.rootPath.endsWith("/")) {
       this.rootPath = this.rootPath.substring(0, this.rootPath.length() - 1);
     }
@@ -115,7 +115,7 @@ public class S3FileAccessV1 implements FileAccess {
     // Get cached results first
     Map<String, Boolean> results = new ConcurrentHashMap<>();
     List<String> uncachedPaths = new ArrayList<>();
-    
+
     for (String path : paths) {
       Boolean cached = fileExistsCache.get(path);
       if (cached != null) {
@@ -124,17 +124,18 @@ public class S3FileAccessV1 implements FileAccess {
         uncachedPaths.add(path);
       }
     }
-    
+
     // Check uncached paths in parallel
     if (!uncachedPaths.isEmpty()) {
-      List<CompletableFuture<Map.Entry<String, Boolean>>> futures = uncachedPaths.stream()
+      List<CompletableFuture<Map.Entry<String, Boolean>>> futures = uncachedPaths
+          .stream()
           .map(path -> CompletableFuture.supplyAsync(() -> {
             boolean exists = checkFileExistsOnS3(path);
             fileExistsCache.put(path, exists);
             return Map.entry(path, exists);
           }, executorService))
           .toList();
-      
+
       futures.forEach(future -> {
         try {
           Map.Entry<String, Boolean> result = future.join();
@@ -144,7 +145,7 @@ public class S3FileAccessV1 implements FileAccess {
         }
       });
     }
-    
+
     return results;
   }
 
@@ -152,17 +153,19 @@ public class S3FileAccessV1 implements FileAccess {
    * Prefetch common module files in parallel for faster subsequent access.
    */
   public void prefetchCommonFiles() {
-    List<String> commonFiles = COMMON_MODULE_FILES.stream()
+    List<String> commonFiles = COMMON_MODULE_FILES
+        .stream()
         .filter(file -> !smallFileCache.containsKey(file))
         .toList();
-    
+
     if (commonFiles.isEmpty()) {
       return;
     }
-    
+
     log.debug(LogMarkers.S3_VERBOSE, "Prefetching {} common module files", commonFiles.size());
-    
-    List<CompletableFuture<Void>> futures = commonFiles.stream()
+
+    List<CompletableFuture<Void>> futures = commonFiles
+        .stream()
         .map(file -> CompletableFuture.runAsync(() -> {
           try {
             String fullFilePath = fullPath(file);
@@ -170,12 +173,15 @@ public class S3FileAccessV1 implements FileAccess {
               // Get file size first
               long size = getFileSizeOnS3(file);
               fileSizeCache.put(file, size);
-              
+
               // Only cache small files
               if (size <= STREAMING_THRESHOLD) {
-                byte[] content = s3Client.getObjectAsString(bucketName, fullFilePath).getBytes();
+                byte[] content = s3Client
+                    .getObjectAsString(bucketName, fullFilePath)
+                    .getBytes();
                 smallFileCache.put(file, content);
-                log.debug(LogMarkers.S3_VERBOSE, "Prefetched file: {} ({} bytes)", file, content.length);
+                log.debug(LogMarkers.S3_VERBOSE, "Prefetched file: {} ({} bytes)", file,
+                    content.length);
               }
             }
           } catch (Exception e) {
@@ -183,8 +189,10 @@ public class S3FileAccessV1 implements FileAccess {
           }
         }, executorService))
         .toList();
-    
-    CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
+    CompletableFuture
+        .allOf(futures.toArray(new CompletableFuture[0]))
+        .join();
   }
 
   /**
@@ -212,30 +220,33 @@ public class S3FileAccessV1 implements FileAccess {
       log.debug(LogMarkers.S3_VERBOSE, "Returning cached content for file: {}", path);
       return new ByteArrayInputStream(cachedContent);
     }
-    
+
     // Get file size to determine strategy
     Long cachedSize = fileSizeCache.get(path);
     long fileSize = cachedSize != null ? cachedSize : getFileSizeOnS3(path);
-    
+
     if (cachedSize == null) {
       fileSizeCache.put(path, fileSize);
     }
-    
+
     String fullFilePath = fullPath(path);
-    
+
     if (fileSize <= STREAMING_THRESHOLD) {
       // Cache small files for future use
       log.debug(LogMarkers.S3_VERBOSE, "Caching small file: {} ({} bytes)", path, fileSize);
       String content = s3Client.getObjectAsString(bucketName, fullFilePath);
       byte[] contentBytes = content.getBytes();
-      
+
       // Implement simple cache size management
       if (smallFileCache.size() >= MAX_CACHE_SIZE) {
         // Remove oldest entry (simple FIFO)
-        String oldestKey = smallFileCache.keySet().iterator().next();
+        String oldestKey = smallFileCache
+            .keySet()
+            .iterator()
+            .next();
         smallFileCache.remove(oldestKey);
       }
-      
+
       smallFileCache.put(path, contentBytes);
       return new ByteArrayInputStream(contentBytes);
     } else {
@@ -274,7 +285,10 @@ public class S3FileAccessV1 implements FileAccess {
   }
 
   /**
-   * Get cache statistics for monitoring.
+   * Retrieves statistics about various internal caches used in the class.
+   *
+   * @return A map where the keys are the cache names (e.g., "fileExistsCache",
+   * "directoryListCache", etc.) and the values are the respective sizes of these caches.
    */
   public Map<String, Integer> getCacheStats() {
     return Map.of(
@@ -305,7 +319,9 @@ public class S3FileAccessV1 implements FileAccess {
 
   private long getFileSizeOnS3(String path) {
     try {
-      return s3Client.getObjectMetadata(bucketName, fullPath(path)).getContentLength();
+      return s3Client
+          .getObjectMetadata(bucketName, fullPath(path))
+          .getContentLength();
     } catch (AmazonServiceException e) {
       log.debug("Failed to get file size for path: {}", path, e);
       return 0;
@@ -316,22 +332,25 @@ public class S3FileAccessV1 implements FileAccess {
     try {
       List<String> allKeys = new ArrayList<>();
       String prefix = fullPath(directoryPath);
-      
+
       ListObjectsRequest request = new ListObjectsRequest()
           .withBucketName(bucketName)
           .withPrefix(prefix)
           .withMaxKeys(1000);
-      
+
       ObjectListing listing;
       do {
         listing = s3Client.listObjects(request);
-        allKeys.addAll(listing.getObjectSummaries().stream()
+        allKeys.addAll(listing
+            .getObjectSummaries()
+            .stream()
             .map(S3ObjectSummary::getKey)
             .collect(Collectors.toList()));
         request.setMarker(listing.getNextMarker());
       } while (listing.isTruncated());
-      
-      log.debug(LogMarkers.S3_VERBOSE, "Listed {} files in directory: {}", allKeys.size(), directoryPath);
+
+      log.debug(LogMarkers.S3_VERBOSE, "Listed {} files in directory: {}", allKeys.size(),
+          directoryPath);
       return allKeys;
     } catch (AmazonServiceException e) {
       log.debug("Failed to list files in directory: {}", directoryPath, e);

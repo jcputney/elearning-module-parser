@@ -17,13 +17,17 @@
 
 package dev.jcputney.elearning.parser.util;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.LoadableMetadata;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
 import dev.jcputney.elearning.parser.input.lom.LOM;
+import dev.jcputney.elearning.parser.util.DurationIso8601Deserializer;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -46,6 +50,25 @@ public final class XmlParsingUtils {
   // Private constructor to prevent instantiation
   private XmlParsingUtils() {
     throw new AssertionError("Utility class should not be instantiated");
+  }
+
+  /**
+   * Creates and configures an XmlMapper with custom deserializers.
+   *
+   * @return A configured XmlMapper instance
+   */
+  private static XmlMapper createConfiguredXmlMapper() {
+    XmlMapper xmlMapper = new XmlMapper();
+    
+    // Configure deserialization features
+    xmlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    
+    // Register custom deserializers
+    SimpleModule module = new SimpleModule();
+    module.addDeserializer(Duration.class, new DurationIso8601Deserializer());
+    xmlMapper.registerModule(module);
+    
+    return xmlMapper;
   }
 
   /**
@@ -84,35 +107,43 @@ public final class XmlParsingUtils {
     if (clazz == null) {
       throw new IllegalArgumentException("Class cannot be null");
     }
-    log.debug(LogMarkers.XML_VERBOSE, "Parsing XML file '{}' to object of type: {}", filePath, clazz.getSimpleName());
-    
+    log.debug(LogMarkers.XML_VERBOSE, "Parsing XML file '{}' to object of type: {}", filePath,
+        clazz.getSimpleName());
+
     // Detect encoding
-    EncodingDetector.EncodingAwareInputStream encodingAwareStream = 
+    EncodingDetector.EncodingAwareInputStream encodingAwareStream =
         EncodingDetector.detectEncoding(stream);
-    
+
     try {
       XMLInputFactory factory = XMLInputFactory.newFactory();
       factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, true);
       factory.setProperty(XMLInputFactory.IS_VALIDATING, false);
       factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
-      
+
       // Create reader with detected encoding
       XMLStreamReader reader = factory.createXMLStreamReader(
-          encodingAwareStream.getInputStream(), 
-          encodingAwareStream.getCharset().name()
+          encodingAwareStream.inputStream(),
+          encodingAwareStream
+              .charset()
+              .name()
       );
-      
-      XmlMapper xmlMapper = new XmlMapper();
+
+      XmlMapper xmlMapper = createConfiguredXmlMapper();
       C result = xmlMapper.readValue(reader, clazz);
-      log.debug(LogMarkers.XML_VERBOSE, "Successfully parsed XML file '{}' to object of type: {} with encoding: {}", 
-          filePath, clazz.getSimpleName(), encodingAwareStream.getCharset().name());
+      log.debug(LogMarkers.XML_VERBOSE,
+          "Successfully parsed XML file '{}' to object of type: {} with encoding: {}",
+          filePath, clazz.getSimpleName(), encodingAwareStream
+              .charset()
+              .name());
       return result;
     } catch (IOException | XMLStreamException e) {
-      String errorMsg = "Error parsing XML file '" + filePath + "' to object of type " + 
-          clazz.getSimpleName() + " with encoding " + 
-          encodingAwareStream.getCharset().name() + ": " + e.getMessage();
+      String errorMsg = "Error parsing XML file '" + filePath + "' to object of type " +
+          clazz.getSimpleName() + " with encoding " +
+          encodingAwareStream
+              .charset()
+              .name() + ": " + e.getMessage();
       log.error(errorMsg);
-      
+
       // Wrap with more context
       if (e instanceof IOException) {
         throw new IOException(errorMsg, e);
@@ -161,10 +192,11 @@ public final class XmlParsingUtils {
           subMetadata.setLom(lom);
           log.debug("Successfully loaded external metadata from: {}", metadataPath);
         } catch (IOException | XMLStreamException e) {
-          String errorMsg = "Error loading external metadata from '" + metadataPath + "' in root '" + 
-              fileAccess.getRootPath() + "': " + e.getMessage();
+          String errorMsg =
+              "Error loading external metadata from '" + metadataPath + "' in root '" +
+                  fileAccess.getRootPath() + "': " + e.getMessage();
           log.debug(errorMsg);
-          
+
           // Re-throw with enhanced context
           if (e instanceof IOException) {
             throw new IOException(errorMsg, e);
@@ -217,10 +249,11 @@ public final class XmlParsingUtils {
           subMetadata.setLom(lom);
           log.debug("Successfully loaded external metadata from: {}", metadataPath);
         } catch (IOException | XMLStreamException e) {
-          String errorMsg = "Error loading external metadata from '" + metadataPath + "' in module at '" + 
-              moduleFileProvider.getRootPath() + "': " + e.getMessage();
+          String errorMsg =
+              "Error loading external metadata from '" + metadataPath + "' in module at '" +
+                  moduleFileProvider.getRootPath() + "': " + e.getMessage();
           log.debug(errorMsg);
-          
+
           // Re-throw with enhanced context
           if (e instanceof IOException) {
             throw new IOException(errorMsg, e);

@@ -23,9 +23,8 @@ import org.slf4j.MarkerFactory;
 /**
  * SLF4J Markers for optional verbose logging in the e-learning parser library.
  * <p>
- * These markers allow consuming applications to selectively enable verbose logging
- * for specific operations without cluttering logs in normal operation.
- * </p>
+ * These markers allow consuming applications to selectively enable verbose logging for specific
+ * operations without cluttering logs in normal operation.
  * <p>
  * Example usage in logback.xml to enable verbose logging:
  * <pre>
@@ -36,31 +35,30 @@ import org.slf4j.MarkerFactory;
  *   &lt;/turboFilter&gt;
  * &lt;/configuration&gt;
  * </pre>
- * </p>
  */
 public final class LogMarkers {
 
   /**
-   * Marker for verbose parsing operations logging.
-   * Use this to log detailed parsing steps that are normally too verbose.
+   * Marker for verbose parsing operations logging. Use this to log detailed parsing steps that are
+   * normally too verbose.
    */
   public static final Marker PARSER_VERBOSE = MarkerFactory.getMarker("PARSER_VERBOSE");
 
   /**
-   * Marker for verbose file access operations logging.
-   * Use this to log detailed file access operations like cache hits/misses.
+   * Marker for verbose file access operations logging. Use this to log detailed file access
+   * operations like cache hits/misses.
    */
   public static final Marker FILE_ACCESS_VERBOSE = MarkerFactory.getMarker("FILE_ACCESS_VERBOSE");
 
   /**
-   * Marker for verbose XML processing logging.
-   * Use this to log detailed XML parsing and metadata loading operations.
+   * Marker for verbose XML processing logging. Use this to log detailed XML parsing and metadata
+   * loading operations.
    */
   public static final Marker XML_VERBOSE = MarkerFactory.getMarker("XML_VERBOSE");
 
   /**
-   * Marker for verbose S3 operations logging.
-   * Use this to log detailed S3 operations like prefetching and streaming.
+   * Marker for verbose S3 operations logging. Use this to log detailed S3 operations like
+   * prefetching and streaming.
    */
   public static final Marker S3_VERBOSE = MarkerFactory.getMarker("S3_VERBOSE");
 

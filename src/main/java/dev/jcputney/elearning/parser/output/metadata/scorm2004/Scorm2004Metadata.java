@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
+import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004Objective;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004ObjectiveMapping;
 import dev.jcputney.elearning.parser.output.metadata.BaseModuleMetadata;
@@ -31,6 +32,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -48,6 +50,9 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(doNotUseGetters = true, callSuper = true)
 public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
 
+  @Getter
+  private boolean hasSequencing;
+
   /**
    * Creates a new Scorm2004Metadata instance with standard SCORM 2004 metadata components.
    *
@@ -59,28 +64,35 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
     // Detect the SCORM 2004 edition from the manifest metadata
     String schemaVersion = null;
     if (manifest.getMetadata() != null) {
-      schemaVersion = manifest.getMetadata().getSchemaVersion();
+      schemaVersion = manifest
+          .getMetadata()
+          .getSchemaVersion();
     }
-    
+
     // Determine the specific edition type
-    ModuleEditionType editionType = ModuleEditionType.fromModuleType(ModuleType.SCORM_2004, schemaVersion);
-    
+    ModuleEditionType editionType = ModuleEditionType.fromModuleType(ModuleType.SCORM_2004,
+        schemaVersion);
+
     Scorm2004Metadata metadata = Scorm2004Metadata
         .builder()
         .manifest(manifest)
         .moduleType(ModuleType.SCORM_2004)
         .moduleEditionType(editionType)
         .xapiEnabled(xapiEnabled)
+        .hasSequencing(hasSequencing(manifest))
         .build();
 
     // Add SCORM 2004 specific metadata
     SimpleMetadata scorm2004Metadata = metadata.getSimpleMetadata(manifest);
 
     // Add global objective IDs
-    Set<String> globalObjectiveIds = getGlobalObjectiveIds(manifest);
+    Set<String> globalObjectiveIds = metadata.getGlobalObjectiveIds();
     if (!globalObjectiveIds.isEmpty()) {
       scorm2004Metadata.addMetadata("globalObjectiveIds", globalObjectiveIds);
     }
+
+    // Add sequencing flag
+    scorm2004Metadata.addMetadata("hasSequencing", metadata.hasSequencing);
 
     // Add the SCORM 2004 metadata component to the composite
     metadata.addMetadataComponent(scorm2004Metadata);
@@ -89,34 +101,12 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
   }
 
   /**
-   * Retrieves the set of global objective IDs from the manifest. A global objective ID is defined
-   * by the presence of a targetObjectiveID in a mapInfo element.
-   *
-   * @param manifest The SCORM 2004 manifest.
-   * @return A set of global objective IDs.
-   */
-  @JsonIgnore
-  private static Set<String> getGlobalObjectiveIds(Scorm2004Manifest manifest) {
-    return manifest
-        .getOrganizations()
-        .getOrganizationList()
-        .stream()
-        .flatMap(org -> safeStream(org.getItems())) // Null-safe stream for items
-        .flatMap(item -> safeStream(getObjectives(item))) // Null-safe stream for objectives
-        .flatMap(obj -> safeStream(obj.getMapInfo())) // Null-safe stream for mapInfo
-        .map(Scorm2004ObjectiveMapping::getTargetObjectiveID)
-        .filter(id -> id != null && !id.isEmpty()) // Filter non-null and non-empty IDs
-        .collect(Collectors.toSet());
-  }
-
-  /**
    * Retrieves the list of objectives from a given item in a null-safe manner.
    *
    * @param item The SCORM item to retrieve objectives from.
    * @return A list of objectives, or an empty list if null.
    */
-  private static List<Scorm2004Objective> getObjectives(
-      dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item item) {
+  private static List<Scorm2004Objective> getObjectives(Scorm2004Item item) {
     if (item.getSequencing() != null && item
         .getSequencing()
         .getObjectives() != null) {
@@ -137,5 +127,75 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
    */
   private static <T> Stream<T> safeStream(Collection<T> collection) {
     return collection != null ? collection.stream() : Stream.empty();
+  }
+
+  /**
+   * Determines if a SCORM 2004 manifest has sequencing information.
+   * <p>
+   * This method checks if any item in any organization has sequencing rules defined. Sequencing is
+   * considered present if any item has a non-null sequencing element.
+   * </p>
+   *
+   * @param manifest The SCORM 2004 manifest to check.
+   * @return true if the manifest contains sequencing information, false otherwise.
+   */
+  public static boolean hasSequencing(Scorm2004Manifest manifest) {
+    if (manifest == null || manifest.getOrganizations() == null) {
+      return false;
+    }
+
+    return manifest
+        .getOrganizations()
+        .getOrganizationList()
+        .stream()
+        .flatMap(org -> safeStream(org.getItems()))
+        .anyMatch(Scorm2004Metadata::hasSequencingInItem);
+  }
+
+  /**
+   * Recursively checks if an item or any of its sub-items has sequencing.
+   *
+   * @param item The item to check.
+   * @return true if the item or any sub-item has sequencing, false otherwise.
+   */
+  private static boolean hasSequencingInItem(Scorm2004Item item) {
+    if (item == null) {
+      return false;
+    }
+
+    // Check if this item has sequencing
+    if (item.getSequencing() != null) {
+      return true;
+    }
+
+    // Check sub-items recursively
+    if (item.getItems() != null) {
+      return item
+          .getItems()
+          .stream()
+          .anyMatch(Scorm2004Metadata::hasSequencingInItem);
+    }
+
+    return false;
+  }
+
+  /**
+   * Retrieves the set of global objective IDs from the manifest. A global objective ID is defined
+   * by the presence of a targetObjectiveID in a mapInfo element.
+   *
+   * @return A set of global objective IDs.
+   */
+  @JsonIgnore
+  public Set<String> getGlobalObjectiveIds() {
+    return manifest
+        .getOrganizations()
+        .getOrganizationList()
+        .stream()
+        .flatMap(org -> safeStream(org.getItems())) // Null-safe stream for items
+        .flatMap(item -> safeStream(getObjectives(item))) // Null-safe stream for objectives
+        .flatMap(obj -> safeStream(obj.getMapInfo())) // Null-safe stream for mapInfo
+        .map(Scorm2004ObjectiveMapping::getTargetObjectiveID)
+        .filter(id -> id != null && !id.isEmpty()) // Filter non-null and non-empty IDs
+        .collect(Collectors.toSet());
   }
 }

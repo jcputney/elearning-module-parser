@@ -9,6 +9,10 @@ This is a Java library for parsing and validating eLearning module manifests in 
 - AICC (INI-based format)
 - cmi5 (XML-based)
 
+## Code Style Guidelines
+
+- Use imports whenever possible, avoiding fully qualified class references
+
 ## Build Commands
 
 ```bash

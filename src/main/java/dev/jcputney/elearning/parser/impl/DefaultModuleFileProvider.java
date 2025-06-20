@@ -110,8 +110,21 @@ public class DefaultModuleFileProvider implements ModuleFileProvider {
   @Override
   public boolean hasXapiSupport() {
     log.debug("Checking for xAPI support");
-    boolean xapiJsExists = fileAccess.fileExists(XAPI_JS_FILE);
-    boolean sendStatementExists = fileAccess.fileExists(XAPI_SEND_STATEMENT_FILE);
+    boolean xapiJsExists = false;
+    boolean sendStatementExists = false;
+    
+    try {
+      xapiJsExists = fileAccess.fileExists(XAPI_JS_FILE);
+    } catch (Exception e) {
+      log.debug("Error checking for xAPI JS file: {}", e.getMessage());
+    }
+    
+    try {
+      sendStatementExists = fileAccess.fileExists(XAPI_SEND_STATEMENT_FILE);
+    } catch (Exception e) {
+      log.debug("Error checking for xAPI Statement file: {}", e.getMessage());
+    }
+    
     boolean hasXapi = xapiJsExists || sendStatementExists;
 
     if (hasXapi) {
