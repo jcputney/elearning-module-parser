@@ -20,6 +20,7 @@ package dev.jcputney.elearning.parser.api;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interface for providing file access operations specific to module parsing.
@@ -77,4 +78,38 @@ public interface ModuleFileProvider {
    * @throws IllegalArgumentException if directory is null
    */
   List<String> listFiles(String directory) throws IOException;
+
+  /**
+   * Checks if multiple files exist in a batch operation.
+   * 
+   * <p>Default implementation calls fileExists() for each path individually.
+   * Implementations may override this to provide more efficient batch operations.
+   *
+   * @param paths List of file paths to check
+   * @return Map where keys are the file paths and values indicate whether the file exists
+   * @throws IllegalArgumentException if paths is null or contains null elements
+   */
+  default Map<String, Boolean> fileExistsBatch(List<String> paths) {
+    if (paths == null) {
+      throw new IllegalArgumentException("Paths list cannot be null");
+    }
+    
+    Map<String, Boolean> results = new java.util.HashMap<>();
+    for (String path : paths) {
+      if (path != null) {
+        results.put(path, fileExists(path));
+      }
+    }
+    return results;
+  }
+
+  /**
+   * Prefetches common module files for faster subsequent access.
+   * 
+   * <p>Default implementation does nothing. Implementations that support
+   * caching (like S3) may override this to pre-load commonly accessed files.
+   */
+  default void prefetchCommonFiles() {
+    // Default implementation does nothing
+  }
 }

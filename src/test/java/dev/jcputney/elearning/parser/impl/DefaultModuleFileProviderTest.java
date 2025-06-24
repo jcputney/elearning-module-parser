@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -191,61 +192,77 @@ class DefaultModuleFileProviderTest {
   @Test
   void testHasXapiSupport_BothFilesExist_ReturnsTrue() {
     // Arrange
-    when(mockFileAccess.fileExists(DefaultModuleFileProvider.XAPI_JS_FILE)).thenReturn(true);
-    when(mockFileAccess.fileExists(DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE)).thenReturn(true);
+    List<String> xapiFiles = List.of(DefaultModuleFileProvider.XAPI_JS_FILE, 
+                                      DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE);
+    Map<String, Boolean> existenceMap = Map.of(
+        DefaultModuleFileProvider.XAPI_JS_FILE, true,
+        DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE, true
+    );
+    when(mockFileAccess.fileExistsBatch(xapiFiles)).thenReturn(existenceMap);
 
     // Act
     boolean result = fileProvider.hasXapiSupport();
 
     // Assert
     assertTrue(result);
-    verify(mockFileAccess).fileExists(DefaultModuleFileProvider.XAPI_JS_FILE);
-    verify(mockFileAccess).fileExists(DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE);
+    verify(mockFileAccess).fileExistsBatch(xapiFiles);
   }
 
   @Test
   void testHasXapiSupport_OnlyXapiJsExists_ReturnsTrue() {
     // Arrange
-    when(mockFileAccess.fileExists(DefaultModuleFileProvider.XAPI_JS_FILE)).thenReturn(true);
-    when(mockFileAccess.fileExists(DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE)).thenReturn(false);
+    List<String> xapiFiles = List.of(DefaultModuleFileProvider.XAPI_JS_FILE, 
+                                      DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE);
+    Map<String, Boolean> existenceMap = Map.of(
+        DefaultModuleFileProvider.XAPI_JS_FILE, true,
+        DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE, false
+    );
+    when(mockFileAccess.fileExistsBatch(xapiFiles)).thenReturn(existenceMap);
 
     // Act
     boolean result = fileProvider.hasXapiSupport();
 
     // Assert
     assertTrue(result);
-    verify(mockFileAccess).fileExists(DefaultModuleFileProvider.XAPI_JS_FILE);
-    verify(mockFileAccess).fileExists(DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE);
+    verify(mockFileAccess).fileExistsBatch(xapiFiles);
   }
 
   @Test
   void testHasXapiSupport_OnlySendStatementExists_ReturnsTrue() {
     // Arrange
-    when(mockFileAccess.fileExists(DefaultModuleFileProvider.XAPI_JS_FILE)).thenReturn(false);
-    when(mockFileAccess.fileExists(DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE)).thenReturn(true);
+    List<String> xapiFiles = List.of(DefaultModuleFileProvider.XAPI_JS_FILE, 
+                                      DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE);
+    Map<String, Boolean> existenceMap = Map.of(
+        DefaultModuleFileProvider.XAPI_JS_FILE, false,
+        DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE, true
+    );
+    when(mockFileAccess.fileExistsBatch(xapiFiles)).thenReturn(existenceMap);
 
     // Act
     boolean result = fileProvider.hasXapiSupport();
 
     // Assert
     assertTrue(result);
-    verify(mockFileAccess).fileExists(DefaultModuleFileProvider.XAPI_JS_FILE);
-    verify(mockFileAccess).fileExists(DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE);
+    verify(mockFileAccess).fileExistsBatch(xapiFiles);
   }
 
   @Test
   void testHasXapiSupport_NoXapiFiles_ReturnsFalse() {
     // Arrange
-    when(mockFileAccess.fileExists(DefaultModuleFileProvider.XAPI_JS_FILE)).thenReturn(false);
-    when(mockFileAccess.fileExists(DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE)).thenReturn(false);
+    List<String> xapiFiles = List.of(DefaultModuleFileProvider.XAPI_JS_FILE, 
+                                      DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE);
+    Map<String, Boolean> existenceMap = Map.of(
+        DefaultModuleFileProvider.XAPI_JS_FILE, false,
+        DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE, false
+    );
+    when(mockFileAccess.fileExistsBatch(xapiFiles)).thenReturn(existenceMap);
 
     // Act
     boolean result = fileProvider.hasXapiSupport();
 
     // Assert
     assertFalse(result);
-    verify(mockFileAccess).fileExists(DefaultModuleFileProvider.XAPI_JS_FILE);
-    verify(mockFileAccess).fileExists(DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE);
+    verify(mockFileAccess).fileExistsBatch(xapiFiles);
   }
 
   @Test
@@ -255,34 +272,73 @@ class DefaultModuleFileProviderTest {
   }
 
   @Test
-  void testHasXapiSupport_FileAccessThrowsException_DoesNotPropagateException() {
-    // Arrange - one call succeeds, one throws exception
-    when(mockFileAccess.fileExists(DefaultModuleFileProvider.XAPI_JS_FILE)).thenReturn(true);
-    when(mockFileAccess.fileExists(DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE))
-        .thenThrow(new RuntimeException("File system error"));
+  void testFileExistsBatch_ValidPaths_DelegatesToFileAccess() {
+    // Arrange
+    List<String> paths = List.of("file1.txt", "file2.txt", "file3.txt");
+    Map<String, Boolean> expectedResults = Map.of(
+        "file1.txt", true,
+        "file2.txt", false,
+        "file3.txt", true
+    );
+    when(mockFileAccess.fileExistsBatch(paths)).thenReturn(expectedResults);
 
     // Act
-    boolean result = fileProvider.hasXapiSupport();
+    Map<String, Boolean> result = fileProvider.fileExistsBatch(paths);
 
-    // Assert - Should still return true because first file exists
-    assertTrue(result);
-    verify(mockFileAccess).fileExists(DefaultModuleFileProvider.XAPI_JS_FILE);
-    verify(mockFileAccess).fileExists(DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE);
+    // Assert
+    assertEquals(expectedResults, result);
+    verify(mockFileAccess).fileExistsBatch(paths);
   }
 
   @Test
-  void testHasXapiSupport_FirstFileCheckFails_StillChecksSecondFile() {
-    // Arrange
-    when(mockFileAccess.fileExists(DefaultModuleFileProvider.XAPI_JS_FILE))
+  void testFileExistsBatch_NullPaths_ThrowsException() {
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+      fileProvider.fileExistsBatch(null);
+    });
+    assertEquals("Paths list cannot be null", exception.getMessage());
+    verifyNoInteractions(mockFileAccess);
+  }
+
+  @Test
+  void testPrefetchCommonFiles_DelegatesToFileAccess() {
+    // Act
+    fileProvider.prefetchCommonFiles();
+
+    // Assert
+    verify(mockFileAccess).prefetchCommonFiles();
+  }
+
+  @Test
+  void testHasXapiSupport_FileAccessThrowsException_DoesNotPropagateException() {
+    // Arrange - batch operation throws exception
+    List<String> xapiFiles = List.of(DefaultModuleFileProvider.XAPI_JS_FILE, 
+                                      DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE);
+    when(mockFileAccess.fileExistsBatch(xapiFiles))
         .thenThrow(new RuntimeException("File system error"));
-    when(mockFileAccess.fileExists(DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE)).thenReturn(true);
+
+    // Act & Assert - Should handle exception gracefully
+    assertThrows(RuntimeException.class, () -> {
+      fileProvider.hasXapiSupport();
+    });
+    verify(mockFileAccess).fileExistsBatch(xapiFiles);
+  }
+
+  @Test
+  void testHasXapiSupport_PartialBatchResult_HandlesGracefully() {
+    // Arrange - batch operation returns partial results
+    List<String> xapiFiles = List.of(DefaultModuleFileProvider.XAPI_JS_FILE, 
+                                      DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE);
+    Map<String, Boolean> existenceMap = Map.of(
+        DefaultModuleFileProvider.XAPI_JS_FILE, true
+        // Second file missing from results
+    );
+    when(mockFileAccess.fileExistsBatch(xapiFiles)).thenReturn(existenceMap);
 
     // Act
     boolean result = fileProvider.hasXapiSupport();
 
-    // Assert - Should return true because second file exists
+    // Assert - Should return true because at least one file exists
     assertTrue(result);
-    verify(mockFileAccess).fileExists(DefaultModuleFileProvider.XAPI_JS_FILE);
-    verify(mockFileAccess).fileExists(DefaultModuleFileProvider.XAPI_SEND_STATEMENT_FILE);
+    verify(mockFileAccess).fileExistsBatch(xapiFiles);
   }
 }

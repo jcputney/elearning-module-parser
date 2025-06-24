@@ -23,6 +23,7 @@ import dev.jcputney.elearning.parser.util.LoggingUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 
 /**
@@ -110,20 +111,13 @@ public class DefaultModuleFileProvider implements ModuleFileProvider {
   @Override
   public boolean hasXapiSupport() {
     log.debug("Checking for xAPI support");
-    boolean xapiJsExists = false;
-    boolean sendStatementExists = false;
     
-    try {
-      xapiJsExists = fileAccess.fileExists(XAPI_JS_FILE);
-    } catch (Exception e) {
-      log.debug("Error checking for xAPI JS file: {}", e.getMessage());
-    }
+    // Use batch operation to check both files at once
+    List<String> xapiFiles = List.of(XAPI_JS_FILE, XAPI_SEND_STATEMENT_FILE);
+    Map<String, Boolean> existenceMap = fileAccess.fileExistsBatch(xapiFiles);
     
-    try {
-      sendStatementExists = fileAccess.fileExists(XAPI_SEND_STATEMENT_FILE);
-    } catch (Exception e) {
-      log.debug("Error checking for xAPI Statement file: {}", e.getMessage());
-    }
+    boolean xapiJsExists = existenceMap.getOrDefault(XAPI_JS_FILE, false);
+    boolean sendStatementExists = existenceMap.getOrDefault(XAPI_SEND_STATEMENT_FILE, false);
     
     boolean hasXapi = xapiJsExists || sendStatementExists;
 
@@ -157,5 +151,34 @@ public class DefaultModuleFileProvider implements ModuleFileProvider {
     }
     log.debug("Listing files in directory: {}", directory);
     return fileAccess.listFiles(directory);
+  }
+
+  /**
+   * Checks if multiple files exist in a batch operation.
+   * 
+   * <p>This implementation delegates to the underlying FileAccess implementation.
+   *
+   * @param paths List of file paths to check
+   * @return Map where keys are the file paths and values indicate whether the file exists
+   * @throws IllegalArgumentException if paths is null or contains null elements
+   */
+  @Override
+  public Map<String, Boolean> fileExistsBatch(List<String> paths) {
+    if (paths == null) {
+      throw new IllegalArgumentException("Paths list cannot be null");
+    }
+
+    log.debug("Checking existence of {} files in batch", paths.size());
+    return fileAccess.fileExistsBatch(paths);
+  }
+
+  /**
+   * Prefetches common module files for faster subsequent access.
+   * 
+   * <p>This implementation delegates to the underlying FileAccess implementation.
+   */
+  public void prefetchCommonFiles() {
+    log.debug("Prefetching common module files");
+    fileAccess.prefetchCommonFiles();
   }
 }

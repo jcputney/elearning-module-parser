@@ -19,7 +19,9 @@ package dev.jcputney.elearning.parser.api;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -154,5 +156,65 @@ public interface FileAccess {
       return path.substring(1);
     }
     return StringUtils.isEmpty(getRootPath()) ? path : getRootPath() + "/" + path;
+  }
+
+  /**
+   * Checks if multiple files exist in a batch operation.
+   * 
+   * <p>Default implementation calls fileExists() for each path individually.
+   * Implementations that support batch operations (like S3) should override this
+   * method to provide more efficient batch checking.
+   *
+   * @param paths List of file paths to check
+   * @return Map where keys are the file paths and values indicate whether the file exists
+   * @throws IllegalArgumentException if paths is null or contains null elements
+   */
+  default Map<String, Boolean> fileExistsBatch(List<String> paths) {
+    if (paths == null) {
+      throw new IllegalArgumentException("Paths list cannot be null");
+    }
+    
+    Map<String, Boolean> results = new HashMap<>();
+    for (String path : paths) {
+      if (path != null) {
+        results.put(path, fileExists(path));
+      }
+    }
+    return results;
+  }
+
+  /**
+   * Prefetches common module files for faster subsequent access.
+   * 
+   * <p>Default implementation does nothing. Implementations that support
+   * caching (like S3) may override this to pre-load commonly accessed files.
+   */
+  default void prefetchCommonFiles() {
+    // Default implementation does nothing
+  }
+
+  /**
+   * Gets a list of all files in the module.
+   * 
+   * <p>This method should return a cached list of all files available in the module.
+   * Implementations should scan the module once and cache the results for efficiency.
+   *
+   * @return List of all file paths in the module
+   * @throws IOException if there's an error accessing the module contents
+   */
+  default List<String> getAllFiles() throws IOException {
+    // Default implementation lists files from root directory
+    return listFiles("");
+  }
+
+  /**
+   * Clears any internal caches maintained by this FileAccess instance.
+   * 
+   * <p>This method should be called when the underlying storage might have changed
+   * or when memory needs to be freed. Implementations that maintain caches should
+   * override this method to clear their specific caches.
+   */
+  default void clearCaches() {
+    // Default implementation does nothing
   }
 }

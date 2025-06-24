@@ -27,7 +27,9 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organizatio
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resource;
 import dev.jcputney.elearning.parser.output.metadata.scorm2004.Scorm2004Metadata;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.xml.stream.XMLStreamException;
 
 /**
@@ -157,8 +159,27 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
       return;
     }
 
+    // Collect all file paths for batch checking
+    List<String> filePaths = new ArrayList<>();
     for (Scorm2004File file : files) {
-      file.setExists(moduleFileProvider.fileExists(file.getHref()));
+      if (file.getHref() != null) {
+        filePaths.add(file.getHref());
+      }
+    }
+    
+    // Check file existence in batch
+    Map<String, Boolean> existenceMap = Map.of();
+    if (!filePaths.isEmpty()) {
+      existenceMap = moduleFileProvider.fileExistsBatch(filePaths);
+    }
+
+    // Apply results and load metadata
+    for (Scorm2004File file : files) {
+      if (file.getHref() != null) {
+        file.setExists(existenceMap.getOrDefault(file.getHref(), false));
+      } else {
+        file.setExists(false);
+      }
       loadExternalMetadataIntoMetadata(file.getMetadata());
     }
   }

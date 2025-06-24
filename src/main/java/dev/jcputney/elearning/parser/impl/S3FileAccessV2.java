@@ -70,6 +70,7 @@ public class S3FileAccessV2 implements FileAccess {
   private final Map<String, List<String>> directoryListCache = new ConcurrentHashMap<>();
   private final Map<String, byte[]> smallFileCache = new ConcurrentHashMap<>();
   private final Map<String, Long> fileSizeCache = new ConcurrentHashMap<>();
+  private volatile List<String> allFilesCache = null;
 
   @Getter
   private volatile String rootPath;
@@ -82,6 +83,18 @@ public class S3FileAccessV2 implements FileAccess {
    * @param rootPath The root path of the S3 bucket to access.
    */
   public S3FileAccessV2(S3Client s3Client, String bucketName, String rootPath) {
+    this(s3Client, bucketName, rootPath, true);
+  }
+
+  /**
+   * Constructs an optimized S3FileAccessV2 instance with the specified S3 client and bucket name.
+   *
+   * @param s3Client The S3 client to use for accessing files.
+   * @param bucketName The name of the S3 bucket to access.
+   * @param rootPath The root path of the S3 bucket to access.
+   * @param eagerCache Whether to eagerly cache all files on initialization.
+   */
+  public S3FileAccessV2(S3Client s3Client, String bucketName, String rootPath, boolean eagerCache) {
     this.s3Client = s3Client;
     this.bucketName = bucketName;
     this.executorService = Executors.newFixedThreadPool(10);
@@ -97,6 +110,16 @@ public class S3FileAccessV2 implements FileAccess {
     if (this.rootPath.endsWith("/")) {
       this.rootPath = this.rootPath.substring(0, this.rootPath.length() - 1);
     }
+
+    if (eagerCache) {
+      // Eagerly cache all files to avoid individual S3 API calls later
+      try {
+        log.debug("Eagerly caching all files for S3 bucket: {} with prefix: {}", bucketName, this.rootPath);
+        getAllFiles();
+      } catch (IOException e) {
+        log.warn("Failed to eagerly cache files from S3, will fall back to lazy loading: {}", e.getMessage());
+      }
+    }
   }
 
   /**
@@ -107,6 +130,22 @@ public class S3FileAccessV2 implements FileAccess {
    */
   @Override
   public boolean fileExistsInternal(String path) {
+    // First check the file exists cache
+    Boolean cached = fileExistsCache.get(path);
+    if (cached != null) {
+      return cached;
+    }
+    
+    // If we have the allFilesCache populated, use it to determine existence
+    List<String> allFiles = allFilesCache;
+    if (allFiles != null) {
+      String fullFilePath = fullPath(path);
+      boolean exists = allFiles.contains(fullFilePath);
+      fileExistsCache.put(path, exists);
+      return exists;
+    }
+    
+    // Fall back to S3 API call if no cache is available
     return fileExistsCache.computeIfAbsent(path, this::checkFileExistsOnS3);
   }
 
@@ -116,6 +155,7 @@ public class S3FileAccessV2 implements FileAccess {
    * @param paths List of file paths to check
    * @return Map of path to existence boolean
    */
+  @Override
   public Map<String, Boolean> fileExistsBatch(List<String> paths) {
     // Get cached results first
     Map<String, Boolean> results = new ConcurrentHashMap<>();
@@ -157,6 +197,7 @@ public class S3FileAccessV2 implements FileAccess {
   /**
    * Prefetch common module files in parallel for faster subsequent access.
    */
+  @Override
   public void prefetchCommonFiles() {
     List<String> commonFiles = COMMON_MODULE_FILES
         .stream()
@@ -324,12 +365,51 @@ public class S3FileAccessV2 implements FileAccess {
   /**
    * Clear all caches - useful for testing or when bucket contents change.
    */
+  @Override
   public void clearCaches() {
     fileExistsCache.clear();
     directoryListCache.clear();
     smallFileCache.clear();
     fileSizeCache.clear();
+    allFilesCache = null;
     // All caches cleared
+  }
+
+  /**
+   * Gets a list of all files in the module.
+   * 
+   * <p>This method scans the entire S3 bucket/prefix once and caches the results
+   * for subsequent calls, improving performance for file existence checks.
+   *
+   * @return List of all file paths in the module
+   * @throws IOException if there's an error accessing the S3 bucket
+   */
+  @Override
+  public List<String> getAllFiles() throws IOException {
+    List<String> cached = allFilesCache;
+    if (cached != null) {
+      return cached;
+    }
+    
+    synchronized (this) {
+      // Double-check after acquiring lock
+      cached = allFilesCache;
+      if (cached != null) {
+        return cached;
+      }
+      
+      log.debug("Scanning all files in S3 bucket: {} with prefix: {}", bucketName, rootPath);
+      List<String> allFiles = listFilesOnS3("");
+      
+      // Populate file existence cache with all found files
+      for (String file : allFiles) {
+        fileExistsCache.put(file, true);
+      }
+      
+      allFilesCache = allFiles;
+      log.debug("Found {} total files in module", allFiles.size());
+      return allFiles;
+    }
   }
 
   /**
@@ -415,6 +495,7 @@ public class S3FileAccessV2 implements FileAccess {
             .contents()
             .stream()
             .map(S3Object::key)
+            .filter(key -> !key.endsWith("/")) // Filter out directory markers
             .collect(Collectors.toList()));
 
         continuationToken = response.nextContinuationToken();

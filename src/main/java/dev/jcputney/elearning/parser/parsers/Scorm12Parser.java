@@ -30,7 +30,9 @@ import dev.jcputney.elearning.parser.output.metadata.scorm12.Scorm12Metadata;
 import dev.jcputney.elearning.parser.util.LoggingUtils;
 import dev.jcputney.elearning.parser.util.LogMarkers;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.xml.stream.XMLStreamException;
 import org.slf4j.Logger;
 
@@ -228,19 +230,41 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    * @throws IOException If an error occurs while reading the file.
    */
   private void loadFilesMetadata(List<Scorm12File> files) throws XMLStreamException, IOException {
-    if (files == null) {
+    if (files == null || files.isEmpty()) {
       return;
     }
 
     log.debug(LogMarkers.PARSER_VERBOSE, "Processing {} files in resource for external metadata", files.size());
+    
+    // Collect all file paths for batch checking
+    List<String> filePaths = new ArrayList<>();
     for (Scorm12File file : files) {
-      boolean exists = moduleFileProvider.fileExists(file.getHref());
-      file.setExists(exists);
-      if (exists) {
-        log.debug(LogMarkers.PARSER_VERBOSE, "File exists: {}", file.getHref());
-      } else {
-        log.debug(LogMarkers.PARSER_VERBOSE, "File does not exist: {}", file.getHref());
+      if (file.getHref() != null) {
+        filePaths.add(file.getHref());
       }
+    }
+    
+    // Check file existence in batch
+    if (!filePaths.isEmpty()) {
+      log.debug(LogMarkers.PARSER_VERBOSE, "Checking existence of {} files in batch", filePaths.size());
+      Map<String, Boolean> existenceMap = moduleFileProvider.fileExistsBatch(filePaths);
+      
+      // Update file existence status
+      for (Scorm12File file : files) {
+        if (file.getHref() != null) {
+          Boolean exists = existenceMap.get(file.getHref());
+          file.setExists(exists != null ? exists : false);
+          if (exists != null && exists) {
+            log.debug(LogMarkers.PARSER_VERBOSE, "File exists: {}", file.getHref());
+          } else {
+            log.debug(LogMarkers.PARSER_VERBOSE, "File does not exist: {}", file.getHref());
+          }
+        }
+      }
+    }
+    
+    // Load external metadata for each file
+    for (Scorm12File file : files) {
       loadExternalMetadataIntoMetadata(file.getMetadata());
     }
   }
