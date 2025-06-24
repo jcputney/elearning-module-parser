@@ -163,4 +163,31 @@ public class LocalFileAccess implements FileAccess {
     // Apply streaming enhancements
     return StreamingUtils.createEnhancedStream(inputStream, fileSize, progressListener);
   }
+
+  /**
+   * Gets the total size of all files in the module.
+   * 
+   * <p>This method recursively walks the directory tree and sums the sizes of all files.
+   *
+   * @return Total size of all files in bytes
+   * @throws IOException if there's an error accessing file sizes
+   */
+  @Override
+  public long getTotalSize() throws IOException {
+    Path rootDir = Paths.get(rootPath);
+    
+    try (Stream<Path> paths = Files.walk(rootDir)) {
+      return paths
+          .filter(Files::isRegularFile)
+          .mapToLong(path -> {
+            try {
+              return Files.size(path);
+            } catch (IOException e) {
+              // Log error and continue with 0 for this file
+              return 0;
+            }
+          })
+          .sum();
+    }
+  }
 }

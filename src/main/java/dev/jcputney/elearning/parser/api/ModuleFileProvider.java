@@ -112,4 +112,19 @@ public interface ModuleFileProvider {
   default void prefetchCommonFiles() {
     // Default implementation does nothing
   }
+
+  /**
+   * Gets the total size of all files in the module.
+   * 
+   * <p>This method calculates the sum of all file sizes in the module.
+   * Implementations that maintain file size caches can provide efficient
+   * calculation of the total module size.
+   *
+   * @return Total size of all files in bytes, or -1 if not supported
+   * @throws IOException if there's an error accessing file sizes
+   */
+  default long getTotalSize() throws IOException {
+    // Default implementation returns -1 to indicate not supported
+    return -1;
+  }
 }

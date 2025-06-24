@@ -133,4 +133,20 @@ public class ClasspathFileAccess implements FileAccess {
     }
     return Optional.empty();
   }
+
+  /**
+   * Gets the total size of all files accessible from the classpath.
+   * 
+   * <p>Note: This implementation returns -1 as classpath resources don't have
+   * a reliable way to determine file sizes without reading the entire content.
+   *
+   * @return -1 to indicate size calculation is not supported for classpath resources
+   * @throws IOException if there's an error accessing resources
+   */
+  @Override
+  public long getTotalSize() throws IOException {
+    // Classpath resources don't provide a reliable way to get file sizes
+    // without reading the entire content, which would be inefficient
+    return -1;
+  }
 }

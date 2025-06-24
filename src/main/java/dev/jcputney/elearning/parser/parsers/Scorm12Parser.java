@@ -199,7 +199,21 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    * @return A new Scorm12Metadata object.
    */
   private Scorm12Metadata createMetadata(Scorm12Manifest manifest, boolean hasXapi) {
-    return Scorm12Metadata.create(manifest, hasXapi);
+    Scorm12Metadata metadata = Scorm12Metadata.create(manifest, hasXapi);
+    
+    // Calculate and set the module size
+    try {
+      long totalSize = moduleFileProvider.getTotalSize();
+      metadata.setSizeOnDisk(totalSize);
+      if (totalSize >= 0) {
+        log.debug(LogMarkers.PARSER_VERBOSE, "Module size: {} bytes", totalSize);
+      }
+    } catch (IOException e) {
+      log.debug(LogMarkers.PARSER_VERBOSE, "Failed to calculate module size: {}", e.getMessage());
+      // Size remains -1 as default
+    }
+    
+    return metadata;
   }
 
   /**

@@ -221,4 +221,18 @@ public class CachedFileAccess implements FileAccess {
     listFilesCache.remove(path);
     fileContentsCache.remove(path);
   }
+
+  /**
+   * Gets the total size of all files by delegating to the underlying FileAccess implementation.
+   * 
+   * <p>Note: This method is not cached as file sizes might change between calls.
+   *
+   * @return Total size of all files in bytes, or -1 if not supported
+   * @throws IOException if there's an error accessing file sizes
+   */
+  @Override
+  public long getTotalSize() throws IOException {
+    log.debug("Getting total size from delegate");
+    return delegate.getTotalSize();
+  }
 }

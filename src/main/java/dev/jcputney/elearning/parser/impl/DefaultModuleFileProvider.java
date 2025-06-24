@@ -181,4 +181,24 @@ public class DefaultModuleFileProvider implements ModuleFileProvider {
     log.debug("Prefetching common module files");
     fileAccess.prefetchCommonFiles();
   }
+
+  /**
+   * Gets the total size of all files in the module.
+   * 
+   * <p>This implementation delegates to the underlying FileAccess implementation.
+   *
+   * @return Total size of all files in bytes, or -1 if not supported
+   * @throws IOException if there's an error accessing file sizes
+   */
+  @Override
+  public long getTotalSize() throws IOException {
+    log.debug("Getting total module size");
+    long totalSize = fileAccess.getTotalSize();
+    if (totalSize >= 0) {
+      log.debug("Total module size: {} bytes", totalSize);
+    } else {
+      log.debug("Total module size calculation not supported by FileAccess implementation");
+    }
+    return totalSize;
+  }
 }

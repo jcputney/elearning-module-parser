@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import java.time.Duration;
@@ -194,6 +195,27 @@ class ModuleMetadataTest {
   }
 
   /**
+   * Tests that setSizeOnDisk properly updates the value.
+   */
+  @Test
+  void setSizeOnDisk_updatesValue() {
+    // Arrange
+    TestPackageManifest manifest = new TestPackageManifest(
+        "Test Title", "Test Description", "http://example.com/launch",
+        "test-id", "1.0", Duration.ofMinutes(30));
+    TestModuleMetadata metadata = new TestModuleMetadata(
+        manifest, ModuleType.SCORM_12, false);
+    long expectedSize = 1024L * 1024L; // 1MB
+
+    // Act
+    metadata.setSizeOnDisk(expectedSize);
+    long actualSize = metadata.getSizeOnDisk();
+
+    // Assert
+    assertEquals(expectedSize, actualSize);
+  }
+
+  /**
    * A concrete implementation of PackageManifest for testing purposes.
    */
   private static class TestPackageManifest implements PackageManifest {
@@ -244,6 +266,28 @@ class ModuleMetadataTest {
     public Duration getDuration() {
       return duration;
     }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+      TestPackageManifest that = (TestPackageManifest) o;
+      return java.util.Objects.equals(title, that.title) &&
+          java.util.Objects.equals(description, that.description) &&
+          java.util.Objects.equals(launchUrl, that.launchUrl) &&
+          java.util.Objects.equals(identifier, that.identifier) &&
+          java.util.Objects.equals(version, that.version) &&
+          java.util.Objects.equals(duration, that.duration);
+    }
+
+    @Override
+    public int hashCode() {
+      return java.util.Objects.hash(title, description, launchUrl, identifier, version, duration);
+    }
   }
 
   /**
@@ -258,7 +302,7 @@ class ModuleMetadataTest {
 
     public TestModuleMetadata(TestPackageManifest manifest, ModuleType moduleType,
         boolean xapiEnabled) {
-      super(manifest, moduleType, dev.jcputney.elearning.parser.enums.ModuleEditionType.fromModuleType(moduleType, null), xapiEnabled);
+      super(manifest, moduleType, ModuleEditionType.fromModuleType(moduleType, null), xapiEnabled);
     }
 
     @Override

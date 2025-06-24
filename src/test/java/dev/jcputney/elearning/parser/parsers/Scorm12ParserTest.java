@@ -75,6 +75,9 @@ public class Scorm12ParserTest {
         .getResources()
         .getResourceList()
         .size());
+    
+    // Verify that sizeOnDisk is calculated (should be greater than 0 for a real module)
+    assertTrue(metadata.getSizeOnDisk() > 0, "Module size should be calculated and greater than 0");
   }
 
   @Test

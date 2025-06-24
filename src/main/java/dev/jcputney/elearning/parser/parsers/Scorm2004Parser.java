@@ -93,7 +93,17 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
                 + MANIFEST_FILE);
       }
 
-      return Scorm2004Metadata.create(manifest, checkForXapi());
+      Scorm2004Metadata metadata = Scorm2004Metadata.create(manifest, checkForXapi());
+      
+      // Calculate and set the module size
+      try {
+        long totalSize = moduleFileProvider.getTotalSize();
+        metadata.setSizeOnDisk(totalSize);
+      } catch (IOException e) {
+        // Size remains -1 as default
+      }
+      
+      return metadata;
     } catch (IOException | XMLStreamException e) {
       throw new ModuleParsingException(
           "Error parsing SCORM 2004 module at path: " + this.moduleFileProvider.getRootPath(), e);

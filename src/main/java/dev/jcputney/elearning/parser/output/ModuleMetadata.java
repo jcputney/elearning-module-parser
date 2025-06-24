@@ -26,6 +26,7 @@ import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -66,6 +67,14 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
   protected boolean xapiEnabled = false;
 
   /**
+   * The total size of all files in the module in bytes.
+   * A value of -1 indicates the size is not available.
+   */
+  @Default
+  @Setter
+  protected long sizeOnDisk = -1;
+
+  /**
    * Constructor for ModuleMetadata.
    *
    * @param manifest the package manifest
@@ -78,6 +87,7 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
     this.moduleType = moduleType;
     this.moduleEditionType = moduleEditionType;
     this.xapiEnabled = xapiEnabled;
+    this.sizeOnDisk = -1; // Initialize default value explicitly
   }
 
   @Override
@@ -116,6 +126,15 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
     return manifest.getDuration();
   }
 
+  /**
+   * Gets the total size of all files in the module on disk.
+   * 
+   * @return Total size of all files in bytes, or -1 if not available
+   */
+  public long getSizeOnDisk() {
+    return sizeOnDisk;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -130,6 +149,7 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
 
     return new EqualsBuilder()
         .append(xapiEnabled, that.xapiEnabled)
+        .append(sizeOnDisk, that.sizeOnDisk)
         .append(manifest, that.manifest)
         .append(moduleType, that.moduleType)
         .append(moduleEditionType, that.moduleEditionType)
@@ -143,6 +163,7 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
         .append(moduleType)
         .append(moduleEditionType)
         .append(xapiEnabled)
+        .append(sizeOnDisk)
         .toHashCode();
   }
 }

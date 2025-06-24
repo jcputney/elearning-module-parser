@@ -379,6 +379,73 @@ public class S3FileAccessV1 implements FileAccess {
   }
 
   /**
+   * Gets the total size of all files in the module.
+   * 
+   * <p>This method calculates the sum of all file sizes in the module using
+   * the cached file sizes from the S3 bucket.
+   *
+   * @return Total size of all files in bytes
+   * @throws IOException if there's an error accessing file sizes
+   */
+  @Override
+  public long getTotalSize() throws IOException {
+    // First ensure we have all files cached
+    List<String> allFiles = getAllFiles();
+    
+    if (allFiles.isEmpty()) {
+      return 0;
+    }
+    
+    log.debug("Calculating total size for {} files", allFiles.size());
+    
+    // If we have all sizes cached already, just sum them
+    if (fileSizeCache.size() >= allFiles.size()) {
+      long totalSize = fileSizeCache.values().stream()
+          .mapToLong(Long::longValue)
+          .sum();
+      log.debug("Total module size (from cache): {} bytes", totalSize);
+      return totalSize;
+    }
+    
+    // Otherwise, we need to fetch sizes for uncached files
+    long totalSize = 0;
+    List<CompletableFuture<Long>> futures = new ArrayList<>();
+    
+    for (String file : allFiles) {
+      // Remove the root path prefix to get the relative path
+      String relativePath = file;
+      if (file.startsWith(rootPath + "/")) {
+        relativePath = file.substring(rootPath.length() + 1);
+      }
+      
+      final String finalRelativePath = relativePath; // Make it final for lambda
+      Long cachedSize = fileSizeCache.get(relativePath);
+      if (cachedSize != null) {
+        totalSize += cachedSize;
+      } else {
+        // Fetch size asynchronously
+        futures.add(CompletableFuture.supplyAsync(() -> {
+          long size = getFileSizeOnS3(finalRelativePath);
+          fileSizeCache.put(finalRelativePath, size);
+          return size;
+        }, executorService));
+      }
+    }
+    
+    // Wait for all size fetches to complete
+    for (CompletableFuture<Long> future : futures) {
+      try {
+        totalSize += future.join();
+      } catch (Exception e) {
+        log.debug("Failed to get file size during total calculation", e);
+      }
+    }
+    
+    log.debug("Total module size: {} bytes", totalSize);
+    return totalSize;
+  }
+
+  /**
    * Shutdown the executor service when the instance is no longer needed.
    */
   public void shutdown() {

@@ -234,4 +234,31 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
              (allFiles.size() > 5 ? " (and " + (allFiles.size() - 5) + " more)" : "");
     }
   }
+
+  /**
+   * Gets the total size of all files in the ZIP archive.
+   * 
+   * <p>This method iterates through all entries in the ZIP and sums their uncompressed sizes.
+   *
+   * @return Total size of all files in bytes (uncompressed)
+   * @throws IOException if there's an error accessing the ZIP file
+   */
+  @Override
+  public long getTotalSize() throws IOException {
+    long totalSize = 0;
+    Enumeration<? extends ZipEntry> entries = zipFile.entries();
+    
+    while (entries.hasMoreElements()) {
+      ZipEntry entry = entries.nextElement();
+      if (!entry.isDirectory()) {
+        // Get uncompressed size
+        long size = entry.getSize();
+        if (size >= 0) {
+          totalSize += size;
+        }
+      }
+    }
+    
+    return totalSize;
+  }
 }
