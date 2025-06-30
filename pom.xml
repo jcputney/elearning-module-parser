@@ -69,7 +69,7 @@
     <version.plugin.surefire>3.5.3</version.plugin.surefire>
     <version.plugin.wrapper>3.3.2</version.plugin.wrapper>
     <version.slf4j>2.0.17</version.slf4j>
-    <version.testcontainers>1.21.2</version.testcontainers>
+    <version.testcontainers>1.21.3</version.testcontainers>
     <version.threeten>1.8.0</version.threeten>
     <version.mockito>5.17.0</version.mockito>
   </properties>
