@@ -25,13 +25,11 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility class for detecting character encoding of XML files. Supports BOM (Byte Order Mark)
  * detection and XML declaration parsing.
  */
-@Slf4j
 public class EncodingDetector {
 
   private static final Pattern XML_ENCODING_PATTERN =
@@ -55,46 +53,30 @@ public class EncodingDetector {
 
     // Use PushbackInputStream to handle BOM removal
     PushbackInputStream pushbackStream = new PushbackInputStream(inputStream, 4);
-    
+
     // First try BOM detection
     BomDetectionResult bomResult = detectBOMWithStream(pushbackStream);
     if (bomResult.charset != null) {
-      log.debug(LogMarkers.XML_VERBOSE, "Detected BOM encoding: {}", bomResult.charset);
       // Return the stream with BOM already consumed
       return new EncodingAwareInputStream(bomResult.stream, bomResult.charset);
     }
 
     // No BOM found, try XML declaration
     // Wrap the pushbackStream for mark/reset support
-    InputStream markableStream = pushbackStream.markSupported() 
-        ? pushbackStream 
+    InputStream markableStream = pushbackStream.markSupported()
+        ? pushbackStream
         : new BufferedInputStream(pushbackStream, BUFFER_SIZE);
-    
+
     markableStream.mark(BUFFER_SIZE);
     Charset xmlDeclCharset = detectFromXmlDeclaration(markableStream);
     if (xmlDeclCharset != null) {
-      log.debug(LogMarkers.XML_VERBOSE, "Detected XML declaration encoding: {}", xmlDeclCharset);
       markableStream.reset();
       return new EncodingAwareInputStream(markableStream, xmlDeclCharset);
     }
 
     // Default to UTF-8
-    log.debug(LogMarkers.XML_VERBOSE, "No encoding detected, defaulting to UTF-8");
     markableStream.reset();
     return new EncodingAwareInputStream(markableStream, StandardCharsets.UTF_8);
-  }
-
-  /**
-   * Result of BOM detection containing the charset and the stream with BOM consumed.
-   */
-  private static class BomDetectionResult {
-    final Charset charset;
-    final InputStream stream;
-    
-    BomDetectionResult(Charset charset, InputStream stream) {
-      this.charset = charset;
-      this.stream = stream;
-    }
   }
 
   /**
@@ -104,49 +86,47 @@ public class EncodingDetector {
    * @return The detection result with charset and stream
    * @throws IOException if an I/O error occurs
    */
-  private static BomDetectionResult detectBOMWithStream(PushbackInputStream pushbackStream) 
+  private static BomDetectionResult detectBOMWithStream(PushbackInputStream pushbackStream)
       throws IOException {
     byte[] bom = new byte[4];
     int bytesRead = pushbackStream.read(bom);
 
-    if (bytesRead >= 3) {
-      // UTF-8 BOM: EF BB BF
-      if (bom[0] == (byte) 0xEF && bom[1] == (byte) 0xBB && bom[2] == (byte) 0xBF) {
-        // BOM detected and consumed, push back any extra bytes
-        if (bytesRead > 3) {
-          pushbackStream.unread(bom[3]);
-        }
-        return new BomDetectionResult(StandardCharsets.UTF_8, pushbackStream);
-      }
+    // UTF-32 BE BOM: 00 00 FE FF (check this first as it requires 4 bytes)
+    if (bytesRead >= 4 && bom[0] == 0x00 && bom[1] == 0x00 &&
+        bom[2] == (byte) 0xFE && bom[3] == (byte) 0xFF) {
+      // All 4 bytes consumed
+      return new BomDetectionResult(Charset.forName("UTF-32BE"), pushbackStream);
+    }
 
-      // UTF-16 BE BOM: FE FF
-      if (bytesRead >= 2 && bom[0] == (byte) 0xFE && bom[1] == (byte) 0xFF) {
-        // BOM detected and consumed, push back extra bytes
-        if (bytesRead > 2) {
-          pushbackStream.unread(bom, 2, bytesRead - 2);
-        }
-        return new BomDetectionResult(StandardCharsets.UTF_16BE, pushbackStream);
+    // UTF-8 BOM: EF BB BF
+    if (bytesRead >= 3 && bom[0] == (byte) 0xEF && bom[1] == (byte) 0xBB && bom[2] == (byte) 0xBF) {
+      // BOM detected and consumed, push back any extra bytes
+      if (bytesRead > 3) {
+        pushbackStream.unread(bom[3]);
       }
+      return new BomDetectionResult(StandardCharsets.UTF_8, pushbackStream);
+    }
 
-      // UTF-16 LE BOM: FF FE
-      if (bytesRead >= 2 && bom[0] == (byte) 0xFF && bom[1] == (byte) 0xFE) {
-        if (bytesRead >= 4 && bom[2] == 0x00 && bom[3] == 0x00) {
-          // UTF-32 LE BOM: FF FE 00 00 - all 4 bytes consumed
-          return new BomDetectionResult(Charset.forName("UTF-32LE"), pushbackStream);
-        }
-        // UTF-16 LE BOM - push back extra bytes
-        if (bytesRead > 2) {
-          pushbackStream.unread(bom, 2, bytesRead - 2);
-        }
-        return new BomDetectionResult(StandardCharsets.UTF_16LE, pushbackStream);
+    // UTF-16 BE BOM: FE FF
+    if (bytesRead >= 2 && bom[0] == (byte) 0xFE && bom[1] == (byte) 0xFF) {
+      // BOM detected and consumed, push back extra bytes
+      if (bytesRead > 2) {
+        pushbackStream.unread(bom, 2, bytesRead - 2);
       }
+      return new BomDetectionResult(StandardCharsets.UTF_16BE, pushbackStream);
+    }
 
-      // UTF-32 BE BOM: 00 00 FE FF
-      if (bytesRead >= 4 && bom[0] == 0x00 && bom[1] == 0x00 &&
-          bom[2] == (byte) 0xFE && bom[3] == (byte) 0xFF) {
-        // All 4 bytes consumed
-        return new BomDetectionResult(Charset.forName("UTF-32BE"), pushbackStream);
+    // UTF-16 LE BOM: FF FE (or UTF-32 LE BOM: FF FE 00 00)
+    if (bytesRead >= 2 && bom[0] == (byte) 0xFF && bom[1] == (byte) 0xFE) {
+      if (bytesRead >= 4 && bom[2] == 0x00 && bom[3] == 0x00) {
+        // UTF-32 LE BOM: FF FE 00 00 - all 4 bytes consumed
+        return new BomDetectionResult(Charset.forName("UTF-32LE"), pushbackStream);
       }
+      // UTF-16 LE BOM - push back extra bytes
+      if (bytesRead > 2) {
+        pushbackStream.unread(bom, 2, bytesRead - 2);
+      }
+      return new BomDetectionResult(StandardCharsets.UTF_16LE, pushbackStream);
     }
 
     // No BOM found, push back all bytes
@@ -194,7 +174,7 @@ public class EncodingDetector {
               try {
                 return Charset.forName(encodingName);
               } catch (Exception e) {
-                log.warn("Unknown encoding in XML declaration: {}", encodingName);
+                // Unknown encoding in XML declaration
               }
             }
 
@@ -208,6 +188,13 @@ public class EncodingDetector {
     }
 
     return null;
+  }
+
+  /**
+   * Result of BOM detection containing the charset and the stream with BOM consumed.
+   */
+  private record BomDetectionResult(Charset charset, InputStream stream) {
+
   }
 
   /**

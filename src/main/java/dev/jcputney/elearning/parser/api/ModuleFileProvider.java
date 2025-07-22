@@ -81,7 +81,7 @@ public interface ModuleFileProvider {
 
   /**
    * Checks if multiple files exist in a batch operation.
-   * 
+   *
    * <p>Default implementation calls fileExists() for each path individually.
    * Implementations may override this to provide more efficient batch operations.
    *
@@ -93,7 +93,7 @@ public interface ModuleFileProvider {
     if (paths == null) {
       throw new IllegalArgumentException("Paths list cannot be null");
     }
-    
+
     Map<String, Boolean> results = new java.util.HashMap<>();
     for (String path : paths) {
       if (path != null) {
@@ -105,7 +105,7 @@ public interface ModuleFileProvider {
 
   /**
    * Prefetches common module files for faster subsequent access.
-   * 
+   *
    * <p>Default implementation does nothing. Implementations that support
    * caching (like S3) may override this to pre-load commonly accessed files.
    */
@@ -115,10 +115,10 @@ public interface ModuleFileProvider {
 
   /**
    * Gets the total size of all files in the module.
-   * 
+   *
    * <p>This method calculates the sum of all file sizes in the module.
-   * Implementations that maintain file size caches can provide efficient
-   * calculation of the total module size.
+   * Implementations that maintain file size caches can provide efficient calculation of the total
+   * module size.
    *
    * @return Total size of all files in bytes, or -1 if not supported
    * @throws IOException if there's an error accessing file sizes

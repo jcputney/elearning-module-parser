@@ -112,7 +112,7 @@ public class Cmi5Manifest implements PackageManifest {
   private List<AU> assignableUnits;
 
   /**
-   * Returns the title of the course. If the title is not present, returns null.
+   * Returns the title of the course. If the title is not present, it returns null.
    *
    * @return the title of the course
    */
@@ -129,7 +129,7 @@ public class Cmi5Manifest implements PackageManifest {
   }
 
   /**
-   * Returns the description of the course. If the description is not present, returns null.
+   * Returns the description of the course. If the description is not present, it returns null.
    *
    * @return the description of the course
    */
@@ -153,7 +153,7 @@ public class Cmi5Manifest implements PackageManifest {
    */
   @Override
   public String getLaunchUrl() {
-    // First try to get the URL from root-level AUs
+    // First, try to get the URL from root-level AUs
     String rootLevelUrl = Optional
         .ofNullable(assignableUnits)
         .filter(units -> !units.isEmpty())
@@ -168,7 +168,7 @@ public class Cmi5Manifest implements PackageManifest {
           .filter(blockList -> !blockList.isEmpty())
           .map(blockList -> blockList.get(0))
           .map(Block::getAssignableUnits)
-          .filter(units -> units != null && !units.isEmpty())
+          .filter(units -> !units.isEmpty())
           .map(units -> units.get(0))
           .map(AU::getUrl)
           .orElse(null);
@@ -178,7 +178,7 @@ public class Cmi5Manifest implements PackageManifest {
   }
 
   /**
-   * Returns the identifier for the course. If the course does not have an identifier, returns
+   * Returns the identifier for the course. If the course does not have an identifier, it returns
    * null.
    *
    * @return the identifier for the course

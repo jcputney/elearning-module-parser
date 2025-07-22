@@ -72,8 +72,8 @@ public class CompletionThreshold implements Serializable {
   @Default
   private PercentType progressWeight = new PercentType(BigDecimal.ONE);
   /**
-   * Indicates whether measure determines completion. If true, completion is based on achieving the
-   * minimum progress measure defined.
+   * Indicates whether a measure determines completion. If true, completion is based on achieving
+   * the minimum progress measure defined.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "completedByMeasure")
   @JsonProperty("completedByMeasure")

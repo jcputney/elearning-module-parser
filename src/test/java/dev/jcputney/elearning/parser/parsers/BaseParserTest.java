@@ -112,10 +112,11 @@ class BaseParserTest {
     when(mockModuleFileProvider.getFileContents(manifestPath)).thenThrow(expectedException);
 
     // Act & Assert
-    IOException actualException = assertThrows(IOException.class, () -> {
+    ModuleParsingException actualException = assertThrows(ModuleParsingException.class, () -> {
       parser.parseManifest(manifestPath);
     });
-    assertSame(expectedException, actualException);
+    assertEquals("Failed to read manifest file 'imsmanifest.xml': File not found", actualException.getMessage());
+    assertSame(expectedException, actualException.getCause());
     verify(mockModuleFileProvider).getFileContents(manifestPath);
     assertFalse(parser.loadExternalMetadataCalled);
   }
@@ -130,7 +131,7 @@ class BaseParserTest {
     when(mockModuleFileProvider.getFileContents(manifestPath)).thenReturn(manifestStream);
 
     // Act & Assert
-    IOException exception = assertThrows(IOException.class, () -> {
+    ModuleParsingException exception = assertThrows(ModuleParsingException.class, () -> {
       parser.parseManifest(manifestPath);
     });
     verify(mockModuleFileProvider).getFileContents(manifestPath);
@@ -148,10 +149,10 @@ class BaseParserTest {
     parser.shouldThrowInLoadExternalMetadata = true;
 
     // Act & Assert
-    IOException exception = assertThrows(IOException.class, () -> {
+    ModuleParsingException exception = assertThrows(ModuleParsingException.class, () -> {
       parser.parseManifest(manifestPath);
     });
-    assertEquals("External metadata loading failed", exception.getMessage());
+    assertEquals("Failed to read manifest file 'imsmanifest.xml': External metadata loading failed", exception.getMessage());
     verify(mockModuleFileProvider).getFileContents(manifestPath);
     assertTrue(parser.loadExternalMetadataCalled);
   }

@@ -122,7 +122,7 @@ Example:
 @Fork(1)
 public class MyBenchmark extends BaseBenchmark {
 
-  private static final Logger log = LoggingUtils.getLogger(MyBenchmark.class);
+  private static final Logger log = LoggerFactory.getLogger(MyBenchmark.class);
   
   private static final String MODULE_TYPE = "mytype";
   private static final String MODULE_RESOURCE_PATH = "modules/mytype/mymodule.zip";

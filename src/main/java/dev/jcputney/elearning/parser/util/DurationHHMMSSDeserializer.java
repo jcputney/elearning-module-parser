@@ -25,6 +25,7 @@ import java.time.Duration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.math.NumberUtils;
 
 /**
@@ -80,7 +81,7 @@ public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
    * @throws IllegalArgumentException if the string format is invalid
    */
   public static Duration parseDuration(String durationString) throws NumberFormatException {
-    if (StringUtils.isEmpty(durationString) || StringUtils.equalsAny("::", durationString)) {
+    if (StringUtils.isEmpty(durationString) || Strings.CS.equalsAny("::", durationString)) {
       return Duration.ZERO;
     }
 

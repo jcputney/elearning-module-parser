@@ -58,7 +58,7 @@ public class ActivityTree implements Serializable {
   private final ActivityNode root;
 
   /**
-   * A map for quick lookup of nodes by their identifier.
+   * A map for a quick lookup of nodes by their identifier.
    */
   private final Map<String, ActivityNode> nodeMap = new HashMap<>();
 
@@ -107,7 +107,7 @@ public class ActivityTree implements Serializable {
    * Gets a node by its identifier.
    *
    * @param identifier The identifier of the node to get
-   * @return An Optional containing the node, or empty if not found
+   * @return An Optional containing the node or empty if not found
    */
   public Optional<ActivityNode> getNodeByIdentifier(String identifier) {
     return Optional.ofNullable(nodeMap.get(identifier));
@@ -153,7 +153,7 @@ public class ActivityTree implements Serializable {
   }
 
   /**
-   * Adds a node to the node map for quick lookup by identifier.
+   * Adds a node to the node map for a quick lookup by identifier.
    *
    * @param node The node to add
    */

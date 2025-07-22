@@ -44,7 +44,7 @@ public class LangStringDeserializer extends JsonDeserializer<LangString> {
   }
 
   @Override
-  public LangString deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+  public LangString deserialize(JsonParser p, DeserializationContext context) throws IOException {
     ObjectMapper mapper = (ObjectMapper) p.getCodec();
     JsonNode node = mapper.readTree(p);
 

@@ -92,7 +92,7 @@ public class Scorm12Item implements Serializable {
   @JsonProperty(value = "identifier", required = true)
   private String identifier;
   /**
-   * References a resource within the manifest that this item represents. This is an optional
+   * References to a resource within the manifest that this item represents. This is an optional
    * attribute.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "identifierref")

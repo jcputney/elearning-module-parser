@@ -22,8 +22,6 @@ import dev.jcputney.elearning.parser.api.ModuleTypeDetectorPlugin;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.parsers.Cmi5Parser;
-import dev.jcputney.elearning.parser.util.LoggingUtils;
-import org.slf4j.Logger;
 
 /**
  * Plugin for detecting cmi5 modules.
@@ -33,11 +31,6 @@ import org.slf4j.Logger;
  * </p>
  */
 public class Cmi5DetectorPlugin implements ModuleTypeDetectorPlugin {
-
-  /**
-   * Logger for logging messages related to cmi5 module detection.
-   */
-  private static final Logger log = LoggingUtils.getLogger(Cmi5DetectorPlugin.class);
 
   /**
    * The priority of this detector plugin.
@@ -79,13 +72,10 @@ public class Cmi5DetectorPlugin implements ModuleTypeDetectorPlugin {
       throw new IllegalArgumentException("FileAccess cannot be null");
     }
 
-    log.debug("Checking for cmi5 module");
     if (fileAccess.fileExists(Cmi5Parser.CMI5_XML)) {
-      log.debug("Found cmi5 manifest file: {}", Cmi5Parser.CMI5_XML);
       return ModuleType.CMI5;
     }
 
-    log.debug("No cmi5 manifest file found");
     return null; // Not a cmi5 module
   }
 }

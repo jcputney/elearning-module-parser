@@ -40,7 +40,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum ScoreRollupType {
 
   /**
-   * The score rollup type is provided by the course.
+   * The course provides the score rollup type.
    */
   @JsonProperty("score provided by course")
   SCORE_PROVIDED_BY_COURSE,

@@ -1,0 +1,137 @@
+name: Benchmarks
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    
+    - name: Run benchmarks
+      run: |
+        ./mvnw clean test-compile exec:java -P benchmark -Djmh.options="-wi 2 -i 3 -f 1 -rf json -rff benchmark-results.json"
+    
+    - name: Process benchmark results
+      if: always()
+      run: |
+        if [ -f benchmark-results.json ]; then
+          echo "## Benchmark Results" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          
+          # Extract and display results with jq
+          jq -r '.[] | "\(.benchmark): \(.primaryMetric.score) ± \(.primaryMetric.scoreError) \(.primaryMetric.scoreUnit)"' benchmark-results.json >> $GITHUB_STEP_SUMMARY
+          
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          
+          # Check for performance regressions (fail if any benchmark takes >50ms)
+          FAILED=0
+          while IFS= read -r line; do
+            SCORE=$(echo "$line" | jq -r '.primaryMetric.score')
+            BENCHMARK=$(echo "$line" | jq -r '.benchmark')
+            
+            # Convert to integer for comparison (assuming milliseconds)
+            SCORE_INT=$(echo "$SCORE" | cut -d. -f1)
+            
+            if [ "$SCORE_INT" -gt 50 ]; then
+              echo "❌ Performance regression detected in $BENCHMARK: ${SCORE}ms exceeds 50ms threshold" >> $GITHUB_STEP_SUMMARY
+              FAILED=1
+            fi
+          done < <(jq -c '.[]' benchmark-results.json)
+          
+          if [ "$FAILED" -eq 1 ]; then
+            echo "::error::Performance regression detected - one or more benchmarks exceeded the 50ms threshold"
+            exit 1
+          else
+            echo "✅ All benchmarks passed performance thresholds" >> $GITHUB_STEP_SUMMARY
+          fi
+        else
+          echo "::error::No benchmark results found"
+          exit 1
+        fi
+    
+    - name: Upload benchmark results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: benchmark-results
+        path: benchmark-results.json
+        retention-days: 30
+    
+    - name: Comment PR with benchmark results
+      if: github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          
+          if (!fs.existsSync('benchmark-results.json')) {
+            console.log('No benchmark results found');
+            return;
+          }
+          
+          const results = JSON.parse(fs.readFileSync('benchmark-results.json', 'utf8'));
+          
+          let comment = '## 📊 Benchmark Results\n\n';
+          comment += '| Benchmark | Score | Error | Unit |\n';
+          comment += '|-----------|-------|-------|------|\n';
+          
+          let hasRegression = false;
+          
+          results.forEach(result => {
+            const score = result.primaryMetric.score;
+            const error = result.primaryMetric.scoreError;
+            const unit = result.primaryMetric.scoreUnit;
+            const benchmark = result.benchmark.split('.').pop();
+            
+            // Check if score exceeds threshold
+            const emoji = score > 50 ? '🔴' : '🟢';
+            if (score > 50) hasRegression = true;
+            
+            comment += `| ${emoji} ${benchmark} | ${score.toFixed(3)} | ±${error.toFixed(3)} | ${unit} |\n`;
+          });
+          
+          if (hasRegression) {
+            comment += '\n⚠️ **Performance regression detected**: One or more benchmarks exceeded the 50ms threshold.\n';
+          } else {
+            comment += '\n✅ **All benchmarks passed** performance thresholds.\n';
+          }
+          
+          // Find and update or create comment
+          const { data: comments } = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+          });
+          
+          const botComment = comments.find(comment => 
+            comment.user.type === 'Bot' && comment.body.includes('📊 Benchmark Results')
+          );
+          
+          if (botComment) {
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: botComment.id,
+              body: comment
+            });
+          } else {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
+          }

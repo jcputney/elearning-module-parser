@@ -38,7 +38,7 @@ public interface ModuleTypeDetector {
    * Registers a module type detector plugin.
    *
    * @param plugin the plugin to register
-   * @throws IllegalArgumentException if plugin is null
+   * @throws IllegalArgumentException if the plugin is null
    */
   void registerPlugin(ModuleTypeDetectorPlugin plugin);
 
@@ -47,7 +47,7 @@ public interface ModuleTypeDetector {
    *
    * @param plugin the plugin to unregister
    * @return true if the plugin was unregistered, false if it wasn't registered
-   * @throws IllegalArgumentException if plugin is null
+   * @throws IllegalArgumentException if the plugin is null
    */
   boolean unregisterPlugin(ModuleTypeDetectorPlugin plugin);
 
@@ -65,7 +65,7 @@ public interface ModuleTypeDetector {
    * successfully detects a module type.
    *
    * @return the detected {@link ModuleType}
-   * @throws ModuleDetectionException if the module type cannot be detected or if there's an error
+   * @throws ModuleDetectionException if the module type cannot be detected, or if there's an error
    * during the detection process
    */
   ModuleType detectModuleType() throws ModuleDetectionException;

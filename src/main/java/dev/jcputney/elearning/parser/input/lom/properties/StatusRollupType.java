@@ -40,7 +40,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum StatusRollupType {
 
   /**
-   * The status rollup type is provided by the course.
+   * The course provides the status rollup type.
    */
   @JsonProperty("status provided by course")
   STATUS_PROVIDED_BY_COURSE,

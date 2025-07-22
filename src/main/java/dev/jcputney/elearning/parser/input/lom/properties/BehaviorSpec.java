@@ -118,7 +118,7 @@ public class BehaviorSpec implements Serializable {
   @JacksonXmlProperty(localName = "disableRightClick")
   private YesNoType disableRightClick;
   /**
-   * The flag indicating whether to prevent window resizing.
+   * The flag indicating whether to prevent the window resizing.
    */
   @JacksonXmlProperty(localName = "preventWindowResize")
   private YesNoType preventWindowResize;
@@ -153,7 +153,7 @@ public class BehaviorSpec implements Serializable {
   @JacksonXmlProperty(localName = "firstScoIsPretest")
   private YesNoType firstScoIsPretest;
   /**
-   * The flag indicating whether to finish causes immediate commit.
+   * The flag indicating whether to finish causes an immediate commit.
    */
   @JacksonXmlProperty(localName = "finishCausesImmediateCommit")
   private YesNoType finishCausesImmediateCommit;
@@ -183,7 +183,7 @@ public class BehaviorSpec implements Serializable {
   @JacksonXmlProperty(localName = "lookaheadSequencerMode")
   private LookaheadSequencerModeType lookaheadSequencerMode;
   /**
-   * The flag indicating whether score overrides status.
+   * The flag indicating whether the score overrides' status.
    */
   @JacksonXmlProperty(localName = "scoreOverridesStatus")
   private YesNoType scoreOverridesStatus;
@@ -193,17 +193,17 @@ public class BehaviorSpec implements Serializable {
   @JacksonXmlProperty(localName = "allowCompleteStatusChange")
   private YesNoType allowCompleteStatusChange;
   /**
-   * The flag indicating whether to scale raw score.
+   * The flag indicating whether to scale a raw score.
    */
   @JacksonXmlProperty(localName = "scaleRawScore")
   private YesNoType scaleRawScore;
   /**
-   * The flag indicating whether to use quick lookahead sequencer.
+   * The flag indicating whether to use a quick lookahead sequencer.
    */
   @JacksonXmlProperty(localName = "useQuickLookaheadSequencer")
   private YesNoType useQuickLookaheadSequencer;
   /**
-   * The flag indicating whether to roll up runtime at SCO unload.
+   * The flag indicating whether to roll up runtime at SCO unloaded.
    */
   @JacksonXmlProperty(localName = "rollupRuntimeAtScoUnload")
   private YesNoType rollupRuntimeAtScoUnload;

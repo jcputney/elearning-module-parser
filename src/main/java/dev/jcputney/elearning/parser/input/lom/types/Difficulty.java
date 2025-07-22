@@ -46,7 +46,7 @@ public enum Difficulty {
   VERY_EASY,
 
   /**
-   * The learning object is easy.
+   * The learning object is "easy".
    */
   @JsonProperty("easy")
   EASY,
@@ -58,7 +58,7 @@ public enum Difficulty {
   MEDIUM,
 
   /**
-   * The learning object is difficult.
+   * The learning object is "difficult".
    */
   @JsonProperty("difficult")
   DIFFICULT,

@@ -27,6 +27,7 @@
           <option value="http://www.imsproject.org" />
           <option value="http://www.jboss.com/xml/ns/" />
           <option value="http://www.jboss.org/j2ee/schema/" />
+          <option value="http://www.scorm.com" />
           <option value="http://www.springframework.org/schema/" />
           <option value="http://www.springframework.org/security/tags" />
           <option value="http://www.springframework.org/tags" />

@@ -89,7 +89,7 @@ public class ClasspathFileAccess implements FileAccess {
         }
       }
     } else {
-      // Fall back to loading from classpath directly (not inside a JAR)
+      // Fall back to loading from the classpath directly (not inside a JAR)
       var dirUrl = getClass()
           .getClassLoader()
           .getResource(directoryPath);
@@ -119,6 +119,22 @@ public class ClasspathFileAccess implements FileAccess {
   }
 
   /**
+   * Gets the total size of all files accessible from the classpath.
+   *
+   * <p>Note: This implementation returns -1 as classpath resources don't have
+   * a reliable way to determine file sizes without reading the entire content.
+   *
+   * @return -1 to indicate size calculation is not supported for classpath resources
+   * @throws IOException if there's an error accessing resources
+   */
+  @Override
+  public long getTotalSize() throws IOException {
+    // Classpath resources don't provide a reliable way to get file sizes
+    // without reading the entire content, which would be inefficient
+    return -1;
+  }
+
+  /**
    * Helper method to check if the code is running from a JAR file and return its path.
    *
    * @return An Optional containing the JAR path if available, or empty if not running from a JAR.
@@ -132,21 +148,5 @@ public class ClasspathFileAccess implements FileAccess {
       return Optional.of(jarPath);
     }
     return Optional.empty();
-  }
-
-  /**
-   * Gets the total size of all files accessible from the classpath.
-   * 
-   * <p>Note: This implementation returns -1 as classpath resources don't have
-   * a reliable way to determine file sizes without reading the entire content.
-   *
-   * @return -1 to indicate size calculation is not supported for classpath resources
-   * @throws IOException if there's an error accessing resources
-   */
-  @Override
-  public long getTotalSize() throws IOException {
-    // Classpath resources don't provide a reliable way to get file sizes
-    // without reading the entire content, which would be inefficient
-    return -1;
   }
 }

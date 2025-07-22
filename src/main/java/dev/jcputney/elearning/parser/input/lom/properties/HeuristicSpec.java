@@ -68,12 +68,12 @@ public class HeuristicSpec implements Serializable {
   @JacksonXmlProperty(localName = "isSatisfactionTracked")
   private YesNoType isSatisfactionTracked;
   /**
-   * Indicates whether score is tracked.
+   * Indicates whether the score is tracked.
    */
   @JacksonXmlProperty(localName = "isScoreTracked")
   private YesNoType isScoreTracked;
   /**
-   * Indicates whether incomplete score is meaningful.
+   * Indicates whether an incomplete score is meaningful.
    */
   @JacksonXmlProperty(localName = "isIncompleteScoreMeaningful")
   private YesNoType isIncompleteScoreMeaningful;

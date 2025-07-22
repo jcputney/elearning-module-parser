@@ -18,12 +18,9 @@
 package dev.jcputney.elearning.parser.parsers;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
-import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.cmi5.Cmi5Manifest;
 import dev.jcputney.elearning.parser.output.metadata.cmi5.Cmi5Metadata;
-import java.io.IOException;
-import javax.xml.stream.XMLStreamException;
 
 /**
  * Cmi5Parser is responsible for parsing cmi5-specific metadata from the cmi5.xml file.
@@ -86,7 +83,7 @@ public class Cmi5Parser extends BaseParser<Cmi5Metadata, Cmi5Manifest> {
   }
 
   @Override
-  void loadExternalMetadata(Cmi5Manifest manifest) throws XMLStreamException, IOException {
+  void loadExternalMetadata(Cmi5Manifest manifest) {
     // No external metadata loading is required for cmi5
   }
 

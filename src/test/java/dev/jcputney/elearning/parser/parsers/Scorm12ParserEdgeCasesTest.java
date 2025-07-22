@@ -41,7 +41,9 @@ class Scorm12ParserEdgeCasesTest {
 
     // The parser should throw a ModuleParsingException because the title is missing
     ModuleParsingException exception = assertThrows(ModuleParsingException.class, parser::parse);
-    assertTrue(exception.getMessage().contains("missing a required <title> element"));
+    assertTrue(exception
+        .getMessage()
+        .contains("missing required <title> element"));
   }
 
   @Test
@@ -51,7 +53,9 @@ class Scorm12ParserEdgeCasesTest {
 
     // The parser should throw a ModuleParsingException because the launch URL is missing
     ModuleParsingException exception = assertThrows(ModuleParsingException.class, parser::parse);
-    assertTrue(exception.getMessage().contains("missing a required <launchUrl>"));
+    assertTrue(exception
+        .getMessage()
+        .contains("missing required launch URL"));
   }
 
   @Test
@@ -82,13 +86,40 @@ class Scorm12ParserEdgeCasesTest {
     assertEquals("content/nonexistent.html", manifest.getLaunchUrl());
 
     // Verify that the resources were parsed correctly
-    assertEquals(2, manifest.getResources().getResourceList().size());
+    assertEquals(2, manifest
+        .getResources()
+        .getResourceList()
+        .size());
 
     // Verify that the files in the resources were marked as not existing
-    assertFalse(manifest.getResources().getResourceList().get(0).getFiles().get(0).isExists());
-    assertFalse(manifest.getResources().getResourceList().get(0).getFiles().get(1).isExists());
-    assertFalse(manifest.getResources().getResourceList().get(0).getFiles().get(2).isExists());
-    assertFalse(manifest.getResources().getResourceList().get(1).getFiles().get(0).isExists());
+    assertFalse(manifest
+        .getResources()
+        .getResourceList()
+        .get(0)
+        .getFiles()
+        .get(0)
+        .isExists());
+    assertFalse(manifest
+        .getResources()
+        .getResourceList()
+        .get(0)
+        .getFiles()
+        .get(1)
+        .isExists());
+    assertFalse(manifest
+        .getResources()
+        .getResourceList()
+        .get(0)
+        .getFiles()
+        .get(2)
+        .isExists());
+    assertFalse(manifest
+        .getResources()
+        .getResourceList()
+        .get(1)
+        .getFiles()
+        .get(0)
+        .isExists());
   }
 
   @Test
@@ -107,33 +138,68 @@ class Scorm12ParserEdgeCasesTest {
     assertEquals("content/module1.html", manifest.getLaunchUrl());
 
     // Verify that the organizations were parsed correctly
-    assertEquals(2, manifest.getOrganizations().getOrganizationList().size());
-    assertEquals("default_org", manifest.getOrganizations().getDefault().getIdentifier());
+    assertEquals(2, manifest
+        .getOrganizations()
+        .getOrganizationList()
+        .size());
+    assertEquals("default_org", manifest
+        .getOrganizations()
+        .getDefault()
+        .getIdentifier());
     assertEquals("alternate_org",
-        manifest.getOrganizations().getOrganizationList().get(1).getIdentifier());
+        manifest
+            .getOrganizations()
+            .getOrganizationList()
+            .get(1)
+            .getIdentifier());
 
     // Verify that the items in the default organization were parsed correctly
-    assertEquals(3, manifest.getOrganizations().getDefault().getItems().size());
+    assertEquals(3, manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems()
+        .size());
 
     // Verify that the nested items were parsed correctly
-    var module1 = manifest.getOrganizations().getDefault().getItems().get(0);
+    var module1 = manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems()
+        .get(0);
     assertEquals("module_1", module1.getIdentifier());
-    assertEquals(2, module1.getItems().size());
+    assertEquals(2, module1
+        .getItems()
+        .size());
 
-    var chapter11 = module1.getItems().get(0);
+    var chapter11 = module1
+        .getItems()
+        .get(0);
     assertEquals("chapter_1_1", chapter11.getIdentifier());
-    assertEquals(2, chapter11.getItems().size());
+    assertEquals(2, chapter11
+        .getItems()
+        .size());
 
-    var section111 = chapter11.getItems().get(0);
+    var section111 = chapter11
+        .getItems()
+        .get(0);
     assertEquals("section_1_1_1", section111.getIdentifier());
-    assertEquals(2, section111.getItems().size());
+    assertEquals(2, section111
+        .getItems()
+        .size());
 
-    var topic1111 = section111.getItems().get(0);
+    var topic1111 = section111
+        .getItems()
+        .get(0);
     assertEquals("topic_1_1_1_1", topic1111.getIdentifier());
-    assertTrue(topic1111.getItems() == null || topic1111.getItems().isEmpty(),
+    assertTrue(topic1111.getItems() == null || topic1111
+            .getItems()
+            .isEmpty(),
         "Expected topic1111 to have no items");
 
     // Verify that the resources were parsed correctly
-    assertEquals(12, manifest.getResources().getResourceList().size());
+    assertEquals(12, manifest
+        .getResources()
+        .getResourceList()
+        .size());
   }
 }

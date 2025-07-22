@@ -49,7 +49,7 @@ public class LangStringListDeserializer extends JsonDeserializer<List<LangString
   }
 
   @Override
-  public List<LangString> deserialize(JsonParser p, DeserializationContext ctxt)
+  public List<LangString> deserialize(JsonParser p, DeserializationContext context)
       throws IOException {
     ObjectMapper mapper = (ObjectMapper) p.getCodec();
     JsonNode node = mapper.readTree(p);
@@ -78,7 +78,7 @@ public class LangStringListDeserializer extends JsonDeserializer<List<LangString
         result.add(langString);
       }
     } else {
-      // Handle single element case
+      // Handle a single element case
       LangString langString = mapper.treeToValue(node, LangString.class);
       result.add(langString);
     }

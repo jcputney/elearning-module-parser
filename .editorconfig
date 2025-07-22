@@ -29,6 +29,7 @@ ij_hocon_spaces_within_braces = false
 ij_hocon_spaces_within_brackets = false
 ij_hocon_spaces_within_method_call_parentheses = false
 
+# noinspection EditorConfigKeyCorrectness
 [*.java]
 ij_java_align_consecutive_assignments = false
 ij_java_align_consecutive_variable_declarations = false
@@ -72,6 +73,7 @@ ij_java_blank_lines_around_method = 1
 ij_java_blank_lines_around_method_in_interface = 1
 ij_java_blank_lines_before_class_end = 0
 ij_java_blank_lines_before_imports = 1
+# noinspection EditorConfigKeyCorrectness
 ij_java_blank_lines_before_method_body = 0
 ij_java_blank_lines_before_package = 0
 ij_java_block_brace_style = end_of_line
@@ -677,7 +679,7 @@ ij_groovy_while_brace_force = never
 ij_groovy_while_on_new_line = false
 ij_groovy_wrap_long_lines = false
 
-[{*.gradle.kts,*.kt,*.kts,*.main.kts}]
+[{*.kt,*.kts}]
 indent_size = 4
 tab_width = 4
 ij_continuation_indent_size = 8

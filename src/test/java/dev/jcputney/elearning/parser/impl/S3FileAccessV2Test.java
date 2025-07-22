@@ -35,9 +35,12 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.checksums.RequestChecksumCalculation;
+import software.amazon.awssdk.core.checksums.ResponseChecksumValidation;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -84,16 +87,23 @@ class S3FileAccessV2Test {
   @BeforeEach
   void setUp() {
     // Create S3 client connected to localstack
-    s3Client = S3Client.builder()
+    s3Client = S3Client
+        .builder()
         .endpointOverride(localstack.getEndpoint())
         .region(Region.of(localstack.getRegion()))
         .credentialsProvider(StaticCredentialsProvider.create(
             AwsBasicCredentials.create(localstack.getAccessKey(), localstack.getSecretKey())))
-        .serviceConfiguration(s3Configuration -> s3Configuration.checksumValidationEnabled(false))
+        .serviceConfiguration(S3Configuration
+            .builder()
+            .pathStyleAccessEnabled(true)
+            .build())
+        .requestChecksumCalculation(RequestChecksumCalculation.WHEN_REQUIRED)
+        .responseChecksumValidation(ResponseChecksumValidation.WHEN_REQUIRED)
         .build();
 
-    // Create test bucket
-    s3Client.createBucket(CreateBucketRequest.builder()
+    // Create a test bucket
+    s3Client.createBucket(CreateBucketRequest
+        .builder()
         .bucket(TEST_BUCKET_NAME)
         .build());
 
@@ -207,7 +217,8 @@ class S3FileAccessV2Test {
   }
 
   private void uploadTestFile(String key, String content) {
-    s3Client.putObject(PutObjectRequest.builder()
+    s3Client.putObject(PutObjectRequest
+        .builder()
         .bucket(TEST_BUCKET_NAME)
         .key(key)
         .build(), RequestBody.fromString(content));

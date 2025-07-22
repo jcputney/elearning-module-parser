@@ -58,10 +58,11 @@ public class LocalFileAccess implements FileAccess {
       rootPath = rootPath.substring(0, rootPath.length() - 1);
     }
     this.rootPath = rootPath;
-    if (!Files.isDirectory(Paths.get(rootPath))) {
-      Path path = Paths.get(rootPath);
-      String context = Files.exists(path) ? 
-          (Files.isRegularFile(path) ? "path points to a file" : "path exists but is not a directory") :
+    Path path = Paths.get(rootPath);
+    if (!Files.isDirectory(path)) {
+      String context = Files.exists(path) ?
+          (Files.isRegularFile(path) ? "path points to a file"
+              : "path exists but is not a directory") :
           "path does not exist";
       throw new IllegalArgumentException(
           "Invalid root directory for LocalFileAccess: '" + rootPath + "' (" + context + ")");
@@ -90,12 +91,12 @@ public class LocalFileAccess implements FileAccess {
 
     // Validate directory
     if (!Files.exists(dirPath)) {
-      throw new IOException("Directory not found: '" + directoryPath + "' (full path: '" + 
+      throw new IOException("Directory not found: '" + directoryPath + "' (full path: '" +
           dirPath.toAbsolutePath() + "') in root '" + getRootPath() + "'");
     }
     if (!Files.isDirectory(dirPath)) {
       String fileType = Files.isRegularFile(dirPath) ? "regular file" : "special file";
-      throw new IOException("Path is not a directory: '" + directoryPath + "' (is a " + fileType + 
+      throw new IOException("Path is not a directory: '" + directoryPath + "' (is a " + fileType +
           ") in root '" + getRootPath() + "'");
     }
 
@@ -108,8 +109,8 @@ public class LocalFileAccess implements FileAccess {
           .map(Path::toString)
           .toList();
     } catch (IOException e) {
-      throw new IOException("Failed to list files in directory: '" + directoryPath + 
-          "' (full path: '" + dirPath.toAbsolutePath() + "') in root '" + getRootPath() + 
+      throw new IOException("Failed to list files in directory: '" + directoryPath +
+          "' (full path: '" + dirPath.toAbsolutePath() + "') in root '" + getRootPath() +
           "': " + e.getMessage(), e);
     }
   }
@@ -134,16 +135,17 @@ public class LocalFileAccess implements FileAccess {
    * @return An InputStream for reading the file contents.
    * @throws IOException if an error occurs while reading the file.
    */
-  public InputStream getFileContentsInternal(String path, StreamingProgressListener progressListener) throws IOException {
+  public InputStream getFileContentsInternal(String path,
+      StreamingProgressListener progressListener) throws IOException {
     Path filePath = Paths.get(fullPath(path));
 
     // Check file existence and read permissions
     if (!fileExistsInternal(path)) {
-      throw new NoSuchFileException("File not found: '" + path + "' (full path: '" + 
+      throw new NoSuchFileException("File not found: '" + path + "' (full path: '" +
           filePath.toAbsolutePath() + "') in root '" + getRootPath() + "'");
     }
     if (!Files.isReadable(filePath)) {
-      String details = "";
+      String details;
       try {
         long size = Files.size(filePath);
         boolean isDirectory = Files.isDirectory(filePath);
@@ -151,22 +153,22 @@ public class LocalFileAccess implements FileAccess {
       } catch (IOException ignored) {
         details = " (unable to read file attributes)";
       }
-      throw new IOException("File is not readable: '" + path + "' (full path: '" + 
+      throw new IOException("File is not readable: '" + path + "' (full path: '" +
           filePath.toAbsolutePath() + "')" + details + " in root '" + getRootPath() + "'");
     }
 
     InputStream inputStream = Files.newInputStream(filePath, StandardOpenOption.READ);
-    
+
     // Get file size for progress tracking
     long fileSize = Files.size(filePath);
-    
+
     // Apply streaming enhancements
     return StreamingUtils.createEnhancedStream(inputStream, fileSize, progressListener);
   }
 
   /**
    * Gets the total size of all files in the module.
-   * 
+   *
    * <p>This method recursively walks the directory tree and sums the sizes of all files.
    *
    * @return Total size of all files in bytes
@@ -175,7 +177,7 @@ public class LocalFileAccess implements FileAccess {
   @Override
   public long getTotalSize() throws IOException {
     Path rootDir = Paths.get(rootPath);
-    
+
     try (Stream<Path> paths = Files.walk(rootDir)) {
       return paths
           .filter(Files::isRegularFile)

@@ -57,7 +57,7 @@ public class ManifestParseException extends ModuleException {
    * @param message the detail message (which is saved for later retrieval by the
    * {@link #getMessage()} method)
    * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method).
-   * A null value is permitted, and indicates that the cause is nonexistent or unknown.
+   * A null value is permitted and indicates that the cause is nonexistent or unknown.
    */
   public ManifestParseException(String message, Throwable cause) {
     super(message, cause);
@@ -70,7 +70,7 @@ public class ManifestParseException extends ModuleException {
    * @param message the detail message (which is saved for later retrieval by the
    * {@link #getMessage()} method)
    * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method).
-   * A null value is permitted, and indicates that the cause is nonexistent or unknown.
+   * A null value is permitted and indicates that the cause is nonexistent or unknown.
    * @param metadata a map of additional context information about the exception
    */
   public ManifestParseException(String message, Throwable cause, Map<String, Object> metadata) {

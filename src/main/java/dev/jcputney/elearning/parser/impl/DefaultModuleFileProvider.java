@@ -19,12 +19,10 @@ package dev.jcputney.elearning.parser.impl;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
-import dev.jcputney.elearning.parser.util.LoggingUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
 
 /**
  * Default implementation of the ModuleFileProvider interface.
@@ -43,7 +41,6 @@ public class DefaultModuleFileProvider implements ModuleFileProvider {
    * The name of the xAPI send statement file.
    */
   public static final String XAPI_SEND_STATEMENT_FILE = "sendStatement.js";
-  private static final Logger log = LoggingUtils.getLogger(DefaultModuleFileProvider.class);
   private final FileAccess fileAccess;
 
   /**
@@ -65,14 +62,13 @@ public class DefaultModuleFileProvider implements ModuleFileProvider {
    * @param path The path to the file.
    * @return An InputStream containing the file contents.
    * @throws IOException If an error occurs while reading the file.
-   * @throws IllegalArgumentException if path is null
+   * @throws IllegalArgumentException if a path is null
    */
   @Override
   public InputStream getFileContents(String path) throws IOException {
     if (path == null) {
       throw new IllegalArgumentException("Path cannot be null");
     }
-    log.debug("Getting file contents for path: {}", path);
     return fileAccess.getFileContents(path);
   }
 
@@ -81,14 +77,13 @@ public class DefaultModuleFileProvider implements ModuleFileProvider {
    *
    * @param path The path to check.
    * @return true if the file exists, false otherwise.
-   * @throws IllegalArgumentException if path is null
+   * @throws IllegalArgumentException if a path is null
    */
   @Override
   public boolean fileExists(String path) {
     if (path == null) {
       throw new IllegalArgumentException("Path cannot be null");
     }
-    log.debug("Checking if file exists at path: {}", path);
     return fileAccess.fileExists(path);
   }
 
@@ -99,7 +94,6 @@ public class DefaultModuleFileProvider implements ModuleFileProvider {
    */
   @Override
   public String getRootPath() {
-    log.debug("Getting root path");
     return fileAccess.getRootPath();
   }
 
@@ -110,30 +104,14 @@ public class DefaultModuleFileProvider implements ModuleFileProvider {
    */
   @Override
   public boolean hasXapiSupport() {
-    log.debug("Checking for xAPI support");
-    
     // Use batch operation to check both files at once
     List<String> xapiFiles = List.of(XAPI_JS_FILE, XAPI_SEND_STATEMENT_FILE);
     Map<String, Boolean> existenceMap = fileAccess.fileExistsBatch(xapiFiles);
-    
+
     boolean xapiJsExists = existenceMap.getOrDefault(XAPI_JS_FILE, false);
     boolean sendStatementExists = existenceMap.getOrDefault(XAPI_SEND_STATEMENT_FILE, false);
-    
-    boolean hasXapi = xapiJsExists || sendStatementExists;
 
-    if (hasXapi) {
-      log.info("xAPI support detected in module");
-      if (xapiJsExists) {
-        log.debug("Found xAPI JS file: {}", XAPI_JS_FILE);
-      }
-      if (sendStatementExists) {
-        log.debug("Found xAPI Statement file: {}", XAPI_SEND_STATEMENT_FILE);
-      }
-    } else {
-      log.debug("No xAPI support detected in module");
-    }
-
-    return hasXapi;
+    return xapiJsExists || sendStatementExists;
   }
 
   /**
@@ -142,20 +120,19 @@ public class DefaultModuleFileProvider implements ModuleFileProvider {
    * @param directory The directory to list files from.
    * @return A list of file names in the directory.
    * @throws IOException If an error occurs while listing the files.
-   * @throws IllegalArgumentException if directory is null
+   * @throws IllegalArgumentException if the directory is null
    */
   @Override
   public List<String> listFiles(String directory) throws IOException {
     if (directory == null) {
       throw new IllegalArgumentException("Directory cannot be null");
     }
-    log.debug("Listing files in directory: {}", directory);
     return fileAccess.listFiles(directory);
   }
 
   /**
    * Checks if multiple files exist in a batch operation.
-   * 
+   *
    * <p>This implementation delegates to the underlying FileAccess implementation.
    *
    * @param paths List of file paths to check
@@ -168,23 +145,21 @@ public class DefaultModuleFileProvider implements ModuleFileProvider {
       throw new IllegalArgumentException("Paths list cannot be null");
     }
 
-    log.debug("Checking existence of {} files in batch", paths.size());
     return fileAccess.fileExistsBatch(paths);
   }
 
   /**
    * Prefetches common module files for faster subsequent access.
-   * 
+   *
    * <p>This implementation delegates to the underlying FileAccess implementation.
    */
   public void prefetchCommonFiles() {
-    log.debug("Prefetching common module files");
     fileAccess.prefetchCommonFiles();
   }
 
   /**
    * Gets the total size of all files in the module.
-   * 
+   *
    * <p>This implementation delegates to the underlying FileAccess implementation.
    *
    * @return Total size of all files in bytes, or -1 if not supported
@@ -192,13 +167,6 @@ public class DefaultModuleFileProvider implements ModuleFileProvider {
    */
   @Override
   public long getTotalSize() throws IOException {
-    log.debug("Getting total module size");
-    long totalSize = fileAccess.getTotalSize();
-    if (totalSize >= 0) {
-      log.debug("Total module size: {} bytes", totalSize);
-    } else {
-      log.debug("Total module size calculation not supported by FileAccess implementation");
-    }
-    return totalSize;
+    return fileAccess.getTotalSize();
   }
 }

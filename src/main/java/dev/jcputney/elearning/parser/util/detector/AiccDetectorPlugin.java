@@ -22,9 +22,7 @@ import dev.jcputney.elearning.parser.api.ModuleTypeDetectorPlugin;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.parsers.AiccParser;
-import dev.jcputney.elearning.parser.util.LoggingUtils;
 import java.io.IOException;
-import org.slf4j.Logger;
 
 /**
  * Plugin for detecting AICC modules.
@@ -34,11 +32,6 @@ import org.slf4j.Logger;
  * </p>
  */
 public class AiccDetectorPlugin implements ModuleTypeDetectorPlugin {
-
-  /**
-   * Logger for logging messages related to AICC module detection.
-   */
-  private static final Logger log = LoggingUtils.getLogger(AiccDetectorPlugin.class);
 
   /**
    * The priority of this detector plugin.
@@ -80,7 +73,6 @@ public class AiccDetectorPlugin implements ModuleTypeDetectorPlugin {
       throw new IllegalArgumentException("FileAccess cannot be null");
     }
 
-    log.debug("Checking for AICC module");
     try {
       var files = fileAccess.listFiles("");
       boolean isAicc = files
@@ -91,14 +83,11 @@ public class AiccDetectorPlugin implements ModuleTypeDetectorPlugin {
                   .anyMatch(f -> f.endsWith(AiccParser.CRS_EXTENSION)));
 
       if (isAicc) {
-        log.debug("Found AICC files (.au and .crs)");
         return ModuleType.AICC;
       }
 
-      log.debug("No AICC files found");
       return null; // Not an AICC module
     } catch (IOException e) {
-      log.error("Error detecting AICC module: {}", e.getMessage());
       throw new ModuleDetectionException("Error detecting AICC module", e);
     }
   }

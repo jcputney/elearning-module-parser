@@ -22,9 +22,7 @@ import dev.jcputney.elearning.parser.api.ModuleTypeDetectorPlugin;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.parsers.Scorm12Parser;
-import dev.jcputney.elearning.parser.util.LoggingUtils;
 import dev.jcputney.elearning.parser.util.ScormVersionDetector;
-import org.slf4j.Logger;
 
 /**
  * Plugin for detecting SCORM modules (both 1.2 and 2004 versions).
@@ -35,11 +33,6 @@ import org.slf4j.Logger;
  * </p>
  */
 public class ScormDetectorPlugin implements ModuleTypeDetectorPlugin {
-
-  /**
-   * Logger for logging messages related to SCORM module detection.
-   */
-  private static final Logger log = LoggingUtils.getLogger(ScormDetectorPlugin.class);
 
   /**
    * The priority of this detector plugin.
@@ -81,21 +74,15 @@ public class ScormDetectorPlugin implements ModuleTypeDetectorPlugin {
       throw new IllegalArgumentException("FileAccess cannot be null");
     }
 
-    log.debug("Checking for SCORM module");
     if (fileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)) {
-      log.debug("Found SCORM manifest file: {}", Scorm12Parser.MANIFEST_FILE);
       try {
         // Use the ScormVersionDetector to determine the specific SCORM version
-        ModuleType scormType = ScormVersionDetector.detectScormVersion(fileAccess);
-        log.debug("Detected SCORM version: {}", scormType);
-        return scormType;
+        return ScormVersionDetector.detectScormVersion(fileAccess);
       } catch (Exception e) {
-        log.error("Error detecting SCORM version: {}", e.getMessage());
         throw new ModuleDetectionException("Error detecting SCORM version", e);
       }
     }
 
-    log.debug("No SCORM manifest file found");
     return null; // Not SCORM module
   }
 }

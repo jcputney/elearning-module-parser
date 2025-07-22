@@ -24,14 +24,12 @@ import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.LoadableMetadata;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
 import dev.jcputney.elearning.parser.input.lom.LOM;
-import dev.jcputney.elearning.parser.util.DurationIso8601Deserializer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import org.slf4j.Logger;
 
 /**
  * Utility class for XML parsing operations used throughout the app.
@@ -41,11 +39,6 @@ import org.slf4j.Logger;
  * </p>
  */
 public final class XmlParsingUtils {
-
-  /**
-   * Logger for logging messages related to XML parsing.
-   */
-  private static final Logger log = LoggingUtils.getLogger(XmlParsingUtils.class);
 
   // Private constructor to prevent instantiation
   private XmlParsingUtils() {
@@ -59,15 +52,15 @@ public final class XmlParsingUtils {
    */
   private static XmlMapper createConfiguredXmlMapper() {
     XmlMapper xmlMapper = new XmlMapper();
-    
+
     // Configure deserialization features
     xmlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    
+
     // Register custom deserializers
     SimpleModule module = new SimpleModule();
     module.addDeserializer(Duration.class, new DurationIso8601Deserializer());
     xmlMapper.registerModule(module);
-    
+
     return xmlMapper;
   }
 
@@ -107,8 +100,7 @@ public final class XmlParsingUtils {
     if (clazz == null) {
       throw new IllegalArgumentException("Class cannot be null");
     }
-    log.debug(LogMarkers.XML_VERBOSE, "Parsing XML file '{}' to object of type: {}", filePath,
-        clazz.getSimpleName());
+    // Debug logging removed - parsing is a normal operation
 
     // Detect encoding
     EncodingDetector.EncodingAwareInputStream encodingAwareStream =
@@ -120,7 +112,7 @@ public final class XmlParsingUtils {
       factory.setProperty(XMLInputFactory.IS_VALIDATING, false);
       factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
 
-      // Create reader with detected encoding
+      // Create a reader with detected encoding
       XMLStreamReader reader = factory.createXMLStreamReader(
           encodingAwareStream.inputStream(),
           encodingAwareStream
@@ -129,20 +121,16 @@ public final class XmlParsingUtils {
       );
 
       XmlMapper xmlMapper = createConfiguredXmlMapper();
-      C result = xmlMapper.readValue(reader, clazz);
-      log.debug(LogMarkers.XML_VERBOSE,
-          "Successfully parsed XML file '{}' to object of type: {} with encoding: {}",
-          filePath, clazz.getSimpleName(), encodingAwareStream
-              .charset()
-              .name());
-      return result;
+      return xmlMapper.readValue(reader, clazz);
     } catch (IOException | XMLStreamException e) {
-      String errorMsg = "Error parsing XML file '" + filePath + "' to object of type " +
-          clazz.getSimpleName() + " with encoding " +
+      String errorMsg = String.format(
+          "Failed to parse XML file '%s' to %s (encoding: %s): %s",
+          filePath, clazz.getSimpleName(),
           encodingAwareStream
               .charset()
-              .name() + ": " + e.getMessage();
-      log.error(errorMsg);
+              .name(),
+          e.getMessage()
+      );
 
       // Wrap with more context
       if (e instanceof IOException) {
@@ -184,18 +172,15 @@ public final class XmlParsingUtils {
         .getLocation()
         .isEmpty()) {
       String metadataPath = subMetadata.getLocation();
-      log.debug("Checking for external metadata file: {}", metadataPath);
       if (fileAccess.fileExists(metadataPath)) {
-        log.debug("Loading external metadata from: {}", metadataPath);
         try (InputStream fileContents = fileAccess.getFileContents(metadataPath)) {
           LOM lom = parseXmlToObject(fileContents, LOM.class, metadataPath);
           subMetadata.setLom(lom);
-          log.debug("Successfully loaded external metadata from: {}", metadataPath);
         } catch (IOException | XMLStreamException e) {
-          String errorMsg =
-              "Error loading external metadata from '" + metadataPath + "' in root '" +
-                  fileAccess.getRootPath() + "': " + e.getMessage();
-          log.debug(errorMsg);
+          String errorMsg = String.format(
+              "Failed to load external metadata from '%s' in root '%s': %s",
+              metadataPath, fileAccess.getRootPath(), e.getMessage()
+          );
 
           // Re-throw with enhanced context
           if (e instanceof IOException) {
@@ -204,9 +189,8 @@ public final class XmlParsingUtils {
             throw new XMLStreamException(errorMsg, e);
           }
         }
-      } else {
-        log.debug("External metadata file not found: {}", metadataPath);
       }
+      // File not found is not an error - metadata is optional
     }
   }
 
@@ -241,18 +225,15 @@ public final class XmlParsingUtils {
         .getLocation()
         .isEmpty()) {
       String metadataPath = subMetadata.getLocation();
-      log.debug("Checking for external metadata file: {}", metadataPath);
       if (moduleFileProvider.fileExists(metadataPath)) {
-        log.debug("Loading external metadata from: {}", metadataPath);
         try (InputStream fileContents = moduleFileProvider.getFileContents(metadataPath)) {
           LOM lom = parseXmlToObject(fileContents, LOM.class, metadataPath);
           subMetadata.setLom(lom);
-          log.debug("Successfully loaded external metadata from: {}", metadataPath);
         } catch (IOException | XMLStreamException e) {
-          String errorMsg =
-              "Error loading external metadata from '" + metadataPath + "' in module at '" +
-                  moduleFileProvider.getRootPath() + "': " + e.getMessage();
-          log.debug(errorMsg);
+          String errorMsg = String.format(
+              "Failed to load external metadata from '%s' in module at '%s': %s",
+              metadataPath, moduleFileProvider.getRootPath(), e.getMessage()
+          );
 
           // Re-throw with enhanced context
           if (e instanceof IOException) {
@@ -261,9 +242,8 @@ public final class XmlParsingUtils {
             throw new XMLStreamException(errorMsg, e);
           }
         }
-      } else {
-        log.debug("External metadata file not found: {}", metadataPath);
       }
+      // File not found is not an error - metadata is optional
     }
   }
 }

@@ -49,7 +49,7 @@ public class InstantDeserializer extends JsonDeserializer<Instant> {
    * @param parser the JsonParser to read the value from
    * @param context context for the deserialization process
    * @return the deserialized {@link Instant} object
-   * @throws IOException if the value cannot be parsed as an ISO 8601 date-time or if there's an
+   * @throws IOException if the value cannot be parsed as an ISO 8601 date-time, or if there's an
    * issue with the parser
    * @throws IllegalArgumentException if the parser is null
    */

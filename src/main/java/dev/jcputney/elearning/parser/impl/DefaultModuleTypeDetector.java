@@ -22,14 +22,12 @@ import dev.jcputney.elearning.parser.api.ModuleTypeDetector;
 import dev.jcputney.elearning.parser.api.ModuleTypeDetectorPlugin;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
-import dev.jcputney.elearning.parser.util.LoggingUtils;
 import dev.jcputney.elearning.parser.util.detector.AiccDetectorPlugin;
 import dev.jcputney.elearning.parser.util.detector.Cmi5DetectorPlugin;
 import dev.jcputney.elearning.parser.util.detector.ScormDetectorPlugin;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import org.slf4j.Logger;
 
 /**
  * Default implementation of the ModuleTypeDetector interface.
@@ -50,8 +48,6 @@ import org.slf4j.Logger;
  * method.
  */
 public class DefaultModuleTypeDetector implements ModuleTypeDetector {
-
-  private static final Logger log = LoggingUtils.getLogger(DefaultModuleTypeDetector.class);
 
   private final FileAccess fileAccess;
   private final List<ModuleTypeDetectorPlugin> plugins;
@@ -77,14 +73,13 @@ public class DefaultModuleTypeDetector implements ModuleTypeDetector {
    * Registers a module type detector plugin.
    *
    * @param plugin the plugin to register
-   * @throws IllegalArgumentException if plugin is null
+   * @throws IllegalArgumentException if the plugin is null
    */
   @Override
   public void registerPlugin(ModuleTypeDetectorPlugin plugin) {
     if (plugin == null) {
       throw new IllegalArgumentException("Plugin cannot be null");
     }
-    log.debug("Registering module type detector plugin: {}", plugin.getName());
     plugins.add(plugin);
     // Sort plugins by priority (highest first)
     plugins.sort(Comparator
@@ -97,14 +92,13 @@ public class DefaultModuleTypeDetector implements ModuleTypeDetector {
    *
    * @param plugin the plugin to unregister
    * @return true if the plugin was unregistered, false if it wasn't registered
-   * @throws IllegalArgumentException if plugin is null
+   * @throws IllegalArgumentException if the plugin is null
    */
   @Override
   public boolean unregisterPlugin(ModuleTypeDetectorPlugin plugin) {
     if (plugin == null) {
       throw new IllegalArgumentException("Plugin cannot be null");
     }
-    log.debug("Unregistering module type detector plugin: {}", plugin.getName());
     return plugins.remove(plugin);
   }
 
@@ -125,32 +119,51 @@ public class DefaultModuleTypeDetector implements ModuleTypeDetector {
    * successfully detects a module type.
    *
    * @return the detected {@link ModuleType}
-   * @throws ModuleDetectionException if the module type cannot be detected or if there's an error
+   * @throws ModuleDetectionException if the module type cannot be detected, or if there's an error
    * during the detection process
    */
   @Override
   public ModuleType detectModuleType() throws ModuleDetectionException {
-    log.debug("Detecting module type using {} plugins", plugins.size());
+    if (plugins.isEmpty()) {
+      throw new ModuleDetectionException(
+          "No module type detector plugins are registered. Cannot detect module type."
+      );
+    }
 
     try {
       for (ModuleTypeDetectorPlugin plugin : plugins) {
-        log.debug("Trying plugin: {}", plugin.getName());
         ModuleType moduleType = plugin.detect(fileAccess);
         if (moduleType != null) {
-          log.debug("Plugin {} detected module type: {}", plugin.getName(), moduleType);
           return moduleType;
         }
       }
 
       // If we get here, none of the plugins could detect the module type
-      log.error("No plugin could detect the module type");
-      throw new ModuleDetectionException("Unknown module type");
+      // Build a helpful error message listing what was tried
+      StringBuilder triedPlugins = new StringBuilder();
+      for (int i = 0; i < plugins.size(); i++) {
+        if (i > 0) {
+          triedPlugins.append(", ");
+        }
+        triedPlugins.append(plugins
+            .get(i)
+            .getName());
+      }
+
+      throw new ModuleDetectionException(String.format(
+          "Unable to detect module type at '%s'. Tried plugins: [%s]. " +
+              "Module might be corrupted or of an unsupported type.",
+          fileAccess.getRootPath(), triedPlugins
+      ));
     } catch (Exception e) {
       if (e instanceof ModuleDetectionException) {
         throw e;
       }
-      log.error("Error detecting module type: {}", e.getMessage());
-      throw new ModuleDetectionException("Error detecting module type", e);
+      throw new ModuleDetectionException(
+          String.format("Error detecting module type at '%s': %s",
+              fileAccess.getRootPath(), e.getMessage()),
+          e
+      );
     }
   }
 

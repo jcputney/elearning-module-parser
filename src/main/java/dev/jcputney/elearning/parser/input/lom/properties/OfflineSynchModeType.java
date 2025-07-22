@@ -42,19 +42,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum OfflineSynchModeType {
 
   /**
-   * The offline synchronization mode is most recent.
+   * The offline synchronization mode is the most recent.
    */
   @JsonProperty("most recent")
   MOST_RECENT,
 
   /**
-   * The offline synchronization mode is simple.
+   * The offline synchronization mode is straightforward.
    */
   @JsonProperty("simple")
   SIMPLE,
 
   /**
-   * The offline synchronization mode is most complete.
+   * The offline synchronization mode is the most complete.
    */
   @JsonProperty("most complete")
   MOST_COMPLETE,

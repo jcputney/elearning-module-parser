@@ -153,10 +153,10 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
   }
 
   /**
-   * Recursively checks if an item or any of its sub-items has sequencing.
+   * Recursively checks if an item or any of its subitems has sequencing.
    *
    * @param item The item to check.
-   * @return true if the item or any sub-item has sequencing, false otherwise.
+   * @return true if the item or any subitem has sequencing, false otherwise.
    */
   private static boolean hasSequencingInItem(Scorm2004Item item) {
     if (item == null) {
@@ -168,7 +168,7 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
       return true;
     }
 
-    // Check sub-items recursively
+    // Check subitems recursively
     if (item.getItems() != null) {
       return item
           .getItems()

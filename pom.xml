@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>dev.jcputney</groupId>
@@ -45,22 +47,23 @@
 
     <version.ascii-table>1.8.0</version.ascii-table>
     <version.assertj>3.27.3</version.assertj>
-    <version.aws.sdk.v1>1.12.787</version.aws.sdk.v1>
-    <version.aws.sdk.v2>2.31.67</version.aws.sdk.v2>
+    <version.aws.sdk.v1>1.12.788</version.aws.sdk.v1>
+    <version.aws.sdk.v2>2.32.5</version.aws.sdk.v2>
     <version.commons-configuration2>2.12.0</version.commons-configuration2>
     <version.commons.compress>1.27.1</version.commons.compress>
-    <version.jackson>2.19.1</version.jackson>
+    <version.commons.lang3>3.18.0</version.commons.lang3>
+    <version.jackson>2.19.2</version.jackson>
     <version.jakarta.xml.bind>4.0.2</version.jakarta.xml.bind>
     <version.jmh>1.37</version.jmh>
     <version.jqwik>1.9.3</version.jqwik>
-    <version.junit>5.13.1</version.junit>
+    <version.junit>5.13.4</version.junit>
     <version.logback>1.5.18</version.logback>
     <version.lombok>1.18.38</version.lombok>
     <version.org.json>20250517</version.org.json>
     <version.plugin.central-publishing>0.8.0</version.plugin.central-publishing>
     <version.plugin.compiler>3.14.0</version.plugin.compiler>
     <version.plugin.failsafe>3.5.3</version.plugin.failsafe>
-    <version.plugin.gpg>3.2.7</version.plugin.gpg>
+    <version.plugin.gpg>3.2.8</version.plugin.gpg>
     <version.plugin.jacoco>0.8.13</version.plugin.jacoco>
     <version.plugin.javadoc>3.11.2</version.plugin.javadoc>
     <version.plugin.release>3.1.1</version.plugin.release>
@@ -69,9 +72,9 @@
     <version.plugin.surefire>3.5.3</version.plugin.surefire>
     <version.plugin.wrapper>3.3.2</version.plugin.wrapper>
     <version.slf4j>2.0.17</version.slf4j>
-    <version.testcontainers>1.21.2</version.testcontainers>
+    <version.testcontainers>1.21.3</version.testcontainers>
     <version.threeten>1.8.0</version.threeten>
-    <version.mockito>5.17.0</version.mockito>
+    <version.mockito>5.18.0</version.mockito>
   </properties>
 
   <dependencyManagement>
@@ -91,6 +94,17 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-configuration2</artifactId>
       <version>${version.commons-configuration2}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-lang3</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${version.commons.lang3}</version>
     </dependency>
     <dependency>
       <groupId>org.threeten</groupId>
@@ -139,6 +153,12 @@
       <artifactId>aws-java-sdk-s3</artifactId>
       <version>${version.aws.sdk.v1}</version>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-codec</groupId>
+          <artifactId>commons-codec</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
@@ -204,6 +224,12 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-compress</artifactId>
       <version>${version.commons.compress}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-lang3</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -271,7 +297,7 @@
           <version>${version.plugin.release}</version>
           <configuration>
             <arguments>-ntp</arguments>
-            <scmCommentPrefix />
+            <scmCommentPrefix/>
             <tagNameFormat>v@{project.version}</tagNameFormat>
             <releaseProfiles>central</releaseProfiles>
           </configuration>
@@ -404,8 +430,21 @@
                   <artifactId>lombok</artifactId>
                   <version>${version.lombok}</version>
                 </path>
+                <path>
+                  <groupId>org.openjdk.jmh</groupId>
+                  <artifactId>jmh-generator-annprocess</artifactId>
+                  <version>${version.jmh}</version>
+                </path>
               </annotationProcessorPaths>
             </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>compile</goal>
+                  <goal>testCompile</goal>
+                </goals>
+              </execution>
+            </executions>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -420,9 +459,11 @@
                 <configuration>
                   <finalName>benchmarks</finalName>
                   <transformers>
-                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                    <transformer
+                      implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                       <mainClass>org.openjdk.jmh.Main</mainClass>
                     </transformer>
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                   </transformers>
                   <filters>
                     <filter>
@@ -434,9 +475,49 @@
                       </excludes>
                     </filter>
                   </filters>
+                  <artifactSet>
+                    <includes>
+                      <include>dev.jcputney:*</include>
+                      <include>org.openjdk.jmh:*</include>
+                      <include>net.sf.jopt-simple:*</include>
+                      <include>org.apache.commons:*</include>
+                      <include>commons-io:*</include>
+                      <include>com.fasterxml.jackson.core:*</include>
+                      <include>com.fasterxml.jackson.dataformat:*</include>
+                      <include>com.google.code.gson:*</include>
+                      <include>org.slf4j:*</include>
+                      <include>ch.qos.logback:*</include>
+                    </includes>
+                  </artifactSet>
+                  <createDependencyReducedPom>false</createDependencyReducedPom>
+                  <shadeTestJar>true</shadeTestJar>
                 </configuration>
               </execution>
             </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.1.0</version>
+            <configuration>
+              <classpathScope>test</classpathScope>
+              <mainClass>org.openjdk.jmh.Main</mainClass>
+              <commandlineArgs>${jmh.options}</commandlineArgs>
+              <systemProperties>
+                <systemProperty>
+                  <key>jmh.separateClasspathJAR</key>
+                  <value>true</value>
+                </systemProperty>
+              </systemProperties>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${version.plugin.surefire}</version>
+            <configuration>
+              <skipTests>true</skipTests>
+            </configuration>
           </plugin>
         </plugins>
       </build>

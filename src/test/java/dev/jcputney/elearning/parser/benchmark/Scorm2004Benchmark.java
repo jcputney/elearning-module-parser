@@ -19,7 +19,6 @@ package dev.jcputney.elearning.parser.benchmark;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
-import dev.jcputney.elearning.parser.util.LoggingUtils;
 import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -29,7 +28,6 @@ import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
-import org.slf4j.Logger;
 
 /**
  * Benchmark for SCORM 2004 module parsing operations.
@@ -41,10 +39,8 @@ import org.slf4j.Logger;
 @Fork(1)
 public class Scorm2004Benchmark extends BaseBenchmark {
 
-  private static final Logger log = LoggingUtils.getLogger(Scorm2004Benchmark.class);
-
   private static final String MODULE_TYPE = "scorm2004";
-  private static final String MODULE_RESOURCE_PATH = "modules/scorm2004/golf.zip";
+  private static final String MODULE_RESOURCE_PATH = "modules/zips/scorm2004.zip";
 
   /**
    * Benchmarks the parsing of a SCORM 2004 module.
@@ -56,7 +52,6 @@ public class Scorm2004Benchmark extends BaseBenchmark {
   @Benchmark
   public void parseModule(Blackhole blackhole)
       throws ModuleDetectionException, ModuleParsingException {
-    log.info("Benchmarking SCORM 2004 module parsing");
     ModuleMetadata<?> metadata = parserFactory.parseModule();
     blackhole.consume(metadata);
   }
@@ -69,7 +64,6 @@ public class Scorm2004Benchmark extends BaseBenchmark {
    */
   @Benchmark
   public void detectModuleType(Blackhole blackhole) throws ModuleDetectionException {
-    log.info("Benchmarking SCORM 2004 module type detection");
     blackhole.consume(parserFactory.getParser());
   }
 

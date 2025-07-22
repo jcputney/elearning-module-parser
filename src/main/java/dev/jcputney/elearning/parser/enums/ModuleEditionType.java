@@ -20,9 +20,9 @@ package dev.jcputney.elearning.parser.enums;
 /**
  * Enum representing the different types and editions of modules.
  * <p>
- * This enum extends the concept of {@link ModuleType} by providing
- * more granular edition information, particularly for SCORM 2004 modules
- * which have multiple editions (2nd, 3rd, and 4th).
+ * This enum extends the concept of {@link ModuleType} by providing more granular edition
+ * information, particularly for SCORM 2004 modules which have multiple editions (2nd, 3rd, and
+ * 4th).
  * </p>
  */
 public enum ModuleEditionType {
@@ -32,7 +32,7 @@ public enum ModuleEditionType {
   SCORM_12,
 
   /**
-   * Generic SCORM 2004 module type (when edition is unknown or unspecified).
+   * Generic SCORM 2004 module type (when an edition is unknown or unspecified).
    */
   SCORM_2004,
 
@@ -62,41 +62,6 @@ public enum ModuleEditionType {
   CMI5;
 
   /**
-   * Determines if this edition type is a SCORM 2004 variant.
-   *
-   * @return true if this is any SCORM 2004 edition type, false otherwise
-   */
-  public boolean isScorm2004() {
-    return this == SCORM_2004 
-        || this == SCORM_2004_2ND_EDITION 
-        || this == SCORM_2004_3RD_EDITION 
-        || this == SCORM_2004_4TH_EDITION;
-  }
-
-  /**
-   * Converts this edition type to the base {@link ModuleType}.
-   *
-   * @return the corresponding base module type
-   */
-  public ModuleType toModuleType() {
-    switch (this) {
-      case SCORM_12:
-        return ModuleType.SCORM_12;
-      case SCORM_2004:
-      case SCORM_2004_2ND_EDITION:
-      case SCORM_2004_3RD_EDITION:
-      case SCORM_2004_4TH_EDITION:
-        return ModuleType.SCORM_2004;
-      case AICC:
-        return ModuleType.AICC;
-      case CMI5:
-        return ModuleType.CMI5;
-      default:
-        throw new IllegalStateException("Unexpected edition type: " + this);
-    }
-  }
-
-  /**
    * Creates a ModuleEditionType from a ModuleType and optional edition information.
    *
    * @param moduleType the base module type
@@ -105,28 +70,53 @@ public enum ModuleEditionType {
    */
   public static ModuleEditionType fromModuleType(ModuleType moduleType, String edition) {
     if (moduleType == ModuleType.SCORM_2004 && edition != null) {
-      String normalizedEdition = edition.toLowerCase().trim();
+      String normalizedEdition = edition
+          .toLowerCase()
+          .trim();
       // Check for specific editions first
       if (normalizedEdition.contains("4th edition") || normalizedEdition.contains("4th")) {
         return SCORM_2004_4TH_EDITION;
       } else if (normalizedEdition.contains("3rd edition") || normalizedEdition.contains("3rd")) {
         return SCORM_2004_3RD_EDITION;
-      } else if (normalizedEdition.contains("2nd edition") || normalizedEdition.contains("2nd") || normalizedEdition.equals("cam 1.3")) {
+      } else if (normalizedEdition.contains("2nd edition") || normalizedEdition.contains("2nd")
+          || normalizedEdition.equals("cam 1.3")) {
         return SCORM_2004_2ND_EDITION;
       }
     }
-    
-    switch (moduleType) {
-      case SCORM_12:
-        return SCORM_12;
-      case SCORM_2004:
-        return SCORM_2004;
-      case AICC:
-        return AICC;
-      case CMI5:
-        return CMI5;
-      default:
-        throw new IllegalArgumentException("Unknown module type: " + moduleType);
-    }
+
+    return switch (moduleType) {
+      case SCORM_12 -> SCORM_12;
+      case SCORM_2004 -> SCORM_2004;
+      case AICC -> AICC;
+      case CMI5 -> CMI5;
+    };
+  }
+
+  /**
+   * Determines if this edition type is a SCORM 2004 variant.
+   *
+   * @return true if this is any SCORM 2004 edition type, false otherwise
+   */
+  public boolean isScorm2004() {
+    return this == SCORM_2004
+        || this == SCORM_2004_2ND_EDITION
+        || this == SCORM_2004_3RD_EDITION
+        || this == SCORM_2004_4TH_EDITION;
+  }
+
+  /**
+   * Converts this edition type to the base {@link ModuleType}.
+   *
+   * @return the corresponding base module type
+   */
+  @SuppressWarnings("unused")
+  public ModuleType toModuleType() {
+    return switch (this) {
+      case SCORM_12 -> ModuleType.SCORM_12;
+      case SCORM_2004, SCORM_2004_2ND_EDITION, SCORM_2004_3RD_EDITION, SCORM_2004_4TH_EDITION ->
+          ModuleType.SCORM_2004;
+      case AICC -> ModuleType.AICC;
+      case CMI5 -> ModuleType.CMI5;
+    };
   }
 }

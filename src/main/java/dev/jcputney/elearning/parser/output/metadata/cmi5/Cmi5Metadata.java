@@ -70,7 +70,7 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
 
     // Extract all AUs (from root level and blocks)
     List<AU> allAUs = getAllAssignableUnits(manifest);
-    
+
     if (!allAUs.isEmpty()) {
       // Add comprehensive AU metadata
       Map<String, Map<String, Object>> auDetails = new HashMap<>();
@@ -79,47 +79,46 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
       Map<String, String> launchMethods = new HashMap<>();
       Map<String, String> activityTypes = new HashMap<>();
       Map<String, String> launchParameters = new HashMap<>();
-      
+
       for (AU au : allAUs) {
         String auId = au.getId();
-        
+
         // Create detailed AU info
-        Map<String, Object> auInfo = new HashMap<>();
-        auInfo.put("url", au.getUrl());
-        if (au.getTitle() != null && au.getTitle().getStrings() != null && !au.getTitle().getStrings().isEmpty()) {
-          auInfo.put("title", au.getTitle().getStrings().get(0).getValue());
-        }
-        if (au.getDescription() != null && au.getDescription().getStrings() != null && !au.getDescription().getStrings().isEmpty()) {
-          auInfo.put("description", au.getDescription().getStrings().get(0).getValue());
-        }
-        auDetails.put(auId, auInfo);
-        
+        auDetails.put(auId, getActivityUnitMetadata(au));
+
         // Extract mastery score
         if (au.getMasteryScore() != null) {
-          masteryScores.put(auId, au.getMasteryScore().getValue().doubleValue());
+          masteryScores.put(auId, au
+              .getMasteryScore()
+              .getValue()
+              .doubleValue());
         }
-        
+
         // Extract moveOn criteria
         if (au.getMoveOn() != null) {
-          moveOnCriteria.put(auId, au.getMoveOn().name());
+          moveOnCriteria.put(auId, au
+              .getMoveOn()
+              .name());
         }
-        
+
         // Extract launch method
         if (au.getLaunchMethod() != null) {
-          launchMethods.put(auId, au.getLaunchMethod().name());
+          launchMethods.put(auId, au
+              .getLaunchMethod()
+              .name());
         }
-        
+
         // Extract activity type
         if (au.getActivityType() != null) {
           activityTypes.put(auId, au.getActivityType());
         }
-        
+
         // Extract launch parameters
         if (au.getLaunchParameters() != null) {
           launchParameters.put(auId, au.getLaunchParameters());
         }
       }
-      
+
       // Add all extracted data to metadata
       cmi5Metadata.addMetadata("cmi5.auDetails", auDetails);
       if (!masteryScores.isEmpty()) {
@@ -137,10 +136,16 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
       if (!launchParameters.isEmpty()) {
         cmi5Metadata.addMetadata("cmi5.launchParameters", launchParameters);
       }
-      
+
       // Keep legacy fields for backward compatibility
-      List<String> assignableUnitIds = allAUs.stream().map(AU::getId).toList();
-      List<String> assignableUnitUrls = allAUs.stream().map(AU::getUrl).toList();
+      List<String> assignableUnitIds = allAUs
+          .stream()
+          .map(AU::getId)
+          .toList();
+      List<String> assignableUnitUrls = allAUs
+          .stream()
+          .map(AU::getUrl)
+          .toList();
       cmi5Metadata.addMetadata("assignableUnitIds", assignableUnitIds);
       cmi5Metadata.addMetadata("assignableUnitUrls", assignableUnitUrls);
     }
@@ -175,7 +180,37 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
 
     return metadata;
   }
-  
+
+  private static Map<String, Object> getActivityUnitMetadata(AU au) {
+    Map<String, Object> auInfo = new HashMap<>();
+    auInfo.put("url", au.getUrl());
+    if (au.getTitle() != null && au
+        .getTitle()
+        .getStrings() != null && !au
+        .getTitle()
+        .getStrings()
+        .isEmpty()) {
+      auInfo.put("title", au
+          .getTitle()
+          .getStrings()
+          .get(0)
+          .getValue());
+    }
+    if (au.getDescription() != null && au
+        .getDescription()
+        .getStrings() != null && !au
+        .getDescription()
+        .getStrings()
+        .isEmpty()) {
+      auInfo.put("description", au
+          .getDescription()
+          .getStrings()
+          .get(0)
+          .getValue());
+    }
+    return auInfo;
+  }
+
   /**
    * Recursively extracts all assignable units from the manifest, including those nested in blocks.
    *
@@ -184,22 +219,22 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
    */
   private static List<AU> getAllAssignableUnits(Cmi5Manifest manifest) {
     List<AU> allAUs = new ArrayList<>();
-    
+
     // Add root-level AUs
     if (manifest.getAssignableUnits() != null) {
       allAUs.addAll(manifest.getAssignableUnits());
     }
-    
+
     // Add AUs from blocks
     if (manifest.getBlocks() != null) {
       for (Block block : manifest.getBlocks()) {
         allAUs.addAll(getAUsFromBlock(block));
       }
     }
-    
+
     return allAUs;
   }
-  
+
   /**
    * Recursively extracts assignable units from a block and its nested blocks.
    *
@@ -208,19 +243,19 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
    */
   private static List<AU> getAUsFromBlock(Block block) {
     List<AU> aus = new ArrayList<>();
-    
+
     // Add AUs from this block
     if (block.getAssignableUnits() != null) {
       aus.addAll(block.getAssignableUnits());
     }
-    
+
     // Recursively add AUs from nested blocks
     if (block.getNestedBlocks() != null) {
       for (Block nestedBlock : block.getNestedBlocks()) {
         aus.addAll(getAUsFromBlock(nestedBlock));
       }
     }
-    
+
     return aus;
   }
 }

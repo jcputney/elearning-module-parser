@@ -70,7 +70,7 @@ public class Scorm2004Organization implements Serializable {
   @Default
   private String structure = "hierarchical";
   /**
-   * The title of this organization, providing a descriptive label for the learning structure it
+   * The title of this organization providing a descriptive label for the learning structure it
    * represents.
    */
   @JacksonXmlProperty(localName = "title", namespace = Scorm2004Manifest.NAMESPACE_URI)

@@ -401,7 +401,7 @@ public class Scorm12Manifest implements PackageManifest {
         .ofNullable(organizations)
         .map(Scorm12Organizations::getDefault)
         .map(Scorm12Organization::getItems)
-        .map(items -> findAllItemsWithIdentifierRef(items))
+        .map(this::findAllItemsWithIdentifierRef)
         .orElse(List.of());
 
     // Find the first resource that exists

@@ -43,6 +43,24 @@ This is a Java library for parsing and validating eLearning module manifests in 
 # Run with code coverage
 ./mvnw test jacoco:report
 # Coverage report: target/site/jacoco/index.html
+
+# Run benchmarks (compiles but skips unit tests)
+./mvnw clean test-compile exec:java -P benchmark
+
+# Run benchmarks with custom JMH options
+./mvnw clean test-compile exec:java -P benchmark -Djmh.options="-wi 3 -i 5 -f 1"
+
+# List available benchmarks
+./mvnw clean test-compile exec:java -P benchmark -Djmh.options="-l"
+
+# Run specific benchmark
+./mvnw clean test-compile exec:java -P benchmark -Djmh.options="Scorm12Benchmark"
+
+# Run benchmarks with more iterations for stable results
+./mvnw clean test-compile exec:java -P benchmark -Djmh.options="-wi 5 -i 10 -f 2"
+
+# Run benchmarks without forking (useful for debugging)
+./mvnw clean test-compile exec:java -P benchmark -Djmh.options="-f 0"
 ```
 
 ## Architecture

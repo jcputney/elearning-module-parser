@@ -55,7 +55,8 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
     try {
       this.zipFile = new ZipFile(zipFilePath);
     } catch (IOException e) {
-      throw new IOException("Failed to open ZIP file: '" + zipFilePath + "' (" + e.getMessage() + ")", e);
+      throw new IOException(
+          "Failed to open ZIP file: '" + zipFilePath + "' (" + e.getMessage() + ")", e);
     }
     this.rootPath = getInternalRootDirectory();
   }
@@ -108,29 +109,31 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
   }
 
   /**
-   * Retrieves the contents of a file within the ZIP archive as an InputStream with optional progress tracking.
+   * Retrieves the contents of a file within the ZIP archive as an InputStream with optional
+   * progress tracking.
    *
    * @param path The path to retrieve contents from (guaranteed to be non-null).
    * @param progressListener Optional progress listener for tracking large file operations.
    * @return An InputStream of the file contents.
    * @throws IOException if the file can't be read.
    */
-  public InputStream getFileContentsInternal(String path, StreamingProgressListener progressListener) throws IOException {
+  public InputStream getFileContentsInternal(String path,
+      StreamingProgressListener progressListener) throws IOException {
     ZipEntry entry = zipFile.getEntry(fullPath(path));
 
     if (entry == null) {
       // Provide helpful information about available files
       String suggestion = getSimilarFiles(path);
-      throw new IOException("File not found in ZIP archive: '" + path + "' (full path: '" + 
-          fullPath(path) + "') in ZIP file '" + zipFilePath + "'" + 
+      throw new IOException("File not found in ZIP archive: '" + path + "' (full path: '" +
+          fullPath(path) + "') in ZIP file '" + zipFilePath + "'" +
           (rootPath.isEmpty() ? "" : " with internal root '" + rootPath + "'") + suggestion);
     }
 
     InputStream inputStream = zipFile.getInputStream(entry);
-    
+
     // Get file size for progress tracking
     long fileSize = entry.getSize();
-    
+
     // Apply streaming enhancements
     return StreamingUtils.createEnhancedStream(inputStream, fileSize, progressListener);
   }
@@ -144,8 +147,36 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
     try {
       zipFile.close();
     } catch (IOException e) {
-      throw new IOException("Failed to close ZIP file: '" + zipFilePath + "' (" + e.getMessage() + ")", e);
+      throw new IOException(
+          "Failed to close ZIP file: '" + zipFilePath + "' (" + e.getMessage() + ")", e);
     }
+  }
+
+  /**
+   * Gets the total size of all files in the ZIP archive.
+   *
+   * <p>This method iterates through all entries in the ZIP and sums their uncompressed sizes.
+   *
+   * @return Total size of all files in bytes (uncompressed)
+   * @throws IOException if there's an error accessing the ZIP file
+   */
+  @Override
+  public long getTotalSize() throws IOException {
+    long totalSize = 0;
+    Enumeration<? extends ZipEntry> entries = zipFile.entries();
+
+    while (entries.hasMoreElements()) {
+      ZipEntry entry = entries.nextElement();
+      if (!entry.isDirectory()) {
+        // Get uncompressed size
+        long size = entry.getSize();
+        if (size >= 0) {
+          totalSize += size;
+        }
+      }
+    }
+
+    return totalSize;
   }
 
   /**
@@ -203,62 +234,42 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
   private String getSimilarFiles(String targetPath) {
     List<String> allFiles = new ArrayList<>();
     Enumeration<? extends ZipEntry> entries = zipFile.entries();
-    
+
     while (entries.hasMoreElements()) {
       ZipEntry entry = entries.nextElement();
       if (!entry.isDirectory()) {
         allFiles.add(entry.getName());
       }
     }
-    
+
     if (allFiles.isEmpty()) {
       return ". ZIP archive appears to be empty or contains only directories.";
     }
-    
-    // Find files with similar names or in same directory
-    String targetName = targetPath.contains("/") ? 
+
+    // Find files with similar names or in the same directory
+    String targetName = targetPath.contains("/") ?
         targetPath.substring(targetPath.lastIndexOf("/") + 1) : targetPath;
-    String targetDir = targetPath.contains("/") ? 
+    String targetDir = targetPath.contains("/") ?
         targetPath.substring(0, targetPath.lastIndexOf("/")) : "";
-    
-    List<String> suggestions = allFiles.stream()
-        .filter(file -> file.toLowerCase().contains(targetName.toLowerCase()) ||
-                       (targetDir.isEmpty() || file.startsWith(targetDir)))
+
+    List<String> suggestions = allFiles
+        .stream()
+        .filter(file -> file
+            .toLowerCase()
+            .contains(targetName.toLowerCase()) ||
+            (targetDir.isEmpty() || file.startsWith(targetDir)))
         .limit(3)
         .toList();
-    
+
     if (!suggestions.isEmpty()) {
       return ". Similar files: " + String.join(", ", suggestions);
     } else {
-      return ". Available files: " + allFiles.stream().limit(5).reduce((a, b) -> a + ", " + b).orElse("none") +
-             (allFiles.size() > 5 ? " (and " + (allFiles.size() - 5) + " more)" : "");
+      return ". Available files: " + allFiles
+          .stream()
+          .limit(5)
+          .reduce((a, b) -> a + ", " + b)
+          .orElse("none") +
+          (allFiles.size() > 5 ? " (and " + (allFiles.size() - 5) + " more)" : "");
     }
-  }
-
-  /**
-   * Gets the total size of all files in the ZIP archive.
-   * 
-   * <p>This method iterates through all entries in the ZIP and sums their uncompressed sizes.
-   *
-   * @return Total size of all files in bytes (uncompressed)
-   * @throws IOException if there's an error accessing the ZIP file
-   */
-  @Override
-  public long getTotalSize() throws IOException {
-    long totalSize = 0;
-    Enumeration<? extends ZipEntry> entries = zipFile.entries();
-    
-    while (entries.hasMoreElements()) {
-      ZipEntry entry = entries.nextElement();
-      if (!entry.isDirectory()) {
-        // Get uncompressed size
-        long size = entry.getSize();
-        if (size >= 0) {
-          totalSize += size;
-        }
-      }
-    }
-    
-    return totalSize;
   }
 }

@@ -40,6 +40,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  *
  * @param <M> the type of the package manifest
  */
+@SuppressWarnings("NullableProblems")
 @Getter
 @SuperBuilder
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
@@ -67,8 +68,8 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
   protected boolean xapiEnabled = false;
 
   /**
-   * The total size of all files in the module in bytes.
-   * A value of -1 indicates the size is not available.
+   * The total size of all files in the module in bytes. A value of -1 indicates the size is not
+   * available.
    */
   @Default
   @Setter
@@ -82,7 +83,8 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
    * @param moduleEditionType the module edition type
    * @param xapiEnabled whether xAPI is enabled
    */
-  protected ModuleMetadata(M manifest, ModuleType moduleType, ModuleEditionType moduleEditionType, boolean xapiEnabled) {
+  protected ModuleMetadata(M manifest, ModuleType moduleType, ModuleEditionType moduleEditionType,
+      boolean xapiEnabled) {
     this.manifest = manifest;
     this.moduleType = moduleType;
     this.moduleEditionType = moduleEditionType;
@@ -128,7 +130,7 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
 
   /**
    * Gets the total size of all files in the module on disk.
-   * 
+   *
    * @return Total size of all files in bytes, or -1 if not available
    */
   public long getSizeOnDisk() {

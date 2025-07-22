@@ -39,8 +39,8 @@ import lombok.extern.jackson.Jacksonized;
  * Represents a node in the SCORM 2004 Activity Tree.
  * <p>
  * An ActivityNode can represent either an organization or an item in the SCORM 2004 manifest. It
- * contains references to its parent and children, as well as the sequencing information associated
- * with the node.
+ * contains references to its parent node and children, as well as the sequencing information
+ * associated with the node.
  * </p>
  */
 @Builder
@@ -191,7 +191,7 @@ public class ActivityNode implements Serializable {
   /**
    * Gets the resource identifier for this node.
    *
-   * @return An Optional containing the resource identifier, or empty if none is defined
+   * @return An Optional containing the resource identifier or empty if none is defined
    */
   public Optional<String> getResourceIdentifier() {
     return Optional.ofNullable(resourceIdentifier);

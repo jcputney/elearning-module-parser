@@ -62,7 +62,7 @@ public interface FileAccess {
    *
    * @param path The path to check.
    * @return True if the file exists, false otherwise.
-   * @throws IllegalArgumentException if path is null
+   * @throws IllegalArgumentException if a path is null
    */
   default boolean fileExists(String path) {
     if (path == null) {
@@ -111,7 +111,7 @@ public interface FileAccess {
    * @param path The path to retrieve contents from.
    * @return An InputStream of the file contents.
    * @throws IOException if the file can't be read.
-   * @throws IllegalArgumentException if path is null
+   * @throws IllegalArgumentException if a path is null
    */
   default InputStream getFileContents(String path) throws IOException {
     if (path == null) {
@@ -146,7 +146,7 @@ public interface FileAccess {
    *
    * @param path The relative or absolute path for which the full path is to be generated.
    * @return The constructed full path as a string.
-   * @throws IllegalArgumentException if path is null
+   * @throws IllegalArgumentException if a path is null
    */
   default String fullPath(String path) {
     if (path == null) {
@@ -160,10 +160,10 @@ public interface FileAccess {
 
   /**
    * Checks if multiple files exist in a batch operation.
-   * 
+   *
    * <p>Default implementation calls fileExists() for each path individually.
-   * Implementations that support batch operations (like S3) should override this
-   * method to provide more efficient batch checking.
+   * Implementations that support batch operations (like S3) should override this method to provide
+   * more efficient batch checking.
    *
    * @param paths List of file paths to check
    * @return Map where keys are the file paths and values indicate whether the file exists
@@ -173,7 +173,7 @@ public interface FileAccess {
     if (paths == null) {
       throw new IllegalArgumentException("Paths list cannot be null");
     }
-    
+
     Map<String, Boolean> results = new HashMap<>();
     for (String path : paths) {
       if (path != null) {
@@ -185,9 +185,9 @@ public interface FileAccess {
 
   /**
    * Prefetches common module files for faster subsequent access.
-   * 
-   * <p>Default implementation does nothing. Implementations that support
-   * caching (like S3) may override this to pre-load commonly accessed files.
+   *
+   * <p>The default implementation does nothing. Implementations that support
+   * caching (like S3) may override this to preload commonly accessed files.
    */
   default void prefetchCommonFiles() {
     // Default implementation does nothing
@@ -195,7 +195,7 @@ public interface FileAccess {
 
   /**
    * Gets a list of all files in the module.
-   * 
+   *
    * <p>This method should return a cached list of all files available in the module.
    * Implementations should scan the module once and cache the results for efficiency.
    *
@@ -203,16 +203,16 @@ public interface FileAccess {
    * @throws IOException if there's an error accessing the module contents
    */
   default List<String> getAllFiles() throws IOException {
-    // Default implementation lists files from root directory
+    // Default implementation lists files from the root directory
     return listFiles("");
   }
 
   /**
    * Clears any internal caches maintained by this FileAccess instance.
-   * 
+   *
    * <p>This method should be called when the underlying storage might have changed
-   * or when memory needs to be freed. Implementations that maintain caches should
-   * override this method to clear their specific caches.
+   * or when memory needs to be freed. Implementations that maintain caches should override this
+   * method to clear their specific caches.
    */
   default void clearCaches() {
     // Default implementation does nothing
@@ -220,10 +220,10 @@ public interface FileAccess {
 
   /**
    * Gets the total size of all files in the module.
-   * 
+   *
    * <p>This method calculates the sum of all file sizes in the module.
-   * Implementations that maintain file size caches can provide efficient
-   * calculation of the total module size.
+   * Implementations that maintain file size caches can provide efficient calculation of the total
+   * module size.
    *
    * @return Total size of all files in bytes
    * @throws IOException if there's an error accessing file sizes

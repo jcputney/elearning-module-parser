@@ -25,7 +25,7 @@ import java.util.Map;
  *
  * <p>This exception is typically thrown by
  * {@link dev.jcputney.elearning.parser.api.ModuleTypeDetector} implementations when they're unable
- * to determine the type of an eLearning module (SCORM 1.2, SCORM 2004, AICC, cmi5) based on the
+ * to determine the type of eLearning module (SCORM 1.2, SCORM 2004, AICC, cmi5) based on the
  * module's structure and manifest files.
  *
  * <p>Common scenarios that might cause this exception include:
@@ -63,7 +63,7 @@ public class ModuleDetectionException extends ModuleException {
    * @param message the detail message (which is saved for later retrieval by the
    * {@link #getMessage()} method)
    * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method).
-   * A null value is permitted, and indicates that the cause is nonexistent or unknown.
+   * A null value is permitted and indicates that the cause is nonexistent or unknown.
    */
   public ModuleDetectionException(String message, Throwable cause) {
     super(message, cause);
@@ -76,7 +76,7 @@ public class ModuleDetectionException extends ModuleException {
    * @param message the detail message (which is saved for later retrieval by the
    * {@link #getMessage()} method)
    * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method).
-   * A null value is permitted, and indicates that the cause is nonexistent or unknown.
+   * A null value is permitted and indicates that the cause is nonexistent or unknown.
    * @param metadata a map of additional context information about the exception
    */
   public ModuleDetectionException(String message, Throwable cause, Map<String, Object> metadata) {

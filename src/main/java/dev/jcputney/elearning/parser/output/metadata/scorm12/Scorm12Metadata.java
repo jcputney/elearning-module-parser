@@ -62,7 +62,7 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
 
     // Add SCORM 1.2 specific metadata
     SimpleMetadata scorm12Metadata = metadata.getSimpleMetadata(manifest);
-    
+
     // Add SCORM 1.2 specific fields from items
     metadata.extractScorm12SpecificMetadata(manifest, scorm12Metadata);
 
@@ -71,28 +71,36 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
 
     return metadata;
   }
-  
+
   /**
-   * Extracts SCORM 1.2 specific metadata from the manifest, including prerequisites,
-   * mastery scores, and other item-level information.
+   * Extracts SCORM 1.2 specific metadata from the manifest, including prerequisites, mastery
+   * scores, and other item-level information.
    *
    * @param manifest The SCORM 1.2 manifest.
    * @param metadata The SimpleMetadata object to populate.
    */
   private void extractScorm12SpecificMetadata(Scorm12Manifest manifest, SimpleMetadata metadata) {
-    if (manifest.getOrganizations() != null && 
-        manifest.getOrganizations().getDefault() != null &&
-        manifest.getOrganizations().getDefault().getItems() != null) {
-      
-      List<Scorm12Item> items = manifest.getOrganizations().getDefault().getItems();
-      
+    if (manifest.getOrganizations() != null &&
+        manifest
+            .getOrganizations()
+            .getDefault() != null &&
+        manifest
+            .getOrganizations()
+            .getDefault()
+            .getItems() != null) {
+
+      List<Scorm12Item> items = manifest
+          .getOrganizations()
+          .getDefault()
+          .getItems();
+
       // Extract prerequisites map
       Map<String, String> prerequisites = new HashMap<>();
       Map<String, Double> masteryScores = new HashMap<>();
       Map<String, String> customData = new HashMap<>();
-      
+
       extractItemData(items, prerequisites, masteryScores, customData);
-      
+
       // Add the extracted data to metadata
       if (!prerequisites.isEmpty()) {
         metadata.addMetadata("scorm12.prerequisites", prerequisites);
@@ -105,7 +113,7 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
       }
     }
   }
-  
+
   /**
    * Recursively extracts item-level data from a list of SCORM 1.2 items.
    *
@@ -114,30 +122,36 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
    * @param masteryScores The map to store mastery scores.
    * @param customData The map to store custom data.
    */
-  private void extractItemData(List<Scorm12Item> items, 
-                               Map<String, String> prerequisites,
-                               Map<String, Double> masteryScores,
-                               Map<String, String> customData) {
+  private void extractItemData(List<Scorm12Item> items,
+      Map<String, String> prerequisites,
+      Map<String, Double> masteryScores,
+      Map<String, String> customData) {
     for (Scorm12Item item : items) {
       String itemId = item.getIdentifier();
-      
+
       // Extract prerequisites
-      if (item.getPrerequisites() != null && item.getPrerequisites().getValue() != null) {
-        prerequisites.put(itemId, item.getPrerequisites().getValue());
+      if (item.getPrerequisites() != null && item
+          .getPrerequisites()
+          .getValue() != null) {
+        prerequisites.put(itemId, item
+            .getPrerequisites()
+            .getValue());
       }
-      
+
       // Extract mastery score
       if (item.getMasteryScore() != null) {
         masteryScores.put(itemId, item.getMasteryScore());
       }
-      
+
       // Extract custom data (dataFromLMS)
       if (item.getDataFromLMS() != null) {
         customData.put(itemId, item.getDataFromLMS());
       }
-      
+
       // Recursively process child items
-      if (item.getItems() != null && !item.getItems().isEmpty()) {
+      if (item.getItems() != null && !item
+          .getItems()
+          .isEmpty()) {
         extractItemData(item.getItems(), prerequisites, masteryScores, customData);
       }
     }

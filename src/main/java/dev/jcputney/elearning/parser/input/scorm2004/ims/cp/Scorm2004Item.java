@@ -64,7 +64,7 @@ public class Scorm2004Item implements Serializable {
   @JsonProperty("identifier")
   private String identifier;
   /**
-   * References a resource within the manifest that this item represents.
+   * References to a resource within the manifest that this item represents.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "identifierref")
   @JsonProperty("identifierref")
@@ -86,7 +86,7 @@ public class Scorm2004Item implements Serializable {
   @JsonProperty("parameters")
   private String parameters;
   /**
-   * The title of this item, providing a descriptive label for the learning object.
+   * The title of this item providing a descriptive label for the learning object.
    */
   @JacksonXmlProperty(localName = "title", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private String title;

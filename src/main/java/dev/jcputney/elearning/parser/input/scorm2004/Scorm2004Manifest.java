@@ -349,7 +349,7 @@ public class Scorm2004Manifest implements PackageManifest {
    */
   @Override
   public String getLaunchUrl() {
-    // get relative URL from first resource
+    // get relative URL from the first resource
     return Optional
         .ofNullable(resources)
         .map(Scorm2004Resources::getResourceList)
@@ -476,7 +476,7 @@ public class Scorm2004Manifest implements PackageManifest {
    * sequencing and navigation.
    * </p>
    *
-   * @return An Optional containing the ActivityTree, or empty if no default organization is found
+   * @return An Optional containing the ActivityTree or empty if no default organization is found
    */
   public Optional<ActivityTree> buildActivityTree() {
     return ActivityTree.buildFromManifest(this);

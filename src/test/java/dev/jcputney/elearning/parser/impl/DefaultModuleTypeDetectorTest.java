@@ -255,7 +255,8 @@ class DefaultModuleTypeDetectorTest {
 
     ModuleDetectionException exception = assertThrows(ModuleDetectionException.class,
         () -> detector.detectModuleType());
-    assertEquals("Error detecting module type", exception.getMessage());
+    assertTrue(exception.getMessage().startsWith("Error detecting module type at"));
+    assertTrue(exception.getMessage().contains("Test exception"));
     assertInstanceOf(RuntimeException.class, exception.getCause());
     assertEquals("Test exception", exception.getCause().getMessage());
   }

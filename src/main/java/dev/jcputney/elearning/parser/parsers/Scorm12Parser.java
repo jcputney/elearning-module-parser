@@ -19,6 +19,7 @@ package dev.jcputney.elearning.parser.parsers;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
+import dev.jcputney.elearning.parser.api.ParsingEventListener;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12File;
@@ -27,14 +28,11 @@ import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organization;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resource;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import dev.jcputney.elearning.parser.output.metadata.scorm12.Scorm12Metadata;
-import dev.jcputney.elearning.parser.util.LoggingUtils;
-import dev.jcputney.elearning.parser.util.LogMarkers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.xml.stream.XMLStreamException;
-import org.slf4j.Logger;
 
 /**
  * Parses SCORM 1.2 modules by reading the imsmanifest.xml file and extracting core metadata.
@@ -50,10 +48,6 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    * The name of the manifest file for SCORM 1.2 modules.
    */
   public static final String MANIFEST_FILE = "imsmanifest.xml";
-  /**
-   * Logger for logging messages related to SCORM 1.2 parsing.
-   */
-  private static final Logger log = LoggingUtils.getLogger(Scorm12Parser.class);
 
   /**
    * Constructs a Scorm12Parser with the specified FileAccess instance.
@@ -61,7 +55,17 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    * @param fileAccess An instance of FileAccess for reading files in the module package.
    */
   public Scorm12Parser(FileAccess fileAccess) {
-    super(fileAccess);
+    this(fileAccess, null);
+  }
+
+  /**
+   * Constructs a Scorm12Parser with the specified FileAccess instance and ParsingEventListener.
+   *
+   * @param fileAccess An instance of FileAccess for reading files in the module package.
+   * @param eventListener Optional listener for parsing events (can be null)
+   */
+  public Scorm12Parser(FileAccess fileAccess, ParsingEventListener eventListener) {
+    super(fileAccess, eventListener);
   }
 
   /**
@@ -71,7 +75,19 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    * package.
    */
   public Scorm12Parser(ModuleFileProvider moduleFileProvider) {
-    super(moduleFileProvider);
+    this(moduleFileProvider, null);
+  }
+
+  /**
+   * Constructs a Scorm12Parser with the specified ModuleFileProvider instance and
+   * ParsingEventListener.
+   *
+   * @param moduleFileProvider An instance of ModuleFileProvider for reading files in the module
+   * package.
+   * @param eventListener Optional listener for parsing events (can be null)
+   */
+  public Scorm12Parser(ModuleFileProvider moduleFileProvider, ParsingEventListener eventListener) {
+    super(moduleFileProvider, eventListener);
   }
 
   /**
@@ -84,7 +100,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    */
   @Override
   public Scorm12Metadata parse() throws ModuleParsingException {
-    log.debug(LogMarkers.PARSER_VERBOSE, "Starting to parse SCORM 1.2 module");
+    eventListener.onParsingStarted("SCORM 1.2", moduleFileProvider.getRootPath());
     try {
       // Parse and validate the manifest
       var manifest = parseAndValidateManifest();
@@ -99,21 +115,20 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
       boolean hasXapi = checkForXapi();
 
       // Build and return ModuleMetadata
-      log.debug(LogMarkers.PARSER_VERBOSE, "Successfully parsed SCORM 1.2 module with title: {}", manifest.getTitle());
+      eventListener.onParsingCompleted("SCORM 1.2", System.currentTimeMillis());
       return createMetadata(manifest, hasXapi);
     } catch (IOException | XMLStreamException e) {
-      log.error("Error parsing SCORM 1.2 module: {}", e.getMessage());
       throw new ModuleParsingException(
-          "Error parsing SCORM 1.2 module at path: " + this.moduleFileProvider.getRootPath(), e);
+          String.format("Failed to parse SCORM 1.2 module at '%s': %s",
+              this.moduleFileProvider.getRootPath(), e.getMessage()), e);
     } catch (ModuleParsingException e) {
       // Re-throw ModuleParsingException directly without wrapping
       throw e;
     } catch (Exception e) {
       // Catch any other unexpected exceptions
-      log.error("Unexpected error parsing SCORM 1.2 module: {}", e.getMessage());
       throw new ModuleParsingException(
-          "Unexpected error parsing SCORM 1.2 module at path: "
-              + this.moduleFileProvider.getRootPath(), e);
+          String.format("Unexpected error parsing SCORM 1.2 module at '%s': %s",
+              this.moduleFileProvider.getRootPath(), e.getMessage()), e);
     }
   }
 
@@ -130,7 +145,6 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
       return;
     }
 
-    log.debug(LogMarkers.PARSER_VERBOSE, "Loading external metadata for SCORM 1.2 manifest");
     loadExternalMetadataIntoMetadata(manifest.getMetadata());
 
     loadResourcesMetadata(manifest
@@ -157,15 +171,13 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
   private Scorm12Manifest parseAndValidateManifest()
       throws IOException, XMLStreamException, ModuleParsingException {
     // Define the manifest path and verify its existence
-    log.debug(LogMarkers.PARSER_VERBOSE, "Checking for SCORM 1.2 manifest file: {}", MANIFEST_FILE);
     if (!moduleFileProvider.fileExists(MANIFEST_FILE)) {
-      log.error("SCORM 1.2 manifest file not found: {}", MANIFEST_FILE);
       throw new ModuleParsingException(
-          "SCORM 1.2 manifest file not found at path: " + MANIFEST_FILE);
+          String.format("SCORM 1.2 manifest file not found: %s in module at '%s'",
+              MANIFEST_FILE, moduleFileProvider.getRootPath()));
     }
 
     // Parse the manifest XML file using a secure parser from BaseParser
-    log.debug(LogMarkers.PARSER_VERBOSE, "Parsing SCORM 1.2 manifest file");
     return parseManifest(MANIFEST_FILE);
   }
 
@@ -178,16 +190,17 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
   private void validateRequiredFields(Scorm12Manifest manifest) throws ModuleParsingException {
     String title = manifest.getTitle();
     String launchUrl = manifest.getLaunchUrl();
-    log.debug(LogMarkers.PARSER_VERBOSE, "Validating required fields - title: {}, launchUrl: {}", title, launchUrl);
 
     if (title == null || title.isEmpty()) {
-      log.error("SCORM 1.2 manifest is missing a required <title> element");
-      throw new ModuleParsingException("SCORM 1.2 manifest is missing a required <title> element.");
+      throw new ModuleParsingException(
+          String.format("SCORM 1.2 manifest at '%s' is missing required <title> element",
+              moduleFileProvider.getRootPath()));
     }
     if (launchUrl == null || launchUrl.isEmpty()) {
-      log.error("SCORM 1.2 manifest is missing a required <launchUrl> in <resource> element");
       throw new ModuleParsingException(
-          "SCORM 1.2 manifest is missing a required <launchUrl> in <resource> element.");
+          String.format(
+              "SCORM 1.2 manifest at '%s' is missing required launch URL in <resource> element",
+              moduleFileProvider.getRootPath()));
     }
   }
 
@@ -200,19 +213,16 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    */
   private Scorm12Metadata createMetadata(Scorm12Manifest manifest, boolean hasXapi) {
     Scorm12Metadata metadata = Scorm12Metadata.create(manifest, hasXapi);
-    
+
     // Calculate and set the module size
     try {
       long totalSize = moduleFileProvider.getTotalSize();
       metadata.setSizeOnDisk(totalSize);
-      if (totalSize >= 0) {
-        log.debug(LogMarkers.PARSER_VERBOSE, "Module size: {} bytes", totalSize);
-      }
     } catch (IOException e) {
-      log.debug(LogMarkers.PARSER_VERBOSE, "Failed to calculate module size: {}", e.getMessage());
-      // Size remains -1 as default
+      // Size remains -1 as default - this is not an error
+      eventListener.onParsingWarning("Unable to calculate module size", e.getMessage());
     }
-    
+
     return metadata;
   }
 
@@ -229,7 +239,6 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
       return;
     }
 
-    log.debug(LogMarkers.PARSER_VERBOSE, "Processing {} resources for external metadata", resources.size());
     for (Scorm12Resource resource : resources) {
       loadExternalMetadataIntoMetadata(resource.getMetadata());
       loadFilesMetadata(resource.getFiles());
@@ -248,8 +257,6 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
       return;
     }
 
-    log.debug(LogMarkers.PARSER_VERBOSE, "Processing {} files in resource for external metadata", files.size());
-    
     // Collect all file paths for batch checking
     List<String> filePaths = new ArrayList<>();
     for (Scorm12File file : files) {
@@ -257,26 +264,20 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
         filePaths.add(file.getHref());
       }
     }
-    
-    // Check file existence in batch
+
+    // Check file existence in a batch
     if (!filePaths.isEmpty()) {
-      log.debug(LogMarkers.PARSER_VERBOSE, "Checking existence of {} files in batch", filePaths.size());
       Map<String, Boolean> existenceMap = moduleFileProvider.fileExistsBatch(filePaths);
-      
+
       // Update file existence status
       for (Scorm12File file : files) {
         if (file.getHref() != null) {
           Boolean exists = existenceMap.get(file.getHref());
           file.setExists(exists != null ? exists : false);
-          if (exists != null && exists) {
-            log.debug(LogMarkers.PARSER_VERBOSE, "File exists: {}", file.getHref());
-          } else {
-            log.debug(LogMarkers.PARSER_VERBOSE, "File does not exist: {}", file.getHref());
-          }
         }
       }
     }
-    
+
     // Load external metadata for each file
     for (Scorm12File file : files) {
       loadExternalMetadataIntoMetadata(file.getMetadata());
@@ -296,7 +297,6 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
       return;
     }
 
-    log.debug(LogMarkers.PARSER_VERBOSE, "Processing {} organizations for external metadata", organizations.size());
     for (Scorm12Organization organization : organizations) {
       loadExternalMetadataIntoMetadata(organization.getMetadata());
       loadExternalMetadataForItems(organization.getItems());
@@ -311,15 +311,12 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
   private void loadExternalMetadataForItems(List<Scorm12Item> items)
       throws XMLStreamException, IOException {
     if (items != null) {
-      log.debug(LogMarkers.PARSER_VERBOSE, "Processing {} items for external metadata", items.size());
       for (Scorm12Item item : items) {
         loadExternalMetadataIntoMetadata(item.getMetadata());
 
         // Recursively process child items
         List<Scorm12Item> childItems = item.getItems();
         if (childItems != null && !childItems.isEmpty()) {
-          log.debug(LogMarkers.PARSER_VERBOSE, "Processing {} child items for item: {}", childItems.size(),
-              item.getIdentifier());
           loadExternalMetadataForItems(childItems);
         }
       }

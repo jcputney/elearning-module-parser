@@ -29,11 +29,9 @@ import dev.jcputney.elearning.parser.parsers.AiccParser;
 import dev.jcputney.elearning.parser.parsers.Cmi5Parser;
 import dev.jcputney.elearning.parser.parsers.Scorm12Parser;
 import dev.jcputney.elearning.parser.parsers.Scorm2004Parser;
-import dev.jcputney.elearning.parser.util.LoggingUtils;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Function;
-import org.slf4j.Logger;
 
 /**
  * Default implementation of the ModuleParserFactory interface.
@@ -43,8 +41,6 @@ import org.slf4j.Logger;
  * then creates the corresponding parser.
  */
 public class DefaultModuleParserFactory implements ModuleParserFactory {
-
-  private static final Logger log = LoggingUtils.getLogger(DefaultModuleParserFactory.class);
 
   private final ModuleTypeDetector moduleTypeDetector;
   private final FileAccess fileAccess;
@@ -98,7 +94,6 @@ public class DefaultModuleParserFactory implements ModuleParserFactory {
     if (parserFactory == null) {
       throw new IllegalArgumentException("Parser factory cannot be null");
     }
-    log.debug("Registering parser factory for module type: {}", moduleType);
     parserRegistry.put(moduleType, parserFactory);
   }
 
@@ -114,7 +109,6 @@ public class DefaultModuleParserFactory implements ModuleParserFactory {
     if (moduleType == null) {
       throw new IllegalArgumentException("Module type cannot be null");
     }
-    log.debug("Unregistering parser factory for module type: {}", moduleType);
     return parserRegistry.remove(moduleType) != null;
   }
 
@@ -126,14 +120,10 @@ public class DefaultModuleParserFactory implements ModuleParserFactory {
    */
   @Override
   public ModuleParser<?> getParser() throws ModuleDetectionException {
-    log.debug("Detecting module type");
     ModuleType moduleType = moduleTypeDetector.detectModuleType();
-    log.debug("Detected module type: {}", moduleType);
 
-    log.debug("Creating parser for module type: {}", moduleType);
     Function<FileAccess, ModuleParser<?>> parserFactory = parserRegistry.get(moduleType);
     if (parserFactory == null) {
-      log.error("No parser registered for module type: {}", moduleType);
       throw new ModuleDetectionException("No parser registered for module type: " + moduleType);
     }
     return parserFactory.apply(fileAccess);
@@ -150,19 +140,7 @@ public class DefaultModuleParserFactory implements ModuleParserFactory {
   @Override
   public ModuleMetadata<?> parseModule()
       throws ModuleDetectionException, ModuleParsingException {
-    log.debug("Starting module parsing");
-    try {
-      ModuleParser<?> parser = getParser();
-      log.debug("Parsing module with parser: {}", parser
-          .getClass()
-          .getSimpleName());
-      ModuleMetadata<?> metadata = parser.parse();
-      log.debug("Module parsing completed successfully");
-      return metadata;
-    } catch (ModuleDetectionException | ModuleParsingException e) {
-      log.error("Error parsing module: {}", e.getMessage());
-      throw e;
-    }
+    return getParser().parse();
   }
 
   /**

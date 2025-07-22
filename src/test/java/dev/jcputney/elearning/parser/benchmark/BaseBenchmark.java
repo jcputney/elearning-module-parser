@@ -21,7 +21,6 @@ import dev.jcputney.elearning.parser.api.ModuleParserFactory;
 import dev.jcputney.elearning.parser.impl.ClasspathFileAccess;
 import dev.jcputney.elearning.parser.impl.DefaultModuleParserFactory;
 import dev.jcputney.elearning.parser.impl.ZipFileAccess;
-import dev.jcputney.elearning.parser.util.LoggingUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,6 +32,7 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class for all benchmarks, providing common setup and teardown operations.
@@ -40,7 +40,7 @@ import org.slf4j.Logger;
 @State(Scope.Thread)
 public abstract class BaseBenchmark {
 
-  private static final Logger log = LoggingUtils.getLogger(BaseBenchmark.class);
+  private static final Logger log = LoggerFactory.getLogger(BaseBenchmark.class);
 
   protected FileAccess fileAccess;
   protected ModuleParserFactory parserFactory;
@@ -99,7 +99,9 @@ public abstract class BaseBenchmark {
     String moduleResourcePath = getModuleResourcePath();
     Path moduleFile = tempDir.resolve(new File(moduleResourcePath).getName());
 
-    try (var inputStream = getClass().getClassLoader().getResourceAsStream(moduleResourcePath)) {
+    try (var inputStream = getClass()
+        .getClassLoader()
+        .getResourceAsStream(moduleResourcePath)) {
       if (inputStream == null) {
         throw new IOException("Module resource not found: " + moduleResourcePath);
       }

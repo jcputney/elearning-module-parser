@@ -65,7 +65,7 @@ public class PackageProperties implements Serializable {
    */
   public static final String NAMESPACE_URI = "http://www.scorm.com/xsd/ScormEnginePackageProperties";
   /**
-   * The controls specification.
+   * The "controls" specification.
    */
   @JacksonXmlProperty(localName = "controls", namespace = NAMESPACE_URI)
   private ControlsSpec controls;
@@ -86,7 +86,7 @@ public class PackageProperties implements Serializable {
   @JacksonXmlProperty(localName = "rsop", namespace = NAMESPACE_URI)
   private RsopSpec rsop;
   /**
-   * The heuristics specification.
+   * The "heuristics" specification.
    */
   @JacksonXmlProperty(localName = "heuristics", namespace = NAMESPACE_URI)
   private HeuristicSpec heuristics;

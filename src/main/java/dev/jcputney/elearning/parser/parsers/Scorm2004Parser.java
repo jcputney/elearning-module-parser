@@ -94,7 +94,7 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
       }
 
       Scorm2004Metadata metadata = Scorm2004Metadata.create(manifest, checkForXapi());
-      
+
       // Calculate and set the module size
       try {
         long totalSize = moduleFileProvider.getTotalSize();
@@ -102,7 +102,7 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
       } catch (IOException e) {
         // Size remains -1 as default
       }
-      
+
       return metadata;
     } catch (IOException | XMLStreamException e) {
       throw new ModuleParsingException(
@@ -176,8 +176,8 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
         filePaths.add(file.getHref());
       }
     }
-    
-    // Check file existence in batch
+
+    // Check file existence in a batch
     Map<String, Boolean> existenceMap = Map.of();
     if (!filePaths.isEmpty()) {
       existenceMap = moduleFileProvider.fileExistsBatch(filePaths);

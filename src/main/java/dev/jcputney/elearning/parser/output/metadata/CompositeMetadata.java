@@ -30,7 +30,7 @@ import lombok.extern.jackson.Jacksonized;
  * A composite implementation of the MetadataComponent interface that can contain other metadata
  * components.
  * <p>
- * This class represents a composite node in the composite pattern, containing other metadata
+ * This class represents a composite node in the composite pattern containing other metadata
  * components. When queried for metadata, it searches through its child components in order until it
  * finds a match.
  * </p>

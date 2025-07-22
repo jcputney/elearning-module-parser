@@ -18,9 +18,9 @@
 package dev.jcputney.elearning.parser.impl;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.api.ParsingEventListener;
 import dev.jcputney.elearning.parser.exception.FileAccessException;
 import dev.jcputney.elearning.parser.exception.RuntimeFileAccessException;
-import dev.jcputney.elearning.parser.util.LoggingUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.slf4j.Logger;
 
 /**
  * A decorator implementation of {@link FileAccess} that adds caching capability to any
@@ -46,9 +45,9 @@ import org.slf4j.Logger;
  */
 public class CachedFileAccess implements FileAccess {
 
-  private static final Logger log = LoggingUtils.getLogger(CachedFileAccess.class);
-
   private final FileAccess delegate;
+
+  private final ParsingEventListener eventListener;
 
   // Cache for file existence checks
   private final Map<String, Boolean> fileExistsCache = new ConcurrentHashMap<>();
@@ -59,21 +58,35 @@ public class CachedFileAccess implements FileAccess {
   // Cache for file contents
   private final Map<String, byte[]> fileContentsCache = new ConcurrentHashMap<>();
 
+  // Cache statistics for monitoring
+  private long cacheHits = 0;
+  private long cacheMisses = 0;
+
   /**
    * Constructs a new {@link CachedFileAccess} instance that wraps the specified {@link FileAccess}
    * implementation.
    *
    * @param delegate The {@link FileAccess} implementation to delegate to.
-   * @throws IllegalArgumentException if delegate is null
+   * @throws IllegalArgumentException if the delegate is null
    */
   public CachedFileAccess(FileAccess delegate) {
+    this(delegate, null);
+  }
+
+  /**
+   * Constructs a new {@link CachedFileAccess} instance that wraps the specified {@link FileAccess}
+   * implementation with an optional event listener.
+   *
+   * @param delegate The {@link FileAccess} implementation to delegate to.
+   * @param eventListener Optional listener for caching events (can be null)
+   * @throws IllegalArgumentException if the delegate is null
+   */
+  public CachedFileAccess(FileAccess delegate, ParsingEventListener eventListener) {
     if (delegate == null) {
       throw new IllegalArgumentException("FileAccess delegate cannot be null");
     }
     this.delegate = delegate;
-    log.debug("Created CachedFileAccess wrapping {}", delegate
-        .getClass()
-        .getSimpleName());
+    this.eventListener = eventListener != null ? eventListener : ParsingEventListener.NO_OP;
   }
 
   /**
@@ -94,10 +107,18 @@ public class CachedFileAccess implements FileAccess {
    */
   @Override
   public boolean fileExistsInternal(String path) {
-    return fileExistsCache.computeIfAbsent(path, p -> {
-      log.debug("Cache miss for fileExists: {}", p);
-      return delegate.fileExists(p);
-    });
+    Boolean cached = fileExistsCache.get(path);
+    if (cached != null) {
+      cacheHits++;
+      eventListener.onParsingProgress("Cache hit: fileExists for " + path, -1);
+      return cached;
+    }
+
+    cacheMisses++;
+    eventListener.onParsingProgress("Cache miss: fileExists for " + path, -1);
+    boolean exists = delegate.fileExists(path);
+    fileExistsCache.put(path, exists);
+    return exists;
   }
 
   /**
@@ -110,8 +131,16 @@ public class CachedFileAccess implements FileAccess {
   @Override
   public List<String> listFilesInternal(String directoryPath) throws IOException {
     try {
+      List<String> cached = listFilesCache.get(directoryPath);
+      if (cached != null) {
+        cacheHits++;
+        eventListener.onParsingProgress("Cache hit: listFiles for " + directoryPath, -1);
+        return cached;
+      }
+
+      cacheMisses++;
+      eventListener.onParsingProgress("Cache miss: listFiles for " + directoryPath, -1);
       return listFilesCache.computeIfAbsent(directoryPath, p -> {
-        log.debug("Cache miss for listFiles: {}", p);
         try {
           // Get the file listing from the delegate
           List<String> files = delegate.listFiles(p);
@@ -125,13 +154,9 @@ public class CachedFileAccess implements FileAccess {
               .getClass()
               .getSimpleName());
 
-          // Log the error with detailed information
-          log.error("Error listing files in directory {}: {}", p, e.getMessage());
-          log.debug("Exception details:", e);
-
           // Wrap the IOException in a FileAccessException to be compatible with computeIfAbsent
           throw new RuntimeFileAccessException(new FileAccessException(
-              "Error listing files in directory: %s".formatted(p), e, metadata));
+              String.format("Failed to list files in directory '%s'", p), e, metadata));
         }
       });
     } catch (RuntimeFileAccessException e) {
@@ -155,8 +180,16 @@ public class CachedFileAccess implements FileAccess {
   @Override
   public InputStream getFileContentsInternal(String path) throws IOException {
     try {
+      byte[] cached = fileContentsCache.get(path);
+      if (cached != null) {
+        cacheHits++;
+        eventListener.onParsingProgress("Cache hit: getFileContents for " + path, -1);
+        return new ByteArrayInputStream(cached);
+      }
+
+      cacheMisses++;
+      eventListener.onParsingProgress("Cache miss: getFileContents for " + path, -1);
       byte[] contents = fileContentsCache.computeIfAbsent(path, p -> {
-        log.debug("Cache miss for getFileContents: {}", p);
         try (InputStream is = delegate.getFileContents(p);
             ByteArrayOutputStream os = new ByteArrayOutputStream()) {
           // Read the file contents into a byte array
@@ -175,13 +208,9 @@ public class CachedFileAccess implements FileAccess {
               .getClass()
               .getSimpleName());
 
-          // Log the error with detailed information
-          log.error("Error reading file contents for {}: {}", p, e.getMessage());
-          log.debug("Exception details:", e);
-
           // Wrap the IOException in a FileAccessException to be compatible with computeIfAbsent
           throw new RuntimeFileAccessException(new FileAccessException(
-              "Error reading file contents for: " + p, e, metadata));
+              String.format("Failed to read file contents from '%s'", p), e, metadata));
         }
       });
 
@@ -199,10 +228,14 @@ public class CachedFileAccess implements FileAccess {
    * Clears all caches, forcing subsequent calls to retrieve fresh data from the delegate.
    */
   public void clearCache() {
-    log.debug("Clearing all caches");
+    int totalCacheEntries =
+        fileExistsCache.size() + listFilesCache.size() + fileContentsCache.size();
     fileExistsCache.clear();
     listFilesCache.clear();
     fileContentsCache.clear();
+    cacheHits = 0;
+    cacheMisses = 0;
+    eventListener.onParsingProgress("Cache cleared: " + totalCacheEntries + " entries removed", -1);
   }
 
   /**
@@ -210,21 +243,31 @@ public class CachedFileAccess implements FileAccess {
    * data from the delegate.
    *
    * @param path The path to clear from the cache.
-   * @throws IllegalArgumentException if path is null
+   * @throws IllegalArgumentException if a path is null
    */
   public void clearCache(String path) {
     if (path == null) {
       throw new IllegalArgumentException("Path cannot be null");
     }
-    log.debug("Clearing cache for path: {}", path);
-    fileExistsCache.remove(path);
-    listFilesCache.remove(path);
-    fileContentsCache.remove(path);
+    int entriesRemoved = 0;
+    if (fileExistsCache.remove(path) != null) {
+      entriesRemoved++;
+    }
+    if (listFilesCache.remove(path) != null) {
+      entriesRemoved++;
+    }
+    if (fileContentsCache.remove(path) != null) {
+      entriesRemoved++;
+    }
+    if (entriesRemoved > 0) {
+      eventListener.onParsingProgress(
+          "Cache cleared for path: " + path + " (" + entriesRemoved + " entries)", -1);
+    }
   }
 
   /**
    * Gets the total size of all files by delegating to the underlying FileAccess implementation.
-   * 
+   *
    * <p>Note: This method is not cached as file sizes might change between calls.
    *
    * @return Total size of all files in bytes, or -1 if not supported
@@ -232,7 +275,30 @@ public class CachedFileAccess implements FileAccess {
    */
   @Override
   public long getTotalSize() throws IOException {
-    log.debug("Getting total size from delegate");
     return delegate.getTotalSize();
+  }
+
+  /**
+   * Gets cache statistics for monitoring.
+   *
+   * @return map containing cache hits, misses, and hit ratio
+   */
+  public Map<String, Object> getCacheStatistics() {
+    Map<String, Object> stats = new HashMap<>();
+    stats.put("hits", cacheHits);
+    stats.put("misses", cacheMisses);
+    long total = cacheHits + cacheMisses;
+    double hitRatio = total > 0 ? (double) cacheHits / total : 0.0;
+    stats.put("hitRatio", hitRatio);
+    stats.put("fileExistsCacheSize", fileExistsCache.size());
+    stats.put("listFilesCacheSize", listFilesCache.size());
+    stats.put("fileContentsCacheSize", fileContentsCache.size());
+
+    // Report cache performance
+    eventListener.onParsingProgress(
+        String.format("Cache stats: %.1f%% hit ratio (%d hits, %d misses)",
+            hitRatio * 100, cacheHits, cacheMisses), -1);
+
+    return stats;
   }
 }

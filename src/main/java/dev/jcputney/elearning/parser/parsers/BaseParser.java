@@ -21,22 +21,21 @@ import dev.jcputney.elearning.parser.ModuleParser;
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.LoadableMetadata;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
+import dev.jcputney.elearning.parser.api.ParsingEventListener;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.DefaultModuleFileProvider;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
-import dev.jcputney.elearning.parser.util.LoggingUtils;
 import dev.jcputney.elearning.parser.util.XmlParsingUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.xml.stream.XMLStreamException;
-import org.slf4j.Logger;
 
 /**
  * Abstract base class for all module parsers, providing shared capability for common operations,
  * like detecting xAPI-related files and utility methods for file parsing.
  * <p>
- * This class shouldn't parse any module types directly, but should provide utility methods and
+ * This class shouldn't parse any module types directly but should provide utility methods and
  * abstract methods to be implemented by the specific module parsers (SCORM, cmi5, LTI, etc.).
  * </p>
  *
@@ -55,13 +54,14 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
    */
   public static final String XAPI_SEND_STATEMENT_FILE = "sendStatement.js";
   /**
-   * Logger for logging messages related to module parsing.
-   */
-  private static final Logger log = LoggingUtils.getLogger(BaseParser.class);
-  /**
    * The ModuleFileProvider instance used for reading files in the module package.
    */
   protected final ModuleFileProvider moduleFileProvider;
+
+  /**
+   * The ParsingEventListener for reporting parsing events. Uses NO_OP if none is provided.
+   */
+  protected final ParsingEventListener eventListener;
 
   /**
    * Constructs a BaseParser with the specified ModuleFileProvider instance.
@@ -71,10 +71,23 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
    * @throws IllegalArgumentException if moduleFileProvider is null
    */
   protected BaseParser(ModuleFileProvider moduleFileProvider) {
+    this(moduleFileProvider, null);
+  }
+
+  /**
+   * Constructs a BaseParser with the specified ModuleFileProvider and ParsingEventListener.
+   *
+   * @param moduleFileProvider An instance of ModuleFileProvider for reading files in the module
+   * package.
+   * @param eventListener Optional listener for parsing events (can be null)
+   * @throws IllegalArgumentException if moduleFileProvider is null
+   */
+  protected BaseParser(ModuleFileProvider moduleFileProvider, ParsingEventListener eventListener) {
     if (moduleFileProvider == null) {
       throw new IllegalArgumentException("ModuleFileProvider cannot be null");
     }
     this.moduleFileProvider = moduleFileProvider;
+    this.eventListener = eventListener != null ? eventListener : ParsingEventListener.NO_OP;
   }
 
   /**
@@ -85,10 +98,23 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
    * @throws IllegalArgumentException if fileAccess is null
    */
   protected BaseParser(FileAccess fileAccess) {
+    this(fileAccess, null);
+  }
+
+  /**
+   * Constructs a BaseParser with the specified FileAccess instance and ParsingEventListener. This
+   * constructor creates a DefaultModuleFileProvider that wraps the FileAccess instance.
+   *
+   * @param fileAccess An instance of FileAccess for reading files in the module package.
+   * @param eventListener Optional listener for parsing events (can be null)
+   * @throws IllegalArgumentException if fileAccess is null
+   */
+  protected BaseParser(FileAccess fileAccess, ParsingEventListener eventListener) {
     if (fileAccess == null) {
       throw new IllegalArgumentException("FileAccess cannot be null");
     }
     this.moduleFileProvider = new DefaultModuleFileProvider(fileAccess);
+    this.eventListener = eventListener != null ? eventListener : ParsingEventListener.NO_OP;
   }
 
   /**
@@ -116,15 +142,18 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
     if (manifestPath == null) {
       throw new IllegalArgumentException("Manifest path cannot be null");
     }
-    log.debug("Parsing manifest file: {}", manifestPath);
+    eventListener.onParsingStarted("manifest", manifestPath);
     try (InputStream manifestStream = moduleFileProvider.getFileContents(manifestPath)) {
       M manifest = parseXmlToObject(manifestStream, getManifestClass());
-      log.debug("Successfully parsed manifest file: {}", manifestPath);
       loadExternalMetadata(manifest);
       return manifest;
-    } catch (IOException | XMLStreamException e) {
-      log.error("Error parsing manifest file {}: {}", manifestPath, e.getMessage());
-      throw e;
+    } catch (IOException e) {
+      throw new ModuleParsingException(
+          String.format("Failed to read manifest file '%s': %s", manifestPath, e.getMessage()), e);
+    } catch (XMLStreamException e) {
+      throw new ModuleParsingException(
+          String.format("Failed to parse manifest XML at '%s': %s", manifestPath, e.getMessage()),
+          e);
     }
   }
 
@@ -157,8 +186,11 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
    * @return true if xAPI is enabled, false otherwise.
    */
   protected boolean checkForXapi() {
-    log.debug("Checking for xAPI-related files");
-    return moduleFileProvider.hasXapiSupport();
+    boolean hasXapi = moduleFileProvider.hasXapiSupport();
+    if (hasXapi) {
+      eventListener.onParsingProgress("xAPI support detected", 100);
+    }
+    return hasXapi;
   }
 
   /**
@@ -200,7 +232,6 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
   protected void loadExternalMetadataIntoMetadata(LoadableMetadata subMetadata)
       throws XMLStreamException, IOException {
     if (subMetadata == null) {
-      log.debug("Not loading external metadata: subMetadata is null");
       return;
     }
 
