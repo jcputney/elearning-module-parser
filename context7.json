@@ -1,0 +1,60 @@
+{
+  "$schema" : "https://context7.com/schema/context7.json",
+  "projectTitle" : "eLearning Module Parser",
+  "description" : "A comprehensive Java library for parsing and validating eLearning module manifests in industry-standard formats including SCORM 1.2, SCORM 2004, AICC, and cmi5",
+  "folders" : [
+    "src/main/java/dev/jcputney/elearning/parser"
+  ],
+  "excludeFolders" : [
+    "src/test",
+    "target",
+    ".mvn",
+    ".github",
+    "benchmarks"
+  ],
+  "excludeFiles" : [
+    "pom.xml.releaseBackup",
+    "release.properties",
+    "dependency-reduced-pom.xml",
+    "*.class",
+    "*.jar",
+    "*.war",
+    "*.ear",
+    "*.log",
+    ".DS_Store",
+    "Thumbs.db"
+  ],
+  "rules" : [
+    "Use Java 17 or higher language features",
+    "Follow factory pattern for parser instantiation via ModuleParserFactory",
+    "Use FileAccess interface for all file system operations to support multiple storage backends",
+    "Automatic module type detection is preferred over manual specification",
+    "All parsers must extend BaseParser and return unified ModuleMetadata",
+    "Use try-with-resources for FileAccess implementations to ensure proper resource cleanup",
+    "Support for local files, ZIP archives, and AWS S3 storage backends",
+    "SCORM manifests are parsed from imsmanifest.xml files",
+    "AICC modules use INI-based format with .crs, .des, .au, and .cst files",
+    "cmi5 modules are parsed from cmi5.xml files",
+    "Use SLF4J for logging with Logback as the implementation",
+    "All custom exceptions should extend ModuleException",
+    "Use Jackson for XML and JSON parsing operations",
+    "Plugin architecture via ModuleTypeDetectorPlugin for extensibility",
+    "Streaming support for large modules to minimize memory usage",
+    "Caching can be enabled via CachedFileAccess wrapper",
+    "Use Lombok annotations to reduce boilerplate code",
+    "Follow Maven project structure and conventions",
+    "Integration tests should extend *IntegrationTest naming pattern",
+    "Use AssertJ for test assertions",
+    "Benchmarks available via JMH with -P benchmark profile"
+  ],
+  "previousVersions" : [
+    {
+      "tag" : "v0.0.15",
+      "title" : "Latest stable release with benchmark improvements"
+    },
+    {
+      "tag" : "v0.0.14",
+      "title" : "Added module size calculation and metadata enhancements"
+    }
+  ]
+}
