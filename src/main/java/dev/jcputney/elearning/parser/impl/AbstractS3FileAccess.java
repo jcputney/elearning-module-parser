@@ -509,9 +509,16 @@ public abstract class AbstractS3FileAccess implements FileAccess {
    */
   protected long getCachedFileSize(String path) {
     Long cachedSize = fileSizeCache.get(path);
+
+    // If cached size is 0, treat it as invalid and refetch
+    if (cachedSize != null && cachedSize == 0) {
+      cachedSize = null;
+      fileSizeCache.remove(path);
+    }
+
     long fileSize = cachedSize != null ? cachedSize : getFileSizeOnS3(path);
 
-    if (cachedSize == null) {
+    if (cachedSize == null && fileSize > 0) {
       fileSizeCache.put(path, fileSize);
     }
 
