@@ -18,6 +18,7 @@
 package dev.jcputney.elearning.parser.input.scorm12;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -359,6 +360,7 @@ public class Scorm12Manifest implements PackageManifest {
   }
 
   @Override
+  @JsonIgnore
   public String getTitle() {
     //noinspection DuplicatedCode
     String organizationTitle = Optional
@@ -377,6 +379,7 @@ public class Scorm12Manifest implements PackageManifest {
   }
 
   @Override
+  @JsonIgnore
   public String getDescription() {
     return Optional
         .ofNullable(metadata)
@@ -386,6 +389,7 @@ public class Scorm12Manifest implements PackageManifest {
   }
 
   @Override
+  @JsonIgnore
   public String getLaunchUrl() {
     // Find all items with non-null identifierRef at any level
     List<String> resourceIds = Optional
@@ -412,6 +416,7 @@ public class Scorm12Manifest implements PackageManifest {
   }
 
   @Override
+  @JsonIgnore
   public Duration getDuration() {
     return Optional
         .ofNullable(metadata)

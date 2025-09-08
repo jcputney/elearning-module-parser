@@ -18,6 +18,7 @@
 package dev.jcputney.elearning.parser.input.cmi5;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.PackageManifest;
@@ -116,6 +117,7 @@ public class Cmi5Manifest implements PackageManifest {
    * @return the title of the course
    */
   @Override
+  @JsonIgnore
   public String getTitle() {
     return Optional
         .ofNullable(course)
@@ -133,6 +135,7 @@ public class Cmi5Manifest implements PackageManifest {
    * @return the description of the course
    */
   @Override
+  @JsonIgnore
   public String getDescription() {
     return Optional
         .ofNullable(course)
@@ -151,6 +154,7 @@ public class Cmi5Manifest implements PackageManifest {
    * @return the launch URL for the course, or null if no assignable units are found
    */
   @Override
+  @JsonIgnore
   public String getLaunchUrl() {
     // First, try to get the URL from root-level AUs
     String rootLevelUrl = Optional
@@ -183,6 +187,7 @@ public class Cmi5Manifest implements PackageManifest {
    * @return the identifier for the course
    */
   @Override
+  @JsonIgnore
   public String getIdentifier() {
     return Optional
         .ofNullable(course)
@@ -196,11 +201,13 @@ public class Cmi5Manifest implements PackageManifest {
    * @return null
    */
   @Override
+  @JsonIgnore
   public String getVersion() {
     return null;
   }
 
   @Override
+  @JsonIgnore
   public Duration getDuration() {
     return Duration.ZERO;
   }

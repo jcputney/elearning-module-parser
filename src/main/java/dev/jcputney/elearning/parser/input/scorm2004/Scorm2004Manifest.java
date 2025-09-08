@@ -18,6 +18,7 @@
 package dev.jcputney.elearning.parser.input.scorm2004;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -299,6 +300,7 @@ public class Scorm2004Manifest implements PackageManifest {
    * @return the title of the content package
    */
   @Override
+  @JsonIgnore
   public String getTitle() {
     //noinspection DuplicatedCode
     String organizationTitle = Optional
@@ -324,6 +326,7 @@ public class Scorm2004Manifest implements PackageManifest {
    * @return the description of the content package
    */
   @Override
+  @JsonIgnore
   public String getDescription() {
     return Optional
         .ofNullable(metadata)
@@ -339,6 +342,7 @@ public class Scorm2004Manifest implements PackageManifest {
    * @return the launch URL for the content package
    */
   @Override
+  @JsonIgnore
   public String getLaunchUrl() {
     // get relative URL from the first resource
     return Optional
@@ -393,6 +397,7 @@ public class Scorm2004Manifest implements PackageManifest {
   }
 
   @Override
+  @JsonIgnore
   public Duration getDuration() {
     return Optional
         .ofNullable(metadata)

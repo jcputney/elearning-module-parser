@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.aicc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import java.time.Duration;
@@ -125,6 +126,7 @@ public class AiccManifest implements PackageManifest {
   }
 
   @Override
+  @JsonIgnore
   public String getTitle() {
     return this.course
         .getCourse()
@@ -132,11 +134,13 @@ public class AiccManifest implements PackageManifest {
   }
 
   @Override
+  @JsonIgnore
   public String getDescription() {
     return this.course.getCourseDescription();
   }
 
   @Override
+  @JsonIgnore
   public String getIdentifier() {
     return this.course
         .getCourse()
@@ -144,6 +148,7 @@ public class AiccManifest implements PackageManifest {
   }
 
   @Override
+  @JsonIgnore
   public String getVersion() {
     return this.course
         .getCourse()
@@ -151,6 +156,7 @@ public class AiccManifest implements PackageManifest {
   }
 
   @Override
+  @JsonIgnore
   public Duration getDuration() {
     return Duration.ZERO;
   }
