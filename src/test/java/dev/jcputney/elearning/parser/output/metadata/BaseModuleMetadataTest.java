@@ -66,12 +66,6 @@ class BaseModuleMetadataTest {
   }
 
   @Test
-  void testBuilderConstructor_Success() {
-    // Skip builder test as it requires complex Lombok setup
-    // The builder pattern is tested indirectly through the actual metadata classes
-  }
-
-  @Test
   void testAddMetadataComponent_NullCompositeMetadata_CreatesAndAdds() {
     // Arrange
     TestBaseModuleMetadata metadataWithNullComposite = new TestBaseModuleMetadata(mockManifest,

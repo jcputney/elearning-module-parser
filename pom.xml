@@ -58,7 +58,6 @@
     <version.jqwik>1.9.3</version.jqwik>
     <version.junit>5.13.4</version.junit>
     <version.logback>1.5.18</version.logback>
-    <version.lombok>1.18.38</version.lombok>
     <version.org.json>20250517</version.org.json>
     <version.plugin.central-publishing>0.8.0</version.plugin.central-publishing>
     <version.plugin.compiler>3.14.0</version.plugin.compiler>
@@ -136,12 +135,6 @@
       <artifactId>jackson-datatype-jsr310</artifactId>
       <version>${version.jackson}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>${version.lombok}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>jakarta.xml.bind</groupId>
@@ -314,15 +307,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${version.plugin.compiler}</version>
-        <configuration>
-          <annotationProcessorPaths>
-            <path>
-              <groupId>org.projectlombok</groupId>
-              <artifactId>lombok</artifactId>
-              <version>${version.lombok}</version>
-            </path>
-          </annotationProcessorPaths>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -350,100 +334,16 @@
           </execution>
         </executions>
       </plugin>
-      <!--      <plugin>-->
-      <!--        <groupId>org.apache.maven.plugins</groupId>-->
-      <!--        <artifactId>maven-source-plugin</artifactId>-->
-      <!--        <version>${version.plugin.source}</version>-->
-      <!--        <executions>-->
-      <!--          <execution>-->
-      <!--            <id>attach-sources</id>-->
-      <!--            <goals>-->
-      <!--              <goal>jar-no-fork</goal>-->
-      <!--            </goals>-->
-      <!--          </execution>-->
-      <!--        </executions>-->
-      <!--      </plugin>-->
-      <plugin>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok-maven-plugin</artifactId>
-        <version>1.18.20.0</version>
-        <executions>
-          <execution>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>delombok</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <sourceDirectory>src/main/java</sourceDirectory>
-          <outputDirectory>${project.build.directory}/delombok</outputDirectory>
-          <addOutputDirectory>false</addOutputDirectory>
-          <encoding>UTF-8</encoding>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>3.3.1</version>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>${version.plugin.source}</version>
         <executions>
           <execution>
-            <id>copy-to-lombok-build</id>
-            <phase>process-resources</phase>
+            <id>attach-sources</id>
             <goals>
-              <goal>copy-resources</goal>
+              <goal>jar-no-fork</goal>
             </goals>
-            <configuration>
-              <resources>
-                <resource>
-                  <directory>${project.basedir}/src/main/resources</directory>
-                </resource>
-              </resources>
-              <outputDirectory>${project.build.directory}/delombok</outputDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>3.1.0</version>
-        <executions>
-          <execution>
-            <id>generate-delomboked-sources-jar</id>
-            <phase>package</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <target>
-                <jar destfile="${project.build.directory}/${project.build.finalName}-sources.jar"
-                  basedir="${project.build.directory}/delombok"/>
-              </target>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-install-plugin</artifactId>
-        <version>3.1.2</version>
-        <executions>
-          <execution>
-            <id>install-source-jar</id>
-            <goals>
-              <goal>install-file</goal>
-            </goals>
-            <phase>install</phase>
-            <configuration>
-              <file>${project.build.directory}/${project.build.finalName}-sources.jar</file>
-              <groupId>${project.groupId}</groupId>
-              <artifactId>${project.artifactId}</artifactId>
-              <version>${project.version}</version>
-              <classifier>sources</classifier>
-              <generatePom>true</generatePom>
-              <pomFile>${project.basedir}/pom.xml</pomFile>
-            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -509,11 +409,6 @@
             <version>${version.plugin.compiler}</version>
             <configuration>
               <annotationProcessorPaths>
-                <path>
-                  <groupId>org.projectlombok</groupId>
-                  <artifactId>lombok</artifactId>
-                  <version>${version.lombok}</version>
-                </path>
                 <path>
                   <groupId>org.openjdk.jmh</groupId>
                   <artifactId>jmh-generator-annprocess</artifactId>
