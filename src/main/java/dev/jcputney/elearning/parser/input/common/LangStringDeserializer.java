@@ -69,6 +69,11 @@ public class LangStringDeserializer extends JsonDeserializer<LangString> {
       value = node
           .get("#text")
           .asText();
+    } else if (node.has("")) {
+      // Jackson XML sometimes uses empty string as key for text content
+      value = node
+          .get("")
+          .asText();
     } else if (node.isTextual()) {
       value = node.asText();
     }

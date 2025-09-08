@@ -100,6 +100,7 @@ public abstract class BaseModuleMetadata<M extends PackageManifest> extends
   }
 
   protected BaseModuleMetadata() {
+    this.compositeMetadata = new CompositeMetadata();
   }
 
   protected BaseModuleMetadata(BaseModuleMetadataBuilder<M, ?, ?> b) {
@@ -177,7 +178,7 @@ public abstract class BaseModuleMetadata<M extends PackageManifest> extends
 
     return new EqualsBuilder()
         .appendSuper(super.equals(o))
-        .append(getCompositeMetadata(), that.getCompositeMetadata())
+        // Don't compare compositeMetadata as it's @JsonIgnore and won't be serialized
         .isEquals();
   }
 
@@ -185,7 +186,7 @@ public abstract class BaseModuleMetadata<M extends PackageManifest> extends
   public int hashCode() {
     return new HashCodeBuilder(17, 37)
         .appendSuper(super.hashCode())
-        .append(getCompositeMetadata())
+        // Don't include compositeMetadata as it's @JsonIgnore and won't be serialized
         .toHashCode();
   }
 

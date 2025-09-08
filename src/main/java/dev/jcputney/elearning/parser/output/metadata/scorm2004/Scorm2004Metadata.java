@@ -48,6 +48,7 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
   private boolean hasSequencing;
 
   protected Scorm2004Metadata() {
+    super();
   }
 
   /**
