@@ -17,20 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the control mode settings for a learning activity within the SCORM IMS Simple
@@ -55,12 +48,6 @@ import lombok.extern.jackson.Jacksonized;
  * <p>These attributes control navigation at the activity level, allowing for flexibility in sequencing logic
  * based on the learner's progress and interactions with the SCORM content.</p>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ControlMode implements Serializable {
@@ -74,7 +61,6 @@ public class ControlMode implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("choice")
-  @Default
   private boolean choice = true;
   /**
    * Indicates whether the learner is allowed to exit from an activity and return to a previously
@@ -85,7 +71,6 @@ public class ControlMode implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("choiceExit")
-  @Default
   private boolean choiceExit = true;
   /**
    * Enables linear or sequential navigation through activities in the sequence. When set to
@@ -97,7 +82,6 @@ public class ControlMode implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("flow")
-  @Default
   private boolean flow = false;
   /**
    * Restricts the learner to only moving forward through the activities without being allowed to go
@@ -109,7 +93,6 @@ public class ControlMode implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("forwardOnly")
-  @Default
   private boolean forwardOnly = false;
   /**
    * Indicates whether the current attempt's objective information is used in sequencing decisions.
@@ -120,7 +103,6 @@ public class ControlMode implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("useCurrentAttemptObjectiveInfo")
-  @Default
   private boolean useCurrentAttemptObjectiveInfo = true;
   /**
    * Indicates whether the current attempt's progress information is used in sequencing decisions.
@@ -131,6 +113,98 @@ public class ControlMode implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("useCurrentAttemptProgressInfo")
-  @Default
   private boolean useCurrentAttemptProgressInfo = true;
+
+  public ControlMode(boolean choice, boolean choiceExit, boolean flow, boolean forwardOnly,
+      boolean useCurrentAttemptObjectiveInfo, boolean useCurrentAttemptProgressInfo) {
+    this.choice = choice;
+    this.choiceExit = choiceExit;
+    this.flow = flow;
+    this.forwardOnly = forwardOnly;
+    this.useCurrentAttemptObjectiveInfo = useCurrentAttemptObjectiveInfo;
+    this.useCurrentAttemptProgressInfo = useCurrentAttemptProgressInfo;
+  }
+
+  public ControlMode() {
+  }
+
+  public boolean isChoice() {
+    return this.choice;
+  }
+
+  public void setChoice(boolean choice) {
+    this.choice = choice;
+  }
+
+  public boolean isChoiceExit() {
+    return this.choiceExit;
+  }
+
+  public void setChoiceExit(boolean choiceExit) {
+    this.choiceExit = choiceExit;
+  }
+
+  public boolean isFlow() {
+    return this.flow;
+  }
+
+  public void setFlow(boolean flow) {
+    this.flow = flow;
+  }
+
+  public boolean isForwardOnly() {
+    return this.forwardOnly;
+  }
+
+  public void setForwardOnly(boolean forwardOnly) {
+    this.forwardOnly = forwardOnly;
+  }
+
+  public boolean isUseCurrentAttemptObjectiveInfo() {
+    return this.useCurrentAttemptObjectiveInfo;
+  }
+
+  public void setUseCurrentAttemptObjectiveInfo(boolean useCurrentAttemptObjectiveInfo) {
+    this.useCurrentAttemptObjectiveInfo = useCurrentAttemptObjectiveInfo;
+  }
+
+  public boolean isUseCurrentAttemptProgressInfo() {
+    return this.useCurrentAttemptProgressInfo;
+  }
+
+  public void setUseCurrentAttemptProgressInfo(boolean useCurrentAttemptProgressInfo) {
+    this.useCurrentAttemptProgressInfo = useCurrentAttemptProgressInfo;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof ControlMode that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(isChoice(), that.isChoice())
+        .append(isChoiceExit(), that.isChoiceExit())
+        .append(isFlow(), that.isFlow())
+        .append(isForwardOnly(), that.isForwardOnly())
+        .append(isUseCurrentAttemptObjectiveInfo(), that.isUseCurrentAttemptObjectiveInfo())
+        .append(isUseCurrentAttemptProgressInfo(), that.isUseCurrentAttemptProgressInfo())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(isChoice())
+        .append(isChoiceExit())
+        .append(isFlow())
+        .append(isForwardOnly())
+        .append(isUseCurrentAttemptObjectiveInfo())
+        .append(isUseCurrentAttemptProgressInfo())
+        .toHashCode();
+  }
 }

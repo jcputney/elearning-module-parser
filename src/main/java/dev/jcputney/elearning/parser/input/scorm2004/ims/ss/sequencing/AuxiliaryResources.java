@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -26,12 +24,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a collection of auxiliary resources associated with a learning activity within the
@@ -50,12 +44,6 @@ import lombok.extern.jackson.Jacksonized;
  * <p>The IMSSS namespace is specified by {@link IMSSS#NAMESPACE_URI}, following the SCORM 2004
  * standards for auxiliary resource management in sequencing and navigation.</p>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class AuxiliaryResources implements Serializable {
@@ -70,4 +58,39 @@ public class AuxiliaryResources implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "auxiliaryResource", namespace = IMSSS.NAMESPACE_URI)
   private List<AuxiliaryResource> auxiliaryResourceList;
+
+  public AuxiliaryResources() {
+  }
+
+  public List<AuxiliaryResource> getAuxiliaryResourceList() {
+    return this.auxiliaryResourceList;
+  }
+
+  public void setAuxiliaryResourceList(
+      List<AuxiliaryResource> auxiliaryResourceList) {
+    this.auxiliaryResourceList = auxiliaryResourceList;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof AuxiliaryResources that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getAuxiliaryResourceList(),
+            that.getAuxiliaryResourceList())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getAuxiliaryResourceList())
+        .toHashCode();
+  }
 }

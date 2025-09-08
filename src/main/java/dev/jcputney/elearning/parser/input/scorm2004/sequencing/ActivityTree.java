@@ -32,10 +32,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a SCORM 2004 Activity Tree.
@@ -45,22 +43,21 @@ import lombok.extern.jackson.Jacksonized;
  * methods to navigate and manipulate the tree.
  * </p>
  */
-@Builder
-@Getter
-@Jacksonized
-@EqualsAndHashCode(doNotUseGetters = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ActivityTree implements Serializable {
 
   /**
    * The root node of the activity tree.
    */
-  private final ActivityNode root;
+  private ActivityNode root;
 
   /**
    * A map for a quick lookup of nodes by their identifier.
    */
-  private final Map<String, ActivityNode> nodeMap = new HashMap<>();
+  private Map<String, ActivityNode> nodeMap = new HashMap<>();
+
+  public ActivityTree() {
+  }
 
   /**
    * Creates an ActivityTree with the specified root node.
@@ -131,6 +128,43 @@ public class ActivityTree implements Serializable {
    */
   public ActivityNode getRoot() {
     return root;
+  }
+
+  public void setRoot(ActivityNode root) {
+    this.root = root;
+  }
+
+  public Map<String, ActivityNode> getNodeMap() {
+    return this.nodeMap;
+  }
+
+  public void setNodeMap(
+      Map<String, ActivityNode> nodeMap) {
+    this.nodeMap = nodeMap;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof ActivityTree that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getRoot(), that.getRoot())
+        .append(getNodeMap(), that.getNodeMap())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getRoot())
+        .append(getNodeMap())
+        .toHashCode();
   }
 
   /**

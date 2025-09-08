@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -31,12 +29,8 @@ import dev.jcputney.elearning.parser.input.lom.types.Structure;
 import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the <code>general</code> element in the LOM schema, which provides general information
@@ -61,12 +55,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class General implements Serializable {
@@ -157,4 +145,134 @@ public class General implements Serializable {
   @JacksonXmlElementWrapper(localName = "aggregationLevel", useWrapping = false)
   @JacksonXmlProperty(localName = "aggregationLevel")
   private SourceValuePair<AggregationLevel> aggregationLevel;
+
+  public General(List<Identifier> identifiers, UnboundLangString title,
+      List<CatalogEntry> catalogEntries, String language, UnboundLangString description,
+      List<UnboundLangString> keywords, UnboundLangString coverage,
+      SourceValuePair<Structure> structure, SourceValuePair<AggregationLevel> aggregationLevel) {
+    this.identifiers = identifiers;
+    this.title = title;
+    this.catalogEntries = catalogEntries;
+    this.language = language;
+    this.description = description;
+    this.keywords = keywords;
+    this.coverage = coverage;
+    this.structure = structure;
+    this.aggregationLevel = aggregationLevel;
+  }
+
+  public General() {
+  }
+
+  public List<Identifier> getIdentifiers() {
+    return this.identifiers;
+  }
+
+  public void setIdentifiers(List<Identifier> identifiers) {
+    this.identifiers = identifiers;
+  }
+
+  public UnboundLangString getTitle() {
+    return this.title;
+  }
+
+  public void setTitle(UnboundLangString title) {
+    this.title = title;
+  }
+
+  public List<CatalogEntry> getCatalogEntries() {
+    return this.catalogEntries;
+  }
+
+  public void setCatalogEntries(List<CatalogEntry> catalogEntries) {
+    this.catalogEntries = catalogEntries;
+  }
+
+  public String getLanguage() {
+    return this.language;
+  }
+
+  public void setLanguage(String language) {
+    this.language = language;
+  }
+
+  public UnboundLangString getDescription() {
+    return this.description;
+  }
+
+  public void setDescription(UnboundLangString description) {
+    this.description = description;
+  }
+
+  public List<UnboundLangString> getKeywords() {
+    return this.keywords;
+  }
+
+  public void setKeywords(List<UnboundLangString> keywords) {
+    this.keywords = keywords;
+  }
+
+  public UnboundLangString getCoverage() {
+    return this.coverage;
+  }
+
+  public void setCoverage(UnboundLangString coverage) {
+    this.coverage = coverage;
+  }
+
+  public SourceValuePair<Structure> getStructure() {
+    return this.structure;
+  }
+
+  public void setStructure(
+      SourceValuePair<Structure> structure) {
+    this.structure = structure;
+  }
+
+  public SourceValuePair<AggregationLevel> getAggregationLevel() {
+    return this.aggregationLevel;
+  }
+
+  public void setAggregationLevel(
+      SourceValuePair<AggregationLevel> aggregationLevel) {
+    this.aggregationLevel = aggregationLevel;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof General general)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getIdentifiers(), general.getIdentifiers())
+        .append(getTitle(), general.getTitle())
+        .append(getCatalogEntries(), general.getCatalogEntries())
+        .append(getLanguage(), general.getLanguage())
+        .append(getDescription(), general.getDescription())
+        .append(getKeywords(), general.getKeywords())
+        .append(getCoverage(), general.getCoverage())
+        .append(getStructure(), general.getStructure())
+        .append(getAggregationLevel(), general.getAggregationLevel())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getIdentifiers())
+        .append(getTitle())
+        .append(getCatalogEntries())
+        .append(getLanguage())
+        .append(getDescription())
+        .append(getKeywords())
+        .append(getCoverage())
+        .append(getStructure())
+        .append(getAggregationLevel())
+        .toHashCode();
+  }
 }

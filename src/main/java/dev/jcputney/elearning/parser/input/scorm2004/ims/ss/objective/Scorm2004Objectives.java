@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -26,12 +24,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the learning objectives for an activity within the SCORM IMS Simple Sequencing (IMSSS)
@@ -49,12 +43,6 @@ import lombok.extern.jackson.Jacksonized;
  * <p>The IMSSS namespace is specified by {@link IMSSS#NAMESPACE_URI}, following the SCORM 2004
  * standards for sequencing and navigation.</p>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Objectives implements Serializable {
@@ -79,4 +67,55 @@ public class Scorm2004Objectives implements Serializable {
   @JacksonXmlElementWrapper(localName = "objective", useWrapping = false)
   @JacksonXmlProperty(localName = "objective", namespace = IMSSS.NAMESPACE_URI)
   private List<Scorm2004Objective> objectiveList;
+
+  public Scorm2004Objectives(Scorm2004Objective primaryObjective,
+      List<Scorm2004Objective> objectiveList) {
+    this.primaryObjective = primaryObjective;
+    this.objectiveList = objectiveList;
+  }
+
+  public Scorm2004Objectives() {
+  }
+
+  public Scorm2004Objective getPrimaryObjective() {
+    return this.primaryObjective;
+  }
+
+  public void setPrimaryObjective(
+      Scorm2004Objective primaryObjective) {
+    this.primaryObjective = primaryObjective;
+  }
+
+  public List<Scorm2004Objective> getObjectiveList() {
+    return this.objectiveList;
+  }
+
+  public void setObjectiveList(
+      List<Scorm2004Objective> objectiveList) {
+    this.objectiveList = objectiveList;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm2004Objectives that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getPrimaryObjective(), that.getPrimaryObjective())
+        .append(getObjectiveList(), that.getObjectiveList())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getPrimaryObjective())
+        .append(getObjectiveList())
+        .toHashCode();
+  }
 }

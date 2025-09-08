@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -46,12 +44,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the SCORM IMS Content Packaging (IMSCP) elements according to the imscp_v1p1 schema.
@@ -63,7 +57,7 @@ import lombok.extern.jackson.Jacksonized;
  *
  * <p>The IMSCP namespace is specified by {@link #NAMESPACE_URI}, and this class
  * is designed to align with the SCORM 2004 standards.</p>
- *
+ * <p>
  * The following schema shows the structure of a "manifest" element:
  * <pre>{@code
  *   <?xml version = "1.0" encoding = "UTF-8"?>
@@ -247,12 +241,6 @@ import lombok.extern.jackson.Jacksonized;
  *   </xsd:schema>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JacksonXmlRootElement(localName = "manifest", namespace = Scorm2004Manifest.NAMESPACE_URI)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -301,6 +289,9 @@ public class Scorm2004Manifest implements PackageManifest {
    */
   @JacksonXmlProperty(localName = "sequencingCollection", namespace = IMSSS.NAMESPACE_URI)
   private SequencingCollection sequencingCollection;
+
+  public Scorm2004Manifest() {
+  }
 
   /**
    * Returns the title of the content package, which is typically the name or title of the course.
@@ -405,14 +396,12 @@ public class Scorm2004Manifest implements PackageManifest {
   public Duration getDuration() {
     return Optional
         .ofNullable(metadata)
-        .filter(
-            m -> m.getLom() != null && m
-                .getLom()
-                .getTechnical() != null
-                && m
-                .getLom()
-                .getTechnical()
-                .getDuration() != null)
+        .filter(m -> m.getLom() != null && m
+            .getLom()
+            .getTechnical() != null && m
+            .getLom()
+            .getTechnical()
+            .getDuration() != null)
         .map(Scorm2004CourseMetadata::getLom)
         .map(lom -> lom
             .getTechnical()
@@ -499,11 +488,92 @@ public class Scorm2004Manifest implements PackageManifest {
     return organizations != null && organizations
         .getOrganizationList()
         .stream()
-        .anyMatch(
-            org -> org.getSequencing() != null || org
-                .getItems()
-                .stream()
-                .anyMatch(this::hasSequencing));
+        .anyMatch(org -> org.getSequencing() != null || org
+            .getItems()
+            .stream()
+            .anyMatch(this::hasSequencing));
+  }
+
+  @Override
+  public String getIdentifier() {
+    return this.identifier;
+  }
+
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }
+
+  @Override
+  public String getVersion() {
+    return this.version;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
+  }
+
+  public Scorm2004CourseMetadata getMetadata() {
+    return this.metadata;
+  }
+
+  public void setMetadata(Scorm2004CourseMetadata metadata) {
+    this.metadata = metadata;
+  }
+
+  public Scorm2004Organizations getOrganizations() {
+    return this.organizations;
+  }
+
+  public void setOrganizations(Scorm2004Organizations organizations) {
+    this.organizations = organizations;
+  }
+
+  public Scorm2004Resources getResources() {
+    return this.resources;
+  }
+
+  public void setResources(Scorm2004Resources resources) {
+    this.resources = resources;
+  }
+
+  public SequencingCollection getSequencingCollection() {
+    return this.sequencingCollection;
+  }
+
+  public void setSequencingCollection(SequencingCollection sequencingCollection) {
+    this.sequencingCollection = sequencingCollection;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm2004Manifest that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(identifier, that.identifier)
+        .append(version, that.version)
+        .append(getMetadata(), that.getMetadata())
+        .append(getOrganizations(), that.getOrganizations())
+        .append(getResources(), that.getResources())
+        .append(getSequencingCollection(), that.getSequencingCollection())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(identifier)
+        .append(version)
+        .append(getMetadata())
+        .append(getOrganizations())
+        .append(getResources())
+        .append(getSequencingCollection())
+        .toHashCode();
   }
 
   /**

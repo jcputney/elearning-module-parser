@@ -38,7 +38,6 @@ import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resource;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resources;
 import java.time.Duration;
 import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -59,21 +58,15 @@ class Scorm12ManifestTest {
   @Test
   void getTitleReturnsTitleFromDefaultOrganization() {
     // Arrange
-    Scorm12Organization organization = Scorm12Organization
-        .builder()
-        .identifier("org-id")
-        .title(TEST_TITLE)
-        .build();
-    Scorm12Organizations organizations = Scorm12Organizations
-        .builder()
-        .organizationList(Collections.singletonList(organization))
-        .defaultOrganization("org-id")
-        .build();
-    Scorm12Manifest manifest = Scorm12Manifest
-        .builder()
-        .identifier(TEST_ID)
-        .organizations(organizations)
-        .build();
+    Scorm12Organization organization = new Scorm12Organization();
+    organization.setTitle(TEST_TITLE);
+    organization.setIdentifier("org-id");
+    Scorm12Organizations organizations = new Scorm12Organizations();
+    organizations.setOrganizationList(Collections.singletonList(organization));
+    organizations.setDefaultOrganization("org-id");
+    Scorm12Manifest manifest = new Scorm12Manifest();
+    manifest.setIdentifier(TEST_ID);
+    manifest.setOrganizations(organizations);
 
     // Act
     String title = manifest.getTitle();
@@ -88,15 +81,11 @@ class Scorm12ManifestTest {
   @Test
   void getDescriptionReturnsDescriptionFromLom() {
     // Arrange
-    Scorm12Metadata metadata = Scorm12Metadata
-        .builder()
-        .lom(createTestLom())
-        .build();
-    Scorm12Manifest manifest = Scorm12Manifest
-        .builder()
-        .identifier(TEST_ID)
-        .metadata(metadata)
-        .build();
+    Scorm12Metadata metadata = new Scorm12Metadata();
+    metadata.setLom(createTestLom());
+    Scorm12Manifest manifest = new Scorm12Manifest();
+    manifest.setIdentifier(TEST_ID);
+    manifest.setMetadata(metadata);
 
     // Act
     String description = manifest.getDescription();
@@ -112,38 +101,26 @@ class Scorm12ManifestTest {
   @Test
   void getLaunchUrlReturnsHrefFromFirstResourceWithMatchingIdentifierRef() {
     // Arrange
-    Scorm12Item item = Scorm12Item
-        .builder()
-        .identifier("item-id")
-        .title("Item Title")
-        .identifierRef("resource-id")
-        .build();
-    Scorm12Organization organization = Scorm12Organization
-        .builder()
-        .identifier("org-id")
-        .items(Collections.singletonList(item))
-        .build();
-    Scorm12Organizations organizations = Scorm12Organizations
-        .builder()
-        .organizationList(Collections.singletonList(organization))
-        .defaultOrganization("org-id")
-        .build();
-    Scorm12Resource resource = Scorm12Resource
-        .builder()
-        .identifier("resource-id")
-        .href(TEST_HREF)
-        .type("webcontent")
-        .build();
-    Scorm12Resources resources = Scorm12Resources
-        .builder()
-        .resourceList(Collections.singletonList(resource))
-        .build();
-    Scorm12Manifest manifest = Scorm12Manifest
-        .builder()
-        .identifier(TEST_ID)
-        .organizations(organizations)
-        .resources(resources)
-        .build();
+    Scorm12Item item = new Scorm12Item();
+    item.setIdentifier("item-id");
+    item.setTitle("Item Title");
+    item.setIdentifierRef("resource-id");
+    Scorm12Organization organization = new Scorm12Organization();
+    organization.setIdentifier("org-id");
+    organization.setItems(Collections.singletonList(item));
+    Scorm12Organizations organizations = new Scorm12Organizations();
+    organizations.setOrganizationList(Collections.singletonList(organization));
+    organizations.setDefaultOrganization("org-id");
+    Scorm12Resource resource = new Scorm12Resource();
+    resource.setIdentifier("resource-id");
+    resource.setHref(TEST_HREF);
+    resource.setType("webcontent");
+    Scorm12Resources resources = new Scorm12Resources();
+    resources.setResourceList(Collections.singletonList(resource));
+    Scorm12Manifest manifest = new Scorm12Manifest();
+    manifest.setIdentifier(TEST_ID);
+    manifest.setOrganizations(organizations);
+    manifest.setResources(resources);
 
     // Act
     String launchUrl = manifest.getLaunchUrl();
@@ -159,15 +136,11 @@ class Scorm12ManifestTest {
   void getDurationReturnsDurationFromLom() {
     // Arrange
     Duration testDuration = Duration.ofHours(2);
-    Scorm12Metadata metadata = Scorm12Metadata
-        .builder()
-        .lom(createTestLomWithDuration(testDuration))
-        .build();
-    Scorm12Manifest manifest = Scorm12Manifest
-        .builder()
-        .identifier(TEST_ID)
-        .metadata(metadata)
-        .build();
+    Scorm12Metadata metadata = new Scorm12Metadata();
+    metadata.setLom(createTestLomWithDuration(testDuration));
+    Scorm12Manifest manifest = new Scorm12Manifest();
+    manifest.setIdentifier(TEST_ID);
+    manifest.setMetadata(metadata);
 
     // Act
     Duration duration = manifest.getDuration();
@@ -182,18 +155,14 @@ class Scorm12ManifestTest {
   @Test
   void equalsReturnsTrueForEqualManifests() {
     // Arrange
-    Scorm12Manifest manifest1 = Scorm12Manifest
-        .builder()
-        .identifier(TEST_ID)
-        .version(TEST_VERSION)
-        .base(TEST_BASE)
-        .build();
-    Scorm12Manifest manifest2 = Scorm12Manifest
-        .builder()
-        .identifier(TEST_ID)
-        .version(TEST_VERSION)
-        .base(TEST_BASE)
-        .build();
+    Scorm12Manifest manifest1 = new Scorm12Manifest();
+    manifest1.setIdentifier(TEST_ID);
+    manifest1.setVersion(TEST_VERSION);
+    manifest1.setBase(TEST_BASE);
+    Scorm12Manifest manifest2 = new Scorm12Manifest();
+    manifest2.setIdentifier(TEST_ID);
+    manifest2.setVersion(TEST_VERSION);
+    manifest2.setBase(TEST_BASE);
 
     // Act & Assert
     assertEquals(manifest1, manifest2);
@@ -206,18 +175,14 @@ class Scorm12ManifestTest {
   @Test
   void equalsReturnsFalseForDifferentManifests() {
     // Arrange
-    Scorm12Manifest manifest1 = Scorm12Manifest
-        .builder()
-        .identifier(TEST_ID)
-        .version(TEST_VERSION)
-        .base(TEST_BASE)
-        .build();
-    Scorm12Manifest manifest2 = Scorm12Manifest
-        .builder()
-        .identifier("different-id")
-        .version(TEST_VERSION)
-        .base(TEST_BASE)
-        .build();
+    Scorm12Manifest manifest1 = new Scorm12Manifest();
+    manifest1.setIdentifier(TEST_ID);
+    manifest1.setVersion(TEST_VERSION);
+    manifest1.setBase(TEST_BASE);
+    Scorm12Manifest manifest2 = new Scorm12Manifest();
+    manifest2.setIdentifier("different-id");
+    manifest2.setVersion(TEST_VERSION);
+    manifest2.setBase(TEST_BASE);
 
     // Act & Assert
     assertNotEquals(manifest1, manifest2);
@@ -228,72 +193,30 @@ class Scorm12ManifestTest {
    * Creates a test LOM with title and description.
    */
   private LOM createTestLom() {
-    return LOM
-        .builder()
-        .general(General
-            .builder()
-            .title(UnboundLangString
-                .builder()
-                .langStrings(List.of(
-                    LangString
-                        .builder()
-                        .language("en")
-                        .value(TEST_TITLE)
-                        .build()
-                ))
-                .build())
-            .description(UnboundLangString
-                .builder()
-                .langStrings(List.of(
-                    LangString
-                        .builder()
-                        .language("en")
-                        .value(TEST_DESCRIPTION)
-                        .build()
-                ))
-                .build())
-            .build())
-        .build();
+    LOM lom = new LOM();
+    General general = new General();
+    general.setTitle(
+        new UnboundLangString(Collections.singletonList(new LangString("en", TEST_TITLE))));
+    general.setDescription(
+        new UnboundLangString(Collections.singletonList(new LangString("en", TEST_DESCRIPTION))));
+    lom.setGeneral(general);
+    return lom;
   }
 
   /**
    * Creates a test LOM with title, description, and duration.
    */
   private LOM createTestLomWithDuration(Duration duration) {
-    Technical technical = Technical
-        .builder()
-        .duration(LomDuration
-            .builder()
-            .duration(duration)
-            .build())
-        .build();
-
-    return LOM
-        .builder()
-        .general(General
-            .builder()
-            .title(UnboundLangString
-                .builder()
-                .langStrings(List.of(
-                    LangString
-                        .builder()
-                        .language("en")
-                        .value(TEST_TITLE)
-                        .build()
-                ))
-                .build())
-            .description(UnboundLangString
-                .builder()
-                .langStrings(List.of(
-                    LangString
-                        .builder()
-                        .language("en")
-                        .value(TEST_DESCRIPTION)
-                        .build()
-                ))
-                .build())
-            .build())
-        .technical(technical)
-        .build();
+    Technical technical = new Technical();
+    technical.setDuration(new LomDuration(duration));
+    General general = new General();
+    general.setTitle(
+        new UnboundLangString(Collections.singletonList(new LangString("en", TEST_TITLE))));
+    general.setDescription(
+        new UnboundLangString(Collections.singletonList(new LangString("en", TEST_DESCRIPTION))));
+    LOM lom = new LOM();
+    lom.setGeneral(general);
+    lom.setTechnical(technical);
+    return lom;
   }
 }

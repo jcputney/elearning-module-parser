@@ -17,17 +17,11 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an entity contributing to the lifecycle of the learning object in the Learning Object
@@ -53,12 +47,6 @@ import lombok.extern.jackson.Jacksonized;
  * END:VCARD"/>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ContributeEntity implements Serializable {
 
@@ -76,4 +64,37 @@ public class ContributeEntity implements Serializable {
    */
   @JacksonXmlProperty(localName = "vcard")
   private String vCard;
+
+  public ContributeEntity() {
+  }
+
+  public String getVCard() {
+    return this.vCard;
+  }
+
+  public void setVCard(String vCard) {
+    this.vCard = vCard;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof ContributeEntity that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(vCard, that.vCard)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(vCard)
+        .toHashCode();
+  }
 }

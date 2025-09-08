@@ -49,7 +49,7 @@ public class RandomizationControlsTest {
   @Test
   void testBuilderWithDefaults() {
     // Create a RandomizationControls instance using the builder with default values
-    RandomizationControls controls = RandomizationControls.builder().build();
+    RandomizationControls controls = new RandomizationControls();
 
     // Verify the default values
     assertNotNull(controls);
@@ -62,12 +62,11 @@ public class RandomizationControlsTest {
   @Test
   void testBuilderWithCustomValues() {
     // Create a RandomizationControls instance using the builder with custom values
-    RandomizationControls controls = RandomizationControls.builder()
-        .randomizationTiming(RandomizationTiming.ON_EACH_NEW_ATTEMPT)
-        .selectionTiming(RandomizationTiming.ONCE)
-        .reorderChildren(true)
-        .selectCount(5)
-        .build();
+    RandomizationControls controls = new RandomizationControls();
+    controls.setRandomizationTiming(RandomizationTiming.ON_EACH_NEW_ATTEMPT);
+    controls.setSelectionTiming(RandomizationTiming.ONCE);
+    controls.setReorderChildren(true);
+    controls.setSelectCount(5);
 
     // Verify the custom values
     assertNotNull(controls);
@@ -80,10 +79,9 @@ public class RandomizationControlsTest {
   @Test
   void testBuilderWithPartialCustomValues() {
     // Create a RandomizationControls instance using the builder with some custom values
-    RandomizationControls controls = RandomizationControls.builder()
-        .randomizationTiming(RandomizationTiming.ONCE)
-        .reorderChildren(true)
-        .build();
+    RandomizationControls controls = new RandomizationControls();
+    controls.setRandomizationTiming(RandomizationTiming.ONCE);
+    controls.setReorderChildren(true);
 
     // Verify the values
     assertNotNull(controls);

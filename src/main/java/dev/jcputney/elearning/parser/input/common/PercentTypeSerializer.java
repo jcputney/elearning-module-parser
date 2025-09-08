@@ -53,7 +53,7 @@ public class PercentTypeSerializer extends JsonSerializer<PercentType> {
       throws IOException {
     if (value != null) {
       gen.writeString(value
-          .getValue()
+          .value()
           .toString());
     } else {
       gen.writeNull();

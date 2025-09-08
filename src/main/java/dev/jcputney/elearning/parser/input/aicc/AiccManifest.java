@@ -17,17 +17,12 @@
 
 package dev.jcputney.elearning.parser.input.aicc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import java.time.Duration;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the AICC manifest for a course.
@@ -38,12 +33,6 @@ import lombok.extern.jackson.Jacksonized;
  * <p>It also provides methods to retrieve the title, description, launch URL, identifier, version,
  * and duration of the course.</p>
  */
-@Builder
-@Getter
-@Jacksonized
-@EqualsAndHashCode(doNotUseGetters = true)
-@NoArgsConstructor
-@AllArgsConstructor
 public class AiccManifest implements PackageManifest {
 
   /**
@@ -132,8 +121,10 @@ public class AiccManifest implements PackageManifest {
     this.launchUrl = rootAssignableUnit.getFileName();
   }
 
+  public AiccManifest() {
+  }
+
   @Override
-  @JsonIgnore
   public String getTitle() {
     return this.course
         .getCourse()
@@ -141,13 +132,11 @@ public class AiccManifest implements PackageManifest {
   }
 
   @Override
-  @JsonIgnore
   public String getDescription() {
     return this.course.getCourseDescription();
   }
 
   @Override
-  @JsonIgnore
   public String getIdentifier() {
     return this.course
         .getCourse()
@@ -155,7 +144,6 @@ public class AiccManifest implements PackageManifest {
   }
 
   @Override
-  @JsonIgnore
   public String getVersion() {
     return this.course
         .getCourse()
@@ -163,8 +151,79 @@ public class AiccManifest implements PackageManifest {
   }
 
   @Override
-  @JsonIgnore
   public Duration getDuration() {
     return Duration.ZERO;
+  }
+
+
+  public AiccCourse getCourse() {
+    return this.course;
+  }
+
+  public void setCourse(AiccCourse course) {
+    this.course = course;
+  }
+
+  public List<AssignableUnit> getAssignableUnits() {
+    return this.assignableUnits;
+  }
+
+  public void setAssignableUnits(List<AssignableUnit> assignableUnits) {
+    this.assignableUnits = assignableUnits;
+  }
+
+  public List<Descriptor> getDescriptors() {
+    return this.descriptors;
+  }
+
+  public void setDescriptors(List<Descriptor> descriptors) {
+    this.descriptors = descriptors;
+  }
+
+  public List<CourseStructure> getCourseStructures() {
+    return this.courseStructures;
+  }
+
+  public void setCourseStructures(List<CourseStructure> courseStructures) {
+    this.courseStructures = courseStructures;
+  }
+
+  @Override
+  public String getLaunchUrl() {
+    return this.launchUrl;
+  }
+
+  public void setLaunchUrl(String launchUrl) {
+    this.launchUrl = launchUrl;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof AiccManifest that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getCourse(), that.getCourse())
+        .append(getAssignableUnits(), that.getAssignableUnits())
+        .append(getDescriptors(), that.getDescriptors())
+        .append(getCourseStructures(), that.getCourseStructures())
+        .append(getLaunchUrl(), that.getLaunchUrl())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getCourse())
+        .append(getAssignableUnits())
+        .append(getDescriptors())
+        .append(getCourseStructures())
+        .append(getLaunchUrl())
+        .toHashCode();
   }
 }

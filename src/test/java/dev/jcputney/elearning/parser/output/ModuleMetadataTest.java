@@ -24,7 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.PackageManifest;
+import java.io.Serial;
 import java.time.Duration;
+import java.util.Objects;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -218,8 +220,10 @@ class ModuleMetadataTest {
   /**
    * A concrete implementation of PackageManifest for testing purposes.
    */
-  private static class TestPackageManifest implements PackageManifest {
+  private static final class TestPackageManifest implements PackageManifest {
 
+    @Serial
+    private static final long serialVersionUID = 0L;
     private final String title;
     private final String description;
     private final String launchUrl;
@@ -227,8 +231,12 @@ class ModuleMetadataTest {
     private final String version;
     private final Duration duration;
 
-    public TestPackageManifest(String title, String description, String launchUrl,
-        String identifier, String version, Duration duration) {
+    /**
+     *
+     */
+    private TestPackageManifest(String title, String description, String launchUrl,
+        String identifier, String version,
+        Duration duration) {
       this.title = title;
       this.description = description;
       this.launchUrl = launchUrl;
@@ -268,26 +276,39 @@ class ModuleMetadataTest {
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) {
+    public boolean equals(Object obj) {
+      if (obj == this) {
         return true;
       }
-      if (o == null || getClass() != o.getClass()) {
+      if (obj == null || obj.getClass() != this.getClass()) {
         return false;
       }
-      TestPackageManifest that = (TestPackageManifest) o;
-      return java.util.Objects.equals(title, that.title) &&
-          java.util.Objects.equals(description, that.description) &&
-          java.util.Objects.equals(launchUrl, that.launchUrl) &&
-          java.util.Objects.equals(identifier, that.identifier) &&
-          java.util.Objects.equals(version, that.version) &&
-          java.util.Objects.equals(duration, that.duration);
+      var that = (TestPackageManifest) obj;
+      return Objects.equals(this.title, that.title) &&
+          Objects.equals(this.description, that.description) &&
+          Objects.equals(this.launchUrl, that.launchUrl) &&
+          Objects.equals(this.identifier, that.identifier) &&
+          Objects.equals(this.version, that.version) &&
+          Objects.equals(this.duration, that.duration);
     }
 
     @Override
     public int hashCode() {
-      return java.util.Objects.hash(title, description, launchUrl, identifier, version, duration);
+      return Objects.hash(title, description, launchUrl, identifier, version, duration);
     }
+
+    @Override
+    public String toString() {
+      return "TestPackageManifest[" +
+          "title=" + title + ", " +
+          "description=" + description + ", " +
+          "launchUrl=" + launchUrl + ", " +
+          "identifier=" + identifier + ", " +
+          "version=" + version + ", " +
+          "duration=" + duration + ']';
+    }
+
+
   }
 
   /**
@@ -310,14 +331,5 @@ class ModuleMetadataTest {
       return manifest;
     }
 
-    @Override
-    public ModuleType getModuleType() {
-      return moduleType;
-    }
-
-    @Override
-    public boolean isXapiEnabled() {
-      return xapiEnabled;
-    }
   }
 }

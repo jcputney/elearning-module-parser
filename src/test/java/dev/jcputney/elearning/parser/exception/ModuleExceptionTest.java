@@ -17,10 +17,18 @@
 
 package dev.jcputney.elearning.parser.exception;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for ModuleException.
@@ -35,7 +43,9 @@ class ModuleExceptionTest {
     // Assert
     assertEquals("Test message", exception.getMessage());
     assertNull(exception.getCause());
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -49,7 +59,9 @@ class ModuleExceptionTest {
     // Assert
     assertEquals("Test message", exception.getMessage());
     assertSame(cause, exception.getCause());
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -66,7 +78,9 @@ class ModuleExceptionTest {
     // Assert
     assertEquals("Test message", exception.getMessage());
     assertSame(cause, exception.getCause());
-    assertEquals(2, exception.getMetadata().size());
+    assertEquals(2, exception
+        .getMetadata()
+        .size());
     assertEquals("value1", exception.getMetadata("key1"));
     assertEquals(42, exception.getMetadata("key2"));
   }
@@ -82,7 +96,9 @@ class ModuleExceptionTest {
     // Assert
     assertEquals("Test message", exception.getMessage());
     assertSame(cause, exception.getCause());
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -97,7 +113,9 @@ class ModuleExceptionTest {
     // Assert
     assertEquals("Test message", exception.getMessage());
     assertSame(cause, exception.getCause());
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -111,7 +129,9 @@ class ModuleExceptionTest {
     // Assert
     assertSame(exception, result); // Method chaining
     assertEquals("testValue", exception.getMetadata("testKey"));
-    assertEquals(1, exception.getMetadata().size());
+    assertEquals(1, exception
+        .getMetadata()
+        .size());
   }
 
   @Test
@@ -124,7 +144,9 @@ class ModuleExceptionTest {
 
     // Assert
     assertSame(exception, result); // Method chaining still works
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -136,9 +158,13 @@ class ModuleExceptionTest {
     exception.addMetadata("testKey", null);
 
     // Assert
-    assertTrue(exception.getMetadata().containsKey("testKey"));
+    assertTrue(exception
+        .getMetadata()
+        .containsKey("testKey"));
     assertNull(exception.getMetadata("testKey"));
-    assertEquals(1, exception.getMetadata().size());
+    assertEquals(1, exception
+        .getMetadata()
+        .size());
   }
 
   @Test
@@ -147,12 +173,15 @@ class ModuleExceptionTest {
     ModuleException exception = new ModuleException("Test message");
 
     // Act
-    exception.addMetadata("key1", "value1")
-            .addMetadata("key2", 42)
-            .addMetadata("key3", true);
+    exception
+        .addMetadata("key1", "value1")
+        .addMetadata("key2", 42)
+        .addMetadata("key3", true);
 
     // Assert
-    assertEquals(3, exception.getMetadata().size());
+    assertEquals(3, exception
+        .getMetadata()
+        .size());
     assertEquals("value1", exception.getMetadata("key1"));
     assertEquals(42, exception.getMetadata("key2"));
     assertEquals(true, exception.getMetadata("key3"));
@@ -169,7 +198,9 @@ class ModuleExceptionTest {
 
     // Assert
     assertEquals("updated", exception.getMetadata("key"));
-    assertEquals(1, exception.getMetadata().size());
+    assertEquals(1, exception
+        .getMetadata()
+        .size());
   }
 
   @Test
@@ -213,8 +244,9 @@ class ModuleExceptionTest {
   void testGetMetadata_AllMetadata_ReturnsUnmodifiableMap() {
     // Arrange
     ModuleException exception = new ModuleException("Test message");
-    exception.addMetadata("key1", "value1")
-            .addMetadata("key2", "value2");
+    exception
+        .addMetadata("key1", "value1")
+        .addMetadata("key2", "value2");
 
     // Act
     Map<String, Object> metadata = exception.getMetadata();
@@ -260,8 +292,9 @@ class ModuleExceptionTest {
   void testToString_MessageWithMetadata_Success() {
     // Arrange
     ModuleException exception = new ModuleException("Test message");
-    exception.addMetadata("key1", "value1")
-            .addMetadata("key2", 42);
+    exception
+        .addMetadata("key1", "value1")
+        .addMetadata("key2", 42);
 
     // Act
     String result = exception.toString();
@@ -323,8 +356,8 @@ class ModuleExceptionTest {
     ModuleException exception = new ModuleException("Test message");
 
     // Assert
-    assertTrue(exception instanceof Exception);
-    assertTrue(exception instanceof Throwable);
+    assertInstanceOf(Exception.class, exception);
+    assertInstanceOf(Throwable.class, exception);
   }
 
   @Test
@@ -333,12 +366,13 @@ class ModuleExceptionTest {
     ModuleException exception = new ModuleException("Test message");
 
     // Act
-    exception.addMetadata("string", "text")
-            .addMetadata("integer", 123)
-            .addMetadata("boolean", true)
-            .addMetadata("double", 45.67)
-            .addMetadata("object", new Object())
-            .addMetadata("null", null);
+    exception
+        .addMetadata("string", "text")
+        .addMetadata("integer", 123)
+        .addMetadata("boolean", true)
+        .addMetadata("double", 45.67)
+        .addMetadata("object", new Object())
+        .addMetadata("null", null);
 
     // Assert
     assertEquals("text", exception.getMetadata("string"));
@@ -347,7 +381,9 @@ class ModuleExceptionTest {
     assertEquals(45.67, exception.getMetadata("double"));
     assertNotNull(exception.getMetadata("object"));
     assertNull(exception.getMetadata("null"));
-    assertEquals(6, exception.getMetadata().size());
+    assertEquals(6, exception
+        .getMetadata()
+        .size());
   }
 
   @Test
@@ -361,7 +397,9 @@ class ModuleExceptionTest {
     originalMetadata.put("newKey", "newValue");
 
     // Assert - Exception's metadata should not be affected
-    assertEquals(1, exception.getMetadata().size());
+    assertEquals(1, exception
+        .getMetadata()
+        .size());
     assertEquals("value", exception.getMetadata("key"));
     assertNull(exception.getMetadata("newKey"));
   }

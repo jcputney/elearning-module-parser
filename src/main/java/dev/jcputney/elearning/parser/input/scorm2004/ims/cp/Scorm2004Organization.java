@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,24 +29,13 @@ import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.Sequencing;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a single organization within the content package. Each organization may contain
  * multiple items structured hierarchically.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Organization implements Serializable {
@@ -67,7 +54,6 @@ public class Scorm2004Organization implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("structure")
-  @Default
   private String structure = "hierarchical";
   /**
    * The title of this organization providing a descriptive label for the learning structure it
@@ -89,7 +75,6 @@ public class Scorm2004Organization implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "objectivesGlobalToSystem", namespace = ADLSeq.NAMESPACE_URI)
   @JsonProperty("objectivesGlobalToSystem")
-  @Default
   private boolean objectivesGlobalToSystem = false;
   /**
    * The default for the adlcp:sharedDataGlobalToSystem attribute for items in this organization. If
@@ -98,7 +83,6 @@ public class Scorm2004Organization implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "sharedDataGlobalToSystem", namespace = ADLCP.NAMESPACE_URI)
   @JsonProperty("sharedDataGlobalToSystem")
-  @Default
   private boolean sharedDataGlobalToSystem = false;
   /**
    * Metadata associated with this organization, providing details such as creation date, and other
@@ -112,4 +96,107 @@ public class Scorm2004Organization implements Serializable {
    */
   @JacksonXmlProperty(localName = "sequencing", namespace = IMSSS.NAMESPACE_URI)
   private Sequencing sequencing;
+
+  public Scorm2004Organization() {
+  }
+
+  public String getIdentifier() {
+    return this.identifier;
+  }
+
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }
+
+  public String getStructure() {
+    return this.structure;
+  }
+
+  public void setStructure(String structure) {
+    this.structure = structure;
+  }
+
+  public String getTitle() {
+    return this.title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public List<Scorm2004Item> getItems() {
+    return this.items;
+  }
+
+  public void setItems(List<Scorm2004Item> items) {
+    this.items = items;
+  }
+
+  public boolean isObjectivesGlobalToSystem() {
+    return this.objectivesGlobalToSystem;
+  }
+
+  public void setObjectivesGlobalToSystem(boolean objectivesGlobalToSystem) {
+    this.objectivesGlobalToSystem = objectivesGlobalToSystem;
+  }
+
+  public boolean isSharedDataGlobalToSystem() {
+    return this.sharedDataGlobalToSystem;
+  }
+
+  public void setSharedDataGlobalToSystem(boolean sharedDataGlobalToSystem) {
+    this.sharedDataGlobalToSystem = sharedDataGlobalToSystem;
+  }
+
+  public Scorm2004SubMetadata getMetadata() {
+    return this.metadata;
+  }
+
+  public void setMetadata(Scorm2004SubMetadata metadata) {
+    this.metadata = metadata;
+  }
+
+  public Sequencing getSequencing() {
+    return this.sequencing;
+  }
+
+  public void setSequencing(Sequencing sequencing) {
+    this.sequencing = sequencing;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm2004Organization that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(isObjectivesGlobalToSystem(), that.isObjectivesGlobalToSystem())
+        .append(isSharedDataGlobalToSystem(), that.isSharedDataGlobalToSystem())
+        .append(getIdentifier(), that.getIdentifier())
+        .append(getStructure(), that.getStructure())
+        .append(getTitle(), that.getTitle())
+        .append(getItems(), that.getItems())
+        .append(getMetadata(), that.getMetadata())
+        .append(getSequencing(), that.getSequencing())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getIdentifier())
+        .append(getStructure())
+        .append(getTitle())
+        .append(getItems())
+        .append(isObjectivesGlobalToSystem())
+        .append(isSharedDataGlobalToSystem())
+        .append(getMetadata())
+        .append(getSequencing())
+        .toHashCode();
+  }
 }

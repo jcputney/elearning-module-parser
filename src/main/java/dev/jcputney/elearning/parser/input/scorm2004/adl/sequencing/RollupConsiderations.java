@@ -17,21 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.RollupConsiderationType;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the rollupConsiderationsType complex type, defining attributes for rollup conditions.
@@ -46,12 +39,6 @@ import lombok.extern.jackson.Jacksonized;
  *   </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupConsiderations implements Serializable {
@@ -61,34 +48,102 @@ public class RollupConsiderations implements Serializable {
    */
   @JacksonXmlProperty(localName = "requiredForSatisfied", isAttribute = true)
   @JsonProperty("requiredForSatisfied")
-  @Default
   private RollupConsiderationType requiredForSatisfied = RollupConsiderationType.ALWAYS;
   /**
    * Specifies when not satisfaction is required for rollup. Default is "always".
    */
   @JacksonXmlProperty(localName = "requiredForNotSatisfied", isAttribute = true)
   @JsonProperty("requiredForNotSatisfied")
-  @Default
   private RollupConsiderationType requiredForNotSatisfied = RollupConsiderationType.ALWAYS;
   /**
    * Specifies when completion is required for rollup. Default is "always".
    */
   @JacksonXmlProperty(localName = "requiredForCompleted", isAttribute = true)
   @JsonProperty("requiredForCompleted")
-  @Default
   private RollupConsiderationType requiredForCompleted = RollupConsiderationType.ALWAYS;
   /**
    * Specifies when incompletion is required for rollup. Default is "always".
    */
   @JacksonXmlProperty(localName = "requiredForIncomplete", isAttribute = true)
   @JsonProperty("requiredForIncomplete")
-  @Default
   private RollupConsiderationType requiredForIncomplete = RollupConsiderationType.ALWAYS;
   /**
    * Indicates if satisfaction is measured only when active. Default is true.
    */
   @JacksonXmlProperty(localName = "measureSatisfactionIfActive", isAttribute = true)
   @JsonProperty("measureSatisfactionIfActive")
-  @Default
   private boolean measureSatisfactionIfActive = true;
+
+  public RollupConsiderations() {
+  }
+
+  public RollupConsiderationType getRequiredForSatisfied() {
+    return this.requiredForSatisfied;
+  }
+
+  public void setRequiredForSatisfied(RollupConsiderationType requiredForSatisfied) {
+    this.requiredForSatisfied = requiredForSatisfied;
+  }
+
+  public RollupConsiderationType getRequiredForNotSatisfied() {
+    return this.requiredForNotSatisfied;
+  }
+
+  public void setRequiredForNotSatisfied(RollupConsiderationType requiredForNotSatisfied) {
+    this.requiredForNotSatisfied = requiredForNotSatisfied;
+  }
+
+  public RollupConsiderationType getRequiredForCompleted() {
+    return this.requiredForCompleted;
+  }
+
+  public void setRequiredForCompleted(RollupConsiderationType requiredForCompleted) {
+    this.requiredForCompleted = requiredForCompleted;
+  }
+
+  public RollupConsiderationType getRequiredForIncomplete() {
+    return this.requiredForIncomplete;
+  }
+
+  public void setRequiredForIncomplete(RollupConsiderationType requiredForIncomplete) {
+    this.requiredForIncomplete = requiredForIncomplete;
+  }
+
+  public boolean isMeasureSatisfactionIfActive() {
+    return this.measureSatisfactionIfActive;
+  }
+
+  public void setMeasureSatisfactionIfActive(boolean measureSatisfactionIfActive) {
+    this.measureSatisfactionIfActive = measureSatisfactionIfActive;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof RollupConsiderations that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(isMeasureSatisfactionIfActive(), that.isMeasureSatisfactionIfActive())
+        .append(getRequiredForSatisfied(), that.getRequiredForSatisfied())
+        .append(getRequiredForNotSatisfied(), that.getRequiredForNotSatisfied())
+        .append(getRequiredForCompleted(), that.getRequiredForCompleted())
+        .append(getRequiredForIncomplete(), that.getRequiredForIncomplete())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getRequiredForSatisfied())
+        .append(getRequiredForNotSatisfied())
+        .append(getRequiredForCompleted())
+        .append(getRequiredForIncomplete())
+        .append(isMeasureSatisfactionIfActive())
+        .toHashCode();
+  }
 }

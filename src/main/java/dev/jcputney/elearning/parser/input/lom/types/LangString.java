@@ -25,12 +25,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import dev.jcputney.elearning.parser.input.common.TrimAndPreserveIndentationDeserializer;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a LangString in LOM metadata, which is a collection of strings with language
@@ -53,12 +49,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Jacksonized
-@Data
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LangString implements Serializable {
 
@@ -75,4 +65,65 @@ public class LangString implements Serializable {
   @JacksonXmlText
   @JsonDeserialize(using = TrimAndPreserveIndentationDeserializer.class)
   private String value;
+
+  public LangString(String language, String value) {
+    this.language = language;
+    this.value = value;
+  }
+
+  public LangString(String value) {
+    this.value = value;
+  }
+
+  public LangString() {
+  }
+
+  public String getLanguage() {
+    return this.language;
+  }
+
+  @JsonAlias("lang")
+  @JacksonXmlProperty(isAttribute = true)
+  @JsonProperty("language")
+  public void setLanguage(String language) {
+    this.language = language;
+  }
+
+  public String getValue() {
+    return this.value;
+  }
+
+  @JsonDeserialize(using = TrimAndPreserveIndentationDeserializer.class)
+  @JacksonXmlText
+  public void setValue(String value) {
+    this.value = value;
+  }
+
+  public String toString() {
+    return "LangString(language=" + this.getLanguage() + ", value=" + this.getValue() + ")";
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof LangString that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getLanguage(), that.getLanguage())
+        .append(getValue(), that.getValue())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getLanguage())
+        .append(getValue())
+        .toHashCode();
+  }
 }

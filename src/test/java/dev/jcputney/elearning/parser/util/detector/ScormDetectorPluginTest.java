@@ -17,18 +17,32 @@
 
 package dev.jcputney.elearning.parser.util.detector;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.api.ModuleTypeDetectorPlugin;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.parsers.Scorm12Parser;
+import dev.jcputney.elearning.parser.util.ScormVersionDetector;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import dev.jcputney.elearning.parser.util.ScormVersionDetector;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
  * Test class for ScormDetectorPlugin.
@@ -87,10 +101,12 @@ class ScormDetectorPluginTest {
   void testDetect_ManifestExistsScorm12_ReturnsScorm12() throws Exception {
     // Arrange
     when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(true);
-    
-    try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(ScormVersionDetector.class)) {
-      mockedDetector.when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
-                   .thenReturn(ModuleType.SCORM_12);
+
+    try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
+        ScormVersionDetector.class)) {
+      mockedDetector
+          .when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
+          .thenReturn(ModuleType.SCORM_12);
 
       // Act
       ModuleType result = plugin.detect(mockFileAccess);
@@ -106,10 +122,12 @@ class ScormDetectorPluginTest {
   void testDetect_ManifestExistsScorm2004_ReturnsScorm2004() throws Exception {
     // Arrange
     when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(true);
-    
-    try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(ScormVersionDetector.class)) {
-      mockedDetector.when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
-                   .thenReturn(ModuleType.SCORM_2004);
+
+    try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
+        ScormVersionDetector.class)) {
+      mockedDetector
+          .when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
+          .thenReturn(ModuleType.SCORM_2004);
 
       // Act
       ModuleType result = plugin.detect(mockFileAccess);
@@ -125,11 +143,13 @@ class ScormDetectorPluginTest {
   void testDetect_VersionDetectorThrowsException_ThrowsModuleDetectionException() throws Exception {
     // Arrange
     when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(true);
-    
-    try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(ScormVersionDetector.class)) {
+
+    try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
+        ScormVersionDetector.class)) {
       Exception originalException = new RuntimeException("Version detection failed");
-      mockedDetector.when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
-                   .thenThrow(originalException);
+      mockedDetector
+          .when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
+          .thenThrow(originalException);
 
       // Act & Assert
       ModuleDetectionException exception = assertThrows(ModuleDetectionException.class, () -> {
@@ -174,10 +194,12 @@ class ScormDetectorPluginTest {
   void testDetect_VersionDetectorReturnsNull_ReturnsNull() throws Exception {
     // Arrange
     when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(true);
-    
-    try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(ScormVersionDetector.class)) {
-      mockedDetector.when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
-                   .thenReturn(null);
+
+    try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
+        ScormVersionDetector.class)) {
+      mockedDetector
+          .when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
+          .thenReturn(null);
 
       // Act
       ModuleType result = plugin.detect(mockFileAccess);
@@ -193,10 +215,12 @@ class ScormDetectorPluginTest {
   void testDetect_MultipleCallsSameFileAccess_ConsistentResults() throws Exception {
     // Arrange
     when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(true);
-    
-    try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(ScormVersionDetector.class)) {
-      mockedDetector.when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
-                   .thenReturn(ModuleType.SCORM_12);
+
+    try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
+        ScormVersionDetector.class)) {
+      mockedDetector
+          .when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
+          .thenReturn(ModuleType.SCORM_12);
 
       // Act
       ModuleType result1 = plugin.detect(mockFileAccess);
@@ -207,7 +231,8 @@ class ScormDetectorPluginTest {
       assertEquals(ModuleType.SCORM_12, result2);
       assertEquals(result1, result2);
       verify(mockFileAccess, times(2)).fileExists(Scorm12Parser.MANIFEST_FILE);
-      mockedDetector.verify(() -> ScormVersionDetector.detectScormVersion(mockFileAccess), times(2));
+      mockedDetector.verify(() -> ScormVersionDetector.detectScormVersion(mockFileAccess),
+          times(2));
     }
   }
 
@@ -218,9 +243,11 @@ class ScormDetectorPluginTest {
     when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(true);
     when(mockFileAccess2.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(false);
 
-    try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(ScormVersionDetector.class)) {
-      mockedDetector.when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
-                   .thenReturn(ModuleType.SCORM_2004);
+    try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
+        ScormVersionDetector.class)) {
+      mockedDetector
+          .when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
+          .thenReturn(ModuleType.SCORM_2004);
 
       // Act
       ModuleType result1 = plugin.detect(mockFileAccess);
@@ -232,19 +259,24 @@ class ScormDetectorPluginTest {
       verify(mockFileAccess).fileExists(Scorm12Parser.MANIFEST_FILE);
       verify(mockFileAccess2).fileExists(Scorm12Parser.MANIFEST_FILE);
       mockedDetector.verify(() -> ScormVersionDetector.detectScormVersion(mockFileAccess));
-      mockedDetector.verify(() -> ScormVersionDetector.detectScormVersion(mockFileAccess2), never());
+      mockedDetector.verify(() -> ScormVersionDetector.detectScormVersion(mockFileAccess2),
+          never());
     }
   }
 
   @Test
-  void testDetect_VersionDetectorThrowsIOException_WrapsInModuleDetectionException() throws Exception {
+  void testDetect_VersionDetectorThrowsIOException_WrapsInModuleDetectionException()
+      throws Exception {
     // Arrange
     when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(true);
-    
-    try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(ScormVersionDetector.class)) {
-      java.io.IOException ioException = new java.io.IOException("IO error during version detection");
-      mockedDetector.when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
-                   .thenThrow(ioException);
+
+    try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
+        ScormVersionDetector.class)) {
+      java.io.IOException ioException = new java.io.IOException(
+          "IO error during version detection");
+      mockedDetector
+          .when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
+          .thenThrow(ioException);
 
       // Act & Assert
       ModuleDetectionException exception = assertThrows(ModuleDetectionException.class, () -> {
@@ -260,23 +292,29 @@ class ScormDetectorPluginTest {
   @Test
   void testPluginProperties_ConsistentWithInterface() {
     // Assert plugin implements the interface correctly
-    assertTrue(plugin instanceof dev.jcputney.elearning.parser.api.ModuleTypeDetectorPlugin);
-    
+    assertInstanceOf(ModuleTypeDetectorPlugin.class, plugin);
+
     // Verify plugin properties are reasonable
     assertTrue(plugin.getPriority() > 0);
     assertNotNull(plugin.getName());
-    assertFalse(plugin.getName().trim().isEmpty());
+    assertFalse(plugin
+        .getName()
+        .trim()
+        .isEmpty());
   }
 
   @Test
-  void testDetect_EdgeCase_ManifestExistsButVersionDetectionReturnsUnexpectedType() throws Exception {
+  void testDetect_EdgeCase_ManifestExistsButVersionDetectionReturnsUnexpectedType()
+      throws Exception {
     // Arrange
     when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(true);
-    
-    try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(ScormVersionDetector.class)) {
+
+    try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
+        ScormVersionDetector.class)) {
       // Return a non-SCORM type (edge case)
-      mockedDetector.when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
-                   .thenReturn(ModuleType.AICC);
+      mockedDetector
+          .when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
+          .thenReturn(ModuleType.AICC);
 
       // Act
       ModuleType result = plugin.detect(mockFileAccess);

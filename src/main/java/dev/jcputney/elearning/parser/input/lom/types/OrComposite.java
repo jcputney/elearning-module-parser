@@ -21,11 +21,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an <code>orComposite</code> element in the LOM schema, defining a set of conditions
@@ -46,11 +43,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@SuperBuilder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class OrComposite implements Serializable {
 
@@ -120,4 +112,51 @@ public class OrComposite implements Serializable {
    */
   @JacksonXmlProperty(localName = "maximumVersion")
   private String maximumVersion;
+
+  public OrComposite() {
+  }
+
+  public SourceValuePair<Type> getType() {
+    return this.type;
+  }
+
+  public SourceValuePair<Name> getName() {
+    return this.name;
+  }
+
+  public String getMinimumVersion() {
+    return this.minimumVersion;
+  }
+
+  public String getMaximumVersion() {
+    return this.maximumVersion;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof OrComposite that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getType(), that.getType())
+        .append(getName(), that.getName())
+        .append(getMinimumVersion(), that.getMinimumVersion())
+        .append(getMaximumVersion(), that.getMaximumVersion())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getType())
+        .append(getName())
+        .append(getMinimumVersion())
+        .append(getMaximumVersion())
+        .toHashCode();
+  }
 }

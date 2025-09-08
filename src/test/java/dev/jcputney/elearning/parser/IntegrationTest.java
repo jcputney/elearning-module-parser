@@ -187,7 +187,8 @@ public class IntegrationTest {
   void testEndToEndParsingAllModuleTypes()
       throws IOException, ModuleDetectionException, ModuleParsingException {
     // Test SCORM 1.2
-    try (ZipFileAccess scorm12Zip = new ZipFileAccess("src/test/resources/modules/zips/scorm12.zip")) {
+    try (ZipFileAccess scorm12Zip = new ZipFileAccess(
+        "src/test/resources/modules/zips/scorm12.zip")) {
       ModuleParserFactory scorm12Factory = new DefaultModuleParserFactory(scorm12Zip);
       ModuleParser<?> scorm12Parser = scorm12Factory.getParser();
       ModuleMetadata<?> scorm12Metadata = scorm12Parser.parse();
@@ -196,7 +197,8 @@ public class IntegrationTest {
     }
 
     // Test SCORM 2004
-    try (ZipFileAccess scorm2004Zip = new ZipFileAccess("src/test/resources/modules/zips/scorm2004.zip")) {
+    try (ZipFileAccess scorm2004Zip = new ZipFileAccess(
+        "src/test/resources/modules/zips/scorm2004.zip")) {
       ModuleParserFactory scorm2004Factory = new DefaultModuleParserFactory(scorm2004Zip);
       ModuleParser<?> scorm2004Parser = scorm2004Factory.getParser();
       ModuleMetadata<?> scorm2004Metadata = scorm2004Parser.parse();
@@ -228,7 +230,7 @@ public class IntegrationTest {
    */
   @Test
   void testScorm2004SecondEditionDetection()
-      throws IOException, ModuleDetectionException, ModuleParsingException {
+      throws ModuleDetectionException, ModuleParsingException {
     // Arrange
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingSingleSCO_SCORM20042ndEdition";
 
@@ -251,7 +253,7 @@ public class IntegrationTest {
    */
   @Test
   void testScorm2004ThirdEditionDetection()
-      throws IOException, ModuleDetectionException, ModuleParsingException {
+      throws ModuleDetectionException, ModuleParsingException {
     // Arrange
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingSingleSCO_SCORM20043rdEdition";
 
@@ -274,7 +276,7 @@ public class IntegrationTest {
    */
   @Test
   void testScorm2004FourthEditionDetection()
-      throws IOException, ModuleDetectionException, ModuleParsingException {
+      throws ModuleDetectionException, ModuleParsingException {
     // Arrange
     String modulePath = "src/test/resources/modules/scorm2004/SequencingPostTestRollup4thEd_SCORM20044thEdition";
 

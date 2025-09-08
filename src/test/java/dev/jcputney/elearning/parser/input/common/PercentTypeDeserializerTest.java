@@ -56,7 +56,7 @@ class PercentTypeDeserializerTest {
     PercentType result = objectMapper.readValue(json, PercentType.class);
 
     // Assert
-    assertEquals(new BigDecimal("0.5"), result.getValue());
+    assertEquals(new BigDecimal("0.5"), result.value());
   }
 
   @Test

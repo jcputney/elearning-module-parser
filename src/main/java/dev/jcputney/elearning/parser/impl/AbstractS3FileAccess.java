@@ -29,7 +29,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import lombok.Getter;
 
 /**
  * Abstract base class for S3 FileAccess implementations with common caching and optimization logic.
@@ -106,7 +105,6 @@ public abstract class AbstractS3FileAccess implements FileAccess {
    * and directories. It is lazily initialized to allow subclasses to set it up after their S3
    * client is ready.
    */
-  @Getter
   protected volatile String rootPath;
 
   /**
@@ -451,6 +449,10 @@ public abstract class AbstractS3FileAccess implements FileAccess {
       return path;
     }
     return rootPath + "/" + path;
+  }
+
+  public String getRootPath() {
+    return this.rootPath;
   }
 
   /**

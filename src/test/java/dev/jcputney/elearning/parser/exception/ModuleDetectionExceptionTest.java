@@ -17,10 +17,18 @@
 
 package dev.jcputney.elearning.parser.exception;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for ModuleDetectionException.
@@ -35,7 +43,9 @@ class ModuleDetectionExceptionTest {
     // Assert
     assertEquals("Detection failed", exception.getMessage());
     assertNull(exception.getCause());
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -49,7 +59,9 @@ class ModuleDetectionExceptionTest {
     // Assert
     assertEquals("Detection failed", exception.getMessage());
     assertSame(cause, exception.getCause());
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -61,12 +73,15 @@ class ModuleDetectionExceptionTest {
     metadata.put("checkedFiles", java.util.Arrays.asList("imsmanifest.xml", "cmi5.xml"));
 
     // Act
-    ModuleDetectionException exception = new ModuleDetectionException("Detection failed", cause, metadata);
+    ModuleDetectionException exception = new ModuleDetectionException("Detection failed", cause,
+        metadata);
 
     // Assert
     assertEquals("Detection failed", exception.getMessage());
     assertSame(cause, exception.getCause());
-    assertEquals(2, exception.getMetadata().size());
+    assertEquals(2, exception
+        .getMetadata()
+        .size());
     assertEquals("ScormDetectorPlugin", exception.getMetadata("detectorPlugin"));
     assertNotNull(exception.getMetadata("checkedFiles"));
   }
@@ -79,7 +94,9 @@ class ModuleDetectionExceptionTest {
     // Assert
     assertNull(exception.getMessage());
     assertNull(exception.getCause());
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -90,7 +107,9 @@ class ModuleDetectionExceptionTest {
     // Assert
     assertEquals("Detection failed", exception.getMessage());
     assertNull(exception.getCause());
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -99,12 +118,15 @@ class ModuleDetectionExceptionTest {
     Throwable cause = new java.io.IOException("File access error");
 
     // Act
-    ModuleDetectionException exception = new ModuleDetectionException("Detection failed", cause, null);
+    ModuleDetectionException exception = new ModuleDetectionException("Detection failed", cause,
+        null);
 
     // Assert
     assertEquals("Detection failed", exception.getMessage());
     assertSame(cause, exception.getCause());
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -113,9 +135,9 @@ class ModuleDetectionExceptionTest {
     ModuleDetectionException exception = new ModuleDetectionException("Detection failed");
 
     // Assert
-    assertTrue(exception instanceof ModuleException);
-    assertTrue(exception instanceof Exception);
-    assertTrue(exception instanceof Throwable);
+    assertInstanceOf(ModuleException.class, exception);
+    assertInstanceOf(Exception.class, exception);
+    assertInstanceOf(Throwable.class, exception);
   }
 
   @Test
@@ -124,22 +146,27 @@ class ModuleDetectionExceptionTest {
     ModuleDetectionException exception = new ModuleDetectionException("Detection failed");
 
     // Act
-    exception.addMetadata("modulePath", "/modules/unknown-module.zip")
-            .addMetadata("detectionAttempts", 3);
+    exception
+        .addMetadata("modulePath", "/modules/unknown-module.zip")
+        .addMetadata("detectionAttempts", 3);
 
     // Assert
     assertEquals("/modules/unknown-module.zip", exception.getMetadata("modulePath"));
     assertEquals(3, exception.getMetadata("detectionAttempts"));
-    assertEquals(2, exception.getMetadata().size());
+    assertEquals(2, exception
+        .getMetadata()
+        .size());
   }
 
   @Test
   void testInheritedMetadataFunctionality_GetMetadata_Success() {
     // Arrange
     Map<String, Object> metadata = new HashMap<>();
-    metadata.put("supportedTypes", java.util.Arrays.asList("SCORM_1_2", "SCORM_2004", "AICC", "CMI5"));
+    metadata.put("supportedTypes",
+        java.util.Arrays.asList("SCORM_1_2", "SCORM_2004", "AICC", "CMI5"));
     metadata.put("detectionTime", 1500L);
-    ModuleDetectionException exception = new ModuleDetectionException("Detection failed", null, metadata);
+    ModuleDetectionException exception = new ModuleDetectionException("Detection failed", null,
+        metadata);
 
     // Act & Assert
     assertNotNull(exception.getMetadata("supportedTypes"));
@@ -151,8 +178,9 @@ class ModuleDetectionExceptionTest {
   void testInheritedToString_WithMetadata_Success() {
     // Arrange
     ModuleDetectionException exception = new ModuleDetectionException("Detection failed");
-    exception.addMetadata("zipFile", "unknown-module.zip")
-            .addMetadata("fileCount", 15);
+    exception
+        .addMetadata("zipFile", "unknown-module.zip")
+        .addMetadata("fileCount", 15);
 
     // Act
     String result = exception.toString();
@@ -171,10 +199,13 @@ class ModuleDetectionExceptionTest {
   void testRealisticScenario_UnsupportedModuleType_Success() {
     // Arrange
     ModuleDetectionException exception = new ModuleDetectionException("Unsupported module type");
-    exception.addMetadata("foundFiles", java.util.Arrays.asList("course.xml", "lesson.html"))
-            .addMetadata("missingFiles", java.util.Arrays.asList("imsmanifest.xml", "cmi5.xml"))
-            .addMetadata("moduleSize", "2.5MB")
-            .addMetadata("detectorPlugins", java.util.Arrays.asList("ScormDetectorPlugin", "Cmi5DetectorPlugin", "AiccDetectorPlugin"));
+    exception
+        .addMetadata("foundFiles", java.util.Arrays.asList("course.xml", "lesson.html"))
+        .addMetadata("missingFiles", java.util.Arrays.asList("imsmanifest.xml", "cmi5.xml"))
+        .addMetadata("moduleSize", "2.5MB")
+        .addMetadata("detectorPlugins",
+            java.util.Arrays.asList("ScormDetectorPlugin", "Cmi5DetectorPlugin",
+                "AiccDetectorPlugin"));
 
     // Act & Assert
     assertEquals("Unsupported module type", exception.getMessage());
@@ -199,8 +230,10 @@ class ModuleDetectionExceptionTest {
 
     // Assert
     assertEquals("Error accessing module files during detection", exception.getMessage());
-    assertTrue(exception.getCause() instanceof java.io.IOException);
-    assertEquals("Unable to read ZIP file", exception.getCause().getMessage());
+    assertInstanceOf(IOException.class, exception.getCause());
+    assertEquals("Unable to read ZIP file", exception
+        .getCause()
+        .getMessage());
     assertEquals("/uploads/module.zip", exception.getMetadata("zipPath"));
     assertEquals("file-listing", exception.getMetadata("operation"));
     assertEquals(2, exception.getMetadata("attemptNumber"));
@@ -209,12 +242,14 @@ class ModuleDetectionExceptionTest {
   @Test
   void testRealisticScenario_CorruptModule_Success() {
     // Arrange
-    ModuleDetectionException exception = new ModuleDetectionException("Corrupt module package detected");
-    exception.addMetadata("corruptionType", "incomplete-manifest")
-            .addMetadata("expectedElements", java.util.Arrays.asList("organizations", "resources"))
-            .addMetadata("foundElements", java.util.Arrays.asList("organizations"))
-            .addMetadata("manifestSize", 512L)
-            .addMetadata("validationErrors", 5);
+    ModuleDetectionException exception = new ModuleDetectionException(
+        "Corrupt module package detected");
+    exception
+        .addMetadata("corruptionType", "incomplete-manifest")
+        .addMetadata("expectedElements", java.util.Arrays.asList("organizations", "resources"))
+        .addMetadata("foundElements", List.of("organizations"))
+        .addMetadata("manifestSize", 512L)
+        .addMetadata("validationErrors", 5);
 
     // Act & Assert
     assertEquals("Corrupt module package detected", exception.getMessage());
@@ -231,20 +266,21 @@ class ModuleDetectionExceptionTest {
     RuntimeException detectorException = new RuntimeException("Detector plugin crashed");
     ModuleDetectionException exception = new ModuleDetectionException(
         "All detection plugins failed", detectorException);
-    
+
     Map<String, String> pluginResults = new HashMap<>();
     pluginResults.put("ScormDetectorPlugin", "IOException: manifest not found");
     pluginResults.put("Cmi5DetectorPlugin", "NullPointerException: invalid XML");
     pluginResults.put("AiccDetectorPlugin", "FileNotFoundException: missing .au file");
-    
-    exception.addMetadata("pluginResults", pluginResults)
-            .addMetadata("totalPlugins", 3)
-            .addMetadata("successfulPlugins", 0)
-            .addMetadata("detectionStrategy", "fail-fast");
+
+    exception
+        .addMetadata("pluginResults", pluginResults)
+        .addMetadata("totalPlugins", 3)
+        .addMetadata("successfulPlugins", 0)
+        .addMetadata("detectionStrategy", "fail-fast");
 
     // Act & Assert
     assertEquals("All detection plugins failed", exception.getMessage());
-    assertTrue(exception.getCause() instanceof RuntimeException);
+    assertInstanceOf(RuntimeException.class, exception.getCause());
     assertEquals(pluginResults, exception.getMetadata("pluginResults"));
     assertEquals(3, exception.getMetadata("totalPlugins"));
     assertEquals(0, exception.getMetadata("successfulPlugins"));
@@ -255,13 +291,17 @@ class ModuleDetectionExceptionTest {
   void testChainedExceptions_ComplexErrorChain_Success() {
     // Arrange
     RuntimeException rootCause = new RuntimeException("XML parser initialization failed");
-    javax.xml.stream.XMLStreamException xmlException = new javax.xml.stream.XMLStreamException("Invalid XML structure", rootCause);
-    ModuleDetectionException exception = new ModuleDetectionException("Module detection failed", xmlException);
+    javax.xml.stream.XMLStreamException xmlException = new javax.xml.stream.XMLStreamException(
+        "Invalid XML structure", rootCause);
+    ModuleDetectionException exception = new ModuleDetectionException("Module detection failed",
+        xmlException);
 
     // Act & Assert
     assertEquals("Module detection failed", exception.getMessage());
     assertSame(xmlException, exception.getCause());
-    assertSame(rootCause, exception.getCause().getCause());
+    assertSame(rootCause, exception
+        .getCause()
+        .getCause());
   }
 
   @Test
@@ -272,7 +312,9 @@ class ModuleDetectionExceptionTest {
     // Assert
     assertEquals("", exception.getMessage());
     assertNull(exception.getCause());
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -282,20 +324,23 @@ class ModuleDetectionExceptionTest {
     fileStructure.put("manifestFiles", java.util.Arrays.asList("manifest.xml", "course.xml"));
     fileStructure.put("contentFiles", java.util.Arrays.asList("index.html", "style.css"));
     fileStructure.put("directories", java.util.Arrays.asList("assets/", "content/"));
-    
+
     ModuleDetectionException exception = new ModuleDetectionException("Complex detection failure");
-    exception.addMetadata("fileStructure", fileStructure)
-            .addMetadata("detectionStartTime", java.time.Instant.now())
-            .addMetadata("heuristics", java.util.Map.of(
-                "hasManifest", false,
-                "hasLaunchFile", true,
-                "hasMetadata", false
-            ));
+    exception
+        .addMetadata("fileStructure", fileStructure)
+        .addMetadata("detectionStartTime", java.time.Instant.now())
+        .addMetadata("heuristics", java.util.Map.of(
+            "hasManifest", false,
+            "hasLaunchFile", true,
+            "hasMetadata", false
+        ));
 
     // Act & Assert
     assertEquals(fileStructure, exception.getMetadata("fileStructure"));
     assertNotNull(exception.getMetadata("detectionStartTime"));
     assertNotNull(exception.getMetadata("heuristics"));
-    assertEquals(3, exception.getMetadata().size());
+    assertEquals(3, exception
+        .getMetadata()
+        .size());
   }
 }

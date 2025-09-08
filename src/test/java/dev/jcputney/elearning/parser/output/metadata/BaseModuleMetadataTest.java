@@ -17,15 +17,24 @@
 
 package dev.jcputney.elearning.parser.output.metadata;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.PackageManifest;
+import java.time.Duration;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
  * Test class for BaseModuleMetadata.
@@ -65,7 +74,8 @@ class BaseModuleMetadataTest {
   @Test
   void testAddMetadataComponent_NullCompositeMetadata_CreatesAndAdds() {
     // Arrange
-    TestBaseModuleMetadata metadataWithNullComposite = new TestBaseModuleMetadata(mockManifest, ModuleType.SCORM_12, true);
+    TestBaseModuleMetadata metadataWithNullComposite = new TestBaseModuleMetadata(mockManifest,
+        ModuleType.SCORM_12, true);
     metadataWithNullComposite.compositeMetadata = null;
 
     // Act
@@ -73,7 +83,9 @@ class BaseModuleMetadataTest {
 
     // Assert
     assertNotNull(metadataWithNullComposite.compositeMetadata);
-    assertTrue(metadataWithNullComposite.compositeMetadata.getComponents().contains(mockComponent));
+    assertTrue(metadataWithNullComposite.compositeMetadata
+        .getComponents()
+        .contains(mockComponent));
   }
 
   @Test
@@ -82,7 +94,9 @@ class BaseModuleMetadataTest {
     metadata.addMetadataComponent(mockComponent);
 
     // Assert
-    assertTrue(metadata.compositeMetadata.getComponents().contains(mockComponent));
+    assertTrue(metadata.compositeMetadata
+        .getComponents()
+        .contains(mockComponent));
   }
 
   @Test
@@ -101,24 +115,27 @@ class BaseModuleMetadataTest {
     when(mockManifest.getLaunchUrl()).thenReturn("test.html");
     when(mockManifest.getIdentifier()).thenReturn("test-id");
     when(mockManifest.getVersion()).thenReturn("1.0");
-    when(mockManifest.getDuration()).thenReturn(java.time.Duration.parse("PT30M"));
+    when(mockManifest.getDuration()).thenReturn(Duration.parse("PT30M"));
     metadata = new TestBaseModuleMetadata(mockManifest, ModuleType.SCORM_12, true);
 
     // Act & Assert
     assertEquals(Optional.of("Test Title"), metadata.getMetadata(BaseModuleMetadata.TITLE));
-    assertEquals(Optional.of("Test Description"), metadata.getMetadata(BaseModuleMetadata.DESCRIPTION));
+    assertEquals(Optional.of("Test Description"),
+        metadata.getMetadata(BaseModuleMetadata.DESCRIPTION));
     assertEquals(Optional.of("test.html"), metadata.getMetadata(BaseModuleMetadata.LAUNCH_URL));
     assertEquals(Optional.of("test-id"), metadata.getMetadata(BaseModuleMetadata.IDENTIFIER));
     assertEquals(Optional.of("1.0"), metadata.getMetadata(BaseModuleMetadata.VERSION));
-    assertEquals(Optional.of(java.time.Duration.parse("PT30M")), metadata.getMetadata(BaseModuleMetadata.DURATION));
-    assertEquals(Optional.of(ModuleType.SCORM_12), metadata.getMetadata(BaseModuleMetadata.MODULE_TYPE));
+    assertEquals(Optional.of(Duration.parse("PT30M")),
+        metadata.getMetadata(BaseModuleMetadata.DURATION));
+    assertEquals(Optional.of(ModuleType.SCORM_12),
+        metadata.getMetadata(BaseModuleMetadata.MODULE_TYPE));
     assertEquals(Optional.of(true), metadata.getMetadata(BaseModuleMetadata.XAPI_ENABLED));
   }
 
   @Test
   void testGetMetadata_StandardFields_NullValues_ReturnsEmpty() {
     // Arrange (all standard fields are null by default except moduleType and xapiEnabled)
-    
+
     // Act & Assert
     assertEquals(Optional.empty(), metadata.getMetadata(BaseModuleMetadata.TITLE));
     assertEquals(Optional.empty(), metadata.getMetadata(BaseModuleMetadata.DESCRIPTION));
@@ -127,9 +144,10 @@ class BaseModuleMetadataTest {
     assertEquals(Optional.empty(), metadata.getMetadata(BaseModuleMetadata.VERSION));
     // Duration might return PT0S instead of null when manifest returns null
     Optional<Object> durationResult = metadata.getMetadata(BaseModuleMetadata.DURATION);
-    assertTrue(durationResult.isEmpty() || java.time.Duration.ZERO.equals(durationResult.get()));
+    assertTrue(durationResult.isEmpty() || Duration.ZERO.equals(durationResult.get()));
     // Non-nullable fields
-    assertEquals(Optional.of(ModuleType.SCORM_12), metadata.getMetadata(BaseModuleMetadata.MODULE_TYPE));
+    assertEquals(Optional.of(ModuleType.SCORM_12),
+        metadata.getMetadata(BaseModuleMetadata.MODULE_TYPE));
     assertEquals(Optional.of(true), metadata.getMetadata(BaseModuleMetadata.XAPI_ENABLED));
   }
 
@@ -199,7 +217,8 @@ class BaseModuleMetadataTest {
   @Test
   void testGetMetadataWithType_ModuleType_CorrectType_ReturnsValue() {
     // Act
-    Optional<ModuleType> result = metadata.getMetadata(BaseModuleMetadata.MODULE_TYPE, ModuleType.class);
+    Optional<ModuleType> result = metadata.getMetadata(BaseModuleMetadata.MODULE_TYPE,
+        ModuleType.class);
 
     // Assert
     assertTrue(result.isPresent());
@@ -287,7 +306,7 @@ class BaseModuleMetadataTest {
     when(mockManifest.getLaunchUrl()).thenReturn("manifest.html");
     when(mockManifest.getIdentifier()).thenReturn("manifest-id");
     when(mockManifest.getVersion()).thenReturn("2.0");
-    when(mockManifest.getDuration()).thenReturn(java.time.Duration.parse("PT1H"));
+    when(mockManifest.getDuration()).thenReturn(Duration.parse("PT1H"));
 
     // Act
     SimpleMetadata result = metadata.getSimpleMetadata(mockManifest);
@@ -295,11 +314,13 @@ class BaseModuleMetadataTest {
     // Assert
     assertNotNull(result);
     assertEquals(Optional.of("Manifest Title"), result.getMetadata(BaseModuleMetadata.TITLE));
-    assertEquals(Optional.of("Manifest Description"), result.getMetadata(BaseModuleMetadata.DESCRIPTION));
+    assertEquals(Optional.of("Manifest Description"),
+        result.getMetadata(BaseModuleMetadata.DESCRIPTION));
     assertEquals(Optional.of("manifest.html"), result.getMetadata(BaseModuleMetadata.LAUNCH_URL));
     assertEquals(Optional.of("manifest-id"), result.getMetadata(BaseModuleMetadata.IDENTIFIER));
     assertEquals(Optional.of("2.0"), result.getMetadata(BaseModuleMetadata.VERSION));
-    assertEquals(Optional.of(java.time.Duration.parse("PT1H")), result.getMetadata(BaseModuleMetadata.DURATION));
+    assertEquals(Optional.of(Duration.parse("PT1H")),
+        result.getMetadata(BaseModuleMetadata.DURATION));
   }
 
   @Test
@@ -342,7 +363,8 @@ class BaseModuleMetadataTest {
     // Arrange
     when(mockManifest.getTitle()).thenReturn("Test");
     metadata = new TestBaseModuleMetadata(mockManifest, ModuleType.SCORM_12, true);
-    TestBaseModuleMetadata other = new TestBaseModuleMetadata(mockManifest, ModuleType.SCORM_12, true);
+    TestBaseModuleMetadata other = new TestBaseModuleMetadata(mockManifest, ModuleType.SCORM_12,
+        true);
 
     // Act & Assert
     assertEquals(metadata, other);
@@ -351,7 +373,8 @@ class BaseModuleMetadataTest {
   @Test
   void testEquals_DifferentContent_ReturnsFalse() {
     // Arrange
-    TestBaseModuleMetadata other = new TestBaseModuleMetadata(mockManifest, ModuleType.SCORM_2004, true);
+    TestBaseModuleMetadata other = new TestBaseModuleMetadata(mockManifest, ModuleType.SCORM_2004,
+        true);
 
     // Act & Assert
     assertNotEquals(metadata, other);
@@ -362,7 +385,8 @@ class BaseModuleMetadataTest {
     // Arrange
     when(mockManifest.getTitle()).thenReturn("Test");
     metadata = new TestBaseModuleMetadata(mockManifest, ModuleType.SCORM_12, true);
-    TestBaseModuleMetadata other = new TestBaseModuleMetadata(mockManifest, ModuleType.SCORM_12, true);
+    TestBaseModuleMetadata other = new TestBaseModuleMetadata(mockManifest, ModuleType.SCORM_12,
+        true);
 
     // Act & Assert
     assertEquals(metadata.hashCode(), other.hashCode());
@@ -374,7 +398,7 @@ class BaseModuleMetadataTest {
     SimpleMetadata simpleMetadata = new SimpleMetadata();
     simpleMetadata.addMetadata("customField", "customValue");
     simpleMetadata.addMetadata("anotherField", 42);
-    
+
     when(mockManifest.getTitle()).thenReturn("Module Title");
     metadata = new TestBaseModuleMetadata(mockManifest, ModuleType.SCORM_12, true);
     metadata.addMetadataComponent(simpleMetadata);
@@ -382,29 +406,31 @@ class BaseModuleMetadataTest {
     // Act & Assert
     // Standard field should be returned from base metadata
     assertEquals(Optional.of("Module Title"), metadata.getMetadata(BaseModuleMetadata.TITLE));
-    
+
     // Custom fields should be returned from composite
     assertEquals(Optional.of("customValue"), metadata.getMetadata("customField"));
     assertEquals(Optional.of(42), metadata.getMetadata("anotherField"));
-    
+
     // hasMetadata should work for both
     assertTrue(metadata.hasMetadata(BaseModuleMetadata.TITLE));
     assertTrue(metadata.hasMetadata("customField"));
     assertTrue(metadata.hasMetadata("anotherField"));
     assertFalse(metadata.hasMetadata("nonexistent"));
-    
+
     // Typed access should work
     assertEquals(Optional.of("customValue"), metadata.getMetadata("customField", String.class));
     assertEquals(Optional.of(42), metadata.getMetadata("anotherField", Integer.class));
-    assertEquals(Optional.empty(), metadata.getMetadata("anotherField", String.class)); // Wrong type
+    assertEquals(Optional.empty(),
+        metadata.getMetadata("anotherField", String.class)); // Wrong type
   }
 
   /**
    * Concrete test implementation of BaseModuleMetadata.
    */
   public static class TestBaseModuleMetadata extends BaseModuleMetadata<TestManifest> {
-    
-    public TestBaseModuleMetadata(TestManifest manifest, ModuleType moduleType, boolean xapiEnabled) {
+
+    public TestBaseModuleMetadata(TestManifest manifest, ModuleType moduleType,
+        boolean xapiEnabled) {
       super(manifest, moduleType, xapiEnabled);
     }
 
@@ -418,6 +444,7 @@ class BaseModuleMetadataTest {
    * Test manifest implementation.
    */
   public static class TestManifest implements PackageManifest {
+
     @Override
     public String getTitle() {
       return null;
@@ -444,7 +471,7 @@ class BaseModuleMetadataTest {
     }
 
     @Override
-    public java.time.Duration getDuration() {
+    public Duration getDuration() {
       return null;
     }
   }

@@ -17,19 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>controlsSpec</strong> complex type.</p>
@@ -55,12 +49,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ControlsSpec implements Serializable {
@@ -130,4 +118,158 @@ public class ControlsSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "forceDisableRootChoice")
   private YesNoType forceDisableRootChoice;
+
+  public ControlsSpec() {
+  }
+
+  public YesNoType getShowFinishButton() {
+    return this.showFinishButton;
+  }
+
+  public void setShowFinishButton(YesNoType showFinishButton) {
+    this.showFinishButton = showFinishButton;
+  }
+
+  public YesNoType getShowCloseItem() {
+    return this.showCloseItem;
+  }
+
+  public void setShowCloseItem(YesNoType showCloseItem) {
+    this.showCloseItem = showCloseItem;
+  }
+
+  public YesNoType getShowHelp() {
+    return this.showHelp;
+  }
+
+  public void setShowHelp(YesNoType showHelp) {
+    this.showHelp = showHelp;
+  }
+
+  public YesNoType getShowProgressBar() {
+    return this.showProgressBar;
+  }
+
+  public void setShowProgressBar(YesNoType showProgressBar) {
+    this.showProgressBar = showProgressBar;
+  }
+
+  public YesNoType getUseMeasureProgressBar() {
+    return this.useMeasureProgressBar;
+  }
+
+  public void setUseMeasureProgressBar(YesNoType useMeasureProgressBar) {
+    this.useMeasureProgressBar = useMeasureProgressBar;
+  }
+
+  public YesNoType getShowCourseStructure() {
+    return this.showCourseStructure;
+  }
+
+  public void setShowCourseStructure(YesNoType showCourseStructure) {
+    this.showCourseStructure = showCourseStructure;
+  }
+
+  public YesNoType getCourseStructureStartsOpen() {
+    return this.courseStructureStartsOpen;
+  }
+
+  public void setCourseStructureStartsOpen(
+      YesNoType courseStructureStartsOpen) {
+    this.courseStructureStartsOpen = courseStructureStartsOpen;
+  }
+
+  public YesNoType getShowNavBar() {
+    return this.showNavBar;
+  }
+
+  public void setShowNavBar(YesNoType showNavBar) {
+    this.showNavBar = showNavBar;
+  }
+
+  public YesNoType getShowTitleBar() {
+    return this.showTitleBar;
+  }
+
+  public void setShowTitleBar(YesNoType showTitleBar) {
+    this.showTitleBar = showTitleBar;
+  }
+
+  public YesNoType getEnableFlowNav() {
+    return this.enableFlowNav;
+  }
+
+  public void setEnableFlowNav(YesNoType enableFlowNav) {
+    this.enableFlowNav = enableFlowNav;
+  }
+
+  public YesNoType getEnableChoiceNav() {
+    return this.enableChoiceNav;
+  }
+
+  public void setEnableChoiceNav(YesNoType enableChoiceNav) {
+    this.enableChoiceNav = enableChoiceNav;
+  }
+
+  public StatusDisplayType getStatusDisplay() {
+    return this.statusDisplay;
+  }
+
+  public void setStatusDisplay(StatusDisplayType statusDisplay) {
+    this.statusDisplay = statusDisplay;
+  }
+
+  public YesNoType getForceDisableRootChoice() {
+    return this.forceDisableRootChoice;
+  }
+
+  public void setForceDisableRootChoice(YesNoType forceDisableRootChoice) {
+    this.forceDisableRootChoice = forceDisableRootChoice;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof ControlsSpec that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getShowFinishButton(), that.getShowFinishButton())
+        .append(getShowCloseItem(), that.getShowCloseItem())
+        .append(getShowHelp(), that.getShowHelp())
+        .append(getShowProgressBar(), that.getShowProgressBar())
+        .append(getUseMeasureProgressBar(), that.getUseMeasureProgressBar())
+        .append(getShowCourseStructure(), that.getShowCourseStructure())
+        .append(getCourseStructureStartsOpen(), that.getCourseStructureStartsOpen())
+        .append(getShowNavBar(), that.getShowNavBar())
+        .append(getShowTitleBar(), that.getShowTitleBar())
+        .append(getEnableFlowNav(), that.getEnableFlowNav())
+        .append(getEnableChoiceNav(), that.getEnableChoiceNav())
+        .append(getStatusDisplay(), that.getStatusDisplay())
+        .append(getForceDisableRootChoice(), that.getForceDisableRootChoice())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getShowFinishButton())
+        .append(getShowCloseItem())
+        .append(getShowHelp())
+        .append(getShowProgressBar())
+        .append(getUseMeasureProgressBar())
+        .append(getShowCourseStructure())
+        .append(getCourseStructureStartsOpen())
+        .append(getShowNavBar())
+        .append(getShowTitleBar())
+        .append(getEnableFlowNav())
+        .append(getEnableChoiceNav())
+        .append(getStatusDisplay())
+        .append(getForceDisableRootChoice())
+        .toHashCode();
+  }
 }

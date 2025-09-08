@@ -20,11 +20,8 @@ package dev.jcputney.elearning.parser.output.metadata;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A composite implementation of the MetadataComponent interface that can contain other metadata
@@ -35,10 +32,6 @@ import lombok.extern.jackson.Jacksonized;
  * finds a match.
  * </p>
  */
-@Builder
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
 public class CompositeMetadata implements MetadataComponent {
 
   /**
@@ -46,13 +39,20 @@ public class CompositeMetadata implements MetadataComponent {
    */
   private final List<MetadataComponent> components = new ArrayList<>();
 
+  public CompositeMetadata() {
+  }
+
   /**
    * Adds a metadata component to this composite.
    *
    * @param component The component to add.
    * @return This CompositeMetadata instance for method chaining.
    */
-  public CompositeMetadata addComponent(@NonNull MetadataComponent component) {
+  public CompositeMetadata addComponent(MetadataComponent component) {
+    if (component == null) {
+      throw new NullPointerException("Component cannot be null");
+    }
+
     components.add(component);
     return this;
   }
@@ -63,7 +63,7 @@ public class CompositeMetadata implements MetadataComponent {
    * @param components The components to add.
    * @return This CompositeMetadata instance for method chaining.
    */
-  public CompositeMetadata addComponents(@NonNull List<MetadataComponent> components) {
+  public CompositeMetadata addComponents(List<MetadataComponent> components) {
     this.components.addAll(components);
     return this;
   }
@@ -107,5 +107,27 @@ public class CompositeMetadata implements MetadataComponent {
    */
   public List<MetadataComponent> getComponents() {
     return new ArrayList<>(components);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof CompositeMetadata that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getComponents(), that.getComponents())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getComponents())
+        .toHashCode();
   }
 }

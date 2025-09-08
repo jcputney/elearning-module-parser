@@ -50,10 +50,9 @@ class Cmi5MetadataTest {
     Course course = createCourse("course-id", "Test Course", "Test Description");
     AU au1 = createAU("au1", "url1");
     AU au2 = createAU("au2", "url2");
-    Cmi5Manifest manifest = Cmi5Manifest.builder()
-        .course(course)
-        .assignableUnits(List.of(au1, au2))
-        .build();
+    Cmi5Manifest manifest = new Cmi5Manifest();
+    manifest.setCourse(course);
+    manifest.setAssignableUnits(List.of(au1, au2));
 
     // Act
     Cmi5Metadata metadata = Cmi5Metadata.create(manifest, true);
@@ -94,10 +93,9 @@ class Cmi5MetadataTest {
     Course course = createCourse("course-id", "Test Course", "Test Description");
     Block block1 = createBlock("block1");
     Block block2 = createBlock("block2");
-    Cmi5Manifest manifest = Cmi5Manifest.builder()
-        .course(course)
-        .blocks(List.of(block1, block2))
-        .build();
+    Cmi5Manifest manifest = new Cmi5Manifest();
+    manifest.setCourse(course);
+    manifest.setBlocks(List.of(block1, block2));
 
     // Act
     Cmi5Metadata metadata = Cmi5Metadata.create(manifest, false);
@@ -129,13 +127,10 @@ class Cmi5MetadataTest {
     Course course = createCourse("course-id", "Test Course", "Test Description");
     Objective objective1 = createObjective("objective1");
     Objective objective2 = createObjective("objective2");
-    ObjectivesList objectives = ObjectivesList.builder()
-        .objectives(List.of(objective1, objective2))
-        .build();
-    Cmi5Manifest manifest = Cmi5Manifest.builder()
-        .course(course)
-        .objectives(objectives)
-        .build();
+    ObjectivesList objectives = new ObjectivesList(List.of(objective1, objective2));
+    Cmi5Manifest manifest = new Cmi5Manifest();
+    manifest.setCourse(course);
+    manifest.setObjectives(objectives);
 
     // Act
     Cmi5Metadata metadata = Cmi5Metadata.create(manifest, true);
@@ -166,9 +161,8 @@ class Cmi5MetadataTest {
   void create_withNoAssignableUnitsBlocksOrObjectives_addsNoMetadata() {
     // Arrange
     Course course = createCourse("course-id", "Test Course", "Test Description");
-    Cmi5Manifest manifest = Cmi5Manifest.builder()
-        .course(course)
-        .build();
+    Cmi5Manifest manifest = new Cmi5Manifest();
+    manifest.setCourse(course);
 
     // Act
     Cmi5Metadata metadata = Cmi5Metadata.create(manifest, true);
@@ -194,15 +188,12 @@ class Cmi5MetadataTest {
   void create_withEmptyLists_addsNoMetadata() {
     // Arrange
     Course course = createCourse("course-id", "Test Course", "Test Description");
-    ObjectivesList objectives = ObjectivesList.builder()
-        .objectives(Collections.emptyList())
-        .build();
-    Cmi5Manifest manifest = Cmi5Manifest.builder()
-        .course(course)
-        .assignableUnits(Collections.emptyList())
-        .blocks(Collections.emptyList())
-        .objectives(objectives)
-        .build();
+    ObjectivesList objectives = new ObjectivesList(Collections.emptyList());
+    Cmi5Manifest manifest = new Cmi5Manifest();
+    manifest.setCourse(course);
+    manifest.setAssignableUnits(Collections.emptyList());
+    manifest.setBlocks(Collections.emptyList());
+    manifest.setObjectives(objectives);
 
     // Act
     Cmi5Metadata metadata = Cmi5Metadata.create(manifest, true);
@@ -214,10 +205,18 @@ class Cmi5MetadataTest {
     assertEquals(manifest, metadata.getManifest());
 
     // Verify no metadata was added
-    assertTrue(metadata.getMetadata("assignableUnitIds").isEmpty());
-    assertTrue(metadata.getMetadata("assignableUnitUrls").isEmpty());
-    assertTrue(metadata.getMetadata("blockIds").isEmpty());
-    assertTrue(metadata.getMetadata("objectiveIds").isEmpty());
+    assertTrue(metadata
+        .getMetadata("assignableUnitIds")
+        .isEmpty());
+    assertTrue(metadata
+        .getMetadata("assignableUnitUrls")
+        .isEmpty());
+    assertTrue(metadata
+        .getMetadata("blockIds")
+        .isEmpty());
+    assertTrue(metadata
+        .getMetadata("objectiveIds")
+        .isEmpty());
   }
 
   /**
@@ -227,13 +226,8 @@ class Cmi5MetadataTest {
    * @return a TextType with the given value
    */
   private TextType createTextType(String value) {
-    LangString langString = LangString.builder()
-        .value(value)
-        .lang("en-US")
-        .build();
-    return TextType.builder()
-        .strings(List.of(langString))
-        .build();
+    LangString langString = new LangString(value, "en-US");
+    return new TextType(List.of(langString));
   }
 
   /**
@@ -245,11 +239,11 @@ class Cmi5MetadataTest {
    * @return a Course with the given values
    */
   private Course createCourse(String id, String title, String description) {
-    return Course.builder()
-        .id(id)
-        .title(createTextType(title))
-        .description(createTextType(description))
-        .build();
+    Course course = new Course();
+    course.setId(id);
+    course.setTitle(createTextType(title));
+    course.setDescription(createTextType(description));
+    return course;
   }
 
   /**
@@ -260,10 +254,10 @@ class Cmi5MetadataTest {
    * @return an AU with the given values
    */
   private AU createAU(String id, String url) {
-    return AU.builder()
-        .id(id)
-        .url(url)
-        .build();
+    AU au = new AU();
+    au.setId(id);
+    au.setUrl(url);
+    return au;
   }
 
   /**
@@ -273,9 +267,9 @@ class Cmi5MetadataTest {
    * @return a Block with the given ID
    */
   private Block createBlock(String id) {
-    return Block.builder()
-        .id(id)
-        .build();
+    Block block = new Block();
+    block.setId(id);
+    return block;
   }
 
   /**
@@ -285,8 +279,8 @@ class Cmi5MetadataTest {
    * @return an Objective with the given ID
    */
   private Objective createObjective(String id) {
-    return Objective.builder()
-        .id(id)
-        .build();
+    Objective objective = new Objective();
+    objective.setId(id);
+    return objective;
   }
 }

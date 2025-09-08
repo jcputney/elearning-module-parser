@@ -17,20 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.lom.LOM;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a taxon path in the Learning Object Metadata (LOM) schema. A taxon path defines a
@@ -49,12 +43,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class TaxonPath implements Serializable {
 
@@ -97,4 +85,63 @@ public class TaxonPath implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "customElement", namespace = LOM.NAMESPACE_URI + "/extend")
   private List<Object> customElements;
+
+  public TaxonPath(SingleLangString source, List<Taxon> taxons, List<Object> customElements) {
+    this.source = source;
+    this.taxons = taxons;
+    this.customElements = customElements;
+  }
+
+  public TaxonPath() {
+  }
+
+  public SingleLangString getSource() {
+    return this.source;
+  }
+
+  public void setSource(SingleLangString source) {
+    this.source = source;
+  }
+
+  public List<Taxon> getTaxons() {
+    return this.taxons;
+  }
+
+  public void setTaxons(List<Taxon> taxons) {
+    this.taxons = taxons;
+  }
+
+  public List<Object> getCustomElements() {
+    return this.customElements;
+  }
+
+  public void setCustomElements(List<Object> customElements) {
+    this.customElements = customElements;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof TaxonPath taxonPath)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getSource(), taxonPath.getSource())
+        .append(getTaxons(), taxonPath.getTaxons())
+        .append(getCustomElements(), taxonPath.getCustomElements())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getSource())
+        .append(getTaxons())
+        .append(getCustomElements())
+        .toHashCode();
+  }
 }

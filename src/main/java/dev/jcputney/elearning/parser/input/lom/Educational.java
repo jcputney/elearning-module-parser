@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -34,12 +32,8 @@ import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the educational information about a learning object in a Learning Object Metadata
@@ -67,12 +61,6 @@ import lombok.extern.jackson.Jacksonized;
  * </complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Educational implements Serializable {
 
@@ -265,4 +253,144 @@ public class Educational implements Serializable {
   @JacksonXmlProperty(localName = "language")
   private List<String> languages;
 
+  public Educational() {
+  }
+
+  public SourceValuePair<InteractivityType> getInteractivityType() {
+    return this.interactivityType;
+  }
+
+  public void setInteractivityType(
+      SourceValuePair<InteractivityType> interactivityType) {
+    this.interactivityType = interactivityType;
+  }
+
+  public List<SourceValuePair<LearningResourceType>> getLearningResourceType() {
+    return this.learningResourceType;
+  }
+
+  public void setLearningResourceType(
+      List<SourceValuePair<LearningResourceType>> learningResourceType) {
+    this.learningResourceType = learningResourceType;
+  }
+
+  public SourceValuePair<InteractivityLevel> getInteractivityLevel() {
+    return this.interactivityLevel;
+  }
+
+  public void setInteractivityLevel(
+      SourceValuePair<InteractivityLevel> interactivityLevel) {
+    this.interactivityLevel = interactivityLevel;
+  }
+
+  public SourceValuePair<SemanticDensity> getSemanticDensity() {
+    return this.semanticDensity;
+  }
+
+  public void setSemanticDensity(
+      SourceValuePair<SemanticDensity> semanticDensity) {
+    this.semanticDensity = semanticDensity;
+  }
+
+  public List<SourceValuePair<IntendedEndUserRole>> getIntendedEndUserRole() {
+    return this.intendedEndUserRole;
+  }
+
+  public void setIntendedEndUserRole(
+      List<SourceValuePair<IntendedEndUserRole>> intendedEndUserRole) {
+    this.intendedEndUserRole = intendedEndUserRole;
+  }
+
+  public List<SourceValuePair<Context>> getContext() {
+    return this.context;
+  }
+
+  public void setContext(
+      List<SourceValuePair<Context>> context) {
+    this.context = context;
+  }
+
+  public UnboundLangString getTypicalAgeRange() {
+    return this.typicalAgeRange;
+  }
+
+  public void setTypicalAgeRange(UnboundLangString typicalAgeRange) {
+    this.typicalAgeRange = typicalAgeRange;
+  }
+
+  public SourceValuePair<Difficulty> getDifficulty() {
+    return this.difficulty;
+  }
+
+  public void setDifficulty(
+      SourceValuePair<Difficulty> difficulty) {
+    this.difficulty = difficulty;
+  }
+
+  public LomDuration getTypicalLearningTime() {
+    return this.typicalLearningTime;
+  }
+
+  public void setTypicalLearningTime(LomDuration typicalLearningTime) {
+    this.typicalLearningTime = typicalLearningTime;
+  }
+
+  public UnboundLangString getDescriptions() {
+    return this.descriptions;
+  }
+
+  public void setDescriptions(UnboundLangString descriptions) {
+    this.descriptions = descriptions;
+  }
+
+  public List<String> getLanguages() {
+    return this.languages;
+  }
+
+  public void setLanguages(List<String> languages) {
+    this.languages = languages;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Educational that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getInteractivityType(),
+            that.getInteractivityType())
+        .append(getLearningResourceType(), that.getLearningResourceType())
+        .append(getInteractivityLevel(), that.getInteractivityLevel())
+        .append(getSemanticDensity(), that.getSemanticDensity())
+        .append(getIntendedEndUserRole(), that.getIntendedEndUserRole())
+        .append(getContext(), that.getContext())
+        .append(getTypicalAgeRange(), that.getTypicalAgeRange())
+        .append(getDifficulty(), that.getDifficulty())
+        .append(getTypicalLearningTime(), that.getTypicalLearningTime())
+        .append(getDescriptions(), that.getDescriptions())
+        .append(getLanguages(), that.getLanguages())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getInteractivityType())
+        .append(getLearningResourceType())
+        .append(getInteractivityLevel())
+        .append(getSemanticDensity())
+        .append(getIntendedEndUserRole())
+        .append(getContext())
+        .append(getTypicalAgeRange())
+        .append(getDifficulty())
+        .append(getTypicalLearningTime())
+        .append(getDescriptions())
+        .append(getLanguages())
+        .toHashCode();
+  }
 }

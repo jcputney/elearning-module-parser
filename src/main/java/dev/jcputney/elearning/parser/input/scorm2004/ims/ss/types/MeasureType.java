@@ -18,12 +18,13 @@
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a decimal measure with a value between -1 and 1, inclusive, with at least four
@@ -31,12 +32,13 @@ import lombok.Getter;
  *
  * <p>This type enforces the range and precision for a measure as defined in the XML schema.
  * Valid values for this type fall within the range of -1 to 1.</p>
+ *
+ * @param value The decimal value for the measure must be between -1 and 1 with at least four
+ * decimal digits.
  */
-@Getter
-@EqualsAndHashCode(doNotUseGetters = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class MeasureType implements Serializable {
+@JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
+public record MeasureType(BigDecimal value) implements Serializable {
 
   /**
    * The minimum and maximum values for the measure type.
@@ -54,16 +56,11 @@ public class MeasureType implements Serializable {
   private static final int SCALE = 4; // At least 4 significant decimal digits
 
   /**
-   * The decimal value for the measure must be between -1 and 1 with at least four decimal digits.
-   */
-  private final BigDecimal value;
-
-  /**
    * Default constructor for the MeasureType class.
    */
   @SuppressWarnings("unused")
   public MeasureType() {
-    this.value = BigDecimal.ZERO.setScale(SCALE, RoundingMode.HALF_UP);
+    this(BigDecimal.ZERO.setScale(SCALE, RoundingMode.HALF_UP));
   }
 
   /**
@@ -111,5 +108,27 @@ public class MeasureType implements Serializable {
     return value
         .setScale(SCALE, RoundingMode.HALF_UP)
         .toPlainString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof MeasureType that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(value(), that.value())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(value())
+        .toHashCode();
   }
 }

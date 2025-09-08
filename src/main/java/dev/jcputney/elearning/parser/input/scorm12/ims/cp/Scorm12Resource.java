@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -28,12 +26,8 @@ import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.ScormType;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the {@code <resource>} element in SCORM 1.2 manifest file.
@@ -55,12 +49,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xsd:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Resource implements Serializable {
 
@@ -117,4 +105,108 @@ public class Scorm12Resource implements Serializable {
   @JacksonXmlElementWrapper(localName = "dependency", useWrapping = false)
   @JacksonXmlProperty(localName = "dependency", namespace = Scorm12Manifest.NAMESPACE_URI)
   private List<Scorm12Dependency> dependencies;
+
+  public Scorm12Resource() {
+  }
+
+  public String getIdentifier() {
+    return this.identifier;
+  }
+
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }
+
+  public String getBase() {
+    return this.base;
+  }
+
+  public void setBase(String base) {
+    this.base = base;
+  }
+
+  public String getHref() {
+    return this.href;
+  }
+
+  public void setHref(String href) {
+    this.href = href;
+  }
+
+  public String getType() {
+    return this.type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public ScormType getScormType() {
+    return this.scormType;
+  }
+
+  public void setScormType(ScormType scormType) {
+    this.scormType = scormType;
+  }
+
+  public Scorm12Metadata getMetadata() {
+    return this.metadata;
+  }
+
+  public void setMetadata(Scorm12Metadata metadata) {
+    this.metadata = metadata;
+  }
+
+  public List<Scorm12File> getFiles() {
+    return this.files;
+  }
+
+  public void setFiles(List<Scorm12File> files) {
+    this.files = files;
+  }
+
+  public List<Scorm12Dependency> getDependencies() {
+    return this.dependencies;
+  }
+
+  public void setDependencies(
+      List<Scorm12Dependency> dependencies) {
+    this.dependencies = dependencies;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm12Resource that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getIdentifier(), that.getIdentifier())
+        .append(getBase(), that.getBase())
+        .append(getHref(), that.getHref())
+        .append(getType(), that.getType())
+        .append(getScormType(), that.getScormType())
+        .append(getMetadata(), that.getMetadata())
+        .append(getFiles(), that.getFiles())
+        .append(getDependencies(), that.getDependencies())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getIdentifier())
+        .append(getBase())
+        .append(getHref())
+        .append(getType())
+        .append(getScormType())
+        .append(getMetadata())
+        .append(getFiles())
+        .append(getDependencies())
+        .toHashCode();
+  }
 }

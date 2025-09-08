@@ -169,8 +169,7 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
    * @throws IOException If an error occurs while reading the file.
    * @throws IllegalArgumentException if manifest is null
    */
-  abstract void loadExternalMetadata(M manifest)
-      throws XMLStreamException, IOException;
+  abstract void loadExternalMetadata(M manifest) throws XMLStreamException, IOException;
 
   /**
    * Abstract method to return the class of the manifest object for the specific parser.

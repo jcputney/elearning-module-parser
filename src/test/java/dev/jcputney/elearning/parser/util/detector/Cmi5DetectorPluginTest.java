@@ -17,16 +17,27 @@
 
 package dev.jcputney.elearning.parser.util.detector;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.api.ModuleTypeDetectorPlugin;
 import dev.jcputney.elearning.parser.enums.ModuleType;
-import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.parsers.Cmi5Parser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
  * Test class for Cmi5DetectorPlugin.
@@ -170,18 +181,22 @@ class Cmi5DetectorPluginTest {
   @Test
   void testPluginProperties_ConsistentWithInterface() {
     // Assert plugin implements the interface correctly
-    assertTrue(plugin instanceof dev.jcputney.elearning.parser.api.ModuleTypeDetectorPlugin);
-    
+    assertInstanceOf(ModuleTypeDetectorPlugin.class, plugin);
+
     // Verify plugin properties are reasonable
     assertTrue(plugin.getPriority() > 0);
     assertNotNull(plugin.getName());
-    assertFalse(plugin.getName().trim().isEmpty());
+    assertFalse(plugin
+        .getName()
+        .trim()
+        .isEmpty());
   }
 
   @Test
   void testDetect_EdgeCase_ExceptionHandling() {
     // Arrange
-    when(mockFileAccess.fileExists(Cmi5Parser.CMI5_XML)).thenThrow(new RuntimeException("Simulated error"));
+    when(mockFileAccess.fileExists(Cmi5Parser.CMI5_XML)).thenThrow(
+        new RuntimeException("Simulated error"));
 
     // Act & Assert
     assertThrows(RuntimeException.class, () -> {

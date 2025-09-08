@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,24 +27,13 @@ import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.ScormType;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a single resource within the content package, typically corresponding to a physical
  * file or collection of files that can be delivered within an LMS.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Resource implements Serializable {
@@ -62,7 +49,6 @@ public class Scorm2004Resource implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("type")
-  @Default
   private String type = "webcontent";
   /**
    * The URL or path to the main entry point file for this resource.
@@ -104,4 +90,107 @@ public class Scorm2004Resource implements Serializable {
   @JacksonXmlElementWrapper(localName = "dependency", useWrapping = false)
   @JacksonXmlProperty(localName = "dependency", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private List<Scorm2004Dependency> dependencies;
+
+  public Scorm2004Resource() {
+  }
+
+  public String getIdentifier() {
+    return this.identifier;
+  }
+
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }
+
+  public String getType() {
+    return this.type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public String getHref() {
+    return this.href;
+  }
+
+  public void setHref(String href) {
+    this.href = href;
+  }
+
+  public String getBase() {
+    return this.base;
+  }
+
+  public void setBase(String base) {
+    this.base = base;
+  }
+
+  public ScormType getScormType() {
+    return this.scormType;
+  }
+
+  public void setScormType(ScormType scormType) {
+    this.scormType = scormType;
+  }
+
+  public Scorm2004SubMetadata getMetadata() {
+    return this.metadata;
+  }
+
+  public void setMetadata(Scorm2004SubMetadata metadata) {
+    this.metadata = metadata;
+  }
+
+  public List<Scorm2004File> getFiles() {
+    return this.files;
+  }
+
+  public void setFiles(List<Scorm2004File> files) {
+    this.files = files;
+  }
+
+  public List<Scorm2004Dependency> getDependencies() {
+    return this.dependencies;
+  }
+
+  public void setDependencies(List<Scorm2004Dependency> dependencies) {
+    this.dependencies = dependencies;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm2004Resource that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getIdentifier(), that.getIdentifier())
+        .append(getType(), that.getType())
+        .append(getHref(), that.getHref())
+        .append(getBase(), that.getBase())
+        .append(getScormType(), that.getScormType())
+        .append(getMetadata(), that.getMetadata())
+        .append(getFiles(), that.getFiles())
+        .append(getDependencies(), that.getDependencies())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getIdentifier())
+        .append(getType())
+        .append(getHref())
+        .append(getBase())
+        .append(getScormType())
+        .append(getMetadata())
+        .append(getFiles())
+        .append(getDependencies())
+        .toHashCode();
+  }
 }

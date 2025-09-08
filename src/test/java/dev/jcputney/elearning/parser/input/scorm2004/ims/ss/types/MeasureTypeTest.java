@@ -38,7 +38,7 @@ public class MeasureTypeTest {
   @Test
   void defaultConstructor_createsZeroValue() {
     MeasureType measure = new MeasureType();
-    assertEquals(BigDecimal.ZERO.setScale(4, RoundingMode.HALF_UP), measure.getValue());
+    assertEquals(BigDecimal.ZERO.setScale(4, RoundingMode.HALF_UP), measure.value());
     assertEquals("0.0000", measure.toString());
   }
 
@@ -46,7 +46,7 @@ public class MeasureTypeTest {
   void constructor_withValidValue_createsInstance() {
     BigDecimal value = new BigDecimal("0.5");
     MeasureType measure = new MeasureType(value);
-    assertEquals(value.setScale(4, RoundingMode.HALF_UP), measure.getValue());
+    assertEquals(value.setScale(4, RoundingMode.HALF_UP), measure.value());
     assertEquals("0.5000", measure.toString());
   }
 
@@ -54,7 +54,7 @@ public class MeasureTypeTest {
   void constructor_withMinValue_createsInstance() {
     BigDecimal value = new BigDecimal("-1");
     MeasureType measure = new MeasureType(value);
-    assertEquals(value.setScale(4, RoundingMode.HALF_UP), measure.getValue());
+    assertEquals(value.setScale(4, RoundingMode.HALF_UP), measure.value());
     assertEquals("-1.0000", measure.toString());
   }
 
@@ -62,7 +62,7 @@ public class MeasureTypeTest {
   void constructor_withMaxValue_createsInstance() {
     BigDecimal value = new BigDecimal("1");
     MeasureType measure = new MeasureType(value);
-    assertEquals(value.setScale(4, RoundingMode.HALF_UP), measure.getValue());
+    assertEquals(value.setScale(4, RoundingMode.HALF_UP), measure.value());
     assertEquals("1.0000", measure.toString());
   }
 
@@ -86,7 +86,7 @@ public class MeasureTypeTest {
   @Test
   void parse_withValidString_createsInstance() {
     MeasureType measure = MeasureType.parse("0.5");
-    assertEquals(new BigDecimal("0.5").setScale(4, RoundingMode.HALF_UP), measure.getValue());
+    assertEquals(new BigDecimal("0.5").setScale(4, RoundingMode.HALF_UP), measure.value());
     assertEquals("0.5000", measure.toString());
   }
 
@@ -149,14 +149,14 @@ public class MeasureTypeTest {
   void constructor_withMoreThanFourDecimalPlaces_scalesCorrectly() {
     BigDecimal value = new BigDecimal("0.12345");
     MeasureType measure = new MeasureType(value);
-    assertEquals(new BigDecimal("0.1235"), measure.getValue()); // Rounded up
+    assertEquals(new BigDecimal("0.1235"), measure.value()); // Rounded up
     assertEquals("0.1235", measure.toString());
   }
 
   @Test
   void parse_withMoreThanFourDecimalPlaces_scalesCorrectly() {
     MeasureType measure = MeasureType.parse("0.12345");
-    assertEquals(new BigDecimal("0.1235"), measure.getValue()); // Rounded up
+    assertEquals(new BigDecimal("0.1235"), measure.value()); // Rounded up
     assertEquals("0.1235", measure.toString());
   }
 }

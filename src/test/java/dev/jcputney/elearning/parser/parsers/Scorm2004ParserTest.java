@@ -53,9 +53,7 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.RollupRuleCond
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.SequencingRuleConditionType;
 import dev.jcputney.elearning.parser.output.metadata.scorm2004.Scorm2004Metadata;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import javax.xml.stream.XMLStreamException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -66,7 +64,7 @@ public class Scorm2004ParserTest {
 
   @Test
   void testParseContentPackagingMetadataSCORM20043rdEdition()
-      throws XMLStreamException, IOException, ModuleParsingException {
+      throws ModuleParsingException {
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition/";
     Scorm2004Parser parser = new Scorm2004Parser(new LocalFileAccess(modulePath));
 
@@ -128,7 +126,7 @@ public class Scorm2004ParserTest {
 
   @Test
   void testParseContentPackagingOneFilePerSCOSCORM20043rdEdition()
-      throws XMLStreamException, IOException, ModuleParsingException {
+      throws ModuleParsingException {
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingOneFilePerSCO_SCORM20043rdEdition";
     Scorm2004Parser parser = new Scorm2004Parser(new LocalFileAccess(modulePath));
 
@@ -160,7 +158,7 @@ public class Scorm2004ParserTest {
 
   @Test
   void testParseContentPackagingSingleSCOSCORM20043rdEdition()
-      throws XMLStreamException, IOException, ModuleParsingException {
+      throws ModuleParsingException {
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingSingleSCO_SCORM20043rdEdition";
     Scorm2004Parser parser = new Scorm2004Parser(new LocalFileAccess(modulePath));
 
@@ -189,7 +187,7 @@ public class Scorm2004ParserTest {
 
   @Test
   void testParseRuntimeBasicCallsSCORM20043rdEdition()
-      throws XMLStreamException, IOException, ModuleParsingException {
+      throws ModuleParsingException {
     String modulePath = "src/test/resources/modules/scorm2004/RuntimeBasicCalls_SCORM20043rdEdition";
     Scorm2004Parser parser = new Scorm2004Parser(new LocalFileAccess(modulePath));
 
@@ -218,21 +216,28 @@ public class Scorm2004ParserTest {
 
   @Test
   void testParseSequencingRandomTestSCORM20043rdEdition()
-      throws XMLStreamException, IOException, ModuleParsingException {
+      throws ModuleParsingException {
     String modulePath = "src/test/resources/modules/scorm2004/SequencingRandomTest_SCORM20043rdEdition";
     Scorm2004Parser parser = new Scorm2004Parser(new LocalFileAccess(modulePath));
-    
+
     Scorm2004Metadata metadata = parser.parse();
     assertNotNull(metadata);
     Scorm2004Manifest manifest = metadata.getManifest();
     assertNotNull(manifest);
 
     // Verify the manifest was parsed correctly
-    assertEquals("Golf Explained - Sequencing Random Test", 
-        manifest.getOrganizations().getDefault().getTitle());
+    assertEquals("Golf Explained - Sequencing Random Test",
+        manifest
+            .getOrganizations()
+            .getDefault()
+            .getTitle());
 
     // Get the content wrapper item and verify its sequencing
-    var contentWrapper = manifest.getOrganizations().getDefault().getItems().get(0);
+    var contentWrapper = manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems()
+        .get(0);
     assertEquals("content_wrapper", contentWrapper.getIdentifier());
 
     // Verify the content wrapper's sequencing
@@ -259,10 +264,14 @@ public class Scorm2004ParserTest {
     RollupRule rule = rules.get(0);
     assertEquals(ChildActivitySet.ALL, rule.getChildActivitySet());
 
-    List<RollupCondition> conditions = rule.getRollupConditions().getRollupConditionList();
+    List<RollupCondition> conditions = rule
+        .getRollupConditions()
+        .getRollupConditionList();
     assertNotNull(conditions);
     assertEquals(1, conditions.size());
-    assertEquals(RollupRuleConditionType.COMPLETED, conditions.get(0).getCondition());
+    assertEquals(RollupRuleConditionType.COMPLETED, conditions
+        .get(0)
+        .getCondition());
 
     RollupAction action = rule.getRollupAction();
     assertNotNull(action);
@@ -281,11 +290,16 @@ public class Scorm2004ParserTest {
     assertEquals(1, mapInfo.size());
 
     Scorm2004ObjectiveMapping mapping = mapInfo.get(0);
-    assertEquals("com.scorm.golfsamples.sequencing.randomtest.content_completed", mapping.getTargetObjectiveID());
+    assertEquals("com.scorm.golfsamples.sequencing.randomtest.content_completed",
+        mapping.getTargetObjectiveID());
     assertTrue(mapping.isWriteSatisfiedStatus());
 
     // Get the post test item and verify its sequencing
-    var postTestItem = manifest.getOrganizations().getDefault().getItems().get(1);
+    var postTestItem = manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems()
+        .get(1);
     assertEquals("posttest_item", postTestItem.getIdentifier());
 
     // Verify the post test's sequencing
@@ -331,7 +345,8 @@ public class Scorm2004ParserTest {
     // Verify randomization controls
     RandomizationControls randomizationControls = postTestSequencing.getRandomizationControls();
     assertNotNull(randomizationControls);
-    assertEquals(RandomizationTiming.ON_EACH_NEW_ATTEMPT, randomizationControls.getRandomizationTiming());
+    assertEquals(RandomizationTiming.ON_EACH_NEW_ATTEMPT,
+        randomizationControls.getRandomizationTiming());
     assertTrue(randomizationControls.isReorderChildren());
   }
 

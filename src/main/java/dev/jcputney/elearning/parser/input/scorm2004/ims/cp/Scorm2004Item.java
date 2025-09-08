@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -35,24 +33,13 @@ import dev.jcputney.elearning.parser.input.scorm2004.adl.types.TimeLimitAction;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.Sequencing;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a single item within an organization, typically mapping to a learning object or
  * resource. Items define the hierarchical structure within an organization.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Item implements Serializable {
@@ -76,7 +63,6 @@ public class Scorm2004Item implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "isvisible")
   @JsonProperty("isvisible")
-  @Default
   private boolean isVisible = true;
   /**
    * Querystring parameters that should be passed to an associated SCO or Asset on launch. Useful
@@ -159,4 +145,177 @@ public class Scorm2004Item implements Serializable {
    */
   @JacksonXmlProperty(localName = "dataFromLMS", namespace = ADLCP.NAMESPACE_URI)
   private String dataFromLMS;
+
+  public Scorm2004Item() {
+  }
+
+  public String getIdentifier() {
+    return this.identifier;
+  }
+
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }
+
+  public String getIdentifierRef() {
+    return this.identifierRef;
+  }
+
+  public void setIdentifierRef(String identifierRef) {
+    this.identifierRef = identifierRef;
+  }
+
+  public boolean isVisible() {
+    return this.isVisible;
+  }
+
+  public void setVisible(boolean visible) {
+    isVisible = visible;
+  }
+
+  public String getParameters() {
+    return this.parameters;
+  }
+
+  public void setParameters(String parameters) {
+    this.parameters = parameters;
+  }
+
+  public String getTitle() {
+    return this.title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public List<Scorm2004Item> getItems() {
+    return this.items;
+  }
+
+  public void setItems(List<Scorm2004Item> items) {
+    this.items = items;
+  }
+
+  public ADLData getData() {
+    return this.data;
+  }
+
+  public void setData(ADLData data) {
+    this.data = data;
+  }
+
+  public CompletionThreshold getCompletionThreshold() {
+    return this.completionThreshold;
+  }
+
+  public void setCompletionThreshold(CompletionThreshold completionThreshold) {
+    this.completionThreshold = completionThreshold;
+  }
+
+  public Sequencing getSequencing() {
+    return this.sequencing;
+  }
+
+  public void setSequencing(Sequencing sequencing) {
+    this.sequencing = sequencing;
+  }
+
+  public Scorm2004SubMetadata getMetadata() {
+    return this.metadata;
+  }
+
+  public void setMetadata(Scorm2004SubMetadata metadata) {
+    this.metadata = metadata;
+  }
+
+  public Presentation getPresentation() {
+    return this.presentation;
+  }
+
+  public void setPresentation(Presentation presentation) {
+    this.presentation = presentation;
+  }
+
+  public Double getMasteryScore() {
+    return this.masteryScore;
+  }
+
+  public void setMasteryScore(Double masteryScore) {
+    this.masteryScore = masteryScore;
+  }
+
+  public String getPrerequisites() {
+    return this.prerequisites;
+  }
+
+  public void setPrerequisites(String prerequisites) {
+    this.prerequisites = prerequisites;
+  }
+
+  public TimeLimitAction getTimeLimitAction() {
+    return this.timeLimitAction;
+  }
+
+  public void setTimeLimitAction(TimeLimitAction timeLimitAction) {
+    this.timeLimitAction = timeLimitAction;
+  }
+
+  public String getDataFromLMS() {
+    return this.dataFromLMS;
+  }
+
+  public void setDataFromLMS(String dataFromLMS) {
+    this.dataFromLMS = dataFromLMS;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm2004Item that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(isVisible(), that.isVisible())
+        .append(getIdentifier(), that.getIdentifier())
+        .append(getIdentifierRef(), that.getIdentifierRef())
+        .append(getParameters(), that.getParameters())
+        .append(getTitle(), that.getTitle())
+        .append(getItems(), that.getItems())
+        .append(getData(), that.getData())
+        .append(getCompletionThreshold(), that.getCompletionThreshold())
+        .append(getSequencing(), that.getSequencing())
+        .append(getMetadata(), that.getMetadata())
+        .append(getPresentation(), that.getPresentation())
+        .append(getMasteryScore(), that.getMasteryScore())
+        .append(getPrerequisites(), that.getPrerequisites())
+        .append(getTimeLimitAction(), that.getTimeLimitAction())
+        .append(getDataFromLMS(), that.getDataFromLMS())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getIdentifier())
+        .append(getIdentifierRef())
+        .append(isVisible())
+        .append(getParameters())
+        .append(getTitle())
+        .append(getItems())
+        .append(getData())
+        .append(getCompletionThreshold())
+        .append(getSequencing())
+        .append(getMetadata())
+        .append(getPresentation())
+        .append(getMasteryScore())
+        .append(getPrerequisites())
+        .append(getTimeLimitAction())
+        .append(getDataFromLMS())
+        .toHashCode();
+  }
 }

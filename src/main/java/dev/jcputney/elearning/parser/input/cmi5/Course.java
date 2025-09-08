@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.cmi5;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -26,12 +24,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the root course element in a CMI5 course structure, including metadata such as title,
@@ -53,12 +47,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:element>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Course implements Serializable {
 
@@ -100,4 +88,74 @@ public class Course implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("id")
   private String id;
+
+  public Course(TextType title, TextType description, List<Object> customExtensions, String id) {
+    this.title = title;
+    this.description = description;
+    this.customExtensions = customExtensions;
+    this.id = id;
+  }
+
+  public Course() {
+  }
+
+  public TextType getTitle() {
+    return this.title;
+  }
+
+  public void setTitle(TextType title) {
+    this.title = title;
+  }
+
+  public TextType getDescription() {
+    return this.description;
+  }
+
+  public void setDescription(TextType description) {
+    this.description = description;
+  }
+
+  public List<Object> getCustomExtensions() {
+    return this.customExtensions;
+  }
+
+  public void setCustomExtensions(List<Object> customExtensions) {
+    this.customExtensions = customExtensions;
+  }
+
+  public String getId() {
+    return this.id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Course course)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getTitle(), course.getTitle())
+        .append(getDescription(), course.getDescription())
+        .append(getCustomExtensions(), course.getCustomExtensions())
+        .append(getId(), course.getId())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getTitle())
+        .append(getDescription())
+        .append(getCustomExtensions())
+        .append(getId())
+        .toHashCode();
+  }
 }

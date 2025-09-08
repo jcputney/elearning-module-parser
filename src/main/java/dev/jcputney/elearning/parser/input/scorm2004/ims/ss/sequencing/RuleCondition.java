@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,25 +27,14 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureTypeDeserializer;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.SequencingRuleConditionType;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an individual condition within a set of rule conditions. Each condition specifies a
  * specific criterion that must be met, such as an objective being completed, a minimum measure
  * threshold, or a defined attempt status.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RuleCondition implements Serializable {
@@ -76,7 +63,6 @@ public class RuleCondition implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("operator")
-  @Default
   private ConditionOperatorType operator = ConditionOperatorType.NO_OP;
   /**
    * Specifies the condition evaluated for this rule. The condition can include criteria such as
@@ -85,4 +71,77 @@ public class RuleCondition implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("condition")
   private SequencingRuleConditionType condition;
+
+  public RuleCondition(String referencedObjective, MeasureType measureThreshold,
+      ConditionOperatorType operator,
+      SequencingRuleConditionType condition) {
+    this.referencedObjective = referencedObjective;
+    this.measureThreshold = measureThreshold;
+    this.operator = operator;
+    this.condition = condition;
+  }
+
+  public RuleCondition() {
+  }
+
+  public String getReferencedObjective() {
+    return this.referencedObjective;
+  }
+
+  public void setReferencedObjective(String referencedObjective) {
+    this.referencedObjective = referencedObjective;
+  }
+
+  public MeasureType getMeasureThreshold() {
+    return this.measureThreshold;
+  }
+
+  public void setMeasureThreshold(MeasureType measureThreshold) {
+    this.measureThreshold = measureThreshold;
+  }
+
+  public ConditionOperatorType getOperator() {
+    return this.operator;
+  }
+
+  public void setOperator(ConditionOperatorType operator) {
+    this.operator = operator;
+  }
+
+  public SequencingRuleConditionType getCondition() {
+    return this.condition;
+  }
+
+  public void setCondition(SequencingRuleConditionType condition) {
+    this.condition = condition;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof RuleCondition that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getReferencedObjective(),
+            that.getReferencedObjective())
+        .append(getMeasureThreshold(), that.getMeasureThreshold())
+        .append(getOperator(), that.getOperator())
+        .append(getCondition(), that.getCondition())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getReferencedObjective())
+        .append(getMeasureThreshold())
+        .append(getOperator())
+        .append(getCondition())
+        .toHashCode();
+  }
 }

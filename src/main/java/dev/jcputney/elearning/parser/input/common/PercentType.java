@@ -18,21 +18,22 @@
 package dev.jcputney.elearning.parser.input.common;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a percentage value constrained between 0 and 1, inclusive. This type enforces the
  * range but does not enforce specific decimal precision.
+ *
+ * @param value The decimal value for the percentage must be between 0 and 1.
  */
-@Getter
-@EqualsAndHashCode(doNotUseGetters = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class PercentType implements Serializable {
+@JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
+public record PercentType(BigDecimal value) implements Serializable {
 
   /**
    * The minimum and maximum values for the percentage.
@@ -42,17 +43,13 @@ public class PercentType implements Serializable {
    * The maximum value for the percentage.
    */
   private static final BigDecimal MAX_VALUE = BigDecimal.ONE;
-  /**
-   * The decimal value for the percentage must be between 0 and 1.
-   */
-  private final BigDecimal value;
 
   /**
    * Default constructor for the PercentType class.
    */
   @SuppressWarnings("unused")
   public PercentType() {
-    this.value = MIN_VALUE;
+    this(MIN_VALUE);
   }
 
   /**
@@ -61,14 +58,13 @@ public class PercentType implements Serializable {
    * @param value the decimal value for the percentage must be between 0 and 1.
    * @throws IllegalArgumentException if the value is out of range.
    */
-  public PercentType(BigDecimal value) {
+  public PercentType {
     if (value == null) {
       throw new IllegalArgumentException("Value cannot be null");
     }
     if (value.compareTo(MIN_VALUE) < 0 || value.compareTo(MAX_VALUE) > 0) {
       throw new IllegalArgumentException("Value must be between 0 and 1, inclusive.");
     }
-    this.value = value;
   }
 
   /**
@@ -96,4 +92,25 @@ public class PercentType implements Serializable {
     return value.toPlainString();
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof PercentType that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(value(), that.value())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(value())
+        .toHashCode();
+  }
 }

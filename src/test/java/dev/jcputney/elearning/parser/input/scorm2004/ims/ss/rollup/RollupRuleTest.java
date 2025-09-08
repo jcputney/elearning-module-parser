@@ -50,7 +50,7 @@ class RollupRuleTest {
     assertNotNull(rollupRule);
     assertEquals(ChildActivitySet.ALL, rollupRule.getChildActivitySet());
     assertEquals(0, rollupRule.getMinimumCount());
-    assertEquals(BigDecimal.ZERO, rollupRule.getMinimumPercent().getValue());
+    assertEquals(BigDecimal.ZERO, rollupRule.getMinimumPercent().value());
 
     assertNotNull(rollupRule.getRollupConditions());
     assertEquals(1, rollupRule.getRollupConditions().getRollupConditionList().size());
@@ -79,7 +79,7 @@ class RollupRuleTest {
     assertNotNull(rollupRule);
     assertEquals(ChildActivitySet.AT_LEAST_COUNT, rollupRule.getChildActivitySet());
     assertEquals(2, rollupRule.getMinimumCount());
-    assertEquals(new BigDecimal("0.5"), rollupRule.getMinimumPercent().getValue());
+    assertEquals(new BigDecimal("0.5"), rollupRule.getMinimumPercent().value());
 
     assertNotNull(rollupRule.getRollupConditions());
     assertEquals(1, rollupRule.getRollupConditions().getRollupConditionList().size());

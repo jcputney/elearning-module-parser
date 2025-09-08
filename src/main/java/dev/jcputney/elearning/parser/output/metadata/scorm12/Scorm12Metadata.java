@@ -26,9 +26,6 @@ import dev.jcputney.elearning.parser.output.metadata.SimpleMetadata;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 /**
  * Represents metadata for SCORM 1.2 eLearning modules, including SCORM 1.2-specific fields such as
@@ -38,10 +35,10 @@ import lombok.experimental.SuperBuilder;
  * SCORM 1.2, providing metadata that describes the learning module content and requirements.
  * </p>
  */
-@SuperBuilder
-@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-@EqualsAndHashCode(doNotUseGetters = true, callSuper = true)
 public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
+
+  protected Scorm12Metadata() {
+  }
 
   /**
    * Creates a new Scorm12Metadata instance with standard SCORM 1.2 metadata components.
@@ -51,14 +48,11 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
    * @return A new Scorm12Metadata instance.
    */
   public static Scorm12Metadata create(Scorm12Manifest manifest, boolean xapiEnabled) {
-    Scorm12Metadata metadata =
-        Scorm12Metadata
-            .builder()
-            .manifest(manifest)
-            .moduleType(ModuleType.SCORM_12)
-            .moduleEditionType(ModuleEditionType.SCORM_12)
-            .xapiEnabled(xapiEnabled)
-            .build();
+    Scorm12Metadata metadata = new Scorm12Metadata();
+    metadata.manifest = manifest;
+    metadata.moduleType = ModuleType.SCORM_12;
+    metadata.moduleEditionType = ModuleEditionType.SCORM_12;
+    metadata.xapiEnabled = xapiEnabled;
 
     // Add SCORM 1.2 specific metadata
     SimpleMetadata scorm12Metadata = metadata.getSimpleMetadata(manifest);
@@ -80,14 +74,12 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
    * @param metadata The SimpleMetadata object to populate.
    */
   private void extractScorm12SpecificMetadata(Scorm12Manifest manifest, SimpleMetadata metadata) {
-    if (manifest.getOrganizations() != null &&
-        manifest
-            .getOrganizations()
-            .getDefault() != null &&
-        manifest
-            .getOrganizations()
-            .getDefault()
-            .getItems() != null) {
+    if (manifest.getOrganizations() != null && manifest
+        .getOrganizations()
+        .getDefault() != null && manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems() != null) {
 
       List<Scorm12Item> items = manifest
           .getOrganizations()
@@ -122,10 +114,8 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
    * @param masteryScores The map to store mastery scores.
    * @param customData The map to store custom data.
    */
-  private void extractItemData(List<Scorm12Item> items,
-      Map<String, String> prerequisites,
-      Map<String, Double> masteryScores,
-      Map<String, String> customData) {
+  private void extractItemData(List<Scorm12Item> items, Map<String, String> prerequisites,
+      Map<String, Double> masteryScores, Map<String, String> customData) {
     for (Scorm12Item item : items) {
       String itemId = item.getIdentifier();
 

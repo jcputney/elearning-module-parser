@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,23 +25,13 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the collection of resources within the content package. Each resource defines a
  * learning object or asset.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Resources implements Serializable {
@@ -62,4 +50,47 @@ public class Scorm2004Resources implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "resource", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private List<Scorm2004Resource> resourceList;
+
+  public Scorm2004Resources() {
+  }
+
+  public String getBase() {
+    return this.base;
+  }
+
+  public void setBase(String base) {
+    this.base = base;
+  }
+
+  public List<Scorm2004Resource> getResourceList() {
+    return this.resourceList;
+  }
+
+  public void setResourceList(List<Scorm2004Resource> resourceList) {
+    this.resourceList = resourceList;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm2004Resources that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getBase(), that.getBase())
+        .append(getResourceList(), that.getResourceList())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getBase())
+        .append(getResourceList())
+        .toHashCode();
+  }
 }

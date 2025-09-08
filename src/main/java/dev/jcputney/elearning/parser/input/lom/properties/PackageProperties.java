@@ -17,19 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Class representing the root element of the ScormEnginePackageProperties XML.</p>
@@ -50,12 +44,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:element>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class PackageProperties implements Serializable {
@@ -90,4 +78,86 @@ public class PackageProperties implements Serializable {
    */
   @JacksonXmlProperty(localName = "heuristics", namespace = NAMESPACE_URI)
   private HeuristicSpec heuristics;
+
+  public PackageProperties(ControlsSpec controls, AppearanceSpec appearance, BehaviorSpec behavior,
+      RsopSpec rsop, HeuristicSpec heuristics) {
+    this.controls = controls;
+    this.appearance = appearance;
+    this.behavior = behavior;
+    this.rsop = rsop;
+    this.heuristics = heuristics;
+  }
+
+  public PackageProperties() {
+  }
+
+  public ControlsSpec getControls() {
+    return this.controls;
+  }
+
+  public void setControls(ControlsSpec controls) {
+    this.controls = controls;
+  }
+
+  public AppearanceSpec getAppearance() {
+    return this.appearance;
+  }
+
+  public void setAppearance(AppearanceSpec appearance) {
+    this.appearance = appearance;
+  }
+
+  public BehaviorSpec getBehavior() {
+    return this.behavior;
+  }
+
+  public void setBehavior(BehaviorSpec behavior) {
+    this.behavior = behavior;
+  }
+
+  public RsopSpec getRsop() {
+    return this.rsop;
+  }
+
+  public void setRsop(RsopSpec rsop) {
+    this.rsop = rsop;
+  }
+
+  public HeuristicSpec getHeuristics() {
+    return this.heuristics;
+  }
+
+  public void setHeuristics(HeuristicSpec heuristics) {
+    this.heuristics = heuristics;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof PackageProperties that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getControls(), that.getControls())
+        .append(getAppearance(), that.getAppearance())
+        .append(getBehavior(), that.getBehavior())
+        .append(getRsop(), that.getRsop())
+        .append(getHeuristics(), that.getHeuristics())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getControls())
+        .append(getAppearance())
+        .append(getBehavior())
+        .append(getRsop())
+        .append(getHeuristics())
+        .toHashCode();
+  }
 }

@@ -31,9 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 /**
  * Represents metadata for a cmi5 module, including cmi5-specific fields such as prerequisites,
@@ -44,10 +41,10 @@ import lombok.experimental.SuperBuilder;
  * fields.
  * </p>
  */
-@SuperBuilder
-@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-@EqualsAndHashCode(doNotUseGetters = true, callSuper = true)
 public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
+
+  protected Cmi5Metadata() {
+  }
 
   /**
    * Creates a new Cmi5Metadata instance with standard cmi5 metadata components.
@@ -57,13 +54,11 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
    * @return A new Cmi5Metadata instance.
    */
   public static Cmi5Metadata create(Cmi5Manifest manifest, boolean xapiEnabled) {
-    Cmi5Metadata metadata = Cmi5Metadata
-        .builder()
-        .manifest(manifest)
-        .moduleType(ModuleType.CMI5)
-        .moduleEditionType(ModuleEditionType.CMI5)
-        .xapiEnabled(xapiEnabled)
-        .build();
+    Cmi5Metadata metadata = new Cmi5Metadata();
+    metadata.manifest = manifest;
+    metadata.moduleType = ModuleType.CMI5;
+    metadata.moduleEditionType = ModuleEditionType.CMI5;
+    metadata.xapiEnabled = xapiEnabled;
 
     // Add cmi5 specific metadata
     SimpleMetadata cmi5Metadata = metadata.getSimpleMetadata(manifest);
@@ -90,7 +85,7 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
         if (au.getMasteryScore() != null) {
           masteryScores.put(auId, au
               .getMasteryScore()
-              .getValue()
+              .value()
               .doubleValue());
         }
 

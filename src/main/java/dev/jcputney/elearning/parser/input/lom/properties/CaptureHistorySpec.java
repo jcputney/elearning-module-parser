@@ -17,19 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>captureHistorySpec</strong> complex type.</p>
@@ -44,12 +38,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class CaptureHistorySpec implements Serializable {
@@ -64,4 +52,52 @@ public class CaptureHistorySpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "captureHistoryDetailed")
   private YesNoType captureHistoryDetailed;
+
+  public CaptureHistorySpec(YesNoType captureHistory, YesNoType captureHistoryDetailed) {
+    this.captureHistory = captureHistory;
+    this.captureHistoryDetailed = captureHistoryDetailed;
+  }
+
+  public CaptureHistorySpec() {
+  }
+
+  public YesNoType getCaptureHistory() {
+    return this.captureHistory;
+  }
+
+  public void setCaptureHistory(YesNoType captureHistory) {
+    this.captureHistory = captureHistory;
+  }
+
+  public YesNoType getCaptureHistoryDetailed() {
+    return this.captureHistoryDetailed;
+  }
+
+  public void setCaptureHistoryDetailed(YesNoType captureHistoryDetailed) {
+    this.captureHistoryDetailed = captureHistoryDetailed;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof CaptureHistorySpec that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getCaptureHistory(), that.getCaptureHistory())
+        .append(getCaptureHistoryDetailed(), that.getCaptureHistoryDetailed())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getCaptureHistory())
+        .append(getCaptureHistoryDetailed())
+        .toHashCode();
+  }
 }

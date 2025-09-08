@@ -46,8 +46,7 @@ public class MeasureTypeDeserializer extends JsonDeserializer<MeasureType> {
    * @throws IOException if the value is not valid
    */
   @Override
-  public MeasureType deserialize(JsonParser p, DeserializationContext context)
-      throws IOException {
+  public MeasureType deserialize(JsonParser p, DeserializationContext context) throws IOException {
     String value = p.getText();
     try {
       return new MeasureType(new BigDecimal(value));

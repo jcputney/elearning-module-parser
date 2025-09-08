@@ -17,20 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
 import java.math.BigInteger;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>stageSpec</strong> complex type.</p>
@@ -46,12 +40,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class StageSpec implements Serializable {
@@ -72,4 +60,57 @@ public class StageSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "fullscreen")
   private YesNoType fullscreen;
+
+  public StageSpec() {
+  }
+
+  public BigInteger getWidth() {
+    return this.width;
+  }
+
+  public void setWidth(BigInteger width) {
+    this.width = width;
+  }
+
+  public BigInteger getHeight() {
+    return this.height;
+  }
+
+  public void setHeight(BigInteger height) {
+    this.height = height;
+  }
+
+  public YesNoType getFullscreen() {
+    return this.fullscreen;
+  }
+
+  public void setFullscreen(YesNoType fullscreen) {
+    this.fullscreen = fullscreen;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof StageSpec stageSpec)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getWidth(), stageSpec.getWidth())
+        .append(getHeight(), stageSpec.getHeight())
+        .append(getFullscreen(), stageSpec.getFullscreen())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getWidth())
+        .append(getHeight())
+        .append(getFullscreen())
+        .toHashCode();
+  }
 }

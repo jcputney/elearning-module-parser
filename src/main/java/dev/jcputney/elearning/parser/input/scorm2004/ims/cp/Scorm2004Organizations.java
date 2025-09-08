@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -28,23 +26,13 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the hierarchical structure of organizations in the content package. Organizations
  * define the arrangement of items within the package.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Organizations implements Serializable {
@@ -63,6 +51,9 @@ public class Scorm2004Organizations implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "organization", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private List<Scorm2004Organization> organizationList;
+
+  public Scorm2004Organizations() {
+  }
 
   /**
    * Retrieves an organization by its unique identifier.
@@ -128,5 +119,45 @@ public class Scorm2004Organizations implements Serializable {
     }
 
     return result;
+  }
+
+  public String getDefaultOrganization() {
+    return this.defaultOrganization;
+  }
+
+  public void setDefaultOrganization(String defaultOrganization) {
+    this.defaultOrganization = defaultOrganization;
+  }
+
+  public List<Scorm2004Organization> getOrganizationList() {
+    return this.organizationList;
+  }
+
+  public void setOrganizationList(List<Scorm2004Organization> organizationList) {
+    this.organizationList = organizationList;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm2004Organizations that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getDefaultOrganization(), that.getDefaultOrganization())
+        .append(getOrganizationList(), that.getOrganizationList())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getDefaultOrganization())
+        .append(getOrganizationList())
+        .toHashCode();
   }
 }

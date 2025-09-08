@@ -64,12 +64,9 @@ public class LangStringListDeserializer extends JsonDeserializer<List<LangString
     }
 
     if (node instanceof ValueNode valueNode) {
-      LangString langString = LangString
-          .builder()
-          .value(valueNode
-              .asText()
-              .trim())
-          .build();
+      LangString langString = new LangString(valueNode
+          .asText()
+          .trim());
       result.add(langString);
     } else if (node.isArray()) {
       ArrayNode arrayNode = (ArrayNode) node;

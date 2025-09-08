@@ -43,31 +43,26 @@ public enum CompletionStatusType {
   /**
    * The "completed" value indicates that the learning object has been completed.
    */
-  @JsonProperty("completed")
-  COMPLETED,
+  @JsonProperty("completed") COMPLETED,
 
   /**
    * The "incomplete" value indicates that the learning object has not been fully completed.
    */
-  @JsonProperty("incomplete")
-  INCOMPLETE,
+  @JsonProperty("incomplete") INCOMPLETE,
 
   /**
    * The "browsed" value indicates that the learning object has been browsed but not necessarily
    * completed.
    */
-  @JsonProperty("browsed")
-  BROWSED,
+  @JsonProperty("browsed") BROWSED,
 
   /**
    * The "not attempted" value indicates that the learning object has not been attempted.
    */
-  @JsonProperty("not attempted")
-  NOT_ATTEMPTED,
+  @JsonProperty("not attempted") NOT_ATTEMPTED,
 
   /**
    * The "unknown" value indicates that the completion status is unknown.
    */
-  @JsonProperty("unknown")
-  UNKNOWN
+  @JsonProperty("unknown") UNKNOWN
 }

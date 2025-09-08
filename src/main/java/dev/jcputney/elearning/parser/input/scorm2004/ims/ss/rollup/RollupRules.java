@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,13 +25,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a set of rollup rules within the SCORM IMS Simple Sequencing (IMSSS) schema. Rollup
@@ -56,12 +49,6 @@ import lombok.extern.jackson.Jacksonized;
  * <p>The IMSSS namespace is specified by {@link IMSSS#NAMESPACE_URI}, following the SCORM 2004 standards
  * for sequencing and navigation.</p>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupRules implements Serializable {
@@ -83,7 +70,6 @@ public class RollupRules implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("rollupObjectiveSatisfied")
-  @Default
   private boolean rollupObjectiveSatisfied = true;
   /**
    * Indicates whether the progress completion status of the parent activity should be based on the
@@ -94,7 +80,6 @@ public class RollupRules implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("rollupProgressCompletion")
-  @Default
   private boolean rollupProgressCompletion = true;
   /**
    * Specifies the weighting applied to the measure of each child activity’s objective when
@@ -106,6 +91,78 @@ public class RollupRules implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("objectiveMeasureWeight")
-  @Default
   private double objectiveMeasureWeight = 1.0;
+
+  public RollupRules(List<RollupRule> rollupRuleList, boolean rollupObjectiveSatisfied,
+      boolean rollupProgressCompletion, double objectiveMeasureWeight) {
+    this.rollupRuleList = rollupRuleList;
+    this.rollupObjectiveSatisfied = rollupObjectiveSatisfied;
+    this.rollupProgressCompletion = rollupProgressCompletion;
+    this.objectiveMeasureWeight = objectiveMeasureWeight;
+  }
+
+  public RollupRules() {
+  }
+
+  public List<RollupRule> getRollupRuleList() {
+    return this.rollupRuleList;
+  }
+
+  public void setRollupRuleList(
+      List<RollupRule> rollupRuleList) {
+    this.rollupRuleList = rollupRuleList;
+  }
+
+  public boolean isRollupObjectiveSatisfied() {
+    return this.rollupObjectiveSatisfied;
+  }
+
+  public void setRollupObjectiveSatisfied(boolean rollupObjectiveSatisfied) {
+    this.rollupObjectiveSatisfied = rollupObjectiveSatisfied;
+  }
+
+  public boolean isRollupProgressCompletion() {
+    return this.rollupProgressCompletion;
+  }
+
+  public void setRollupProgressCompletion(boolean rollupProgressCompletion) {
+    this.rollupProgressCompletion = rollupProgressCompletion;
+  }
+
+  public double getObjectiveMeasureWeight() {
+    return this.objectiveMeasureWeight;
+  }
+
+  public void setObjectiveMeasureWeight(double objectiveMeasureWeight) {
+    this.objectiveMeasureWeight = objectiveMeasureWeight;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof RollupRules that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(isRollupObjectiveSatisfied(),
+            that.isRollupObjectiveSatisfied())
+        .append(isRollupProgressCompletion(), that.isRollupProgressCompletion())
+        .append(getObjectiveMeasureWeight(), that.getObjectiveMeasureWeight())
+        .append(getRollupRuleList(), that.getRollupRuleList())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getRollupRuleList())
+        .append(isRollupObjectiveSatisfied())
+        .append(isRollupProgressCompletion())
+        .append(getObjectiveMeasureWeight())
+        .toHashCode();
+  }
 }

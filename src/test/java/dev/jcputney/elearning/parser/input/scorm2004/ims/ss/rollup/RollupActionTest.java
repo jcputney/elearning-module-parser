@@ -111,9 +111,7 @@ class RollupActionTest {
   @Test
   void testBuilderAndGetters() {
     // When
-    RollupAction rollupAction = RollupAction.builder()
-        .action(RollupActionType.SATISFIED)
-        .build();
+    RollupAction rollupAction = new RollupAction(RollupActionType.SATISFIED);
 
     // Then
     assertNotNull(rollupAction);

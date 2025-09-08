@@ -17,18 +17,12 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an identifier for a related resource.
@@ -42,12 +36,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Identifier implements Serializable {
@@ -62,4 +50,47 @@ public class Identifier implements Serializable {
    */
   @JacksonXmlProperty(localName = "entry")
   private String entry;
+
+  public Identifier() {
+  }
+
+  public String getCatalog() {
+    return this.catalog;
+  }
+
+  public void setCatalog(String catalog) {
+    this.catalog = catalog;
+  }
+
+  public String getEntry() {
+    return this.entry;
+  }
+
+  public void setEntry(String entry) {
+    this.entry = entry;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Identifier that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getCatalog(), that.getCatalog())
+        .append(getEntry(), that.getEntry())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getCatalog())
+        .append(getEntry())
+        .toHashCode();
+  }
 }

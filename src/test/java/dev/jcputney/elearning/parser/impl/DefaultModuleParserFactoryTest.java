@@ -36,7 +36,6 @@ import dev.jcputney.elearning.parser.parsers.Cmi5Parser;
 import dev.jcputney.elearning.parser.parsers.Scorm12Parser;
 import dev.jcputney.elearning.parser.parsers.Scorm2004Parser;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -217,31 +216,13 @@ class DefaultModuleParserFactoryTest {
     }
 
     @Override
-    public List<String> listFilesInternal(String directoryPath) throws IOException {
+    public List<String> listFilesInternal(String directoryPath) {
       return Collections.emptyList();
     }
 
     @Override
-    public InputStream getFileContentsInternal(String path) throws IOException {
+    public InputStream getFileContentsInternal(String path) {
       return new ByteArrayInputStream(new byte[0]);
-    }
-  }
-
-  private static class MockModuleTypeDetectorPlugin implements ModuleTypeDetectorPlugin {
-
-    @Override
-    public ModuleType detect(FileAccess fileAccess) throws ModuleDetectionException {
-      return null;
-    }
-
-    @Override
-    public int getPriority() {
-      return 0;
-    }
-
-    @Override
-    public String getName() {
-      return "MockDetectorPlugin";
     }
   }
 
@@ -325,7 +306,8 @@ class DefaultModuleParserFactoryTest {
   private static class MockModuleMetadata extends ModuleMetadata<PackageManifest> {
 
     public MockModuleMetadata(PackageManifest manifest) {
-      super(manifest, ModuleType.SCORM_12, dev.jcputney.elearning.parser.enums.ModuleEditionType.SCORM_12, false);
+      super(manifest, ModuleType.SCORM_12,
+          dev.jcputney.elearning.parser.enums.ModuleEditionType.SCORM_12, false);
     }
   }
 

@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -26,12 +24,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLSeq;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an objective within the SCORM sequencing model. Objectives define specific learning
@@ -46,12 +40,6 @@ import lombok.extern.jackson.Jacksonized;
  *   </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ADLObjective implements Serializable {
 
@@ -69,4 +57,47 @@ public class ADLObjective implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "mapInfo", namespace = ADLSeq.NAMESPACE_URI)
   private List<MapInfo> mapInfoList;
+
+  public ADLObjective() {
+  }
+
+  public String getObjectiveID() {
+    return this.objectiveID;
+  }
+
+  public void setObjectiveID(String objectiveID) {
+    this.objectiveID = objectiveID;
+  }
+
+  public List<MapInfo> getMapInfoList() {
+    return this.mapInfoList;
+  }
+
+  public void setMapInfoList(List<MapInfo> mapInfoList) {
+    this.mapInfoList = mapInfoList;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof ADLObjective that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getObjectiveID(), that.getObjectiveID())
+        .append(getMapInfoList(), that.getMapInfoList())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getObjectiveID())
+        .append(getMapInfoList())
+        .toHashCode();
+  }
 }

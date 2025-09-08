@@ -17,6 +17,21 @@
 
 package dev.jcputney.elearning.parser.parsers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.LoadableMetadata;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
@@ -26,13 +41,12 @@ import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import javax.xml.stream.XMLStreamException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
  * Test class for BaseParser.
@@ -55,17 +69,15 @@ class BaseParserTest {
 
   @Test
   void testConstructor_WithModuleFileProvider_NullProvider_ThrowsException() {
-    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-      new TestableBaseParser((ModuleFileProvider) null);
-    });
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+        () -> new TestableBaseParser((ModuleFileProvider) null));
     assertEquals("ModuleFileProvider cannot be null", exception.getMessage());
   }
 
   @Test
   void testConstructor_WithFileAccess_NullFileAccess_ThrowsException() {
-    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-      new TestableBaseParser((FileAccess) null);
-    });
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+        () -> new TestableBaseParser((FileAccess) null));
     assertEquals("FileAccess cannot be null", exception.getMessage());
   }
 
@@ -78,9 +90,8 @@ class BaseParserTest {
 
   @Test
   void testParseManifest_NullPath_ThrowsException() {
-    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-      parser.parseManifest(null);
-    });
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+        () -> parser.parseManifest(null));
     assertEquals("Manifest path cannot be null", exception.getMessage());
     verifyNoInteractions(mockModuleFileProvider);
   }
@@ -91,7 +102,7 @@ class BaseParserTest {
     String manifestPath = "imsmanifest.xml";
     String xmlContent = "<?xml version=\"1.0\"?><root><test>value</test></root>";
     InputStream manifestStream = new ByteArrayInputStream(xmlContent.getBytes());
-    
+
     when(mockModuleFileProvider.getFileContents(manifestPath)).thenReturn(manifestStream);
 
     // Act
@@ -112,10 +123,10 @@ class BaseParserTest {
     when(mockModuleFileProvider.getFileContents(manifestPath)).thenThrow(expectedException);
 
     // Act & Assert
-    ModuleParsingException actualException = assertThrows(ModuleParsingException.class, () -> {
-      parser.parseManifest(manifestPath);
-    });
-    assertEquals("Failed to read manifest file 'imsmanifest.xml': File not found", actualException.getMessage());
+    ModuleParsingException actualException = assertThrows(ModuleParsingException.class,
+        () -> parser.parseManifest(manifestPath));
+    assertEquals("Failed to read manifest file 'imsmanifest.xml': File not found",
+        actualException.getMessage());
     assertSame(expectedException, actualException.getCause());
     verify(mockModuleFileProvider).getFileContents(manifestPath);
     assertFalse(parser.loadExternalMetadataCalled);
@@ -127,13 +138,11 @@ class BaseParserTest {
     String manifestPath = "imsmanifest.xml";
     String invalidXml = "invalid xml content";
     InputStream manifestStream = new ByteArrayInputStream(invalidXml.getBytes());
-    
+
     when(mockModuleFileProvider.getFileContents(manifestPath)).thenReturn(manifestStream);
 
     // Act & Assert
-    ModuleParsingException exception = assertThrows(ModuleParsingException.class, () -> {
-      parser.parseManifest(manifestPath);
-    });
+    assertThrows(ModuleParsingException.class, () -> parser.parseManifest(manifestPath));
     verify(mockModuleFileProvider).getFileContents(manifestPath);
     assertFalse(parser.loadExternalMetadataCalled);
   }
@@ -144,15 +153,15 @@ class BaseParserTest {
     String manifestPath = "imsmanifest.xml";
     String xmlContent = "<?xml version=\"1.0\"?><root><test>value</test></root>";
     InputStream manifestStream = new ByteArrayInputStream(xmlContent.getBytes());
-    
+
     when(mockModuleFileProvider.getFileContents(manifestPath)).thenReturn(manifestStream);
     parser.shouldThrowInLoadExternalMetadata = true;
 
     // Act & Assert
-    ModuleParsingException exception = assertThrows(ModuleParsingException.class, () -> {
-      parser.parseManifest(manifestPath);
-    });
-    assertEquals("Failed to read manifest file 'imsmanifest.xml': External metadata loading failed", exception.getMessage());
+    ModuleParsingException exception = assertThrows(ModuleParsingException.class,
+        () -> parser.parseManifest(manifestPath));
+    assertEquals("Failed to read manifest file 'imsmanifest.xml': External metadata loading failed",
+        exception.getMessage());
     verify(mockModuleFileProvider).getFileContents(manifestPath);
     assertTrue(parser.loadExternalMetadataCalled);
   }
@@ -203,9 +212,7 @@ class BaseParserTest {
     InputStream stream = new ByteArrayInputStream(invalidXml.getBytes());
 
     // Act & Assert
-    assertThrows(IOException.class, () -> {
-      parser.testParseXmlToObject(stream, TestManifest.class);
-    });
+    assertThrows(IOException.class, () -> parser.testParseXmlToObject(stream, TestManifest.class));
   }
 
   @Test
@@ -242,7 +249,7 @@ class BaseParserTest {
    * Concrete implementation of BaseParser for testing purposes.
    */
   private static class TestableBaseParser extends BaseParser<TestModuleMetadata, TestManifest> {
-    
+
     boolean loadExternalMetadataCalled = false;
     boolean shouldThrowInLoadExternalMetadata = false;
     TestManifest lastManifestParsed = null;
@@ -256,12 +263,27 @@ class BaseParserTest {
     }
 
     @Override
-    public TestModuleMetadata parse() throws ModuleParsingException {
+    public TestModuleMetadata parse() {
       return new TestModuleMetadata();
     }
 
+    // Expose protected methods for testing
+    public boolean testCheckForXapi() {
+      return checkForXapi();
+    }
+
+    public <C> C testParseXmlToObject(InputStream stream, Class<C> clazz)
+        throws IOException, XMLStreamException {
+      return parseXmlToObject(stream, clazz);
+    }
+
+    public void testLoadExternalMetadataIntoMetadata(LoadableMetadata subMetadata)
+        throws XMLStreamException, IOException {
+      loadExternalMetadataIntoMetadata(subMetadata);
+    }
+
     @Override
-    void loadExternalMetadata(TestManifest manifest) throws XMLStreamException, IOException {
+    void loadExternalMetadata(TestManifest manifest) throws IOException {
       loadExternalMetadataCalled = true;
       lastManifestParsed = manifest;
       if (shouldThrowInLoadExternalMetadata) {
@@ -273,40 +295,26 @@ class BaseParserTest {
     protected Class<TestManifest> getManifestClass() {
       return TestManifest.class;
     }
-
-    // Expose protected methods for testing
-    public boolean testCheckForXapi() {
-      return checkForXapi();
-    }
-
-    public <C> C testParseXmlToObject(InputStream stream, Class<C> clazz) 
-        throws IOException, XMLStreamException {
-      return parseXmlToObject(stream, clazz);
-    }
-
-    public void testLoadExternalMetadataIntoMetadata(LoadableMetadata subMetadata) 
-        throws XMLStreamException, IOException {
-      loadExternalMetadataIntoMetadata(subMetadata);
-    }
   }
 
   /**
    * Test manifest class for testing purposes.
    */
-  @com.fasterxml.jackson.annotation.JsonIgnoreProperties(ignoreUnknown = true)
-  @com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement(localName = "root")
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  @JacksonXmlRootElement(localName = "root")
   public static class TestManifest implements PackageManifest {
+
     private String test;
-    
-    @com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty(localName = "test")
+
+    @JacksonXmlProperty(localName = "test")
     public String getTest() {
       return test;
     }
-    
+
     public void setTest(String test) {
       this.test = test;
     }
-    
+
     @Override
     public String getTitle() {
       return null;
@@ -333,7 +341,7 @@ class BaseParserTest {
     }
 
     @Override
-    public java.time.Duration getDuration() {
+    public Duration getDuration() {
       return null;
     }
   }
@@ -342,6 +350,7 @@ class BaseParserTest {
    * Test metadata class for testing purposes.
    */
   public static class TestModuleMetadata extends ModuleMetadata<TestManifest> {
+
     @Override
     public TestManifest getManifest() {
       return new TestManifest();

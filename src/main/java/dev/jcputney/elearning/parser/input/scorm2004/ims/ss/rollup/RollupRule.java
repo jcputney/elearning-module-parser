@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -31,24 +29,13 @@ import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.ChildActivitySet;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an individual rollup rule within a set of rollup rules. Each rule defines conditions
  * and an action that dictate how child activities’ statuses affect the parent activity’s rollup.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupRule implements Serializable {
 
@@ -73,7 +60,6 @@ public class RollupRule implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("childActivitySet")
-  @Default
   private ChildActivitySet childActivitySet = ChildActivitySet.ALL;
   /**
    * Specifies the minimum number of child activities that must meet the rollup conditions for this
@@ -84,7 +70,6 @@ public class RollupRule implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("minimumCount")
-  @Default
   private int minimumCount = 0;
   /**
    * Specifies the minimum percentage of child activities that must meet the rollup conditions for
@@ -97,6 +82,78 @@ public class RollupRule implements Serializable {
   @JsonDeserialize(using = PercentTypeDeserializer.class)
   @JsonSerialize(using = PercentTypeSerializer.class)
   @JsonProperty("minimumPercent")
-  @Default
   private PercentType minimumPercent = new PercentType(BigDecimal.ZERO);
+
+  public RollupRule() {
+  }
+
+  public RollupConditions getRollupConditions() {
+    return this.rollupConditions;
+  }
+
+  public void setRollupConditions(RollupConditions rollupConditions) {
+    this.rollupConditions = rollupConditions;
+  }
+
+  public RollupAction getRollupAction() {
+    return this.rollupAction;
+  }
+
+  public void setRollupAction(RollupAction rollupAction) {
+    this.rollupAction = rollupAction;
+  }
+
+  public ChildActivitySet getChildActivitySet() {
+    return this.childActivitySet;
+  }
+
+  public void setChildActivitySet(ChildActivitySet childActivitySet) {
+    this.childActivitySet = childActivitySet;
+  }
+
+  public int getMinimumCount() {
+    return this.minimumCount;
+  }
+
+  public void setMinimumCount(int minimumCount) {
+    this.minimumCount = minimumCount;
+  }
+
+  public PercentType getMinimumPercent() {
+    return this.minimumPercent;
+  }
+
+  public void setMinimumPercent(PercentType minimumPercent) {
+    this.minimumPercent = minimumPercent;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof RollupRule that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getMinimumCount(), that.getMinimumCount())
+        .append(getRollupConditions(), that.getRollupConditions())
+        .append(getRollupAction(), that.getRollupAction())
+        .append(getChildActivitySet(), that.getChildActivitySet())
+        .append(getMinimumPercent(), that.getMinimumPercent())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getRollupConditions())
+        .append(getRollupAction())
+        .append(getChildActivitySet())
+        .append(getMinimumCount())
+        .append(getMinimumPercent())
+        .toHashCode();
+  }
 }

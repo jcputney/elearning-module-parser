@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -32,12 +30,8 @@ import dev.jcputney.elearning.parser.util.DurationHHMMSSDeserializer;
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an item within a SCORM 1.2 organization.
@@ -76,12 +70,6 @@ import lombok.extern.jackson.Jacksonized;
  * </item>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Item implements Serializable {
 
@@ -171,4 +159,165 @@ public class Scorm12Item implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "item", namespace = Scorm12Manifest.NAMESPACE_URI)
   private List<Scorm12Item> items;
+
+  public Scorm12Item(String identifier, String identifierRef, Boolean isVisible, String parameters,
+      Duration maxTimeAllowed, Double masteryScore, Scorm12Prerequisites prerequisites,
+      TimeLimitAction timeLimitAction, String dataFromLMS, String title, Scorm12Metadata metadata,
+      List<Scorm12Item> items) {
+    this.identifier = identifier;
+    this.identifierRef = identifierRef;
+    this.isVisible = isVisible;
+    this.parameters = parameters;
+    this.maxTimeAllowed = maxTimeAllowed;
+    this.masteryScore = masteryScore;
+    this.prerequisites = prerequisites;
+    this.timeLimitAction = timeLimitAction;
+    this.dataFromLMS = dataFromLMS;
+    this.title = title;
+    this.metadata = metadata;
+    this.items = items;
+  }
+
+  public Scorm12Item() {
+  }
+
+  public String getIdentifier() {
+    return this.identifier;
+  }
+
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }
+
+  public String getIdentifierRef() {
+    return this.identifierRef;
+  }
+
+  public void setIdentifierRef(String identifierRef) {
+    this.identifierRef = identifierRef;
+  }
+
+  public Boolean getIsVisible() {
+    return this.isVisible;
+  }
+
+  public String getParameters() {
+    return this.parameters;
+  }
+
+  public void setParameters(String parameters) {
+    this.parameters = parameters;
+  }
+
+  public Duration getMaxTimeAllowed() {
+    return this.maxTimeAllowed;
+  }
+
+  public void setMaxTimeAllowed(Duration maxTimeAllowed) {
+    this.maxTimeAllowed = maxTimeAllowed;
+  }
+
+  public Double getMasteryScore() {
+    return this.masteryScore;
+  }
+
+  public void setMasteryScore(Double masteryScore) {
+    this.masteryScore = masteryScore;
+  }
+
+  public Scorm12Prerequisites getPrerequisites() {
+    return this.prerequisites;
+  }
+
+  public void setPrerequisites(Scorm12Prerequisites prerequisites) {
+    this.prerequisites = prerequisites;
+  }
+
+  public TimeLimitAction getTimeLimitAction() {
+    return this.timeLimitAction;
+  }
+
+  public void setTimeLimitAction(TimeLimitAction timeLimitAction) {
+    this.timeLimitAction = timeLimitAction;
+  }
+
+  public String getDataFromLMS() {
+    return this.dataFromLMS;
+  }
+
+  public void setDataFromLMS(String dataFromLMS) {
+    this.dataFromLMS = dataFromLMS;
+  }
+
+  public String getTitle() {
+    return this.title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public Scorm12Metadata getMetadata() {
+    return this.metadata;
+  }
+
+  public void setMetadata(Scorm12Metadata metadata) {
+    this.metadata = metadata;
+  }
+
+  public List<Scorm12Item> getItems() {
+    return this.items;
+  }
+
+  public void setItems(List<Scorm12Item> items) {
+    this.items = items;
+  }
+
+  public void setVisible(Boolean visible) {
+    isVisible = visible;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm12Item that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getIdentifier(), that.getIdentifier())
+        .append(getIdentifierRef(), that.getIdentifierRef())
+        .append(getIsVisible(), that.getIsVisible())
+        .append(getParameters(), that.getParameters())
+        .append(getMaxTimeAllowed(), that.getMaxTimeAllowed())
+        .append(getMasteryScore(), that.getMasteryScore())
+        .append(getPrerequisites(), that.getPrerequisites())
+        .append(getTimeLimitAction(), that.getTimeLimitAction())
+        .append(getDataFromLMS(), that.getDataFromLMS())
+        .append(getTitle(), that.getTitle())
+        .append(getMetadata(), that.getMetadata())
+        .append(getItems(), that.getItems())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getIdentifier())
+        .append(getIdentifierRef())
+        .append(getIsVisible())
+        .append(getParameters())
+        .append(getMaxTimeAllowed())
+        .append(getMasteryScore())
+        .append(getPrerequisites())
+        .append(getTimeLimitAction())
+        .append(getDataFromLMS())
+        .append(getTitle())
+        .append(getMetadata())
+        .append(getItems())
+        .toHashCode();
+  }
 }

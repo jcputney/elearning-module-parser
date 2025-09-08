@@ -31,10 +31,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents metadata for SCORM 2004 eLearning modules, including SCORM 2004-specific fields such
@@ -45,13 +43,12 @@ import lombok.experimental.SuperBuilder;
  * the structure and rules that are specific to SCORM 2004 modules.
  * </p>
  */
-@SuperBuilder
-@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-@EqualsAndHashCode(doNotUseGetters = true, callSuper = true)
 public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
 
-  @Getter
   private boolean hasSequencing;
+
+  protected Scorm2004Metadata() {
+  }
 
   /**
    * Creates a new Scorm2004Metadata instance with standard SCORM 2004 metadata components.
@@ -73,14 +70,12 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
     ModuleEditionType editionType = ModuleEditionType.fromModuleType(ModuleType.SCORM_2004,
         schemaVersion);
 
-    Scorm2004Metadata metadata = Scorm2004Metadata
-        .builder()
-        .manifest(manifest)
-        .moduleType(ModuleType.SCORM_2004)
-        .moduleEditionType(editionType)
-        .xapiEnabled(xapiEnabled)
-        .hasSequencing(hasSequencing(manifest))
-        .build();
+    Scorm2004Metadata metadata = new Scorm2004Metadata();
+    metadata.manifest = manifest;
+    metadata.moduleType = ModuleType.SCORM_2004;
+    metadata.moduleEditionType = editionType;
+    metadata.xapiEnabled = xapiEnabled;
+    metadata.hasSequencing = hasSequencing(manifest);
 
     // Add SCORM 2004 specific metadata
     SimpleMetadata scorm2004Metadata = metadata.getSimpleMetadata(manifest);
@@ -197,5 +192,33 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
         .map(Scorm2004ObjectiveMapping::getTargetObjectiveID)
         .filter(id -> id != null && !id.isEmpty()) // Filter non-null and non-empty IDs
         .collect(Collectors.toSet());
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm2004Metadata that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .appendSuper(super.equals(o))
+        .append(isHasSequencing(), that.isHasSequencing())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .appendSuper(super.hashCode())
+        .append(isHasSequencing())
+        .toHashCode();
+  }
+
+  public boolean isHasSequencing() {
+    return this.hasSequencing;
   }
 }

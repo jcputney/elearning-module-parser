@@ -17,19 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>communicationsSpec</strong> complex type.</p>
@@ -44,12 +38,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class CommunicationsSpec implements Serializable {
@@ -64,4 +52,48 @@ public class CommunicationsSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "commitFrequency")
   private Integer commitFrequency;
+
+  public CommunicationsSpec() {
+  }
+
+  public Integer getMaxFailedSubmissions() {
+    return this.maxFailedSubmissions;
+  }
+
+  public void setMaxFailedSubmissions(Integer maxFailedSubmissions) {
+    this.maxFailedSubmissions = maxFailedSubmissions;
+  }
+
+  public Integer getCommitFrequency() {
+    return this.commitFrequency;
+  }
+
+  public void setCommitFrequency(Integer commitFrequency) {
+    this.commitFrequency = commitFrequency;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof CommunicationsSpec that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getMaxFailedSubmissions(),
+            that.getMaxFailedSubmissions())
+        .append(getCommitFrequency(), that.getCommitFrequency())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getMaxFailedSubmissions())
+        .append(getCommitFrequency())
+        .toHashCode();
+  }
 }

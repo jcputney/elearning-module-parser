@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -26,12 +24,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a set of sequencing rules within the SCORM IMS Simple Sequencing (IMSSS) schema.
@@ -58,12 +52,6 @@ import lombok.extern.jackson.Jacksonized;
  * <p>The IMSSS namespace is specified by {@link IMSSS#NAMESPACE_URI}, and this class
  * aligns with the SCORM 2004 standards for sequencing and navigation.</p>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class SequencingRules implements Serializable {
@@ -92,4 +80,57 @@ public class SequencingRules implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "postConditionRule", namespace = IMSSS.NAMESPACE_URI)
   private List<SequencingRule> postConditionRules;
+
+  public SequencingRules() {
+  }
+
+  public List<SequencingRule> getPreConditionRules() {
+    return this.preConditionRules;
+  }
+
+  public void setPreConditionRules(List<SequencingRule> preConditionRules) {
+    this.preConditionRules = preConditionRules;
+  }
+
+  public List<SequencingRule> getExitConditionRules() {
+    return this.exitConditionRules;
+  }
+
+  public void setExitConditionRules(List<SequencingRule> exitConditionRules) {
+    this.exitConditionRules = exitConditionRules;
+  }
+
+  public List<SequencingRule> getPostConditionRules() {
+    return this.postConditionRules;
+  }
+
+  public void setPostConditionRules(List<SequencingRule> postConditionRules) {
+    this.postConditionRules = postConditionRules;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof SequencingRules that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getPreConditionRules(), that.getPreConditionRules())
+        .append(getExitConditionRules(), that.getExitConditionRules())
+        .append(getPostConditionRules(), that.getPostConditionRules())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getPreConditionRules())
+        .append(getExitConditionRules())
+        .append(getPostConditionRules())
+        .toHashCode();
+  }
 }

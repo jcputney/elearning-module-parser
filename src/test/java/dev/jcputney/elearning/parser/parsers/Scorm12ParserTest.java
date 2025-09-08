@@ -75,7 +75,7 @@ public class Scorm12ParserTest {
         .getResources()
         .getResourceList()
         .size());
-    
+
     // Verify that sizeOnDisk is calculated (should be greater than 0 for a real module)
     assertTrue(metadata.getSizeOnDisk() > 0, "Module size should be calculated and greater than 0");
   }
@@ -234,66 +234,95 @@ public class Scorm12ParserTest {
 
     assertEquals("Prerequisites Test Course", manifest.getTitle());
     assertEquals("module1.html", manifest.getLaunchUrl());
-    
+
     // Verify all 4 items are parsed
-    var items = manifest.getOrganizations().getDefault().getItems();
+    var items = manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems();
     assertEquals(4, items.size());
-    
+
     // Check Module 1 - no prerequisites (empty element)
     var module1 = items.get(0);
     assertEquals("module1", module1.getIdentifier());
     assertNotNull(module1.getPrerequisites());
-    assertNull(module1.getPrerequisites().getValue()); // Empty element results in null value
-    assertEquals("aicc_script", module1.getPrerequisites().getType());
+    assertNull(module1
+        .getPrerequisites()
+        .getValue()); // Empty element results in null value
+    assertEquals("aicc_script", module1
+        .getPrerequisites()
+        .getType());
     assertEquals(80.0, module1.getMasteryScore());
     assertNotNull(module1.getMaxTimeAllowed());
-    assertEquals(9000L, module1.getMaxTimeAllowed().getSeconds()); // 2:30:00
-    
+    assertEquals(9000L, module1
+        .getMaxTimeAllowed()
+        .getSeconds()); // 2:30:00
+
     // Check Module 2 - requires module1
     var module2 = items.get(1);
     assertEquals("module2", module2.getIdentifier());
     assertNotNull(module2.getPrerequisites());
-    assertEquals("module1", module2.getPrerequisites().getValue());
-    assertEquals("aicc_script", module2.getPrerequisites().getType());
+    assertEquals("module1", module2
+        .getPrerequisites()
+        .getValue());
+    assertEquals("aicc_script", module2
+        .getPrerequisites()
+        .getType());
     assertEquals("custom_data_for_module2", module2.getDataFromLMS());
-    
+
     // Check Module 3 - requires module1 AND module2
     var module3 = items.get(2);
     assertEquals("module3", module3.getIdentifier());
     assertNotNull(module3.getPrerequisites());
-    assertEquals("module1 AND module2", module3.getPrerequisites().getValue());
-    assertEquals("aicc_script", module3.getPrerequisites().getType());
+    assertEquals("module1 AND module2", module3
+        .getPrerequisites()
+        .getValue());
+    assertEquals("aicc_script", module3
+        .getPrerequisites()
+        .getType());
     assertNotNull(module3.getTimeLimitAction());
-    assertEquals("EXIT_MESSAGE", module3.getTimeLimitAction().name());
-    
+    assertEquals("EXIT_MESSAGE", module3
+        .getTimeLimitAction()
+        .name());
+
     // Check Module 4 - complex prerequisites
     var module4 = items.get(3);
     assertEquals("module4", module4.getIdentifier());
     assertNotNull(module4.getPrerequisites());
-    assertEquals("(module1 AND module2) OR module3", module4.getPrerequisites().getValue());
-    assertEquals("aicc_script", module4.getPrerequisites().getType());
+    assertEquals("(module1 AND module2) OR module3", module4
+        .getPrerequisites()
+        .getValue());
+    assertEquals("aicc_script", module4
+        .getPrerequisites()
+        .getType());
     assertEquals(90.0, module4.getMasteryScore());
-    
+
     // Verify prerequisites are accessible through metadata interface
     @SuppressWarnings("unchecked")
-    var prerequisitesMap = (Map<String, String>) metadata.getMetadata("scorm12.prerequisites").orElse(null);
+    var prerequisitesMap = (Map<String, String>) metadata
+        .getMetadata("scorm12.prerequisites")
+        .orElse(null);
     assertNotNull(prerequisitesMap);
     assertEquals(3, prerequisitesMap.size()); // module2, module3, module4 have prerequisites
     assertEquals("module1", prerequisitesMap.get("module2"));
     assertEquals("module1 AND module2", prerequisitesMap.get("module3"));
     assertEquals("(module1 AND module2) OR module3", prerequisitesMap.get("module4"));
-    
+
     // Verify mastery scores are accessible
     @SuppressWarnings("unchecked")
-    var masteryScoresMap = (Map<String, Double>) metadata.getMetadata("scorm12.masteryScores").orElse(null);
+    var masteryScoresMap = (Map<String, Double>) metadata
+        .getMetadata("scorm12.masteryScores")
+        .orElse(null);
     assertNotNull(masteryScoresMap);
     assertEquals(2, masteryScoresMap.size()); // module1 and module4 have mastery scores
     assertEquals(80.0, masteryScoresMap.get("module1"));
     assertEquals(90.0, masteryScoresMap.get("module4"));
-    
+
     // Verify custom data is accessible
     @SuppressWarnings("unchecked")
-    var customDataMap = (Map<String, String>) metadata.getMetadata("scorm12.customData").orElse(null);
+    var customDataMap = (Map<String, String>) metadata
+        .getMetadata("scorm12.customData")
+        .orElse(null);
     assertNotNull(customDataMap);
     assertEquals(1, customDataMap.size()); // only module2 has custom data
     assertEquals("custom_data_for_module2", customDataMap.get("module2"));

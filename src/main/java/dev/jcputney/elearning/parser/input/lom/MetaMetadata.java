@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -28,12 +26,8 @@ import dev.jcputney.elearning.parser.input.lom.types.ContributeMeta;
 import dev.jcputney.elearning.parser.input.lom.types.Identifier;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the meta-metadata information about a learning object in a Learning Object Metadata
@@ -54,13 +48,7 @@ import lombok.extern.jackson.Jacksonized;
  * </complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-@EqualsAndHashCode(exclude = "customElements")
 public class MetaMetadata implements Serializable {
 
   /**
@@ -163,4 +151,87 @@ public class MetaMetadata implements Serializable {
   @JacksonXmlElementWrapper(localName = "customElements", useWrapping = false)
   @JacksonXmlProperty(localName = "customElements")
   private List<Object> customElements;
+
+  public MetaMetadata() {
+  }
+
+  public List<Identifier> getIdentifier() {
+    return this.identifier;
+  }
+
+  public void setIdentifier(List<Identifier> identifier) {
+    this.identifier = identifier;
+  }
+
+  public List<CatalogEntry> getCatalogEntries() {
+    return this.catalogEntries;
+  }
+
+  public void setCatalogEntries(List<CatalogEntry> catalogEntries) {
+    this.catalogEntries = catalogEntries;
+  }
+
+  public List<ContributeMeta> getContribute() {
+    return this.contribute;
+  }
+
+  public void setContribute(List<ContributeMeta> contribute) {
+    this.contribute = contribute;
+  }
+
+  public List<String> getMetadataSchema() {
+    return this.metadataSchema;
+  }
+
+  public void setMetadataSchema(List<String> metadataSchema) {
+    this.metadataSchema = metadataSchema;
+  }
+
+  public String getLanguage() {
+    return this.language;
+  }
+
+  public void setLanguage(String language) {
+    this.language = language;
+  }
+
+  public List<Object> getCustomElements() {
+    return this.customElements;
+  }
+
+  public void setCustomElements(List<Object> customElements) {
+    this.customElements = customElements;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof MetaMetadata that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getIdentifier(), that.getIdentifier())
+        .append(getCatalogEntries(), that.getCatalogEntries())
+        .append(getContribute(), that.getContribute())
+        .append(getMetadataSchema(), that.getMetadataSchema())
+        .append(getLanguage(), that.getLanguage())
+        .append(getCustomElements(), that.getCustomElements())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getIdentifier())
+        .append(getCatalogEntries())
+        .append(getContribute())
+        .append(getMetadataSchema())
+        .append(getLanguage())
+        .append(getCustomElements())
+        .toHashCode();
+  }
 }

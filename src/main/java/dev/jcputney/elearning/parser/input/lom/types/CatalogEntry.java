@@ -17,17 +17,11 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a catalog entry in LOM metadata. This type is used for fields that require a catalog
@@ -43,12 +37,6 @@ import lombok.extern.jackson.Jacksonized;
  * 	</xsd:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class CatalogEntry implements Serializable {
 
@@ -66,4 +54,47 @@ public class CatalogEntry implements Serializable {
    */
   @JacksonXmlProperty(localName = "entry")
   private UnboundLangString entry;
+
+  public CatalogEntry() {
+  }
+
+  public String getCatalog() {
+    return this.catalog;
+  }
+
+  public void setCatalog(String catalog) {
+    this.catalog = catalog;
+  }
+
+  public UnboundLangString getEntry() {
+    return this.entry;
+  }
+
+  public void setEntry(UnboundLangString entry) {
+    this.entry = entry;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof CatalogEntry that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getCatalog(), that.getCatalog())
+        .append(getEntry(), that.getEntry())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getCatalog())
+        .append(getEntry())
+        .toHashCode();
+  }
 }

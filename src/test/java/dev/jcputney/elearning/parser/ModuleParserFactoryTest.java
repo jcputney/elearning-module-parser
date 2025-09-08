@@ -47,8 +47,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -150,8 +148,9 @@ class ModuleParserFactoryTest {
 
           boolean jsonParsedEquals = metadata.equals(result);
           boolean hasSequencing = false;
-          if (metadata.getModuleType() == ModuleType.SCORM_2004) {
-            hasSequencing = ((Scorm2004Metadata) metadata).isHasSequencing();
+          if (metadata.getModuleType() == ModuleType.SCORM_2004
+              && metadata instanceof Scorm2004Metadata scorm2004Metadata) {
+            hasSequencing = (scorm2004Metadata).isHasSequencing();
           }
           rows.add(new RowData(
               jsonParsedEquals ? PASS : FAIL,
@@ -240,191 +239,7 @@ class ModuleParserFactoryTest {
         )
         .writeTo(System.out);
 
-    // Generate HTML report
-    generateHtmlReport(rows, directoryToTest, failureCount);
-
     System.exit(failureCount);
-  }
-
-  static void generateHtmlReport(List<RowData> rows, String directoryPath, int failureCount) {
-    String timestamp = LocalDateTime
-        .now()
-        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
-    String filename = "module-parser-test-report-" + timestamp + ".html";
-    Path htmlPath = Path.of(filename);
-
-    int passCount = rows.size() - failureCount;
-    double passRate = rows.isEmpty() ? 0 : (passCount * 100.0 / rows.size());
-    String generatedAt = LocalDateTime
-        .now()
-        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-    // Build table rows
-    StringBuilder tableRows = new StringBuilder();
-    for (RowData row : rows) {
-      String badgeClass = row.result.equals("PASS") ? "pass-badge" : "fail-badge";
-
-      if (row.result.equals("FAIL") && (row.title == null || row.title.isEmpty())) {
-        // This is an error row
-        tableRows.append(
-            //language=HTML
-            """
-                <tr>
-                    <td><span class="%s">%s</span></td>
-                    <td class="filename" title="%s">%s</td>
-                    <td colspan="6" class="error-text">%s</td>
-                </tr>
-                """.formatted(
-                badgeClass, row.result,
-                escapeHtml(row.filename), escapeHtml(row.filename),
-                escapeHtml(row.moduleTypeOrError)
-            ));
-      } else {
-        String jsonClass = row.jsonParsed ? "yes" : "no";
-        String jsonText = row.jsonParsed ? "YES" : "NO";
-        String seqClass =
-            !row.moduleTypeOrError.equals("SCORM_2004") ? "na" : (row.hasSequencing ? "yes" : "no");
-        String seqText = !row.moduleTypeOrError.equals("SCORM_2004") ? "N/A"
-            : (row.hasSequencing ? "YES" : "NO");
-
-        tableRows.append(
-            //language=HTML
-            """
-                <tr>
-                    <td><span class="%s">%s</span></td>
-                    <td class="filename" title="%s">%s</td>
-                    <td>%s</td>
-                    <td>%s</td>
-                    <td class="description">%s</td>
-                    <td>%s</td>
-                    <td class="%s">%s</td>
-                    <td class="%s">%s</td>
-                </tr>
-                """.formatted(
-                badgeClass, row.result,
-                escapeHtml(row.filename), escapeHtml(row.filename),
-                escapeHtml(row.moduleTypeOrError),
-                escapeHtml(row.title),
-                escapeHtml(row.description),
-                row.duration.toString(),
-                jsonClass, jsonText,
-                seqClass, seqText
-            ));
-      }
-    }
-
-    //language=HTML
-    String html = """
-        <!DOCTYPE html>
-        <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Module Parser Test Report</title>
-                <style>
-                    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f5; margin: 0; }
-                    .container { max-width: 1600px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-                    h1 { color: #333; border-bottom: 2px solid #4CAF50; padding-bottom: 10px; }
-                    .summary { display: flex; gap: 20px; margin: 20px 0; flex-wrap: wrap; }
-                    .summary-card { flex: 1; min-width: 150px; padding: 15px; border-radius: 5px; text-align: center; }
-                    .summary-card.total { background: #e3f2fd; color: #1976d2; }
-                    .summary-card.pass { background: #e8f5e9; color: #388e3c; }
-                    .summary-card.fail { background: #ffebee; color: #d32f2f; }
-                    .summary-card .number { font-size: 2em; font-weight: bold; }
-                    .summary-card .label { font-size: 0.9em; margin-top: 5px; }
-                    .metadata { color: #666; font-size: 0.9em; margin: 10px 0; }
-                    .table-wrapper { width: 100%; overflow-x: auto; margin-top: 20px; border: 1px solid #e0e0e0; border-radius: 4px; }
-                    table { width: 100%; border-collapse: collapse; min-width: 900px; }
-                    th { background: #f0f0f0; padding: 12px 8px; text-align: left; font-weight: 600; position: sticky; top: 0; border-bottom: 2px solid #ddd; white-space: nowrap; }
-                    td { padding: 10px 8px; border-bottom: 1px solid #e0e0e0; word-break: break-word; max-width: 300px; }
-                    td.filename { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-                    td.description { max-width: 350px; }
-                    tr:hover { background: #f9f9f9; }
-                    .pass-badge { background: #4CAF50; color: white; padding: 4px 8px; border-radius: 4px; font-weight: 500; display: inline-block; white-space: nowrap; }
-                    .fail-badge { background: #f44336; color: white; padding: 4px 8px; border-radius: 4px; font-weight: 500; display: inline-block; white-space: nowrap; }
-                    .yes { color: #4CAF50; font-weight: 500; }
-                    .no { color: #f44336; font-weight: 500; }
-                    .na { color: #999; }
-                    .error-text { color: #d32f2f; font-style: italic; word-break: break-all; }
-                    .filename { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9em; }
-                    @media (max-width: 768px) {
-                        .container { padding: 15px; border-radius: 0; }
-                        .summary-card { min-width: 100%; }
-                        td, th { padding: 8px 4px; font-size: 0.9em; }
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <h1>Module Parser Test Report</h1>
-                    <div class="metadata">
-                        <strong>Generated:</strong> %s<br>
-                        <strong>Test Directory:</strong> %s<br>
-                    </div>
-                    <div class="summary">
-                        <div class="summary-card total">
-                            <div class="number">%d</div>
-                            <div class="label">Total Modules</div>
-                        </div>
-                        <div class="summary-card pass">
-                            <div class="number">%d</div>
-                            <div class="label">Passed (%.1f%%)</div>
-                        </div>
-                        <div class="summary-card fail">
-                            <div class="number">%d</div>
-                            <div class="label">Failed (%.1f%%)</div>
-                        </div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Result</th>
-                                    <th>Filename</th>
-                                    <th>Module Type</th>
-                                    <th>Title</th>
-                                    <th>Description</th>
-                                    <th>Duration</th>
-                                    <th>JSON Parsed</th>
-                                    <th>Sequencing</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            %s
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </body>
-        </html>""".formatted(
-        generatedAt,
-        directoryPath,
-        rows.size(),
-        passCount,
-        passRate,
-        failureCount,
-        100 - passRate,
-        tableRows.toString()
-    );
-
-    try {
-      Files.writeString(htmlPath, html);
-      System.out.println("\nHTML report saved to: " + htmlPath.toAbsolutePath());
-    } catch (IOException e) {
-      System.err.println("Failed to write HTML report: " + e.getMessage());
-    }
-  }
-
-  static String escapeHtml(String text) {
-    if (text == null) {
-      return "";
-    }
-    return text
-        .replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
-        .replace("\"", "&quot;")
-        .replace("'", "&#39;");
   }
 
   static ObjectMapper createConfiguredObjectMapper() {

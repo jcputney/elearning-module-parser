@@ -17,28 +17,16 @@
 
 package dev.jcputney.elearning.parser.input.cmi5.types;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a single objective with a title, description, and unique identifier.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Objective implements Serializable {
 
@@ -70,4 +58,57 @@ public class Objective implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("id")
   private String id;
+
+  public Objective() {
+  }
+
+  public TextType getTitle() {
+    return this.title;
+  }
+
+  public void setTitle(TextType title) {
+    this.title = title;
+  }
+
+  public TextType getDescription() {
+    return this.description;
+  }
+
+  public void setDescription(TextType description) {
+    this.description = description;
+  }
+
+  public String getId() {
+    return this.id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Objective objective)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getTitle(), objective.getTitle())
+        .append(getDescription(), objective.getDescription())
+        .append(getId(), objective.getId())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getTitle())
+        .append(getDescription())
+        .append(getId())
+        .toHashCode();
+  }
 }

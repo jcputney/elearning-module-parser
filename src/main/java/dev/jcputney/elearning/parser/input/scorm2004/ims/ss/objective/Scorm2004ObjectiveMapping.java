@@ -17,19 +17,12 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a mapping from a local objective to a global objective within the SCORM IMS Simple
@@ -38,12 +31,6 @@ import lombok.extern.jackson.Jacksonized;
  * information with global objectives, providing consistency in tracking and reporting across
  * different activities.</p>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004ObjectiveMapping implements Serializable {
 
@@ -67,7 +54,6 @@ public class Scorm2004ObjectiveMapping implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("readSatisfiedStatus")
-  @Default
   private boolean readSatisfiedStatus = true;
   /**
    * Specifies whether this local objective should read the normalized measure (performance level)
@@ -79,7 +65,6 @@ public class Scorm2004ObjectiveMapping implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("readNormalizedMeasure")
-  @Default
   private boolean readNormalizedMeasure = true;
   /**
    * Specifies whether this local objective should write its satisfaction status to the target
@@ -92,7 +77,6 @@ public class Scorm2004ObjectiveMapping implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("writeSatisfiedStatus")
-  @Default
   private boolean writeSatisfiedStatus = false;
   /**
    * Specifies whether this local objective should write its normalized measure (performance level)
@@ -104,7 +88,6 @@ public class Scorm2004ObjectiveMapping implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("writeNormalizedMeasure")
-  @Default
   private boolean writeNormalizedMeasure = false;
 
   /**
@@ -120,7 +103,6 @@ public class Scorm2004ObjectiveMapping implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("readCompletionStatus")
-  @Default
   private boolean readCompletionStatus = true;
 
   /**
@@ -136,6 +118,111 @@ public class Scorm2004ObjectiveMapping implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("writeCompletionStatus")
-  @Default
   private boolean writeCompletionStatus = false;
+
+  public Scorm2004ObjectiveMapping(String targetObjectiveID, boolean readSatisfiedStatus,
+      boolean readNormalizedMeasure, boolean writeSatisfiedStatus, boolean writeNormalizedMeasure,
+      boolean readCompletionStatus, boolean writeCompletionStatus) {
+    this.targetObjectiveID = targetObjectiveID;
+    this.readSatisfiedStatus = readSatisfiedStatus;
+    this.readNormalizedMeasure = readNormalizedMeasure;
+    this.writeSatisfiedStatus = writeSatisfiedStatus;
+    this.writeNormalizedMeasure = writeNormalizedMeasure;
+    this.readCompletionStatus = readCompletionStatus;
+    this.writeCompletionStatus = writeCompletionStatus;
+  }
+
+  public Scorm2004ObjectiveMapping() {
+  }
+
+  public String getTargetObjectiveID() {
+    return this.targetObjectiveID;
+  }
+
+  public void setTargetObjectiveID(String targetObjectiveID) {
+    this.targetObjectiveID = targetObjectiveID;
+  }
+
+  public boolean isReadSatisfiedStatus() {
+    return this.readSatisfiedStatus;
+  }
+
+  public void setReadSatisfiedStatus(boolean readSatisfiedStatus) {
+    this.readSatisfiedStatus = readSatisfiedStatus;
+  }
+
+  public boolean isReadNormalizedMeasure() {
+    return this.readNormalizedMeasure;
+  }
+
+  public void setReadNormalizedMeasure(boolean readNormalizedMeasure) {
+    this.readNormalizedMeasure = readNormalizedMeasure;
+  }
+
+  public boolean isWriteSatisfiedStatus() {
+    return this.writeSatisfiedStatus;
+  }
+
+  public void setWriteSatisfiedStatus(boolean writeSatisfiedStatus) {
+    this.writeSatisfiedStatus = writeSatisfiedStatus;
+  }
+
+  public boolean isWriteNormalizedMeasure() {
+    return this.writeNormalizedMeasure;
+  }
+
+  public void setWriteNormalizedMeasure(boolean writeNormalizedMeasure) {
+    this.writeNormalizedMeasure = writeNormalizedMeasure;
+  }
+
+  public boolean isReadCompletionStatus() {
+    return this.readCompletionStatus;
+  }
+
+  public void setReadCompletionStatus(boolean readCompletionStatus) {
+    this.readCompletionStatus = readCompletionStatus;
+  }
+
+  public boolean isWriteCompletionStatus() {
+    return this.writeCompletionStatus;
+  }
+
+  public void setWriteCompletionStatus(boolean writeCompletionStatus) {
+    this.writeCompletionStatus = writeCompletionStatus;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm2004ObjectiveMapping that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(isReadSatisfiedStatus(),
+            that.isReadSatisfiedStatus())
+        .append(isReadNormalizedMeasure(), that.isReadNormalizedMeasure())
+        .append(isWriteSatisfiedStatus(), that.isWriteSatisfiedStatus())
+        .append(isWriteNormalizedMeasure(), that.isWriteNormalizedMeasure())
+        .append(isReadCompletionStatus(), that.isReadCompletionStatus())
+        .append(isWriteCompletionStatus(), that.isWriteCompletionStatus())
+        .append(getTargetObjectiveID(), that.getTargetObjectiveID())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getTargetObjectiveID())
+        .append(isReadSatisfiedStatus())
+        .append(isReadNormalizedMeasure())
+        .append(isWriteSatisfiedStatus())
+        .append(isWriteNormalizedMeasure())
+        .append(isReadCompletionStatus())
+        .append(isWriteCompletionStatus())
+        .toHashCode();
+  }
 }

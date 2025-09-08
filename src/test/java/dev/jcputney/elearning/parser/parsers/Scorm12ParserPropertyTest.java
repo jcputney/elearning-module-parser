@@ -48,33 +48,37 @@ public class Scorm12ParserPropertyTest {
   @ParameterizedTest
   @ValueSource(strings = {
       // Missing title
-      "<manifest identifier=\"com.scorm.golfsamples.contentpackaging.singlesco.12\" version=\"1\">\n"
-          + "  <organizations default=\"golf_sample_default\">\n"
-          + "    <organization identifier=\"golf_sample_default\">\n"
-          + "      <item identifier=\"item_1\" identifierref=\"resource_1\"></item>\n"
-          + "    </organization>\n"
-          + "  </organizations>\n"
-          + "  <resources>\n"
-          + "    <resource identifier=\"resource_1\" type=\"webcontent\" adlcp:scormtype=\"sco\" href=\"shared/launchpage.html\">\n"
-          + "      <file href=\"shared/launchpage.html\" />\n"
-          + "    </resource>\n"
-          + "  </resources>\n"
-          + "</manifest>",
+      // language=XML
+      """
+          <manifest identifier="com.scorm.golfsamples.contentpackaging.singlesco.12" version="1">
+            <organizations default="golf_sample_default">
+              <organization identifier="golf_sample_default">
+                <item identifier="item_1" identifierref="resource_1"></item>
+              </organization>
+            </organizations>
+            <resources>
+              <resource identifier="resource_1" type="webcontent" adlcp:scormtype="sco" href="shared/launchpage.html">
+                <file href="shared/launchpage.html" />
+              </resource>
+            </resources>
+          </manifest>""",
 
       // Missing launch URL (href attribute in resource)
-      "<manifest identifier=\"com.scorm.golfsamples.contentpackaging.singlesco.12\" version=\"1\">\n"
-          + "  <organizations default=\"golf_sample_default\">\n"
-          + "    <organization identifier=\"golf_sample_default\">\n"
-          + "      <title>Golf Explained - CP Single SCO</title>\n"
-          + "      <item identifier=\"item_1\" identifierref=\"resource_1\"></item>\n"
-          + "    </organization>\n"
-          + "  </organizations>\n"
-          + "  <resources>\n"
-          + "    <resource identifier=\"resource_1\" type=\"webcontent\" adlcp:scormtype=\"sco\">\n"
-          + "      <file href=\"shared/launchpage.html\" />\n"
-          + "    </resource>\n"
-          + "  </resources>\n"
-          + "</manifest>"
+      // language=XML
+      """
+          <manifest identifier="com.scorm.golfsamples.contentpackaging.singlesco.12" version="1">
+            <organizations default="golf_sample_default">
+              <organization identifier="golf_sample_default">
+                <title>Golf Explained - CP Single SCO</title>
+                <item identifier="item_1" identifierref="resource_1"></item>
+              </organization>
+            </organizations>
+            <resources>
+              <resource identifier="resource_1" type="webcontent" adlcp:scormtype="sco">
+                <file href="shared/launchpage.html" />
+              </resource>
+            </resources>
+          </manifest>"""
   })
   void testMissingRequiredFields(String manifestXml) {
     // Create a mock FileAccess that returns the test manifest XML
@@ -92,38 +96,42 @@ public class Scorm12ParserPropertyTest {
    * when the XML is malformed.
    */
   @ParameterizedTest
-  @ValueSource(strings = {
-      // Unclosed tag
-      "<manifest identifier=\"com.scorm.golfsamples.contentpackaging.singlesco.12\" version=\"1\">\n"
-          + "  <organizations default=\"golf_sample_default\">\n"
-          + "    <organization identifier=\"golf_sample_default\">\n"
-          + "      <title>Golf Explained - CP Single SCO</title>\n"
-          + "      <item identifier=\"item_1\" identifierref=\"resource_1\"></item>\n"
-          + "    </organization>\n"
-          + "  </organizations>\n"
-          + "  <resources>\n"
-          + "    <resource identifier=\"resource_1\" type=\"webcontent\" adlcp:scormtype=\"sco\" href=\"shared/launchpage.html\">\n"
-          + "      <file href=\"shared/launchpage.html\" />\n"
-          + "    </resource>\n"
-          + "  </resources>\n"
-          + "</manifest",
+  @ValueSource(// Extra closing tag
+      strings = {
+          // Unclosed tag
+          // language=XML
+          """
+              <manifest identifier="com.scorm.golfsamples.contentpackaging.singlesco.12" version="1">
+                <organizations default="golf_sample_default">
+                  <organization identifier="golf_sample_default">
+                    <title>Golf Explained - CP Single SCO</title>
+                    <item identifier="item_1" identifierref="resource_1"></item>
+                  </organization>
+                </organizations>
+                <resources>
+                  <resource identifier="resource_1" type="webcontent" adlcp:scormtype="sco" href="shared/launchpage.html">
+                    <file href="shared/launchpage.html" />
+                  </resource>
+                </resources>
+              </manifest>""",
 
-      // Invalid XML structure
-      "<manifest identifier=\"com.scorm.golfsamples.contentpackaging.singlesco.12\" version=\"1\">\n"
-          + "  <organizations default=\"golf_sample_default\">\n"
-          + "    <organization identifier=\"golf_sample_default\">\n"
-          + "      <title>Golf Explained - CP Single SCO</title>\n"
-          + "      <item identifier=\"item_1\" identifierref=\"resource_1\"></item>\n"
-          + "    </organization>\n"
-          + "  </organizations>\n"
-          + "  <resources>\n"
-          + "    <resource identifier=\"resource_1\" type=\"webcontent\" adlcp:scormtype=\"sco\" href=\"shared/launchpage.html\">\n"
-          + "      <file href=\"shared/launchpage.html\" />\n"
-          + "    </resource>\n"
-          + "  </resources>\n"
-          + "  </organizations>\n" // Extra closing tag
-          + "</manifest>"
-  })
+          // Invalid XML structure
+          // language=XML
+          """
+              <manifest identifier="com.scorm.golfsamples.contentpackaging.singlesco.12" version="1">
+                <organizations default="golf_sample_default">
+                  <organization identifier="golf_sample_default">
+                    <title>Golf Explained - CP Single SCO</title>
+                    <item identifier="item_1" identifierref="resource_1"></item>
+                  </organization>
+                </organizations>
+                <resources>
+                  <resource identifier="resource_1" type="webcontent" adlcp:scormtype="sco" href="shared/launchpage.html">
+                    <file href="shared/launchpage.html" />
+                  </resource>
+                </resources>
+              </manifest>"""
+      })
   void testMalformedXml(String manifestXml) {
     // Create a mock FileAccess that returns the test manifest XML
     FileAccess mockFileAccess = new MockFileAccess(manifestXml);
@@ -176,11 +184,17 @@ public class Scorm12ParserPropertyTest {
       assertNotNull(manifest);
 
       // Verify that the parser extracted the expected values
-      assertTrue(manifest.getTitle().length() > 100); // Very long title
+      assertTrue(manifest
+          .getTitle()
+          .length() > 100); // Very long title
       assertEquals("shared/launchpage.html", manifest.getLaunchUrl());
     } catch (ModuleParsingException e) {
       // If the parser throws an exception, it should be because of a validation error
-      assertTrue(e.getMessage().contains("missing") || e.getMessage().contains("required"));
+      assertTrue(e
+          .getMessage()
+          .contains("missing") || e
+          .getMessage()
+          .contains("required"));
     }
   }
 
@@ -191,25 +205,27 @@ public class Scorm12ParserPropertyTest {
   @Test
   void testMinimalValidManifest() throws ModuleParsingException {
     // Minimal valid manifest with just the required fields
-    String manifestXml = "<manifest xmlns=\"http://www.imsproject.org/xsd/imscp_rootv1p1p2\" "
-        + "xmlns:adlcp=\"http://www.adlnet.org/xsd/adlcp_rootv1p2\" "
-        + "identifier=\"com.scorm.golfsamples.contentpackaging.singlesco.12\" version=\"1\">\n"
-        + "  <metadata>\n"
-        + "    <schema>ADL SCORM</schema>\n"
-        + "    <schemaversion>1.2</schemaversion>\n"
-        + "  </metadata>\n"
-        + "  <organizations default=\"golf_sample_default\">\n"
-        + "    <organization identifier=\"golf_sample_default\">\n"
-        + "      <title>Minimal Valid Manifest</title>\n"
-        + "      <item identifier=\"item_1\" identifierref=\"resource_1\"></item>\n"
-        + "    </organization>\n"
-        + "  </organizations>\n"
-        + "  <resources>\n"
-        + "    <resource identifier=\"resource_1\" type=\"webcontent\" adlcp:scormtype=\"sco\" href=\"index.html\">\n"
-        + "      <file href=\"index.html\" />\n"
-        + "    </resource>\n"
-        + "  </resources>\n"
-        + "</manifest>";
+    // language=XML
+    String manifestXml = """
+        <manifest xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+            xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+            identifier="com.scorm.golfsamples.contentpackaging.singlesco.12" version="1">
+          <metadata>
+            <schema>ADL SCORM</schema>
+            <schemaversion>1.2</schemaversion>
+          </metadata>
+          <organizations default="golf_sample_default">
+            <organization identifier="golf_sample_default">
+              <title>Minimal Valid Manifest</title>
+              <item identifier="item_1" identifierref="resource_1"></item>
+            </organization>
+          </organizations>
+          <resources>
+            <resource identifier="resource_1" type="webcontent" adlcp:scormtype="sco" href="index.html">
+              <file href="index.html" />
+            </resource>
+          </resources>
+        </manifest>""";
 
     // Create a mock FileAccess that returns the test manifest XML
     FileAccess mockFileAccess = new MockFileAccess(manifestXml);
@@ -231,13 +247,7 @@ public class Scorm12ParserPropertyTest {
   /**
    * A mock FileAccess implementation that returns predefined content for the manifest file.
    */
-  private static class MockFileAccess implements FileAccess {
-
-    private final String manifestXml;
-
-    public MockFileAccess(String manifestXml) {
-      this.manifestXml = manifestXml;
-    }
+  private record MockFileAccess(String manifestXml) implements FileAccess {
 
     @Override
     public boolean fileExistsInternal(String path) {
@@ -245,7 +255,7 @@ public class Scorm12ParserPropertyTest {
     }
 
     @Override
-    public List<String> listFilesInternal(String path) throws IOException {
+    public List<String> listFilesInternal(String path) {
       if (path == null || path.isEmpty()) {
         List<String> files = new ArrayList<>();
         files.add("imsmanifest.xml");

@@ -17,21 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.api.LoadableMetadata;
 import dev.jcputney.elearning.parser.input.lom.LOM;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLCP;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents metadata for a SCORM element, which can either be inline metadata using a LOM element
@@ -55,12 +48,6 @@ import lombok.extern.jackson.Jacksonized;
  * </metadata>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004SubMetadata implements LoadableMetadata {
@@ -75,6 +62,49 @@ public class Scorm2004SubMetadata implements LoadableMetadata {
    * Inline metadata represented as a LOM element.
    */
   @JacksonXmlProperty(localName = "lom", namespace = LOM.NAMESPACE_URI)
-  @Setter
   private LOM lom;
+
+  public Scorm2004SubMetadata() {
+  }
+
+  public String getLocation() {
+    return this.location;
+  }
+
+  public void setLocation(String location) {
+    this.location = location;
+  }
+
+  public LOM getLom() {
+    return this.lom;
+  }
+
+  @JacksonXmlProperty(localName = "lom", namespace = LOM.NAMESPACE_URI)
+  public void setLom(LOM lom) {
+    this.lom = lom;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm2004SubMetadata that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getLocation(), that.getLocation())
+        .append(getLom(), that.getLom())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getLocation())
+        .append(getLom())
+        .toHashCode();
+  }
 }

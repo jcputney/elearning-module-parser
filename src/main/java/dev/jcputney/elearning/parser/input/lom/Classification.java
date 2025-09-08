@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -28,12 +26,8 @@ import dev.jcputney.elearning.parser.input.lom.types.TaxonPath;
 import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the classification information about a learning object in a Learning Object Metadata
@@ -54,12 +48,6 @@ import lombok.extern.jackson.Jacksonized;
  * </complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Classification implements Serializable {
 
@@ -132,4 +120,68 @@ public class Classification implements Serializable {
    */
   @JacksonXmlProperty(localName = "keyword")
   private UnboundLangString keywords;
+
+  public Classification() {
+  }
+
+  public SourceValuePair<Purpose> getPurpose() {
+    return this.purpose;
+  }
+
+  public void setPurpose(
+      SourceValuePair<Purpose> purpose) {
+    this.purpose = purpose;
+  }
+
+  public List<TaxonPath> getTaxonPaths() {
+    return this.taxonPaths;
+  }
+
+  public void setTaxonPaths(List<TaxonPath> taxonPaths) {
+    this.taxonPaths = taxonPaths;
+  }
+
+  public UnboundLangString getDescription() {
+    return this.description;
+  }
+
+  public void setDescription(UnboundLangString description) {
+    this.description = description;
+  }
+
+  public UnboundLangString getKeywords() {
+    return this.keywords;
+  }
+
+  public void setKeywords(UnboundLangString keywords) {
+    this.keywords = keywords;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Classification that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getPurpose(), that.getPurpose())
+        .append(getTaxonPaths(), that.getTaxonPaths())
+        .append(getDescription(), that.getDescription())
+        .append(getKeywords(), that.getKeywords())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getPurpose())
+        .append(getTaxonPaths())
+        .append(getDescription())
+        .append(getKeywords())
+        .toHashCode();
+  }
 }

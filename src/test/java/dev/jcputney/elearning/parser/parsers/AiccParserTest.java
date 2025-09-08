@@ -52,13 +52,33 @@ class AiccParserTest {
     assertEquals("UniversitySite AICC Testing Tool", manifest.getTitle());
     assertEquals("Descriptive Text", manifest.getDescription());
     assertEquals("default.htm", manifest.getLaunchUrl());
-    assertEquals("Profiscience Partners", manifest.getCourse().getCourse().getCourseCreator());
-    assertEquals("HTML", manifest.getCourse().getCourse().getCourseSystem());
-    assertEquals("1", manifest.getCourse().getCourse().getTotalAus());
-    assertEquals("1", manifest.getCourse().getCourseBehavior().getMaxNormal());
-    assertEquals(1, manifest.getAssignableUnits().size());
-    assertEquals("A1", manifest.getAssignableUnits().get(0).getSystemId());
-    assertEquals("C,N", manifest.getAssignableUnits().get(0).getTimeLimitAction());
+    assertEquals("Profiscience Partners", manifest
+        .getCourse()
+        .getCourse()
+        .getCourseCreator());
+    assertEquals("HTML", manifest
+        .getCourse()
+        .getCourse()
+        .getCourseSystem());
+    assertEquals("1", manifest
+        .getCourse()
+        .getCourse()
+        .getTotalAus());
+    assertEquals("1", manifest
+        .getCourse()
+        .getCourseBehavior()
+        .getMaxNormal());
+    assertEquals(1, manifest
+        .getAssignableUnits()
+        .size());
+    assertEquals("A1", manifest
+        .getAssignableUnits()
+        .get(0)
+        .getSystemId());
+    assertEquals("C,N", manifest
+        .getAssignableUnits()
+        .get(0)
+        .getTimeLimitAction());
   }
 
   /**
@@ -121,10 +141,10 @@ class AiccParserTest {
             Total_AUs = 1
             Total_Blocks = 0
             Max_Fields_CST = 100
-
+            
             [COURSE_BEHAVIOR]
             MAX_NORMAL = 1
-
+            
             [COURSE_DESCRIPTION]
             A minimal AICC course for testing = This is a minimal AICC course for testing purposes.
             """);
@@ -155,11 +175,25 @@ class AiccParserTest {
     assertNotNull(manifest);
     assertEquals("Minimal AICC Course", manifest.getTitle());
     assertEquals("A minimal AICC course for testing", manifest.getDescription());
-    assertEquals("Test Creator", manifest.getCourse().getCourse().getCourseCreator());
-    assertEquals("Test System", manifest.getCourse().getCourse().getCourseSystem());
-    assertEquals("1", manifest.getCourse().getCourse().getTotalAus());
-    assertEquals("1", manifest.getCourse().getCourseBehavior().getMaxNormal());
-    assertEquals(1, manifest.getAssignableUnits().size());
+    assertEquals("Test Creator", manifest
+        .getCourse()
+        .getCourse()
+        .getCourseCreator());
+    assertEquals("Test System", manifest
+        .getCourse()
+        .getCourse()
+        .getCourseSystem());
+    assertEquals("1", manifest
+        .getCourse()
+        .getCourse()
+        .getTotalAus());
+    assertEquals("1", manifest
+        .getCourse()
+        .getCourseBehavior()
+        .getMaxNormal());
+    assertEquals(1, manifest
+        .getAssignableUnits()
+        .size());
   }
 
   /**
@@ -193,7 +227,7 @@ class AiccParserTest {
             Total_AUs = 3
             Total_Blocks = 0
             Max_Fields_CST = 100
-
+            
             [COURSE_BEHAVIOR]
             MAX_NORMAL = 3
             """);
@@ -225,9 +259,20 @@ class AiccParserTest {
     AiccManifest manifest = metadata.getManifest();
     assertNotNull(manifest);
     assertEquals("Multi AU AICC Course", manifest.getTitle());
-    assertEquals(3, manifest.getAssignableUnits().size());
-    assertEquals("A1", manifest.getAssignableUnits().get(0).getSystemId());
-    assertEquals("A2", manifest.getAssignableUnits().get(1).getSystemId());
-    assertEquals("A3", manifest.getAssignableUnits().get(2).getSystemId());
+    assertEquals(3, manifest
+        .getAssignableUnits()
+        .size());
+    assertEquals("A1", manifest
+        .getAssignableUnits()
+        .get(0)
+        .getSystemId());
+    assertEquals("A2", manifest
+        .getAssignableUnits()
+        .get(1)
+        .getSystemId());
+    assertEquals("A3", manifest
+        .getAssignableUnits()
+        .get(2)
+        .getSystemId());
   }
 }

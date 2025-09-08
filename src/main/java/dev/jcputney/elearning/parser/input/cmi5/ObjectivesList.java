@@ -17,20 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.cmi5;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.cmi5.types.Objective;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the objectives section of a CMI5 course structure, containing a list of defined
@@ -56,12 +50,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ObjectivesList implements Serializable {
 
@@ -82,4 +70,41 @@ public class ObjectivesList implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "objective")
   private List<Objective> objectives;
+
+  public ObjectivesList(List<Objective> objectives) {
+    this.objectives = objectives;
+  }
+
+  public ObjectivesList() {
+  }
+
+  public List<Objective> getObjectives() {
+    return this.objectives;
+  }
+
+  public void setObjectives(List<Objective> objectives) {
+    this.objectives = objectives;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof ObjectivesList that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getObjectives(), that.getObjectives())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getObjectives())
+        .toHashCode();
+  }
 }

@@ -17,19 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>launchSpec</strong> complex type.</p>
@@ -45,12 +39,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LaunchSpec implements Serializable {
@@ -70,4 +58,63 @@ public class LaunchSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "wrapScoWindowWithApi")
   private YesNoType wrapScoWindowWithApi;
+
+  public LaunchSpec(LaunchType sco, LaunchType player, YesNoType wrapScoWindowWithApi) {
+    this.sco = sco;
+    this.player = player;
+    this.wrapScoWindowWithApi = wrapScoWindowWithApi;
+  }
+
+  public LaunchSpec() {
+  }
+
+  public LaunchType getSco() {
+    return this.sco;
+  }
+
+  public void setSco(LaunchType sco) {
+    this.sco = sco;
+  }
+
+  public LaunchType getPlayer() {
+    return this.player;
+  }
+
+  public void setPlayer(LaunchType player) {
+    this.player = player;
+  }
+
+  public YesNoType getWrapScoWindowWithApi() {
+    return this.wrapScoWindowWithApi;
+  }
+
+  public void setWrapScoWindowWithApi(YesNoType wrapScoWindowWithApi) {
+    this.wrapScoWindowWithApi = wrapScoWindowWithApi;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof LaunchSpec that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getSco(), that.getSco())
+        .append(getPlayer(), that.getPlayer())
+        .append(getWrapScoWindowWithApi(), that.getWrapScoWindowWithApi())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getSco())
+        .append(getPlayer())
+        .append(getWrapScoWindowWithApi())
+        .toHashCode();
+  }
 }

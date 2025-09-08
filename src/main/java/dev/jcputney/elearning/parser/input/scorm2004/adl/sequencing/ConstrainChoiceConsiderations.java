@@ -17,20 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the constrainedChoiceConsiderationsType complex type, defining choice and activation
@@ -43,12 +36,6 @@ import lombok.extern.jackson.Jacksonized;
  *   </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ConstrainChoiceConsiderations implements Serializable {
@@ -58,13 +45,54 @@ public class ConstrainChoiceConsiderations implements Serializable {
    */
   @JacksonXmlProperty(localName = "preventActivation", isAttribute = true)
   @JsonProperty("preventActivation")
-  @Default
   private boolean preventActivation = false;
   /**
    * Constrains choice when true. Default is false.
    */
   @JacksonXmlProperty(localName = "constrainChoice", isAttribute = true)
   @JsonProperty("constrainChoice")
-  @Default
   private boolean constrainChoice = false;
+
+  public ConstrainChoiceConsiderations() {
+  }
+
+  public boolean isPreventActivation() {
+    return this.preventActivation;
+  }
+
+  public void setPreventActivation(boolean preventActivation) {
+    this.preventActivation = preventActivation;
+  }
+
+  public boolean isConstrainChoice() {
+    return this.constrainChoice;
+  }
+
+  public void setConstrainChoice(boolean constrainChoice) {
+    this.constrainChoice = constrainChoice;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof ConstrainChoiceConsiderations that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(isPreventActivation(), that.isPreventActivation())
+        .append(isConstrainChoice(), that.isConstrainChoice())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(isPreventActivation())
+        .append(isConstrainChoice())
+        .toHashCode();
+  }
 }

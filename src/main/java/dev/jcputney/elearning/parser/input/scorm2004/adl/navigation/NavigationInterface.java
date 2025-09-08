@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.navigation;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -26,24 +24,14 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLNav;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the navigation interface controls, which specify options for interacting with the LMS
  * navigation UI. This includes defining the appearance and functionality of the navigation buttons
  * and controls.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class NavigationInterface implements Serializable {
@@ -55,4 +43,37 @@ public class NavigationInterface implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "hideLMSUI", namespace = ADLNav.NAMESPACE_URI)
   private List<HideLMSUI> hideLMSUI;
+
+  public NavigationInterface() {
+  }
+
+  public List<HideLMSUI> getHideLMSUI() {
+    return this.hideLMSUI;
+  }
+
+  public void setHideLMSUI(List<HideLMSUI> hideLMSUI) {
+    this.hideLMSUI = hideLMSUI;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof NavigationInterface that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getHideLMSUI(), that.getHideLMSUI())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getHideLMSUI())
+        .toHashCode();
+  }
 }

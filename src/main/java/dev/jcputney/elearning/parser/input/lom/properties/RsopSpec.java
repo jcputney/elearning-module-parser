@@ -17,19 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>rsopSpec</strong> complex type.</p>
@@ -43,12 +37,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RsopSpec implements Serializable {
@@ -58,4 +46,37 @@ public class RsopSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "offlineSynchMode")
   private OfflineSynchModeType offlineSynchMode;
+
+  public RsopSpec() {
+  }
+
+  public OfflineSynchModeType getOfflineSynchMode() {
+    return this.offlineSynchMode;
+  }
+
+  public void setOfflineSynchMode(OfflineSynchModeType offlineSynchMode) {
+    this.offlineSynchMode = offlineSynchMode;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof RsopSpec rsopSpec)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getOfflineSynchMode(), rsopSpec.getOfflineSynchMode())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getOfflineSynchMode())
+        .toHashCode();
+  }
 }

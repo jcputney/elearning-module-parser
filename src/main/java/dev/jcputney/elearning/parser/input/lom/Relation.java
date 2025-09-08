@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -27,12 +25,8 @@ import dev.jcputney.elearning.parser.input.lom.types.Resource;
 import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the relationship information about a learning object in a Learning Object Metadata
@@ -51,12 +45,6 @@ import lombok.extern.jackson.Jacksonized;
  * </complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Relation implements Serializable {
 
@@ -96,4 +84,47 @@ public class Relation implements Serializable {
   @JacksonXmlElementWrapper(localName = "resource", useWrapping = false)
   @JacksonXmlProperty(localName = "resource")
   private List<Resource> resource;
+
+  public Relation() {
+  }
+
+  public SourceValuePair<Kind> getKind() {
+    return this.kind;
+  }
+
+  public void setKind(SourceValuePair<Kind> kind) {
+    this.kind = kind;
+  }
+
+  public List<Resource> getResource() {
+    return this.resource;
+  }
+
+  public void setResource(List<Resource> resource) {
+    this.resource = resource;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Relation relation)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getKind(), relation.getKind())
+        .append(getResource(), relation.getResource())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getKind())
+        .append(getResource())
+        .toHashCode();
+  }
 }

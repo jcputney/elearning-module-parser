@@ -40,7 +40,7 @@ class PercentTypeTest {
     PercentType percentType = new PercentType();
 
     // Assert
-    assertEquals(BigDecimal.ZERO, percentType.getValue());
+    assertEquals(BigDecimal.ZERO, percentType.value());
   }
 
   @Test
@@ -52,7 +52,7 @@ class PercentTypeTest {
     PercentType percentType = new PercentType(value);
 
     // Assert
-    assertEquals(value, percentType.getValue());
+    assertEquals(value, percentType.value());
   }
 
   @Test
@@ -100,7 +100,7 @@ class PercentTypeTest {
     PercentType percentType = new PercentType(value);
 
     // Assert
-    assertEquals(value, percentType.getValue());
+    assertEquals(value, percentType.value());
   }
 
   @Test
@@ -112,7 +112,7 @@ class PercentTypeTest {
     PercentType percentType = new PercentType(value);
 
     // Assert
-    assertEquals(value, percentType.getValue());
+    assertEquals(value, percentType.value());
   }
 
   @Test
@@ -124,7 +124,7 @@ class PercentTypeTest {
     PercentType percentType = PercentType.parse(value);
 
     // Assert
-    assertEquals(new BigDecimal("0.75"), percentType.getValue());
+    assertEquals(new BigDecimal("0.75"), percentType.value());
   }
 
   @Test

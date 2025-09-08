@@ -17,17 +17,11 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a source-value pair, commonly used in the LOM schema to describe a value and its
@@ -47,12 +41,6 @@ import lombok.extern.jackson.Jacksonized;
  *
  * @param <T> the type of the value, which can be an enumeration or a string
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class SourceValuePair<T> implements Serializable {
 
@@ -76,4 +64,47 @@ public class SourceValuePair<T> implements Serializable {
    */
   @JsonProperty("value")
   private T value;
+
+  public SourceValuePair() {
+  }
+
+  public String getSource() {
+    return this.source;
+  }
+
+  public void setSource(String source) {
+    this.source = source;
+  }
+
+  public T getValue() {
+    return this.value;
+  }
+
+  public void setValue(T value) {
+    this.value = value;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof SourceValuePair<?> that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getSource(), that.getSource())
+        .append(getValue(), that.getValue())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getSource())
+        .append(getValue())
+        .toHashCode();
+  }
 }

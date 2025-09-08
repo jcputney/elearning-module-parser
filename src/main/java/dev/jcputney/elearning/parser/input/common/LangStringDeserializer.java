@@ -74,10 +74,6 @@ public class LangStringDeserializer extends JsonDeserializer<LangString> {
     }
 
     // Create a new LangString instance using the builder pattern
-    return LangString
-        .builder()
-        .language(language)
-        .value(value)
-        .build();
+    return new LangString(language, value);
   }
 }

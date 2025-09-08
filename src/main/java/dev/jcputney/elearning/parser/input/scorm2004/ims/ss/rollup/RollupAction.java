@@ -17,19 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.RollupActionType;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the action to perform if the conditions specified in a rollup rule are met. The rollup
@@ -39,12 +33,6 @@ import lombok.extern.jackson.Jacksonized;
  * <p>Common actions include marking the parent activity as satisfied, not satisfied,
  * completed, or incomplete based on the rollup rule conditions.</p>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupAction implements Serializable {
 
@@ -61,4 +49,41 @@ public class RollupAction implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("action")
   private RollupActionType action;
+
+  public RollupAction(RollupActionType action) {
+    this.action = action;
+  }
+
+  public RollupAction() {
+  }
+
+  public RollupActionType getAction() {
+    return this.action;
+  }
+
+  public void setAction(RollupActionType action) {
+    this.action = action;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof RollupAction that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getAction(), that.getAction())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getAction())
+        .toHashCode();
+  }
 }

@@ -32,7 +32,7 @@ import java.io.Serializable;
  *
  * <p>The ADLNav namespace is specified by {@link #NAMESPACE_URI}, and this class
  * is designed to conform to the SCORM 2004 3rd Edition specification.</p>
- *
+ * <p>
  * The following schema shows the structure of the ADLNav element:
  * <pre>{@code
  *   <?xml version = "1.0"?>

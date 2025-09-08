@@ -126,8 +126,7 @@ public class DefaultModuleTypeDetector implements ModuleTypeDetector {
   public ModuleType detectModuleType() throws ModuleDetectionException {
     if (plugins.isEmpty()) {
       throw new ModuleDetectionException(
-          "No module type detector plugins are registered. Cannot detect module type."
-      );
+          "No module type detector plugins are registered. Cannot detect module type.");
     }
 
     try {
@@ -150,20 +149,17 @@ public class DefaultModuleTypeDetector implements ModuleTypeDetector {
             .getName());
       }
 
-      throw new ModuleDetectionException(String.format(
-          "Unable to detect module type at '%s'. Tried plugins: [%s]. " +
-              "Module might be corrupted or of an unsupported type.",
-          fileAccess.getRootPath(), triedPlugins
-      ));
+      throw new ModuleDetectionException(
+          String.format("Unable to detect module type at '%s'. Tried plugins: [%s]. "
+                  + "Module might be corrupted or of an unsupported type.", fileAccess.getRootPath(),
+              triedPlugins));
     } catch (Exception e) {
       if (e instanceof ModuleDetectionException) {
         throw e;
       }
       throw new ModuleDetectionException(
-          String.format("Error detecting module type at '%s': %s",
-              fileAccess.getRootPath(), e.getMessage()),
-          e
-      );
+          String.format("Error detecting module type at '%s': %s", fileAccess.getRootPath(),
+              e.getMessage()), e);
     }
   }
 

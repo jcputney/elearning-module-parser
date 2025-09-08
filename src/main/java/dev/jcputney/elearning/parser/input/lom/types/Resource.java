@@ -17,19 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the <code>resource</code> element in the LOM schema, containing information about a
@@ -47,12 +41,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Resource implements Serializable {
 
@@ -117,4 +105,67 @@ public class Resource implements Serializable {
   @JacksonXmlElementWrapper(localName = "customElements", useWrapping = false)
   @JacksonXmlProperty(localName = "customElements")
   private List<Object> customElements;
+
+  public Resource() {
+  }
+
+  public List<Identifier> getIdentifiers() {
+    return this.identifiers;
+  }
+
+  public void setIdentifiers(List<Identifier> identifiers) {
+    this.identifiers = identifiers;
+  }
+
+  public UnboundLangString getDescriptions() {
+    return this.descriptions;
+  }
+
+  public void setDescriptions(UnboundLangString descriptions) {
+    this.descriptions = descriptions;
+  }
+
+  public List<CatalogEntry> getCatalogEntries() {
+    return this.catalogEntries;
+  }
+
+  public void setCatalogEntries(List<CatalogEntry> catalogEntries) {
+    this.catalogEntries = catalogEntries;
+  }
+
+  public List<Object> getCustomElements() {
+    return this.customElements;
+  }
+
+  public void setCustomElements(List<Object> customElements) {
+    this.customElements = customElements;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Resource resource)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getIdentifiers(), resource.getIdentifiers())
+        .append(getDescriptions(), resource.getDescriptions())
+        .append(getCatalogEntries(), resource.getCatalogEntries())
+        .append(getCustomElements(), resource.getCustomElements())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getIdentifiers())
+        .append(getDescriptions())
+        .append(getCatalogEntries())
+        .append(getCustomElements())
+        .toHashCode();
+  }
 }

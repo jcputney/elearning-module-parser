@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -30,23 +28,13 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004O
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.random.RandomizationControls;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup.RollupRules;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a top-level sequencing configuration, containing elements that define the sequencing
  * rules and objectives for SCORM content.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Sequencing implements Serializable {
@@ -111,4 +99,138 @@ public class Sequencing implements Serializable {
    */
   @JacksonXmlProperty(localName = "constrainedChoiceConsiderations", namespace = ADLSeq.NAMESPACE_URI)
   private ConstrainChoiceConsiderations constrainChoiceConsiderations;
+
+  public Sequencing() {
+  }
+
+  public ControlMode getControlMode() {
+    return this.controlMode;
+  }
+
+  public void setControlMode(ControlMode controlMode) {
+    this.controlMode = controlMode;
+  }
+
+  public SequencingRules getSequencingRules() {
+    return this.sequencingRules;
+  }
+
+  public void setSequencingRules(SequencingRules sequencingRules) {
+    this.sequencingRules = sequencingRules;
+  }
+
+  public LimitConditions getLimitConditions() {
+    return this.limitConditions;
+  }
+
+  public void setLimitConditions(LimitConditions limitConditions) {
+    this.limitConditions = limitConditions;
+  }
+
+  public AuxiliaryResources getAuxiliaryResources() {
+    return this.auxiliaryResources;
+  }
+
+  public void setAuxiliaryResources(AuxiliaryResources auxiliaryResources) {
+    this.auxiliaryResources = auxiliaryResources;
+  }
+
+  public RollupRules getRollupRules() {
+    return this.rollupRules;
+  }
+
+  public void setRollupRules(RollupRules rollupRules) {
+    this.rollupRules = rollupRules;
+  }
+
+  public Scorm2004Objectives getObjectives() {
+    return this.objectives;
+  }
+
+  public void setObjectives(Scorm2004Objectives objectives) {
+    this.objectives = objectives;
+  }
+
+  public Scorm2004Objectives getAdlObjectives() {
+    return this.adlObjectives;
+  }
+
+  public void setAdlObjectives(Scorm2004Objectives adlObjectives) {
+    this.adlObjectives = adlObjectives;
+  }
+
+  public RandomizationControls getRandomizationControls() {
+    return this.randomizationControls;
+  }
+
+  public void setRandomizationControls(RandomizationControls randomizationControls) {
+    this.randomizationControls = randomizationControls;
+  }
+
+  public DeliveryControls getDeliveryControls() {
+    return this.deliveryControls;
+  }
+
+  public void setDeliveryControls(DeliveryControls deliveryControls) {
+    this.deliveryControls = deliveryControls;
+  }
+
+  public RollupConsiderations getRollupConsiderations() {
+    return this.rollupConsiderations;
+  }
+
+  public void setRollupConsiderations(RollupConsiderations rollupConsiderations) {
+    this.rollupConsiderations = rollupConsiderations;
+  }
+
+  public ConstrainChoiceConsiderations getConstrainChoiceConsiderations() {
+    return this.constrainChoiceConsiderations;
+  }
+
+  public void setConstrainChoiceConsiderations(
+      ConstrainChoiceConsiderations constrainChoiceConsiderations) {
+    this.constrainChoiceConsiderations = constrainChoiceConsiderations;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Sequencing that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getControlMode(), that.getControlMode())
+        .append(getSequencingRules(), that.getSequencingRules())
+        .append(getLimitConditions(), that.getLimitConditions())
+        .append(getAuxiliaryResources(), that.getAuxiliaryResources())
+        .append(getRollupRules(), that.getRollupRules())
+        .append(getObjectives(), that.getObjectives())
+        .append(getAdlObjectives(), that.getAdlObjectives())
+        .append(getRandomizationControls(), that.getRandomizationControls())
+        .append(getDeliveryControls(), that.getDeliveryControls())
+        .append(getRollupConsiderations(), that.getRollupConsiderations())
+        .append(getConstrainChoiceConsiderations(), that.getConstrainChoiceConsiderations())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getControlMode())
+        .append(getSequencingRules())
+        .append(getLimitConditions())
+        .append(getAuxiliaryResources())
+        .append(getRollupRules())
+        .append(getObjectives())
+        .append(getAdlObjectives())
+        .append(getRandomizationControls())
+        .append(getDeliveryControls())
+        .append(getRollupConsiderations())
+        .append(getConstrainChoiceConsiderations())
+        .toHashCode();
+  }
 }

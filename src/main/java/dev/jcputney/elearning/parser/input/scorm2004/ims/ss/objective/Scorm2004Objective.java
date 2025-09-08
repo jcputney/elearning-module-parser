@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -26,25 +24,14 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an individual learning objective within the SCORM IMS Simple Sequencing schema.
  * Objectives specify criteria such as minimum required performance, satisfaction requirements, and
  * mappings to global objectives for tracking learner progress.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004Objective implements Serializable {
 
@@ -65,7 +52,6 @@ public class Scorm2004Objective implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("satisfiedByMeasure")
-  @Default
   private Boolean satisfiedByMeasure = false;
   /**
    * The minimum normalized measure required to consider this objective as satisfied. This value
@@ -87,4 +73,76 @@ public class Scorm2004Objective implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "mapInfo", namespace = IMSSS.NAMESPACE_URI)
   private List<Scorm2004ObjectiveMapping> mapInfo;
+
+  public Scorm2004Objective(String objectiveID, Boolean satisfiedByMeasure,
+      Double minNormalizedMeasure, List<Scorm2004ObjectiveMapping> mapInfo) {
+    this.objectiveID = objectiveID;
+    this.satisfiedByMeasure = satisfiedByMeasure;
+    this.minNormalizedMeasure = minNormalizedMeasure;
+    this.mapInfo = mapInfo;
+  }
+
+  public Scorm2004Objective() {
+  }
+
+  public String getObjectiveID() {
+    return this.objectiveID;
+  }
+
+  public void setObjectiveID(String objectiveID) {
+    this.objectiveID = objectiveID;
+  }
+
+  public Boolean getSatisfiedByMeasure() {
+    return this.satisfiedByMeasure;
+  }
+
+  public void setSatisfiedByMeasure(Boolean satisfiedByMeasure) {
+    this.satisfiedByMeasure = satisfiedByMeasure;
+  }
+
+  public Double getMinNormalizedMeasure() {
+    return this.minNormalizedMeasure;
+  }
+
+  public void setMinNormalizedMeasure(Double minNormalizedMeasure) {
+    this.minNormalizedMeasure = minNormalizedMeasure;
+  }
+
+  public List<Scorm2004ObjectiveMapping> getMapInfo() {
+    return this.mapInfo;
+  }
+
+  public void setMapInfo(
+      List<Scorm2004ObjectiveMapping> mapInfo) {
+    this.mapInfo = mapInfo;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm2004Objective that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getObjectiveID(), that.getObjectiveID())
+        .append(getSatisfiedByMeasure(), that.getSatisfiedByMeasure())
+        .append(getMinNormalizedMeasure(), that.getMinNormalizedMeasure())
+        .append(getMapInfo(), that.getMapInfo())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getObjectiveID())
+        .append(getSatisfiedByMeasure())
+        .append(getMinNormalizedMeasure())
+        .append(getMapInfo())
+        .toHashCode();
+  }
 }

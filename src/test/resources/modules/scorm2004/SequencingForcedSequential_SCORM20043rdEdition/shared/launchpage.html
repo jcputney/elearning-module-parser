@@ -38,7 +38,7 @@
         var navWidth = 40;
         setIframeHeight("contentFrame", navWidth);
         //need this in a setTimeout to avoid a timing error in IE6
-        window.setTimeout('window.onresize = function() { setIframeHeight("contentFrame", ' + navWidth + '); }', 1000);
+        window.setTimeout('window.onresize = function() { setIframeHeight("contentFrame", ' + navWidth + ') }', 1000);
     }
     
     /*************************************/

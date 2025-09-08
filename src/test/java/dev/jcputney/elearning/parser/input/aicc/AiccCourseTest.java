@@ -39,57 +39,80 @@ public class AiccCourseTest {
   @Test
   void testAiccCourseBuilderAndGetters() {
     // Create a course using the builder
-    AiccCourse.Course course = AiccCourse.Course.builder()
-        .courseCreator("Test Creator")
-        .courseId("TEST-001")
-        .courseTitle("Test Course")
-        .courseSystem("HTML")
-        .level("1")
-        .maxFieldsCst("100")
-        .maxFieldsOrt("50")
-        .totalAus("5")
-        .totalBlocks("3")
-        .version("1.0")
-        .totalComplexObj("0")
-        .totalObjectives("10")
-        .build();
+    AiccCourse.Course course = new AiccCourse.Course();
+    course.setCourseCreator("Test Creator");
+    course.setCourseId("TEST-001");
+    course.setCourseTitle("Test Course");
+    course.setCourseSystem("HTML");
+    course.setLevel("1");
+    course.setMaxFieldsCst("100");
+    course.setMaxFieldsOrt("50");
+    course.setTotalAus("5");
+    course.setTotalBlocks("3");
+    course.setVersion("1.0");
+    course.setTotalComplexObj("0");
+    course.setTotalObjectives("10");
 
     // Create a course behavior using the builder
-    AiccCourse.CourseBehavior courseBehavior = AiccCourse.CourseBehavior.builder()
-        .maxNormal("5")
-        .build();
+    AiccCourse.CourseBehavior courseBehavior = new AiccCourse.CourseBehavior();
+    courseBehavior.setMaxNormal("5");
 
     // Create a course description map
     Map<String, String> courseDescription = new HashMap<>();
     courseDescription.put("Test Description", "This is a test course");
 
     // Create an AiccCourse using the builder
-    AiccCourse aiccCourse = AiccCourse.builder()
-        .course(course)
-        .courseBehavior(courseBehavior)
-        .courseDescription(courseDescription)
-        .build();
+    AiccCourse aiccCourse = new AiccCourse();
+    aiccCourse.setCourse(course);
+    aiccCourse.setCourseBehavior(courseBehavior);
+    aiccCourse.setCourseDescription(courseDescription);
 
     // Verify the getters
     assertEquals(course, aiccCourse.getCourse());
     assertEquals(courseBehavior, aiccCourse.getCourseBehavior());
 
     // Verify the course getters
-    assertEquals("Test Creator", aiccCourse.getCourse().getCourseCreator());
-    assertEquals("TEST-001", aiccCourse.getCourse().getCourseId());
-    assertEquals("Test Course", aiccCourse.getCourse().getCourseTitle());
-    assertEquals("HTML", aiccCourse.getCourse().getCourseSystem());
-    assertEquals("1", aiccCourse.getCourse().getLevel());
-    assertEquals("100", aiccCourse.getCourse().getMaxFieldsCst());
-    assertEquals("50", aiccCourse.getCourse().getMaxFieldsOrt());
-    assertEquals("5", aiccCourse.getCourse().getTotalAus());
-    assertEquals("3", aiccCourse.getCourse().getTotalBlocks());
-    assertEquals("1.0", aiccCourse.getCourse().getVersion());
-    assertEquals("0", aiccCourse.getCourse().getTotalComplexObj());
-    assertEquals("10", aiccCourse.getCourse().getTotalObjectives());
+    assertEquals("Test Creator", aiccCourse
+        .getCourse()
+        .getCourseCreator());
+    assertEquals("TEST-001", aiccCourse
+        .getCourse()
+        .getCourseId());
+    assertEquals("Test Course", aiccCourse
+        .getCourse()
+        .getCourseTitle());
+    assertEquals("HTML", aiccCourse
+        .getCourse()
+        .getCourseSystem());
+    assertEquals("1", aiccCourse
+        .getCourse()
+        .getLevel());
+    assertEquals("100", aiccCourse
+        .getCourse()
+        .getMaxFieldsCst());
+    assertEquals("50", aiccCourse
+        .getCourse()
+        .getMaxFieldsOrt());
+    assertEquals("5", aiccCourse
+        .getCourse()
+        .getTotalAus());
+    assertEquals("3", aiccCourse
+        .getCourse()
+        .getTotalBlocks());
+    assertEquals("1.0", aiccCourse
+        .getCourse()
+        .getVersion());
+    assertEquals("0", aiccCourse
+        .getCourse()
+        .getTotalComplexObj());
+    assertEquals("10", aiccCourse
+        .getCourse()
+        .getTotalObjectives());
 
     // Verify the course behavior getters
-    assertEquals("5", aiccCourse.getCourseBehavior().getMaxNormal());
+    assertEquals("5", aiccCourse
+        .getCourseBehavior()
+        .getMaxNormal());
 
     // Verify the getCourseDescription method
     assertEquals("Test Description", aiccCourse.getCourseDescription());
@@ -101,32 +124,30 @@ public class AiccCourseTest {
   @Test
   void testGetCourseDescription_withEmptyMap_returnsNull() {
     // Create a course using the builder
-    AiccCourse.Course course = AiccCourse.Course.builder()
-        .courseCreator("Test Creator")
-        .courseId("TEST-001")
-        .courseTitle("Test Course")
-        .courseSystem("HTML")
-        .level("1")
-        .maxFieldsCst("100")
-        .totalAus("5")
-        .totalBlocks("3")
-        .version("1.0")
-        .build();
+    AiccCourse.Course course = new AiccCourse.Course();
+    course.setCourseCreator("Test Creator");
+    course.setCourseId("TEST-001");
+    course.setCourseTitle("Test Course");
+    course.setCourseSystem("HTML");
+    course.setLevel("1");
+    course.setMaxFieldsCst("100");
+    course.setMaxFieldsOrt("50");
+    course.setTotalAus("5");
+    course.setTotalBlocks("3");
+    course.setVersion("1.0");
 
     // Create a course behavior using the builder
-    AiccCourse.CourseBehavior courseBehavior = AiccCourse.CourseBehavior.builder()
-        .maxNormal("5")
-        .build();
+    AiccCourse.CourseBehavior courseBehavior = new AiccCourse.CourseBehavior();
+    courseBehavior.setMaxNormal("5");
 
     // Create an empty course description map
     Map<String, String> courseDescription = new HashMap<>();
 
     // Create an AiccCourse using the builder
-    AiccCourse aiccCourse = AiccCourse.builder()
-        .course(course)
-        .courseBehavior(courseBehavior)
-        .courseDescription(courseDescription)
-        .build();
+    AiccCourse aiccCourse = new AiccCourse();
+    aiccCourse.setCourse(course);
+    aiccCourse.setCourseBehavior(courseBehavior);
+    aiccCourse.setCourseDescription(courseDescription);
 
     // Verify the getCourseDescription method returns null for an empty map
     assertNull(aiccCourse.getCourseDescription());
@@ -138,29 +159,27 @@ public class AiccCourseTest {
   @Test
   void testGetCourseDescription_withNullMap_returnsNull() {
     // Create a course using the builder
-    AiccCourse.Course course = AiccCourse.Course.builder()
-        .courseCreator("Test Creator")
-        .courseId("TEST-001")
-        .courseTitle("Test Course")
-        .courseSystem("HTML")
-        .level("1")
-        .maxFieldsCst("100")
-        .totalAus("5")
-        .totalBlocks("3")
-        .version("1.0")
-        .build();
+    AiccCourse.Course course = new AiccCourse.Course();
+    course.setCourseCreator("Test Creator");
+    course.setCourseId("TEST-001");
+    course.setCourseTitle("Test Course");
+    course.setCourseSystem("HTML");
+    course.setLevel("1");
+    course.setMaxFieldsCst("100");
+    course.setMaxFieldsOrt("50");
+    course.setTotalAus("5");
+    course.setTotalBlocks("3");
+    course.setVersion("1.0");
 
     // Create a course behavior using the builder
-    AiccCourse.CourseBehavior courseBehavior = AiccCourse.CourseBehavior.builder()
-        .maxNormal("5")
-        .build();
+    AiccCourse.CourseBehavior courseBehavior = new AiccCourse.CourseBehavior();
+    courseBehavior.setMaxNormal("5");
 
     // Create an AiccCourse using the builder with a null course description
-    AiccCourse aiccCourse = AiccCourse.builder()
-        .course(course)
-        .courseBehavior(courseBehavior)
-        .courseDescription(null)
-        .build();
+    AiccCourse aiccCourse = new AiccCourse();
+    aiccCourse.setCourse(course);
+    aiccCourse.setCourseBehavior(courseBehavior);
+    aiccCourse.setCourseDescription(null);
 
     // Verify the getCourseDescription method returns null for a null map
     assertNull(aiccCourse.getCourseDescription());

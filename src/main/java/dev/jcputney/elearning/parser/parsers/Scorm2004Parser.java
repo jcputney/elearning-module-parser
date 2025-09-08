@@ -122,8 +122,7 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
    * @throws XMLStreamException If an error occurs while parsing the XML.
    * @throws IOException If an error occurs while reading the file.
    */
-  void loadExternalMetadata(Scorm2004Manifest manifest)
-      throws XMLStreamException, IOException {
+  void loadExternalMetadata(Scorm2004Manifest manifest) throws XMLStreamException, IOException {
     if (manifest == null) {
       return;
     }
@@ -163,8 +162,7 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
    * @throws XMLStreamException If an error occurs while parsing the XML.
    * @throws IOException If an error occurs while reading the file.
    */
-  private void loadFilesMetadata(List<Scorm2004File> files)
-      throws XMLStreamException, IOException {
+  private void loadFilesMetadata(List<Scorm2004File> files) throws XMLStreamException, IOException {
     if (files == null) {
       return;
     }

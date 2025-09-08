@@ -17,18 +17,12 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a dependency within SCORM 1.2 resource.
@@ -54,12 +48,6 @@ import lombok.extern.jackson.Jacksonized;
  * </resource>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Dependency implements Serializable {
 
@@ -70,4 +58,38 @@ public class Scorm12Dependency implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "identifierref")
   @JsonProperty(value = "identifierref", required = true)
   private String identifierRef;
+
+
+  public Scorm12Dependency() {
+  }
+
+  public String getIdentifierRef() {
+    return this.identifierRef;
+  }
+
+  public void setIdentifierRef(String identifierRef) {
+    this.identifierRef = identifierRef;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm12Dependency that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getIdentifierRef(), that.getIdentifierRef())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getIdentifierRef())
+        .toHashCode();
+  }
 }

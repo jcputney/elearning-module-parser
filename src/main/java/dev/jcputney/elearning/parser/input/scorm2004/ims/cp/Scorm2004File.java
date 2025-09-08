@@ -17,33 +17,19 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a file element within a resource, specifying a particular physical file in the content
  * package.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004File implements Serializable {
@@ -64,7 +50,58 @@ public class Scorm2004File implements Serializable {
    * Specifies whether the file exists in the content package. This is not parsed from the manifest
    * but is set during processing.
    */
-  @Default
-  @Setter
   private boolean exists = false;
+
+  public Scorm2004File() {
+  }
+
+  public String getHref() {
+    return this.href;
+  }
+
+  public void setHref(String href) {
+    this.href = href;
+  }
+
+  public Scorm2004SubMetadata getMetadata() {
+    return this.metadata;
+  }
+
+  public void setMetadata(Scorm2004SubMetadata metadata) {
+    this.metadata = metadata;
+  }
+
+  public boolean isExists() {
+    return this.exists;
+  }
+
+  public void setExists(boolean exists) {
+    this.exists = exists;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm2004File that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(isExists(), that.isExists())
+        .append(getHref(), that.getHref())
+        .append(getMetadata(), that.getMetadata())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getHref())
+        .append(getMetadata())
+        .append(isExists())
+        .toHashCode();
+  }
 }

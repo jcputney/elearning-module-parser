@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -26,12 +24,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.util.DurationIso8601Deserializer;
 import java.io.Serializable;
 import java.time.Duration;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the duration metadata of a resource, including the duration value in ISO 8601 format
@@ -61,12 +55,6 @@ import lombok.extern.jackson.Jacksonized;
  * </duration>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LomDuration implements Serializable {
 
@@ -89,4 +77,51 @@ public class LomDuration implements Serializable {
    */
   @JacksonXmlProperty(localName = "description")
   private SingleLangString description;
+
+  public LomDuration() {
+  }
+
+  public LomDuration(Duration duration) {
+    this.duration = duration;
+  }
+
+  public Duration getDuration() {
+    return this.duration;
+  }
+
+  public void setDuration(Duration duration) {
+    this.duration = duration;
+  }
+
+  public SingleLangString getDescription() {
+    return this.description;
+  }
+
+  public void setDescription(SingleLangString description) {
+    this.description = description;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof LomDuration that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getDuration(), that.getDuration())
+        .append(getDescription(), that.getDescription())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getDuration())
+        .append(getDescription())
+        .toHashCode();
+  }
 }

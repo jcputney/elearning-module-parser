@@ -17,20 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>behaviorSpec</strong> complex type.</p>
@@ -77,12 +71,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class BehaviorSpec implements Serializable {
@@ -257,4 +245,370 @@ public class BehaviorSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "timeLimit")
   private Integer timeLimit;
+
+  public BehaviorSpec() {
+  }
+
+  public LaunchSpec getLaunch() {
+    return this.launch;
+  }
+
+  public void setLaunch(LaunchSpec launch) {
+    this.launch = launch;
+  }
+
+  public ExitActionsSpec getExitActions() {
+    return this.exitActions;
+  }
+
+  public void setExitActions(ExitActionsSpec exitActions) {
+    this.exitActions = exitActions;
+  }
+
+  public CommunicationsSpec getCommunications() {
+    return this.communications;
+  }
+
+  public void setCommunications(CommunicationsSpec communications) {
+    this.communications = communications;
+  }
+
+  public DebugSpec getDebug() {
+    return this.debug;
+  }
+
+  public void setDebug(DebugSpec debug) {
+    this.debug = debug;
+  }
+
+  public CaptureHistorySpec getHistory() {
+    return this.history;
+  }
+
+  public void setHistory(CaptureHistorySpec history) {
+    this.history = history;
+  }
+
+  public YesNoType getDisableRightClick() {
+    return this.disableRightClick;
+  }
+
+  public void setDisableRightClick(YesNoType disableRightClick) {
+    this.disableRightClick = disableRightClick;
+  }
+
+  public YesNoType getPreventWindowResize() {
+    return this.preventWindowResize;
+  }
+
+  public void setPreventWindowResize(YesNoType preventWindowResize) {
+    this.preventWindowResize = preventWindowResize;
+  }
+
+  public ScoreRollupType getScoreRollupMode() {
+    return this.scoreRollupMode;
+  }
+
+  public void setScoreRollupMode(ScoreRollupType scoreRollupMode) {
+    this.scoreRollupMode = scoreRollupMode;
+  }
+
+  public Integer getNumberOfScoringObjects() {
+    return this.numberOfScoringObjects;
+  }
+
+  public void setNumberOfScoringObjects(Integer numberOfScoringObjects) {
+    this.numberOfScoringObjects = numberOfScoringObjects;
+  }
+
+  public StatusRollupType getStatusRollupMode() {
+    return this.statusRollupMode;
+  }
+
+  public void setStatusRollupMode(StatusRollupType statusRollupMode) {
+    this.statusRollupMode = statusRollupMode;
+  }
+
+  public BigDecimal getThresholdScoreForCompletion() {
+    return this.thresholdScoreForCompletion;
+  }
+
+  public void setThresholdScoreForCompletion(BigDecimal thresholdScoreForCompletion) {
+    this.thresholdScoreForCompletion = thresholdScoreForCompletion;
+  }
+
+  public YesNoType getApplyRollupStatusToSuccess() {
+    return this.applyRollupStatusToSuccess;
+  }
+
+  public void setApplyRollupStatusToSuccess(YesNoType applyRollupStatusToSuccess) {
+    this.applyRollupStatusToSuccess = applyRollupStatusToSuccess;
+  }
+
+  public YesNoType getFirstScoIsPretest() {
+    return this.firstScoIsPretest;
+  }
+
+  public void setFirstScoIsPretest(YesNoType firstScoIsPretest) {
+    this.firstScoIsPretest = firstScoIsPretest;
+  }
+
+  public YesNoType getFinishCausesImmediateCommit() {
+    return this.finishCausesImmediateCommit;
+  }
+
+  public void setFinishCausesImmediateCommit(YesNoType finishCausesImmediateCommit) {
+    this.finishCausesImmediateCommit = finishCausesImmediateCommit;
+  }
+
+  public InvalidMenuItemActionType getInvalidMenuItemAction() {
+    return this.invalidMenuItemAction;
+  }
+
+  public void setInvalidMenuItemAction(InvalidMenuItemActionType invalidMenuItemAction) {
+    this.invalidMenuItemAction = invalidMenuItemAction;
+  }
+
+  public YesNoType getAlwaysFlowToFirstSco() {
+    return this.alwaysFlowToFirstSco;
+  }
+
+  public void setAlwaysFlowToFirstSco(YesNoType alwaysFlowToFirstSco) {
+    this.alwaysFlowToFirstSco = alwaysFlowToFirstSco;
+  }
+
+  public YesNoType getLogoutCausesPlayerExit() {
+    return this.logoutCausesPlayerExit;
+  }
+
+  public void setLogoutCausesPlayerExit(YesNoType logoutCausesPlayerExit) {
+    this.logoutCausesPlayerExit = logoutCausesPlayerExit;
+  }
+
+  public ResetRunTimeDataTimingType getResetRtTiming() {
+    return this.resetRtTiming;
+  }
+
+  public void setResetRtTiming(ResetRunTimeDataTimingType resetRtTiming) {
+    this.resetRtTiming = resetRtTiming;
+  }
+
+  public LookaheadSequencerModeType getLookaheadSequencerMode() {
+    return this.lookaheadSequencerMode;
+  }
+
+  public void setLookaheadSequencerMode(LookaheadSequencerModeType lookaheadSequencerMode) {
+    this.lookaheadSequencerMode = lookaheadSequencerMode;
+  }
+
+  public YesNoType getScoreOverridesStatus() {
+    return this.scoreOverridesStatus;
+  }
+
+  public void setScoreOverridesStatus(YesNoType scoreOverridesStatus) {
+    this.scoreOverridesStatus = scoreOverridesStatus;
+  }
+
+  public YesNoType getAllowCompleteStatusChange() {
+    return this.allowCompleteStatusChange;
+  }
+
+  public void setAllowCompleteStatusChange(YesNoType allowCompleteStatusChange) {
+    this.allowCompleteStatusChange = allowCompleteStatusChange;
+  }
+
+  public YesNoType getScaleRawScore() {
+    return this.scaleRawScore;
+  }
+
+  public void setScaleRawScore(YesNoType scaleRawScore) {
+    this.scaleRawScore = scaleRawScore;
+  }
+
+  public YesNoType getUseQuickLookaheadSequencer() {
+    return this.useQuickLookaheadSequencer;
+  }
+
+  public void setUseQuickLookaheadSequencer(YesNoType useQuickLookaheadSequencer) {
+    this.useQuickLookaheadSequencer = useQuickLookaheadSequencer;
+  }
+
+  public YesNoType getRollupRuntimeAtScoUnload() {
+    return this.rollupRuntimeAtScoUnload;
+  }
+
+  public void setRollupRuntimeAtScoUnload(YesNoType rollupRuntimeAtScoUnload) {
+    this.rollupRuntimeAtScoUnload = rollupRuntimeAtScoUnload;
+  }
+
+  public YesNoType getForceObjectiveCompletionSetByContent() {
+    return this.forceObjectiveCompletionSetByContent;
+  }
+
+  public void setForceObjectiveCompletionSetByContent(
+      YesNoType forceObjectiveCompletionSetByContent) {
+    this.forceObjectiveCompletionSetByContent = forceObjectiveCompletionSetByContent;
+  }
+
+  public YesNoType getInvokeRollupAtSuspendAll() {
+    return this.invokeRollupAtSuspendAll;
+  }
+
+  public void setInvokeRollupAtSuspendAll(YesNoType invokeRollupAtSuspendAll) {
+    this.invokeRollupAtSuspendAll = invokeRollupAtSuspendAll;
+  }
+
+  public CompletionStatusType getCompletionStatOfFailedSuccessStat() {
+    return this.completionStatOfFailedSuccessStat;
+  }
+
+  public void setCompletionStatOfFailedSuccessStat(
+      CompletionStatusType completionStatOfFailedSuccessStat) {
+    this.completionStatOfFailedSuccessStat = completionStatOfFailedSuccessStat;
+  }
+
+  public YesNoType getSatisfiedCausesCompletion() {
+    return this.satisfiedCausesCompletion;
+  }
+
+  public void setSatisfiedCausesCompletion(YesNoType satisfiedCausesCompletion) {
+    this.satisfiedCausesCompletion = satisfiedCausesCompletion;
+  }
+
+  public YesNoType getMakeStudentPrefsGlobalToCourse() {
+    return this.makeStudentPrefsGlobalToCourse;
+  }
+
+  public void setMakeStudentPrefsGlobalToCourse(YesNoType makeStudentPrefsGlobalToCourse) {
+    this.makeStudentPrefsGlobalToCourse = makeStudentPrefsGlobalToCourse;
+  }
+
+  public ReturnToLmsActionType getReturnToLmsAction() {
+    return this.returnToLmsAction;
+  }
+
+  public void setReturnToLmsAction(ReturnToLmsActionType returnToLmsAction) {
+    this.returnToLmsAction = returnToLmsAction;
+  }
+
+  public YesNoType getRollupEmptySetToUnknown() {
+    return this.rollupEmptySetToUnknown;
+  }
+
+  public void setRollupEmptySetToUnknown(YesNoType rollupEmptySetToUnknown) {
+    this.rollupEmptySetToUnknown = rollupEmptySetToUnknown;
+  }
+
+  public YesNoType getValidateInteractionTypes() {
+    return this.validateInteractionTypes;
+  }
+
+  public void setValidateInteractionTypes(YesNoType validateInteractionTypes) {
+    this.validateInteractionTypes = validateInteractionTypes;
+  }
+
+  public Integer getSuspendDataMaxLength() {
+    return this.suspendDataMaxLength;
+  }
+
+  public void setSuspendDataMaxLength(Integer suspendDataMaxLength) {
+    this.suspendDataMaxLength = suspendDataMaxLength;
+  }
+
+  public Integer getTimeLimit() {
+    return this.timeLimit;
+  }
+
+  public void setTimeLimit(Integer timeLimit) {
+    this.timeLimit = timeLimit;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof BehaviorSpec that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getLaunch(), that.getLaunch())
+        .append(getExitActions(), that.getExitActions())
+        .append(getCommunications(), that.getCommunications())
+        .append(getDebug(), that.getDebug())
+        .append(getHistory(), that.getHistory())
+        .append(getDisableRightClick(), that.getDisableRightClick())
+        .append(getPreventWindowResize(), that.getPreventWindowResize())
+        .append(getScoreRollupMode(), that.getScoreRollupMode())
+        .append(getNumberOfScoringObjects(), that.getNumberOfScoringObjects())
+        .append(getStatusRollupMode(), that.getStatusRollupMode())
+        .append(getThresholdScoreForCompletion(), that.getThresholdScoreForCompletion())
+        .append(getApplyRollupStatusToSuccess(), that.getApplyRollupStatusToSuccess())
+        .append(getFirstScoIsPretest(), that.getFirstScoIsPretest())
+        .append(getFinishCausesImmediateCommit(), that.getFinishCausesImmediateCommit())
+        .append(getInvalidMenuItemAction(), that.getInvalidMenuItemAction())
+        .append(getAlwaysFlowToFirstSco(), that.getAlwaysFlowToFirstSco())
+        .append(getLogoutCausesPlayerExit(), that.getLogoutCausesPlayerExit())
+        .append(getResetRtTiming(), that.getResetRtTiming())
+        .append(getLookaheadSequencerMode(), that.getLookaheadSequencerMode())
+        .append(getScoreOverridesStatus(), that.getScoreOverridesStatus())
+        .append(getAllowCompleteStatusChange(), that.getAllowCompleteStatusChange())
+        .append(getScaleRawScore(), that.getScaleRawScore())
+        .append(getUseQuickLookaheadSequencer(), that.getUseQuickLookaheadSequencer())
+        .append(getRollupRuntimeAtScoUnload(), that.getRollupRuntimeAtScoUnload())
+        .append(getForceObjectiveCompletionSetByContent(),
+            that.getForceObjectiveCompletionSetByContent())
+        .append(getInvokeRollupAtSuspendAll(), that.getInvokeRollupAtSuspendAll())
+        .append(getCompletionStatOfFailedSuccessStat(), that.getCompletionStatOfFailedSuccessStat())
+        .append(getSatisfiedCausesCompletion(), that.getSatisfiedCausesCompletion())
+        .append(getMakeStudentPrefsGlobalToCourse(), that.getMakeStudentPrefsGlobalToCourse())
+        .append(getReturnToLmsAction(), that.getReturnToLmsAction())
+        .append(getRollupEmptySetToUnknown(), that.getRollupEmptySetToUnknown())
+        .append(getValidateInteractionTypes(), that.getValidateInteractionTypes())
+        .append(getSuspendDataMaxLength(), that.getSuspendDataMaxLength())
+        .append(getTimeLimit(), that.getTimeLimit())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getLaunch())
+        .append(getExitActions())
+        .append(getCommunications())
+        .append(getDebug())
+        .append(getHistory())
+        .append(getDisableRightClick())
+        .append(getPreventWindowResize())
+        .append(getScoreRollupMode())
+        .append(getNumberOfScoringObjects())
+        .append(getStatusRollupMode())
+        .append(getThresholdScoreForCompletion())
+        .append(getApplyRollupStatusToSuccess())
+        .append(getFirstScoIsPretest())
+        .append(getFinishCausesImmediateCommit())
+        .append(getInvalidMenuItemAction())
+        .append(getAlwaysFlowToFirstSco())
+        .append(getLogoutCausesPlayerExit())
+        .append(getResetRtTiming())
+        .append(getLookaheadSequencerMode())
+        .append(getScoreOverridesStatus())
+        .append(getAllowCompleteStatusChange())
+        .append(getScaleRawScore())
+        .append(getUseQuickLookaheadSequencer())
+        .append(getRollupRuntimeAtScoUnload())
+        .append(getForceObjectiveCompletionSetByContent())
+        .append(getInvokeRollupAtSuspendAll())
+        .append(getCompletionStatOfFailedSuccessStat())
+        .append(getSatisfiedCausesCompletion())
+        .append(getMakeStudentPrefsGlobalToCourse())
+        .append(getReturnToLmsAction())
+        .append(getRollupEmptySetToUnknown())
+        .append(getValidateInteractionTypes())
+        .append(getSuspendDataMaxLength())
+        .append(getTimeLimit())
+        .toHashCode();
+  }
 }

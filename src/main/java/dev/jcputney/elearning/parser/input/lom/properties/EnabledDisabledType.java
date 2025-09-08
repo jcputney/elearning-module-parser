@@ -40,12 +40,10 @@ public enum EnabledDisabledType {
   /**
    * The lookahead sequencer mode is enabled.
    */
-  @JsonProperty("enabled")
-  ENABLED,
+  @JsonProperty("enabled") ENABLED,
 
   /**
    * The lookahead sequencer mode is disabled.
    */
-  @JsonProperty("disabled")
-  DISABLED
+  @JsonProperty("disabled") DISABLED
 }

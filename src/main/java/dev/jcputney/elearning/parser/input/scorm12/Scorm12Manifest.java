@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm12;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -36,12 +34,8 @@ import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resources;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the SCORM IMS Content Packaging (IMSCP) elements according to the imscp_rootv1p1p2
@@ -310,12 +304,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xsd:schema>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JacksonXmlRootElement(localName = "manifest", namespace = Scorm12Manifest.NAMESPACE_URI)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -366,6 +354,9 @@ public class Scorm12Manifest implements PackageManifest {
    */
   @JacksonXmlProperty(localName = "resources", namespace = NAMESPACE_URI)
   private Scorm12Resources resources;
+
+  public Scorm12Manifest() {
+  }
 
   @Override
   public String getTitle() {
@@ -436,6 +427,88 @@ public class Scorm12Manifest implements PackageManifest {
             .getDuration()
             .getDuration())
         .orElse(Duration.ZERO);
+  }
+
+  @Override
+  public String getIdentifier() {
+    return this.identifier;
+  }
+
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }
+
+  @Override
+  public String getVersion() {
+    return this.version;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
+  }
+
+  public String getBase() {
+    return this.base;
+  }
+
+  public void setBase(String base) {
+    this.base = base;
+  }
+
+  public Scorm12Metadata getMetadata() {
+    return this.metadata;
+  }
+
+  public void setMetadata(Scorm12Metadata metadata) {
+    this.metadata = metadata;
+  }
+
+  public Scorm12Organizations getOrganizations() {
+    return this.organizations;
+  }
+
+  public void setOrganizations(Scorm12Organizations organizations) {
+    this.organizations = organizations;
+  }
+
+  public Scorm12Resources getResources() {
+    return this.resources;
+  }
+
+  public void setResources(Scorm12Resources resources) {
+    this.resources = resources;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm12Manifest that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(identifier, that.identifier)
+        .append(version, that.version)
+        .append(getBase(), that.getBase())
+        .append(getMetadata(), that.getMetadata())
+        .append(getOrganizations(), that.getOrganizations())
+        .append(getResources(), that.getResources())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(identifier)
+        .append(version)
+        .append(getBase())
+        .append(getMetadata())
+        .append(getOrganizations())
+        .append(getResources())
+        .toHashCode();
   }
 
   /**

@@ -17,17 +17,11 @@
 
 package dev.jcputney.elearning.parser.input.aicc;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>courseStructure</strong> complex type.</p>
@@ -42,12 +36,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class CourseStructure implements Serializable {
 
@@ -61,4 +49,52 @@ public class CourseStructure implements Serializable {
    */
   @JsonProperty(value = "member", required = true)
   private String member;
+
+  public CourseStructure(String block, String member) {
+    this.block = block;
+    this.member = member;
+  }
+
+  public CourseStructure() {
+  }
+
+  public String getBlock() {
+    return this.block;
+  }
+
+  public void setBlock(String block) {
+    this.block = block;
+  }
+
+  public String getMember() {
+    return this.member;
+  }
+
+  public void setMember(String member) {
+    this.member = member;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof CourseStructure that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getBlock(), that.getBlock())
+        .append(getMember(), that.getMember())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getBlock())
+        .append(getMember())
+        .toHashCode();
+  }
 }

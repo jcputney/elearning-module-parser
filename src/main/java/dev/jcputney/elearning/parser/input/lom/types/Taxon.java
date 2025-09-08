@@ -17,20 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.lom.LOM;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a taxon within a taxon path in the Learning Object Metadata (LOM) schema. A taxon is
@@ -48,12 +42,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Taxon implements Serializable {
 
@@ -94,4 +82,57 @@ public class Taxon implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "customElement", namespace = LOM.NAMESPACE_URI + "/extend")
   private List<Object> customElements;
+
+  public Taxon() {
+  }
+
+  public String getId() {
+    return this.id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public SingleLangString getEntry() {
+    return this.entry;
+  }
+
+  public void setEntry(SingleLangString entry) {
+    this.entry = entry;
+  }
+
+  public List<Object> getCustomElements() {
+    return this.customElements;
+  }
+
+  public void setCustomElements(List<Object> customElements) {
+    this.customElements = customElements;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Taxon taxon)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getId(), taxon.getId())
+        .append(getEntry(), taxon.getEntry())
+        .append(getCustomElements(), taxon.getCustomElements())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getId())
+        .append(getEntry())
+        .append(getCustomElements())
+        .toHashCode();
+  }
 }

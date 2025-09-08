@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,12 +28,8 @@ import dev.jcputney.elearning.parser.util.InstantDeserializer;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the limit conditions for a learning activity within the SCORM IMS Simple Sequencing
@@ -58,12 +52,6 @@ import lombok.extern.jackson.Jacksonized;
  * <p>The IMSSS namespace is specified by {@link IMSSS#NAMESPACE_URI}, and this class aligns with
  * SCORM 2004 standards for sequencing and navigation.</p>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LimitConditions implements Serializable {
@@ -160,4 +148,109 @@ public class LimitConditions implements Serializable {
   @JsonDeserialize(using = InstantDeserializer.class)
   @JsonProperty("endTimeLimit")
   private Instant endTimeLimit;
+
+  public LimitConditions(Integer attemptLimit, Duration attemptAbsoluteDurationLimit,
+      Duration attemptExperiencedDurationLimit, Duration activityAbsoluteDurationLimit,
+      Duration activityExperiencedDurationLimit, Instant beginTimeLimit, Instant endTimeLimit) {
+    this.attemptLimit = attemptLimit;
+    this.attemptAbsoluteDurationLimit = attemptAbsoluteDurationLimit;
+    this.attemptExperiencedDurationLimit = attemptExperiencedDurationLimit;
+    this.activityAbsoluteDurationLimit = activityAbsoluteDurationLimit;
+    this.activityExperiencedDurationLimit = activityExperiencedDurationLimit;
+    this.beginTimeLimit = beginTimeLimit;
+    this.endTimeLimit = endTimeLimit;
+  }
+
+  public LimitConditions() {
+  }
+
+  public Integer getAttemptLimit() {
+    return this.attemptLimit;
+  }
+
+  public void setAttemptLimit(Integer attemptLimit) {
+    this.attemptLimit = attemptLimit;
+  }
+
+  public Duration getAttemptAbsoluteDurationLimit() {
+    return this.attemptAbsoluteDurationLimit;
+  }
+
+  public void setAttemptAbsoluteDurationLimit(Duration attemptAbsoluteDurationLimit) {
+    this.attemptAbsoluteDurationLimit = attemptAbsoluteDurationLimit;
+  }
+
+  public Duration getAttemptExperiencedDurationLimit() {
+    return this.attemptExperiencedDurationLimit;
+  }
+
+  public void setAttemptExperiencedDurationLimit(Duration attemptExperiencedDurationLimit) {
+    this.attemptExperiencedDurationLimit = attemptExperiencedDurationLimit;
+  }
+
+  public Duration getActivityAbsoluteDurationLimit() {
+    return this.activityAbsoluteDurationLimit;
+  }
+
+  public void setActivityAbsoluteDurationLimit(Duration activityAbsoluteDurationLimit) {
+    this.activityAbsoluteDurationLimit = activityAbsoluteDurationLimit;
+  }
+
+  public Duration getActivityExperiencedDurationLimit() {
+    return this.activityExperiencedDurationLimit;
+  }
+
+  public void setActivityExperiencedDurationLimit(Duration activityExperiencedDurationLimit) {
+    this.activityExperiencedDurationLimit = activityExperiencedDurationLimit;
+  }
+
+  public Instant getBeginTimeLimit() {
+    return this.beginTimeLimit;
+  }
+
+  public void setBeginTimeLimit(Instant beginTimeLimit) {
+    this.beginTimeLimit = beginTimeLimit;
+  }
+
+  public Instant getEndTimeLimit() {
+    return this.endTimeLimit;
+  }
+
+  public void setEndTimeLimit(Instant endTimeLimit) {
+    this.endTimeLimit = endTimeLimit;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof LimitConditions that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getAttemptLimit(), that.getAttemptLimit())
+        .append(getAttemptAbsoluteDurationLimit(), that.getAttemptAbsoluteDurationLimit())
+        .append(getAttemptExperiencedDurationLimit(), that.getAttemptExperiencedDurationLimit())
+        .append(getActivityAbsoluteDurationLimit(), that.getActivityAbsoluteDurationLimit())
+        .append(getActivityExperiencedDurationLimit(), that.getActivityExperiencedDurationLimit())
+        .append(getBeginTimeLimit(), that.getBeginTimeLimit())
+        .append(getEndTimeLimit(), that.getEndTimeLimit())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getAttemptLimit())
+        .append(getAttemptAbsoluteDurationLimit())
+        .append(getAttemptExperiencedDurationLimit())
+        .append(getActivityAbsoluteDurationLimit())
+        .append(getActivityExperiencedDurationLimit())
+        .append(getBeginTimeLimit())
+        .append(getEndTimeLimit())
+        .toHashCode();
+  }
 }

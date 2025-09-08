@@ -17,21 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the delivery controls for a learning activity within the SCORM IMS Simple Sequencing
@@ -53,12 +46,6 @@ import lombok.extern.jackson.Jacksonized;
  * <p>The IMSSS namespace is specified by {@link IMSSS#NAMESPACE_URI}, and this class aligns with
  * SCORM 2004 standards for sequencing and navigation.</p>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class DeliveryControls implements Serializable {
@@ -76,7 +63,6 @@ public class DeliveryControls implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("tracked")
-  @Default
   private boolean tracked = true;
   /**
    * Indicates whether the content should set the activity's completion status. When set to
@@ -91,7 +77,6 @@ public class DeliveryControls implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("completionSetByContent")
-  @Default
   private boolean completionSetByContent = false;
   /**
    * Specifies whether the content should set the objective satisfaction status for this activity.
@@ -106,6 +91,58 @@ public class DeliveryControls implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("objectiveSetByContent")
-  @Default
   private boolean objectiveSetByContent = false;
+
+  public DeliveryControls() {
+  }
+
+  public boolean isTracked() {
+    return this.tracked;
+  }
+
+  public void setTracked(boolean tracked) {
+    this.tracked = tracked;
+  }
+
+  public boolean isCompletionSetByContent() {
+    return this.completionSetByContent;
+  }
+
+  public void setCompletionSetByContent(boolean completionSetByContent) {
+    this.completionSetByContent = completionSetByContent;
+  }
+
+  public boolean isObjectiveSetByContent() {
+    return this.objectiveSetByContent;
+  }
+
+  public void setObjectiveSetByContent(boolean objectiveSetByContent) {
+    this.objectiveSetByContent = objectiveSetByContent;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof DeliveryControls that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(isTracked(), that.isTracked())
+        .append(isCompletionSetByContent(), that.isCompletionSetByContent())
+        .append(isObjectiveSetByContent(), that.isObjectiveSetByContent())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(isTracked())
+        .append(isCompletionSetByContent())
+        .append(isObjectiveSetByContent())
+        .toHashCode();
+  }
 }

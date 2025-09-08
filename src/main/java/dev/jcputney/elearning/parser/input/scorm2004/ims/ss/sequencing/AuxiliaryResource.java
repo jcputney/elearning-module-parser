@@ -17,18 +17,12 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an individual auxiliary resource within the SCORM IMS Simple Sequencing schema. An
@@ -39,12 +33,6 @@ import lombok.extern.jackson.Jacksonized;
  * diagrams, or external tools that help learners in understanding or practicing the activity
  * content.</p>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class AuxiliaryResource implements Serializable {
 
@@ -69,4 +57,48 @@ public class AuxiliaryResource implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("purpose")
   private String purpose;
+
+  public AuxiliaryResource() {
+  }
+
+  public String getAuxiliaryResourceID() {
+    return this.auxiliaryResourceID;
+  }
+
+  public void setAuxiliaryResourceID(String auxiliaryResourceID) {
+    this.auxiliaryResourceID = auxiliaryResourceID;
+  }
+
+  public String getPurpose() {
+    return this.purpose;
+  }
+
+  public void setPurpose(String purpose) {
+    this.purpose = purpose;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof AuxiliaryResource that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getAuxiliaryResourceID(),
+            that.getAuxiliaryResourceID())
+        .append(getPurpose(), that.getPurpose())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getAuxiliaryResourceID())
+        .append(getPurpose())
+        .toHashCode();
+  }
 }

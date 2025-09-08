@@ -77,10 +77,9 @@ public class AiccDetectorPlugin implements ModuleTypeDetectorPlugin {
       var files = fileAccess.listFiles("");
       boolean isAicc = files
           .stream()
-          .anyMatch(file -> file.endsWith(AiccParser.AU_EXTENSION) &&
-              files
-                  .stream()
-                  .anyMatch(f -> f.endsWith(AiccParser.CRS_EXTENSION)));
+          .anyMatch(file -> file.endsWith(AiccParser.AU_EXTENSION) && files
+              .stream()
+              .anyMatch(f -> f.endsWith(AiccParser.CRS_EXTENSION)));
 
       if (isAicc) {
         return ModuleType.AICC;

@@ -17,33 +17,20 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.ConditionOperatorType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.RollupRuleConditionType;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an individual rollup condition within a set of rollup conditions. Each condition
  * specifies a specific criterion, such as completion or satisfaction status, that affects whether
  * the associated rollup rule is applied.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupCondition implements Serializable {
 
@@ -56,7 +43,6 @@ public class RollupCondition implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("operator")
-  @Default
   private ConditionOperatorType operator = ConditionOperatorType.NO_OP;
   /**
    * Specifies the specific condition being evaluated in this rollup condition. The condition may
@@ -65,4 +51,47 @@ public class RollupCondition implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("condition")
   private RollupRuleConditionType condition;
+
+  public RollupCondition() {
+  }
+
+  public ConditionOperatorType getOperator() {
+    return this.operator;
+  }
+
+  public void setOperator(ConditionOperatorType operator) {
+    this.operator = operator;
+  }
+
+  public RollupRuleConditionType getCondition() {
+    return this.condition;
+  }
+
+  public void setCondition(RollupRuleConditionType condition) {
+    this.condition = condition;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof RollupCondition that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getOperator(), that.getOperator())
+        .append(getCondition(), that.getCondition())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getOperator())
+        .append(getCondition())
+        .toHashCode();
+  }
 }

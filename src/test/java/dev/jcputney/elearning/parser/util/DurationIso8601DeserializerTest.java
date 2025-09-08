@@ -371,7 +371,7 @@ class DurationIso8601DeserializerTest {
     }
 
     @Override
-    public String getText() throws IOException {
+    public String getText() {
       return text;
     }
 
@@ -402,7 +402,7 @@ class DurationIso8601DeserializerTest {
 
     // Stub implementations of abstract methods
     @Override
-    public JsonToken nextToken() throws IOException {
+    public JsonToken nextToken() {
       return null;
     }
 
@@ -441,7 +441,7 @@ class DurationIso8601DeserializerTest {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
     }
 
     @Override
@@ -450,12 +450,12 @@ class DurationIso8601DeserializerTest {
     }
 
     @Override
-    public JsonParser skipChildren() throws IOException {
+    public JsonParser skipChildren() {
       return null;
     }
 
     @Override
-    public String getCurrentName() throws IOException {
+    public String getCurrentName() {
       return null;
     }
 
@@ -464,77 +464,77 @@ class DurationIso8601DeserializerTest {
     }
 
     @Override
-    public String getValueAsString() throws IOException {
+    public String getValueAsString() {
       return null;
     }
 
     @Override
-    public String getValueAsString(String defaultValue) throws IOException {
+    public String getValueAsString(String defaultValue) {
       return null;
     }
 
     @Override
-    public int getValueAsInt() throws IOException {
+    public int getValueAsInt() {
       return 0;
     }
 
     @Override
-    public int getValueAsInt(int defaultValue) throws IOException {
+    public int getValueAsInt(int defaultValue) {
       return 0;
     }
 
     @Override
-    public long getValueAsLong() throws IOException {
+    public long getValueAsLong() {
       return 0;
     }
 
     @Override
-    public long getValueAsLong(long defaultValue) throws IOException {
+    public long getValueAsLong(long defaultValue) {
       return 0;
     }
 
     @Override
-    public double getValueAsDouble() throws IOException {
+    public double getValueAsDouble() {
       return 0;
     }
 
     @Override
-    public double getValueAsDouble(double defaultValue) throws IOException {
+    public double getValueAsDouble(double defaultValue) {
       return 0;
     }
 
     @Override
-    public boolean getValueAsBoolean() throws IOException {
+    public boolean getValueAsBoolean() {
       return false;
     }
 
     @Override
-    public boolean getValueAsBoolean(boolean defaultValue) throws IOException {
+    public boolean getValueAsBoolean(boolean defaultValue) {
       return false;
     }
 
     @Override
-    public Object getEmbeddedObject() throws IOException {
+    public Object getEmbeddedObject() {
       return null;
     }
 
     @Override
-    public byte[] getBinaryValue() throws IOException {
+    public byte[] getBinaryValue() {
       return new byte[0];
     }
 
     @Override
-    public int getTextLength() throws IOException {
+    public int getTextLength() {
       return 0;
     }
 
     @Override
-    public int getTextOffset() throws IOException {
+    public int getTextOffset() {
       return 0;
     }
 
     @Override
-    public char[] getTextCharacters() throws IOException {
+    public char[] getTextCharacters() {
       return new char[0];
     }
 
@@ -544,57 +544,57 @@ class DurationIso8601DeserializerTest {
     }
 
     @Override
-    public Number getNumberValue() throws IOException {
+    public Number getNumberValue() {
       return null;
     }
 
     @Override
-    public NumberType getNumberType() throws IOException {
+    public NumberType getNumberType() {
       return null;
     }
 
     @Override
-    public int getIntValue() throws IOException {
+    public int getIntValue() {
       return 0;
     }
 
     @Override
-    public long getLongValue() throws IOException {
+    public long getLongValue() {
       return 0;
     }
 
     @Override
-    public java.math.BigInteger getBigIntegerValue() throws IOException {
+    public java.math.BigInteger getBigIntegerValue() {
       return null;
     }
 
     @Override
-    public float getFloatValue() throws IOException {
+    public float getFloatValue() {
       return 0;
     }
 
     @Override
-    public double getDoubleValue() throws IOException {
+    public double getDoubleValue() {
       return 0;
     }
 
     @Override
-    public java.math.BigDecimal getDecimalValue() throws IOException {
+    public java.math.BigDecimal getDecimalValue() {
       return null;
     }
 
     @Override
-    public Object getObjectId() throws IOException {
+    public Object getObjectId() {
       return null;
     }
 
     @Override
-    public Object getTypeId() throws IOException {
+    public Object getTypeId() {
       return null;
     }
 
     @Override
-    public byte[] getBinaryValue(Base64Variant bv) throws IOException {
+    public byte[] getBinaryValue(Base64Variant bv) {
       return new byte[0];
     }
 
@@ -604,7 +604,7 @@ class DurationIso8601DeserializerTest {
     }
 
     @Override
-    public JsonToken nextValue() throws IOException {
+    public JsonToken nextValue() {
       return nextToken();
     }
   }

@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -26,13 +24,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the <code>organization</code> element in SCORM 1.2.
@@ -70,12 +63,6 @@ import lombok.extern.jackson.Jacksonized;
  * </organization>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Organization implements Serializable {
 
@@ -90,7 +77,6 @@ public class Scorm12Organization implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "structure")
   @JsonProperty(value = "structure")
-  @Default
   private String structure = "hierarchical";
   /**
    * The title of the organization, providing a descriptive label.
@@ -108,4 +94,86 @@ public class Scorm12Organization implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "item", namespace = Scorm12Manifest.NAMESPACE_URI)
   private List<Scorm12Item> items;
+
+  public Scorm12Organization(String identifier, String structure, String title,
+      Scorm12Metadata metadata, List<Scorm12Item> items) {
+    this.identifier = identifier;
+    this.structure = structure;
+    this.title = title;
+    this.metadata = metadata;
+    this.items = items;
+  }
+
+  public Scorm12Organization() {
+  }
+
+  public String getIdentifier() {
+    return this.identifier;
+  }
+
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }
+
+  public String getStructure() {
+    return this.structure;
+  }
+
+  public void setStructure(String structure) {
+    this.structure = structure;
+  }
+
+  public String getTitle() {
+    return this.title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public Scorm12Metadata getMetadata() {
+    return this.metadata;
+  }
+
+  public void setMetadata(Scorm12Metadata metadata) {
+    this.metadata = metadata;
+  }
+
+  public List<Scorm12Item> getItems() {
+    return this.items;
+  }
+
+  public void setItems(List<Scorm12Item> items) {
+    this.items = items;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm12Organization that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getIdentifier(), that.getIdentifier())
+        .append(getStructure(), that.getStructure())
+        .append(getTitle(), that.getTitle())
+        .append(getMetadata(), that.getMetadata())
+        .append(getItems(), that.getItems())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getIdentifier())
+        .append(getStructure())
+        .append(getTitle())
+        .append(getMetadata())
+        .append(getItems())
+        .toHashCode();
+  }
 }

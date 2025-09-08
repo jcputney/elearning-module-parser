@@ -37,20 +37,19 @@ public class AssignableUnitTest {
   @Test
   void testAssignableUnitBuilderAndGetters() {
     // Create an AssignableUnit using the builder
-    AssignableUnit assignableUnit = AssignableUnit.builder()
-        .systemId("A1")
-        .commandLine("test.html")
-        .fileName("test.html")
-        .coreVendor("Test Vendor")
-        .type("Lesson")
-        .maxScore("100")
-        .masteryScore("80")
-        .maxTimeAllowed("01:00:00")
-        .timeLimitAction("C,N")
-        .systemVendor("System Vendor")
-        .webLaunch("http://example.com/test.html")
-        .auPassword("password")
-        .build();
+    AssignableUnit assignableUnit = new AssignableUnit();
+    assignableUnit.setSystemId("A1");
+    assignableUnit.setCommandLine("test.html");
+    assignableUnit.setFileName("test.html");
+    assignableUnit.setCoreVendor("Test Vendor");
+    assignableUnit.setType("Lesson");
+    assignableUnit.setMaxScore("100");
+    assignableUnit.setMasteryScore("80");
+    assignableUnit.setMaxTimeAllowed("01:00:00");
+    assignableUnit.setTimeLimitAction("C,N");
+    assignableUnit.setSystemVendor("System Vendor");
+    assignableUnit.setWebLaunch("http://example.com/test.html");
+    assignableUnit.setAuPassword("password");
 
     // Verify the getters
     assertEquals("A1", assignableUnit.getSystemId());
@@ -74,20 +73,18 @@ public class AssignableUnitTest {
   @Test
   void testSetDescriptor() {
     // Create an AssignableUnit using the builder
-    AssignableUnit assignableUnit = AssignableUnit.builder()
-        .systemId("A1")
-        .commandLine("test.html")
-        .fileName("test.html")
-        .coreVendor("Test Vendor")
-        .build();
+    AssignableUnit assignableUnit = new AssignableUnit();
+    assignableUnit.setSystemId("A1");
+    assignableUnit.setCommandLine("test.html");
+    assignableUnit.setFileName("test.html");
+    assignableUnit.setCoreVendor("Test Vendor");
 
     // Create a descriptor
-    Descriptor descriptor = Descriptor.builder()
-        .systemId("A1")
-        .developerId("DEV-001")
-        .title("Test AU")
-        .description("Test Assignable Unit")
-        .build();
+    Descriptor descriptor = new Descriptor();
+    descriptor.setSystemId("A1");
+    descriptor.setDeveloperId("DEV-001");
+    descriptor.setTitle("Test AU");
+    descriptor.setDescription("Test Assignable Unit");
 
     // Set the descriptor
     assignableUnit.setDescriptor(descriptor);

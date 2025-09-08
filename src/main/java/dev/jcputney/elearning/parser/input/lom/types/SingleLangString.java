@@ -21,12 +21,8 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a single language string in LOM metadata. This type is used for fields that only
@@ -40,12 +36,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Jacksonized
-@Data
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class SingleLangString implements Serializable {
 
@@ -55,4 +45,43 @@ public class SingleLangString implements Serializable {
   @JacksonXmlProperty(localName = "string")
   @JsonAlias("langstring")
   private LangString langString;
+
+  public SingleLangString() {
+  }
+
+  public LangString getLangString() {
+    return this.langString;
+  }
+
+  @JsonAlias("langstring")
+  @JacksonXmlProperty(localName = "string")
+  public void setLangString(LangString langString) {
+    this.langString = langString;
+  }
+
+  public String toString() {
+    return "SingleLangString(langString=" + this.getLangString() + ")";
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof SingleLangString that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getLangString(), that.getLangString())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getLangString())
+        .toHashCode();
+  }
 }

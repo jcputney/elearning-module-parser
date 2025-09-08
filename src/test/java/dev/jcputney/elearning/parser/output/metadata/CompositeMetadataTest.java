@@ -17,6 +17,17 @@
 
 package dev.jcputney.elearning.parser.output.metadata;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -24,8 +35,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
  * Test class for CompositeMetadata.
@@ -52,15 +61,19 @@ class CompositeMetadataTest {
   @Test
   void testDefaultConstructor_CreatesEmptyComposite() {
     assertNotNull(compositeMetadata);
-    assertTrue(compositeMetadata.getComponents().isEmpty());
+    assertTrue(compositeMetadata
+        .getComponents()
+        .isEmpty());
     assertFalse(compositeMetadata.hasMetadata("anyKey"));
   }
 
   @Test
   void testBuilderConstructor_CreatesEmptyComposite() {
-    CompositeMetadata metadata = CompositeMetadata.builder().build();
+    CompositeMetadata metadata = new CompositeMetadata();
     assertNotNull(metadata);
-    assertTrue(metadata.getComponents().isEmpty());
+    assertTrue(metadata
+        .getComponents()
+        .isEmpty());
   }
 
   @Test
@@ -70,24 +83,27 @@ class CompositeMetadataTest {
 
     // Assert
     assertSame(compositeMetadata, result); // Method chaining
-    assertEquals(1, compositeMetadata.getComponents().size());
-    assertTrue(compositeMetadata.getComponents().contains(mockComponent1));
+    assertEquals(1, compositeMetadata
+        .getComponents()
+        .size());
+    assertTrue(compositeMetadata
+        .getComponents()
+        .contains(mockComponent1));
   }
 
   @Test
   void testAddComponent_NullComponent_ThrowsException() {
     // Act & Assert
-    assertThrows(NullPointerException.class, () -> {
-      compositeMetadata.addComponent(null);
-    });
+    assertThrows(NullPointerException.class, () -> compositeMetadata.addComponent(null));
   }
 
   @Test
   void testAddComponent_MultipleComponents_Success() {
     // Act
-    compositeMetadata.addComponent(mockComponent1)
-                    .addComponent(mockComponent2)
-                    .addComponent(mockComponent3);
+    compositeMetadata
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2)
+        .addComponent(mockComponent3);
 
     // Assert
     List<MetadataComponent> components = compositeMetadata.getComponents();
@@ -107,26 +123,32 @@ class CompositeMetadataTest {
 
     // Assert
     assertSame(compositeMetadata, result); // Method chaining
-    assertEquals(2, compositeMetadata.getComponents().size());
-    assertTrue(compositeMetadata.getComponents().contains(mockComponent1));
-    assertTrue(compositeMetadata.getComponents().contains(mockComponent2));
+    assertEquals(2, compositeMetadata
+        .getComponents()
+        .size());
+    assertTrue(compositeMetadata
+        .getComponents()
+        .contains(mockComponent1));
+    assertTrue(compositeMetadata
+        .getComponents()
+        .contains(mockComponent2));
   }
 
   @Test
   void testAddComponents_NullList_ThrowsException() {
     // Act & Assert
-    assertThrows(NullPointerException.class, () -> {
-      compositeMetadata.addComponents(null);
-    });
+    assertThrows(NullPointerException.class, () -> compositeMetadata.addComponents(null));
   }
 
   @Test
   void testAddComponents_EmptyList_Success() {
     // Act
-    compositeMetadata.addComponents(Arrays.asList());
+    compositeMetadata.addComponents(List.of());
 
     // Assert
-    assertTrue(compositeMetadata.getComponents().isEmpty());
+    assertTrue(compositeMetadata
+        .getComponents()
+        .isEmpty());
   }
 
   @Test
@@ -141,7 +163,9 @@ class CompositeMetadataTest {
   @Test
   void testGetMetadata_FirstComponentHasValue_ReturnsFirstValue() {
     // Arrange
-    compositeMetadata.addComponent(mockComponent1).addComponent(mockComponent2);
+    compositeMetadata
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2);
     when(mockComponent1.getMetadata("key")).thenReturn(Optional.of("value1"));
     when(mockComponent2.getMetadata("key")).thenReturn(Optional.of("value2"));
 
@@ -158,7 +182,9 @@ class CompositeMetadataTest {
   @Test
   void testGetMetadata_FirstComponentEmpty_ChecksSecondComponent() {
     // Arrange
-    compositeMetadata.addComponent(mockComponent1).addComponent(mockComponent2);
+    compositeMetadata
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2);
     when(mockComponent1.getMetadata("key")).thenReturn(Optional.empty());
     when(mockComponent2.getMetadata("key")).thenReturn(Optional.of("value2"));
 
@@ -175,7 +201,9 @@ class CompositeMetadataTest {
   @Test
   void testGetMetadata_AllComponentsEmpty_ReturnsEmpty() {
     // Arrange
-    compositeMetadata.addComponent(mockComponent1).addComponent(mockComponent2);
+    compositeMetadata
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2);
     when(mockComponent1.getMetadata("key")).thenReturn(Optional.empty());
     when(mockComponent2.getMetadata("key")).thenReturn(Optional.empty());
 
@@ -191,7 +219,9 @@ class CompositeMetadataTest {
   @Test
   void testGetMetadata_NullKey_SearchesAllComponents() {
     // Arrange
-    compositeMetadata.addComponent(mockComponent1).addComponent(mockComponent2);
+    compositeMetadata
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2);
     when(mockComponent1.getMetadata(null)).thenReturn(Optional.empty());
     when(mockComponent2.getMetadata(null)).thenReturn(Optional.of("nullKeyValue"));
 
@@ -223,7 +253,9 @@ class CompositeMetadataTest {
   @Test
   void testGetMetadataWithType_FirstComponentWrongType_ChecksSecondComponent() {
     // Arrange
-    compositeMetadata.addComponent(mockComponent1).addComponent(mockComponent2);
+    compositeMetadata
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2);
     when(mockComponent1.getMetadata("key", String.class)).thenReturn(Optional.empty());
     when(mockComponent2.getMetadata("key", String.class)).thenReturn(Optional.of("stringValue"));
 
@@ -240,7 +272,9 @@ class CompositeMetadataTest {
   @Test
   void testGetMetadataWithType_AllComponentsWrongType_ReturnsEmpty() {
     // Arrange
-    compositeMetadata.addComponent(mockComponent1).addComponent(mockComponent2);
+    compositeMetadata
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2);
     when(mockComponent1.getMetadata("key", Integer.class)).thenReturn(Optional.empty());
     when(mockComponent2.getMetadata("key", Integer.class)).thenReturn(Optional.empty());
 
@@ -265,7 +299,9 @@ class CompositeMetadataTest {
   @Test
   void testHasMetadata_FirstComponentHasKey_ReturnsTrue() {
     // Arrange
-    compositeMetadata.addComponent(mockComponent1).addComponent(mockComponent2);
+    compositeMetadata
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2);
     when(mockComponent1.hasMetadata("key")).thenReturn(true);
 
     // Act
@@ -280,7 +316,9 @@ class CompositeMetadataTest {
   @Test
   void testHasMetadata_FirstComponentDoesNotHaveKey_ChecksSecondComponent() {
     // Arrange
-    compositeMetadata.addComponent(mockComponent1).addComponent(mockComponent2);
+    compositeMetadata
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2);
     when(mockComponent1.hasMetadata("key")).thenReturn(false);
     when(mockComponent2.hasMetadata("key")).thenReturn(true);
 
@@ -296,7 +334,9 @@ class CompositeMetadataTest {
   @Test
   void testHasMetadata_NoComponentsHaveKey_ReturnsFalse() {
     // Arrange
-    compositeMetadata.addComponent(mockComponent1).addComponent(mockComponent2);
+    compositeMetadata
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2);
     when(mockComponent1.hasMetadata("key")).thenReturn(false);
     when(mockComponent2.hasMetadata("key")).thenReturn(false);
 
@@ -312,7 +352,9 @@ class CompositeMetadataTest {
   @Test
   void testHasMetadata_NullKey_ChecksAllComponents() {
     // Arrange
-    compositeMetadata.addComponent(mockComponent1).addComponent(mockComponent2);
+    compositeMetadata
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2);
     when(mockComponent1.hasMetadata(null)).thenReturn(false);
     when(mockComponent2.hasMetadata(null)).thenReturn(true);
 
@@ -328,24 +370,36 @@ class CompositeMetadataTest {
   @Test
   void testGetComponents_ReturnsDefensiveCopy() {
     // Arrange
-    compositeMetadata.addComponent(mockComponent1).addComponent(mockComponent2);
+    compositeMetadata
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2);
 
     // Act
     List<MetadataComponent> components = compositeMetadata.getComponents();
     components.clear(); // Modify the returned list
 
     // Assert
-    assertEquals(2, compositeMetadata.getComponents().size()); // Original should be unchanged
-    assertTrue(compositeMetadata.getComponents().contains(mockComponent1));
-    assertTrue(compositeMetadata.getComponents().contains(mockComponent2));
+    assertEquals(2, compositeMetadata
+        .getComponents()
+        .size()); // Original should be unchanged
+    assertTrue(compositeMetadata
+        .getComponents()
+        .contains(mockComponent1));
+    assertTrue(compositeMetadata
+        .getComponents()
+        .contains(mockComponent2));
   }
 
   @Test
   void testEquals_SameComponents_ReturnsTrue() {
     // Arrange
     CompositeMetadata other = new CompositeMetadata();
-    compositeMetadata.addComponent(mockComponent1).addComponent(mockComponent2);
-    other.addComponent(mockComponent1).addComponent(mockComponent2);
+    compositeMetadata
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2);
+    other
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2);
 
     // Act & Assert
     assertEquals(compositeMetadata, other);
@@ -375,8 +429,12 @@ class CompositeMetadataTest {
   void testHashCode_SameComponents_SameHashCode() {
     // Arrange
     CompositeMetadata other = new CompositeMetadata();
-    compositeMetadata.addComponent(mockComponent1).addComponent(mockComponent2);
-    other.addComponent(mockComponent1).addComponent(mockComponent2);
+    compositeMetadata
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2);
+    other
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2);
 
     // Act & Assert
     assertEquals(compositeMetadata.hashCode(), other.hashCode());
@@ -385,9 +443,10 @@ class CompositeMetadataTest {
   @Test
   void testSearchOrder_ComponentsSearchedInOrder() {
     // Arrange
-    compositeMetadata.addComponent(mockComponent1)
-                    .addComponent(mockComponent2)
-                    .addComponent(mockComponent3);
+    compositeMetadata
+        .addComponent(mockComponent1)
+        .addComponent(mockComponent2)
+        .addComponent(mockComponent3);
 
     // First component returns empty, second returns value, third should not be checked
     when(mockComponent1.getMetadata("key")).thenReturn(Optional.empty());
@@ -410,29 +469,32 @@ class CompositeMetadataTest {
     // Arrange
     SimpleMetadata simpleMetadata1 = new SimpleMetadata();
     SimpleMetadata simpleMetadata2 = new SimpleMetadata();
-    
+
     simpleMetadata1.addMetadata("title", "Test Title");
     simpleMetadata1.addMetadata("version", 1);
-    
+
     simpleMetadata2.addMetadata("description", "Test Description");
     simpleMetadata2.addMetadata("version", 2); // Should not override first version
 
-    compositeMetadata.addComponent(simpleMetadata1).addComponent(simpleMetadata2);
+    compositeMetadata
+        .addComponent(simpleMetadata1)
+        .addComponent(simpleMetadata2);
 
     // Act & Assert
     assertEquals(Optional.of("Test Title"), compositeMetadata.getMetadata("title"));
     assertEquals(Optional.of("Test Description"), compositeMetadata.getMetadata("description"));
     assertEquals(Optional.of(1), compositeMetadata.getMetadata("version")); // First component wins
     assertEquals(Optional.empty(), compositeMetadata.getMetadata("nonexistent"));
-    
+
     assertTrue(compositeMetadata.hasMetadata("title"));
     assertTrue(compositeMetadata.hasMetadata("description"));
     assertTrue(compositeMetadata.hasMetadata("version"));
     assertFalse(compositeMetadata.hasMetadata("nonexistent"));
-    
+
     // Test typed access
     assertEquals(Optional.of("Test Title"), compositeMetadata.getMetadata("title", String.class));
     assertEquals(Optional.of(1), compositeMetadata.getMetadata("version", Integer.class));
-    assertEquals(Optional.empty(), compositeMetadata.getMetadata("version", String.class)); // Wrong type
+    assertEquals(Optional.empty(),
+        compositeMetadata.getMetadata("version", String.class)); // Wrong type
   }
 }

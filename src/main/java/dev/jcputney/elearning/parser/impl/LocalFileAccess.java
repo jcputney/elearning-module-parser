@@ -29,7 +29,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.stream.Stream;
-import lombok.Getter;
 
 /**
  * Implementation of FileAccess for local file access. This class provides methods to check file
@@ -41,7 +40,6 @@ public class LocalFileAccess implements FileAccess {
   /**
    * The root path for file access. This is the base directory where files are accessed from.
    */
-  @Getter
   private final String rootPath;
 
   /**
@@ -91,27 +89,29 @@ public class LocalFileAccess implements FileAccess {
 
     // Validate directory
     if (!Files.exists(dirPath)) {
-      throw new IOException("Directory not found: '" + directoryPath + "' (full path: '" +
-          dirPath.toAbsolutePath() + "') in root '" + getRootPath() + "'");
+      throw new IOException(
+          "Directory not found: '" + directoryPath + "' (full path: '" + dirPath.toAbsolutePath()
+              + "') in root '" + getRootPath() + "'");
     }
     if (!Files.isDirectory(dirPath)) {
       String fileType = Files.isRegularFile(dirPath) ? "regular file" : "special file";
-      throw new IOException("Path is not a directory: '" + directoryPath + "' (is a " + fileType +
-          ") in root '" + getRootPath() + "'");
+      throw new IOException(
+          "Path is not a directory: '" + directoryPath + "' (is a " + fileType + ") in root '"
+              + getRootPath() + "'");
     }
 
     try (Stream<Path> paths = Files.list(dirPath)) {
       // Use stream API for more secure listing with filtering on regular files only
       Path basePath = Paths.get(getRootPath());
-      return paths
-          .filter(Files::isRegularFile) // Only list regular files
+      return paths.filter(Files::isRegularFile) // Only list regular files
           .map(basePath::relativize)
           .map(Path::toString)
           .toList();
     } catch (IOException e) {
-      throw new IOException("Failed to list files in directory: '" + directoryPath +
-          "' (full path: '" + dirPath.toAbsolutePath() + "') in root '" + getRootPath() +
-          "': " + e.getMessage(), e);
+      throw new IOException(
+          "Failed to list files in directory: '" + directoryPath + "' (full path: '"
+              + dirPath.toAbsolutePath() + "') in root '" + getRootPath() + "': " + e.getMessage(),
+          e);
     }
   }
 
@@ -141,8 +141,9 @@ public class LocalFileAccess implements FileAccess {
 
     // Check file existence and read permissions
     if (!fileExistsInternal(path)) {
-      throw new NoSuchFileException("File not found: '" + path + "' (full path: '" +
-          filePath.toAbsolutePath() + "') in root '" + getRootPath() + "'");
+      throw new NoSuchFileException(
+          "File not found: '" + path + "' (full path: '" + filePath.toAbsolutePath()
+              + "') in root '" + getRootPath() + "'");
     }
     if (!Files.isReadable(filePath)) {
       String details;
@@ -153,8 +154,9 @@ public class LocalFileAccess implements FileAccess {
       } catch (IOException ignored) {
         details = " (unable to read file attributes)";
       }
-      throw new IOException("File is not readable: '" + path + "' (full path: '" +
-          filePath.toAbsolutePath() + "')" + details + " in root '" + getRootPath() + "'");
+      throw new IOException(
+          "File is not readable: '" + path + "' (full path: '" + filePath.toAbsolutePath() + "')"
+              + details + " in root '" + getRootPath() + "'");
     }
 
     InputStream inputStream = Files.newInputStream(filePath, StandardOpenOption.READ);
@@ -191,5 +193,9 @@ public class LocalFileAccess implements FileAccess {
           })
           .sum();
     }
+  }
+
+  public String getRootPath() {
+    return this.rootPath;
   }
 }

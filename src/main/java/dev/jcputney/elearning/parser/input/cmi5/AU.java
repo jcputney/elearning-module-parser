@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.cmi5;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -30,12 +28,8 @@ import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
 import dev.jcputney.elearning.parser.input.common.PercentType;
 import dev.jcputney.elearning.parser.input.common.PercentTypeDeserializer;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an Assignable Unit (AU) in a CMI5 course structure. An AU is a distinct learning
@@ -93,12 +87,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class AU implements Serializable {
 
@@ -233,4 +221,153 @@ public class AU implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("activityType")
   private String activityType;
+
+  public AU(TextType title, TextType description, ReferencesObjectives objectives, String url,
+      String launchParameters, String entitlementKey, String id, MoveOn moveOn,
+      PercentType masteryScore, LaunchMethod launchMethod, String activityType) {
+    this.title = title;
+    this.description = description;
+    this.objectives = objectives;
+    this.url = url;
+    this.launchParameters = launchParameters;
+    this.entitlementKey = entitlementKey;
+    this.id = id;
+    this.moveOn = moveOn;
+    this.masteryScore = masteryScore;
+    this.launchMethod = launchMethod;
+    this.activityType = activityType;
+  }
+
+  public AU() {
+  }
+
+  public TextType getTitle() {
+    return this.title;
+  }
+
+  public void setTitle(TextType title) {
+    this.title = title;
+  }
+
+  public TextType getDescription() {
+    return this.description;
+  }
+
+  public void setDescription(TextType description) {
+    this.description = description;
+  }
+
+  public ReferencesObjectives getObjectives() {
+    return this.objectives;
+  }
+
+  public void setObjectives(ReferencesObjectives objectives) {
+    this.objectives = objectives;
+  }
+
+  public String getUrl() {
+    return this.url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+  public String getLaunchParameters() {
+    return this.launchParameters;
+  }
+
+  public void setLaunchParameters(String launchParameters) {
+    this.launchParameters = launchParameters;
+  }
+
+  public String getEntitlementKey() {
+    return this.entitlementKey;
+  }
+
+  public void setEntitlementKey(String entitlementKey) {
+    this.entitlementKey = entitlementKey;
+  }
+
+  public String getId() {
+    return this.id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public MoveOn getMoveOn() {
+    return this.moveOn;
+  }
+
+  public void setMoveOn(MoveOn moveOn) {
+    this.moveOn = moveOn;
+  }
+
+  public PercentType getMasteryScore() {
+    return this.masteryScore;
+  }
+
+  public void setMasteryScore(PercentType masteryScore) {
+    this.masteryScore = masteryScore;
+  }
+
+  public LaunchMethod getLaunchMethod() {
+    return this.launchMethod;
+  }
+
+  public void setLaunchMethod(LaunchMethod launchMethod) {
+    this.launchMethod = launchMethod;
+  }
+
+  public String getActivityType() {
+    return this.activityType;
+  }
+
+  public void setActivityType(String activityType) {
+    this.activityType = activityType;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof AU au)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getTitle(), au.getTitle())
+        .append(getDescription(), au.getDescription())
+        .append(getObjectives(), au.getObjectives())
+        .append(getUrl(), au.getUrl())
+        .append(getLaunchParameters(), au.getLaunchParameters())
+        .append(getEntitlementKey(), au.getEntitlementKey())
+        .append(getId(), au.getId())
+        .append(getMoveOn(), au.getMoveOn())
+        .append(getMasteryScore(), au.getMasteryScore())
+        .append(getLaunchMethod(), au.getLaunchMethod())
+        .append(getActivityType(), au.getActivityType())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getTitle())
+        .append(getDescription())
+        .append(getObjectives())
+        .append(getUrl())
+        .append(getLaunchParameters())
+        .append(getEntitlementKey())
+        .append(getId())
+        .append(getMoveOn())
+        .append(getMasteryScore())
+        .append(getLaunchMethod())
+        .append(getActivityType())
+        .toHashCode();
+  }
 }

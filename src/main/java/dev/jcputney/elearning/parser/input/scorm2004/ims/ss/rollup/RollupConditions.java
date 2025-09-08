@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.rollup;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -26,13 +24,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a set of conditions that control when a rollup rule should apply. Rollup conditions
@@ -42,12 +35,6 @@ import lombok.extern.jackson.Jacksonized;
  * <p>Conditions can be combined based on the logic defined in {@link #conditionCombination},
  * allowing multiple criteria to be evaluated together.</p>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RollupConditions implements Serializable {
 
@@ -68,6 +55,48 @@ public class RollupConditions implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("conditionCombination")
-  @Default
   private String conditionCombination = "any";
+
+  public RollupConditions() {
+  }
+
+  public List<RollupCondition> getRollupConditionList() {
+    return this.rollupConditionList;
+  }
+
+  public void setRollupConditionList(List<RollupCondition> rollupConditionList) {
+    this.rollupConditionList = rollupConditionList;
+  }
+
+  public String getConditionCombination() {
+    return this.conditionCombination;
+  }
+
+  public void setConditionCombination(String conditionCombination) {
+    this.conditionCombination = conditionCombination;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof RollupConditions that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getRollupConditionList(), that.getRollupConditionList())
+        .append(getConditionCombination(), that.getConditionCombination())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getRollupConditionList())
+        .append(getConditionCombination())
+        .toHashCode();
+  }
 }

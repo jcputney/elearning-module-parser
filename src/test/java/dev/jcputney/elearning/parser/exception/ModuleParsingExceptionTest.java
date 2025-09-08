@@ -17,10 +17,18 @@
 
 package dev.jcputney.elearning.parser.exception;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.xml.stream.XMLStreamException;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for ModuleParsingException.
@@ -35,7 +43,9 @@ class ModuleParsingExceptionTest {
     // Assert
     assertEquals("Parse error", exception.getMessage());
     assertNull(exception.getCause());
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -49,7 +59,9 @@ class ModuleParsingExceptionTest {
     // Assert
     assertEquals("Parse error", exception.getMessage());
     assertSame(cause, exception.getCause());
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -66,7 +78,9 @@ class ModuleParsingExceptionTest {
     // Assert
     assertEquals("Parse error", exception.getMessage());
     assertSame(cause, exception.getCause());
-    assertEquals(2, exception.getMetadata().size());
+    assertEquals(2, exception
+        .getMetadata()
+        .size());
     assertEquals("SCORM", exception.getMetadata("moduleType"));
     assertEquals(42, exception.getMetadata("lineNumber"));
   }
@@ -79,7 +93,9 @@ class ModuleParsingExceptionTest {
     // Assert
     assertNull(exception.getMessage());
     assertNull(exception.getCause());
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -90,7 +106,9 @@ class ModuleParsingExceptionTest {
     // Assert
     assertEquals("Parse error", exception.getMessage());
     assertNull(exception.getCause());
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -104,7 +122,9 @@ class ModuleParsingExceptionTest {
     // Assert
     assertEquals("Parse error", exception.getMessage());
     assertSame(cause, exception.getCause());
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -113,9 +133,9 @@ class ModuleParsingExceptionTest {
     ModuleParsingException exception = new ModuleParsingException("Parse error");
 
     // Assert
-    assertTrue(exception instanceof ModuleException);
-    assertTrue(exception instanceof Exception);
-    assertTrue(exception instanceof Throwable);
+    assertInstanceOf(ModuleException.class, exception);
+    assertInstanceOf(Exception.class, exception);
+    assertInstanceOf(Throwable.class, exception);
   }
 
   @Test
@@ -124,13 +144,16 @@ class ModuleParsingExceptionTest {
     ModuleParsingException exception = new ModuleParsingException("Parse error");
 
     // Act
-    exception.addMetadata("fileName", "manifest.xml")
-            .addMetadata("errorCode", "INVALID_XML");
+    exception
+        .addMetadata("fileName", "manifest.xml")
+        .addMetadata("errorCode", "INVALID_XML");
 
     // Assert
     assertEquals("manifest.xml", exception.getMetadata("fileName"));
     assertEquals("INVALID_XML", exception.getMetadata("errorCode"));
-    assertEquals(2, exception.getMetadata().size());
+    assertEquals(2, exception
+        .getMetadata()
+        .size());
   }
 
   @Test
@@ -151,8 +174,9 @@ class ModuleParsingExceptionTest {
   void testInheritedToString_WithMetadata_Success() {
     // Arrange
     ModuleParsingException exception = new ModuleParsingException("Parse error");
-    exception.addMetadata("file", "imsmanifest.xml")
-            .addMetadata("line", 25);
+    exception
+        .addMetadata("file", "imsmanifest.xml")
+        .addMetadata("line", 25);
 
     // Act
     String result = exception.toString();
@@ -182,8 +206,10 @@ class ModuleParsingExceptionTest {
 
     // Assert
     assertEquals("Failed to parse SCORM manifest", exception.getMessage());
-    assertTrue(exception.getCause() instanceof javax.xml.stream.XMLStreamException);
-    assertEquals("Invalid XML at line 15", exception.getCause().getMessage());
+    assertInstanceOf(XMLStreamException.class, exception.getCause());
+    assertEquals("Invalid XML at line 15", exception
+        .getCause()
+        .getMessage());
     assertEquals("imsmanifest.xml", exception.getMetadata("fileName"));
     assertEquals("SCORM 1.2", exception.getMetadata("moduleType"));
     assertEquals("/modules/course123", exception.getMetadata("rootPath"));
@@ -192,11 +218,13 @@ class ModuleParsingExceptionTest {
   @Test
   void testRealisticScenario_MissingRequiredElement_Success() {
     // Arrange
-    ModuleParsingException exception = new ModuleParsingException("Missing required element: <title>");
-    exception.addMetadata("element", "title")
-            .addMetadata("parentElement", "metadata")
-            .addMetadata("required", true)
-            .addMetadata("specification", "SCORM 2004");
+    ModuleParsingException exception = new ModuleParsingException(
+        "Missing required element: <title>");
+    exception
+        .addMetadata("element", "title")
+        .addMetadata("parentElement", "metadata")
+        .addMetadata("required", true)
+        .addMetadata("specification", "SCORM 2004");
 
     // Act & Assert
     assertEquals("Missing required element: <title>", exception.getMessage());
@@ -212,15 +240,16 @@ class ModuleParsingExceptionTest {
     java.io.IOException ioException = new java.io.IOException("File not found: launch.html");
     ModuleParsingException exception = new ModuleParsingException(
         "Invalid module structure: missing launch file", ioException);
-    
-    exception.addMetadata("missingFile", "launch.html")
-            .addMetadata("expectedLocation", "content/")
-            .addMetadata("moduleId", "course-123")
-            .addMetadata("validationStage", "structure-check");
+
+    exception
+        .addMetadata("missingFile", "launch.html")
+        .addMetadata("expectedLocation", "content/")
+        .addMetadata("moduleId", "course-123")
+        .addMetadata("validationStage", "structure-check");
 
     // Act & Assert
     assertEquals("Invalid module structure: missing launch file", exception.getMessage());
-    assertTrue(exception.getCause() instanceof java.io.IOException);
+    assertInstanceOf(IOException.class, exception.getCause());
     assertEquals("launch.html", exception.getMetadata("missingFile"));
     assertEquals("content/", exception.getMetadata("expectedLocation"));
     assertEquals("course-123", exception.getMetadata("moduleId"));
@@ -232,12 +261,15 @@ class ModuleParsingExceptionTest {
     // Arrange
     RuntimeException rootCause = new RuntimeException("Database connection failed");
     java.io.IOException ioException = new java.io.IOException("Failed to read metadata", rootCause);
-    ModuleParsingException exception = new ModuleParsingException("Module parsing failed", ioException);
+    ModuleParsingException exception = new ModuleParsingException("Module parsing failed",
+        ioException);
 
     // Act & Assert
     assertEquals("Module parsing failed", exception.getMessage());
     assertSame(ioException, exception.getCause());
-    assertSame(rootCause, exception.getCause().getCause());
+    assertSame(rootCause, exception
+        .getCause()
+        .getCause());
   }
 
   @Test
@@ -248,7 +280,9 @@ class ModuleParsingExceptionTest {
     // Assert
     assertEquals("", exception.getMessage());
     assertNull(exception.getCause());
-    assertTrue(exception.getMetadata().isEmpty());
+    assertTrue(exception
+        .getMetadata()
+        .isEmpty());
   }
 
   @Test
@@ -257,11 +291,12 @@ class ModuleParsingExceptionTest {
     Map<String, Object> nestedData = new HashMap<>();
     nestedData.put("validationRules", java.util.Arrays.asList("required-title", "valid-duration"));
     nestedData.put("errorCount", 3);
-    
+
     ModuleParsingException exception = new ModuleParsingException("Validation failed");
-    exception.addMetadata("validationResults", nestedData)
-            .addMetadata("timestamp", java.time.Instant.now())
-            .addMetadata("validator", "DefaultValidator");
+    exception
+        .addMetadata("validationResults", nestedData)
+        .addMetadata("timestamp", java.time.Instant.now())
+        .addMetadata("validator", "DefaultValidator");
 
     // Act & Assert
     assertEquals(nestedData, exception.getMetadata("validationResults"));

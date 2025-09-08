@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -29,12 +27,8 @@ import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The root element of a Learning Object Metadata (LOM) document. This is the entry point for
@@ -60,12 +54,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JacksonXmlRootElement(localName = "lom", namespace = LOM.NAMESPACE_URI)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -232,6 +220,9 @@ public class LOM implements Serializable {
   @JacksonXmlProperty(localName = "classification")
   private List<Classification> classifications;
 
+  public LOM() {
+  }
+
   /**
    * Get the title of the learning object.
    *
@@ -266,5 +257,115 @@ public class LOM implements Serializable {
             .get(0)
             .getValue())
         .orElse(null);
+  }
+
+  public General getGeneral() {
+    return this.general;
+  }
+
+  public void setGeneral(General general) {
+    this.general = general;
+  }
+
+  public LifeCycle getLifecycle() {
+    return this.lifecycle;
+  }
+
+  public void setLifecycle(LifeCycle lifecycle) {
+    this.lifecycle = lifecycle;
+  }
+
+  public MetaMetadata getMetaMetadata() {
+    return this.metaMetadata;
+  }
+
+  public void setMetaMetadata(MetaMetadata metaMetadata) {
+    this.metaMetadata = metaMetadata;
+  }
+
+  public Technical getTechnical() {
+    return this.technical;
+  }
+
+  public void setTechnical(Technical technical) {
+    this.technical = technical;
+  }
+
+  public Educational getEducational() {
+    return this.educational;
+  }
+
+  public void setEducational(Educational educational) {
+    this.educational = educational;
+  }
+
+  public Rights getRights() {
+    return this.rights;
+  }
+
+  public void setRights(Rights rights) {
+    this.rights = rights;
+  }
+
+  public List<Relation> getRelations() {
+    return this.relations;
+  }
+
+  public void setRelations(List<Relation> relations) {
+    this.relations = relations;
+  }
+
+  public List<Annotation> getAnnotations() {
+    return this.annotations;
+  }
+
+  public void setAnnotations(List<Annotation> annotations) {
+    this.annotations = annotations;
+  }
+
+  public List<Classification> getClassifications() {
+    return this.classifications;
+  }
+
+  public void setClassifications(List<Classification> classifications) {
+    this.classifications = classifications;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof LOM lom)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getGeneral(), lom.getGeneral())
+        .append(getLifecycle(), lom.getLifecycle())
+        .append(getMetaMetadata(), lom.getMetaMetadata())
+        .append(getTechnical(), lom.getTechnical())
+        .append(getEducational(), lom.getEducational())
+        .append(getRights(), lom.getRights())
+        .append(getRelations(), lom.getRelations())
+        .append(getAnnotations(), lom.getAnnotations())
+        .append(getClassifications(), lom.getClassifications())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getGeneral())
+        .append(getLifecycle())
+        .append(getMetaMetadata())
+        .append(getTechnical())
+        .append(getEducational())
+        .append(getRights())
+        .append(getRelations())
+        .append(getAnnotations())
+        .append(getClassifications())
+        .toHashCode();
   }
 }

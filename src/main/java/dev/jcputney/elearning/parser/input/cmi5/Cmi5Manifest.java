@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.cmi5;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -28,12 +26,8 @@ import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the root element of a CMI5 course structure manifest. Implements the
@@ -52,12 +46,6 @@ import lombok.extern.jackson.Jacksonized;
  *   <li>A sequence of <code>Block</code> and <code>AU</code> (Assignable Unit) elements defining the course structure.</li>
  * </ul>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Cmi5Manifest implements PackageManifest {
 
@@ -110,6 +98,17 @@ public class Cmi5Manifest implements PackageManifest {
   @JacksonXmlElementWrapper(localName = "au", useWrapping = false)
   @JacksonXmlProperty(localName = "au")
   private List<AU> assignableUnits;
+
+  public Cmi5Manifest(Course course, ObjectivesList objectives, List<Block> blocks,
+      List<AU> assignableUnits) {
+    this.course = course;
+    this.objectives = objectives;
+    this.blocks = blocks;
+    this.assignableUnits = assignableUnits;
+  }
+
+  public Cmi5Manifest() {
+  }
 
   /**
    * Returns the title of the course. If the title is not present, it returns null.
@@ -204,5 +203,65 @@ public class Cmi5Manifest implements PackageManifest {
   @Override
   public Duration getDuration() {
     return Duration.ZERO;
+  }
+
+  public Course getCourse() {
+    return this.course;
+  }
+
+  public void setCourse(Course course) {
+    this.course = course;
+  }
+
+  public ObjectivesList getObjectives() {
+    return this.objectives;
+  }
+
+  public void setObjectives(ObjectivesList objectives) {
+    this.objectives = objectives;
+  }
+
+  public List<Block> getBlocks() {
+    return this.blocks;
+  }
+
+  public void setBlocks(List<Block> blocks) {
+    this.blocks = blocks;
+  }
+
+  public List<AU> getAssignableUnits() {
+    return this.assignableUnits;
+  }
+
+  public void setAssignableUnits(List<AU> assignableUnits) {
+    this.assignableUnits = assignableUnits;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Cmi5Manifest that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getCourse(), that.getCourse())
+        .append(getObjectives(), that.getObjectives())
+        .append(getBlocks(), that.getBlocks())
+        .append(getAssignableUnits(), that.getAssignableUnits())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getCourse())
+        .append(getObjectives())
+        .append(getBlocks())
+        .append(getAssignableUnits())
+        .toHashCode();
   }
 }

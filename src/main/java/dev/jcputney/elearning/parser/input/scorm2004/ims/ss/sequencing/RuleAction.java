@@ -17,19 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the action to perform if the conditions specified in a sequencing rule are met. Rule
@@ -39,12 +33,6 @@ import lombok.extern.jackson.Jacksonized;
  * <p>Actions are only executed if the conditions in the rule's {@link RuleConditions} are
  * met.</p>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class RuleAction implements Serializable {
@@ -61,4 +49,37 @@ public class RuleAction implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("action")
   private String action;
+
+  public RuleAction() {
+  }
+
+  public String getAction() {
+    return this.action;
+  }
+
+  public void setAction(String action) {
+    this.action = action;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof RuleAction that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getAction(), that.getAction())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getAction())
+        .toHashCode();
+  }
 }

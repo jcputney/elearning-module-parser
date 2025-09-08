@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -26,13 +24,8 @@ import dev.jcputney.elearning.parser.api.LoadableMetadata;
 import dev.jcputney.elearning.parser.input.lom.LOM;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLCP;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents metadata information about the content package in SCORM manifest.
@@ -48,12 +41,6 @@ import lombok.extern.jackson.Jacksonized;
  * </metadata>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm2004CourseMetadata implements LoadableMetadata {
@@ -91,6 +78,69 @@ public class Scorm2004CourseMetadata implements LoadableMetadata {
    * course, such as the title, description, and other relevant details.
    */
   @JacksonXmlProperty(localName = "lom", namespace = LOM.NAMESPACE_URI)
-  @Setter
   private LOM lom;
+
+  public Scorm2004CourseMetadata() {
+  }
+
+  public String getSchema() {
+    return this.schema;
+  }
+
+  public void setSchema(String schema) {
+    this.schema = schema;
+  }
+
+  public String getSchemaVersion() {
+    return this.schemaVersion;
+  }
+
+  public void setSchemaVersion(String schemaVersion) {
+    this.schemaVersion = schemaVersion;
+  }
+
+  public String getLocation() {
+    return this.location;
+  }
+
+  public void setLocation(String location) {
+    this.location = location;
+  }
+
+  public LOM getLom() {
+    return this.lom;
+  }
+
+  @JacksonXmlProperty(localName = "lom", namespace = LOM.NAMESPACE_URI)
+  public void setLom(LOM lom) {
+    this.lom = lom;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm2004CourseMetadata that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getSchema(), that.getSchema())
+        .append(getSchemaVersion(), that.getSchemaVersion())
+        .append(getLocation(), that.getLocation())
+        .append(getLom(), that.getLom())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getSchema())
+        .append(getSchemaVersion())
+        .append(getLocation())
+        .append(getLom())
+        .toHashCode();
+  }
 }

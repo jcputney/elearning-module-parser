@@ -17,30 +17,18 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a single sequencing rule within a set of pre-condition, exit-condition, or
  * post-condition rules. Each rule consists of a set of conditions and an action.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class SequencingRule implements Serializable {
@@ -59,4 +47,47 @@ public class SequencingRule implements Serializable {
    */
   @JacksonXmlProperty(localName = "ruleAction", namespace = IMSSS.NAMESPACE_URI)
   private RuleAction ruleAction;
+
+  public SequencingRule() {
+  }
+
+  public RuleConditions getRuleConditions() {
+    return this.ruleConditions;
+  }
+
+  public void setRuleConditions(RuleConditions ruleConditions) {
+    this.ruleConditions = ruleConditions;
+  }
+
+  public RuleAction getRuleAction() {
+    return this.ruleAction;
+  }
+
+  public void setRuleAction(RuleAction ruleAction) {
+    this.ruleAction = ruleAction;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof SequencingRule that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getRuleConditions(), that.getRuleConditions())
+        .append(getRuleAction(), that.getRuleAction())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getRuleConditions())
+        .append(getRuleAction())
+        .toHashCode();
+  }
 }

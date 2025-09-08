@@ -17,21 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a file within SCORM 1.2 resource.
@@ -61,12 +53,6 @@ import lombok.extern.jackson.Jacksonized;
  * </file>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12File implements Serializable {
 
@@ -87,7 +73,58 @@ public class Scorm12File implements Serializable {
    * Specifies whether the file exists in the content package. This is not parsed from the manifest
    * but is set during processing.
    */
-  @Default
-  @Setter
   private boolean exists = false;
+
+  public Scorm12File() {
+  }
+
+  public String getHref() {
+    return this.href;
+  }
+
+  public void setHref(String href) {
+    this.href = href;
+  }
+
+  public Scorm12Metadata getMetadata() {
+    return this.metadata;
+  }
+
+  public void setMetadata(Scorm12Metadata metadata) {
+    this.metadata = metadata;
+  }
+
+  public boolean isExists() {
+    return this.exists;
+  }
+
+  public void setExists(boolean exists) {
+    this.exists = exists;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm12File that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(isExists(), that.isExists())
+        .append(getHref(), that.getHref())
+        .append(getMetadata(), that.getMetadata())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getHref())
+        .append(getMetadata())
+        .append(isExists())
+        .toHashCode();
+  }
 }

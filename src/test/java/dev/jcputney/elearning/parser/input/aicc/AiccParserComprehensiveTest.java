@@ -68,32 +68,73 @@ public class AiccParserComprehensiveTest {
 
     // Verify course
     assertNotNull(manifest.getCourse());
-    assertEquals("Profiscience Partners", manifest.getCourse().getCourse().getCourseCreator());
-    assertEquals("HTML", manifest.getCourse().getCourse().getCourseSystem());
-    assertEquals("1", manifest.getCourse().getCourse().getTotalAus());
+    assertEquals("Profiscience Partners", manifest
+        .getCourse()
+        .getCourse()
+        .getCourseCreator());
+    assertEquals("HTML", manifest
+        .getCourse()
+        .getCourse()
+        .getCourseSystem());
+    assertEquals("1", manifest
+        .getCourse()
+        .getCourse()
+        .getTotalAus());
 
     // Verify course behavior
-    assertNotNull(manifest.getCourse().getCourseBehavior());
-    assertEquals("1", manifest.getCourse().getCourseBehavior().getMaxNormal());
+    assertNotNull(manifest
+        .getCourse()
+        .getCourseBehavior());
+    assertEquals("1", manifest
+        .getCourse()
+        .getCourseBehavior()
+        .getMaxNormal());
 
     // Verify assignable units
     assertNotNull(manifest.getAssignableUnits());
-    assertEquals(1, manifest.getAssignableUnits().size());
-    assertEquals("A1", manifest.getAssignableUnits().get(0).getSystemId());
-    assertEquals("C,N", manifest.getAssignableUnits().get(0).getTimeLimitAction());
+    assertEquals(1, manifest
+        .getAssignableUnits()
+        .size());
+    assertEquals("A1", manifest
+        .getAssignableUnits()
+        .get(0)
+        .getSystemId());
+    assertEquals("C,N", manifest
+        .getAssignableUnits()
+        .get(0)
+        .getTimeLimitAction());
 
     // Verify descriptors
     assertNotNull(manifest.getDescriptors());
-    assertEquals(1, manifest.getDescriptors().size());
-    assertEquals("A1", manifest.getDescriptors().get(0).getSystemId());
-    assertEquals("Title", manifest.getDescriptors().get(0).getTitle());
-    assertEquals("Description", manifest.getDescriptors().get(0).getDescription());
+    assertEquals(1, manifest
+        .getDescriptors()
+        .size());
+    assertEquals("A1", manifest
+        .getDescriptors()
+        .get(0)
+        .getSystemId());
+    assertEquals("Title", manifest
+        .getDescriptors()
+        .get(0)
+        .getTitle());
+    assertEquals("Description", manifest
+        .getDescriptors()
+        .get(0)
+        .getDescription());
 
     // Verify course structure
     assertNotNull(manifest.getCourseStructures());
-    assertEquals(1, manifest.getCourseStructures().size());
-    assertEquals("ROOT", manifest.getCourseStructures().get(0).getBlock());
-    assertEquals("A1", manifest.getCourseStructures().get(0).getMember());
+    assertEquals(1, manifest
+        .getCourseStructures()
+        .size());
+    assertEquals("ROOT", manifest
+        .getCourseStructures()
+        .get(0)
+        .getBlock());
+    assertEquals("A1", manifest
+        .getCourseStructures()
+        .get(0)
+        .getMember());
   }
 
   /**
@@ -124,35 +165,85 @@ public class AiccParserComprehensiveTest {
 
     // Verify course
     assertNotNull(manifest.getCourse());
-    assertEquals("Test Creator", manifest.getCourse().getCourse().getCourseCreator());
-    assertEquals("Test System", manifest.getCourse().getCourse().getCourseSystem());
-    assertEquals("2", manifest.getCourse().getCourse().getTotalAus());
+    assertEquals("Test Creator", manifest
+        .getCourse()
+        .getCourse()
+        .getCourseCreator());
+    assertEquals("Test System", manifest
+        .getCourse()
+        .getCourse()
+        .getCourseSystem());
+    assertEquals("2", manifest
+        .getCourse()
+        .getCourse()
+        .getTotalAus());
 
     // Verify course behavior
-    assertNotNull(manifest.getCourse().getCourseBehavior());
-    assertEquals("2", manifest.getCourse().getCourseBehavior().getMaxNormal());
+    assertNotNull(manifest
+        .getCourse()
+        .getCourseBehavior());
+    assertEquals("2", manifest
+        .getCourse()
+        .getCourseBehavior()
+        .getMaxNormal());
 
     // Verify assignable units
     assertNotNull(manifest.getAssignableUnits());
-    assertEquals(2, manifest.getAssignableUnits().size());
-    assertEquals("A1", manifest.getAssignableUnits().get(0).getSystemId());
-    assertEquals("lesson1.html", manifest.getAssignableUnits().get(0).getFileName());
-    assertEquals("A2", manifest.getAssignableUnits().get(1).getSystemId());
-    assertEquals("assessment.html", manifest.getAssignableUnits().get(1).getFileName());
+    assertEquals(2, manifest
+        .getAssignableUnits()
+        .size());
+    assertEquals("A1", manifest
+        .getAssignableUnits()
+        .get(0)
+        .getSystemId());
+    assertEquals("lesson1.html", manifest
+        .getAssignableUnits()
+        .get(0)
+        .getFileName());
+    assertEquals("A2", manifest
+        .getAssignableUnits()
+        .get(1)
+        .getSystemId());
+    assertEquals("assessment.html", manifest
+        .getAssignableUnits()
+        .get(1)
+        .getFileName());
 
     // Verify descriptors
     assertNotNull(manifest.getDescriptors());
-    assertEquals(2, manifest.getDescriptors().size());
-    assertEquals("A1", manifest.getDescriptors().get(0).getSystemId());
-    assertEquals("Lesson 1", manifest.getDescriptors().get(0).getTitle());
-    assertEquals("A2", manifest.getDescriptors().get(1).getSystemId());
-    assertEquals("Assessment", manifest.getDescriptors().get(1).getTitle());
+    assertEquals(2, manifest
+        .getDescriptors()
+        .size());
+    assertEquals("A1", manifest
+        .getDescriptors()
+        .get(0)
+        .getSystemId());
+    assertEquals("Lesson 1", manifest
+        .getDescriptors()
+        .get(0)
+        .getTitle());
+    assertEquals("A2", manifest
+        .getDescriptors()
+        .get(1)
+        .getSystemId());
+    assertEquals("Assessment", manifest
+        .getDescriptors()
+        .get(1)
+        .getTitle());
 
     // Verify course structures
     assertNotNull(manifest.getCourseStructures());
-    assertEquals(3, manifest.getCourseStructures().size());
-    assertEquals("ROOT", manifest.getCourseStructures().get(0).getBlock());
-    assertEquals("A1", manifest.getCourseStructures().get(0).getMember());
+    assertEquals(3, manifest
+        .getCourseStructures()
+        .size());
+    assertEquals("ROOT", manifest
+        .getCourseStructures()
+        .get(0)
+        .getBlock());
+    assertEquals("A1", manifest
+        .getCourseStructures()
+        .get(0)
+        .getMember());
   }
 
   /**
@@ -228,11 +319,15 @@ public class AiccParserComprehensiveTest {
 
     // Verify assignable units
     assertNotNull(manifest.getAssignableUnits());
-    assertEquals(3, manifest.getAssignableUnits().size());
+    assertEquals(3, manifest
+        .getAssignableUnits()
+        .size());
 
     // Verify course structures
     assertNotNull(manifest.getCourseStructures());
-    assertEquals(5, manifest.getCourseStructures().size());
+    assertEquals(5, manifest
+        .getCourseStructures()
+        .size());
 
     // Verify the structure hierarchy
     boolean foundRootA1 = false;
@@ -242,15 +337,35 @@ public class AiccParserComprehensiveTest {
     boolean foundBlock2A3 = false;
 
     for (CourseStructure cs : manifest.getCourseStructures()) {
-      if (cs.getBlock().equals("ROOT") && cs.getMember().equals("A1")) {
+      if (cs
+          .getBlock()
+          .equals("ROOT") && cs
+          .getMember()
+          .equals("A1")) {
         foundRootA1 = true;
-      } else if (cs.getBlock().equals("ROOT") && cs.getMember().equals("BLOCK1")) {
+      } else if (cs
+          .getBlock()
+          .equals("ROOT") && cs
+          .getMember()
+          .equals("BLOCK1")) {
         foundRootBlock1 = true;
-      } else if (cs.getBlock().equals("BLOCK1") && cs.getMember().equals("A2")) {
+      } else if (cs
+          .getBlock()
+          .equals("BLOCK1") && cs
+          .getMember()
+          .equals("A2")) {
         foundBlock1A2 = true;
-      } else if (cs.getBlock().equals("BLOCK1") && cs.getMember().equals("BLOCK2")) {
+      } else if (cs
+          .getBlock()
+          .equals("BLOCK1") && cs
+          .getMember()
+          .equals("BLOCK2")) {
         foundBlock1Block2 = true;
-      } else if (cs.getBlock().equals("BLOCK2") && cs.getMember().equals("A3")) {
+      } else if (cs
+          .getBlock()
+          .equals("BLOCK2") && cs
+          .getMember()
+          .equals("A3")) {
         foundBlock2A3 = true;
       }
     }
@@ -329,14 +444,25 @@ public class AiccParserComprehensiveTest {
 
     // Verify course
     assertNotNull(manifest.getCourse());
-    assertEquals("Test & Creator", manifest.getCourse().getCourse().getCourseCreator());
+    assertEquals("Test & Creator", manifest
+        .getCourse()
+        .getCourse()
+        .getCourseCreator());
 
     // Verify descriptors
     assertNotNull(manifest.getDescriptors());
-    assertEquals(1, manifest.getDescriptors().size());
-    assertEquals("Lesson & Test", manifest.getDescriptors().get(0).getTitle());
+    assertEquals(1, manifest
+        .getDescriptors()
+        .size());
+    assertEquals("Lesson & Test", manifest
+        .getDescriptors()
+        .get(0)
+        .getTitle());
     assertEquals("Description with <special> characters",
-        manifest.getDescriptors().get(0).getDescription());
+        manifest
+            .getDescriptors()
+            .get(0)
+            .getDescription());
   }
 
   /**
@@ -405,20 +531,42 @@ public class AiccParserComprehensiveTest {
 
     // Verify course
     assertNotNull(manifest.getCourse());
-    assertEquals("Test Creator", manifest.getCourse().getCourse().getCourseCreator());
-    assertEquals("TEST-001", manifest.getCourse().getCourse().getCourseId());
+    assertEquals("Test Creator", manifest
+        .getCourse()
+        .getCourse()
+        .getCourseCreator());
+    assertEquals("TEST-001", manifest
+        .getCourse()
+        .getCourse()
+        .getCourseId());
 
     // Verify assignable units
     assertNotNull(manifest.getAssignableUnits());
-    assertEquals(1, manifest.getAssignableUnits().size());
-    assertEquals("A1", manifest.getAssignableUnits().get(0).getSystemId());
-    assertEquals("lesson.html", manifest.getAssignableUnits().get(0).getFileName());
+    assertEquals(1, manifest
+        .getAssignableUnits()
+        .size());
+    assertEquals("A1", manifest
+        .getAssignableUnits()
+        .get(0)
+        .getSystemId());
+    assertEquals("lesson.html", manifest
+        .getAssignableUnits()
+        .get(0)
+        .getFileName());
 
     // Verify descriptors
     assertNotNull(manifest.getDescriptors());
-    assertEquals(1, manifest.getDescriptors().size());
-    assertEquals("A1", manifest.getDescriptors().get(0).getSystemId());
-    assertEquals("Minimal Lesson", manifest.getDescriptors().get(0).getTitle());
+    assertEquals(1, manifest
+        .getDescriptors()
+        .size());
+    assertEquals("A1", manifest
+        .getDescriptors()
+        .get(0)
+        .getSystemId());
+    assertEquals("Minimal Lesson", manifest
+        .getDescriptors()
+        .get(0)
+        .getTitle());
   }
 
   /**

@@ -28,7 +28,7 @@ import java.io.Serializable;
  *
  * <p>The ADLCP namespace is specified by {@link #NAMESPACE_URI}, and this class
  * is designed to conform to the SCORM 2004 3rd Edition specification.</p>
- *
+ * <p>
  * The following schema snippet shows the structure of an "adlcp" element:
  * <pre>{@code
  *   <?xml version = "1.0"?>

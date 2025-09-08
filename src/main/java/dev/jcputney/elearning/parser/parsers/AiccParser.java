@@ -99,30 +99,28 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
       String title = aiccManifest.getTitle();
       String launchUrl = aiccManifest.getLaunchUrl();
       if (title == null || title.isEmpty()) {
-        throw new ModuleParsingException(
-            "AICC module at '" + this.moduleFileProvider.getRootPath() +
-                "' has empty or missing title in course file (expected in [Course_Data] section)");
+        throw new ModuleParsingException("AICC module at '" + this.moduleFileProvider.getRootPath()
+            + "' has empty or missing title in course file (expected in [Course_Data] section)");
       }
       if (launchUrl == null || launchUrl.isEmpty()) {
-        throw new ModuleParsingException(
-            "AICC module at '" + this.moduleFileProvider.getRootPath() +
-                "' has empty or missing launch URL in course file (expected in [Course_Data] section)");
+        throw new ModuleParsingException("AICC module at '" + this.moduleFileProvider.getRootPath()
+            + "' has empty or missing launch URL in course file (expected in [Course_Data] section)");
       }
 
       // Build and return metadata
       return AiccMetadata.create(aiccManifest, checkForXapi());
     } catch (IOException | ManifestParseException e) {
       throw new ModuleParsingException(
-          "Error parsing AICC module at '" + this.moduleFileProvider.getRootPath() +
-              "' (requires .crs, .des, .au, and .cst files): " + e.getMessage(), e);
+          "Error parsing AICC module at '" + this.moduleFileProvider.getRootPath()
+              + "' (requires .crs, .des, .au, and .cst files): " + e.getMessage(), e);
     } catch (ModuleParsingException e) {
       // Re-throw ModuleParsingException directly without wrapping
       throw e;
     } catch (Exception e) {
       // Catch any other unexpected exceptions
       throw new ModuleParsingException(
-          "Unexpected error parsing AICC module at '" + this.moduleFileProvider.getRootPath() +
-              "': " + e
+          "Unexpected error parsing AICC module at '" + this.moduleFileProvider.getRootPath()
+              + "': " + e
               .getClass()
               .getSimpleName() + " - " + e.getMessage(), e);
     }
@@ -145,12 +143,7 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
     var assignableUnits = parseCsvFile(AssignableUnit.class, AU_EXTENSION);
     var courseStructure = parseCsvFile(CourseStructure.class, CST_EXTENSION);
 
-    return new AiccManifest(
-        aiccCourse,
-        assignableUnits,
-        descriptors,
-        courseStructure
-    );
+    return new AiccManifest(aiccCourse, assignableUnits, descriptors, courseStructure);
   }
 
   @Override
@@ -166,8 +159,7 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
   /**
    * Parses a CSV file and returns a list of objects of the specified class.
    */
-  private <T> List<T> parseCsvFile(Class<T> clazz, String extension)
-      throws IOException {
+  private <T> List<T> parseCsvFile(Class<T> clazz, String extension) throws IOException {
     String fileName = findFileByExtension(extension);
     if (fileName == null) {
       checkAvailableFiles(extension, "AICC CSV file with extension '");
@@ -208,8 +200,7 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
   /**
    * Parses an INI file and returns an object of the specified class.
    */
-  private <T> T parseIniFile()
-      throws IOException, ManifestParseException {
+  private <T> T parseIniFile() throws IOException, ManifestParseException {
     String fileName = findFileByExtension(AiccParser.CRS_EXTENSION);
     if (fileName == null) {
       checkAvailableFiles(AiccParser.CRS_EXTENSION, "AICC INI file with extension '");
@@ -238,8 +229,8 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
       return objectMapper.convertValue(mapData, (Class<T>) AiccCourse.class);
     } catch (ConfigurationException e) {
       throw new ManifestParseException(
-          "Error parsing AICC INI file '" + fileName + "' in module at '" +
-              moduleFileProvider.getRootPath() + "' (check file format and encoding): "
+          "Error parsing AICC INI file '" + fileName + "' in module at '"
+              + moduleFileProvider.getRootPath() + "' (check file format and encoding): "
               + e.getMessage(), e);
     }
   }

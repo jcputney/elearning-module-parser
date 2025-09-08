@@ -37,12 +37,7 @@ public class DescriptorTest {
   @Test
   void testDescriptorBuilderAndGetters() {
     // Create a Descriptor using the builder
-    Descriptor descriptor = Descriptor.builder()
-        .systemId("A1")
-        .developerId("DEV-001")
-        .title("Test AU")
-        .description("Test Assignable Unit")
-        .build();
+    Descriptor descriptor = new Descriptor("A1", "DEV-001", "Test AU", "Test Assignable Unit");
 
     // Verify the getters
     assertEquals("A1", descriptor.getSystemId());
@@ -57,12 +52,11 @@ public class DescriptorTest {
   @Test
   void testDescriptorBuilderWithNullValues() {
     // Create a Descriptor using the builder with null values
-    Descriptor descriptor = Descriptor.builder()
-        .systemId(null)
-        .developerId(null)
-        .title(null)
-        .description(null)
-        .build();
+    Descriptor descriptor = new Descriptor();
+    descriptor.setSystemId(null);
+    descriptor.setDeveloperId(null);
+    descriptor.setTitle(null);
+    descriptor.setDescription(null);
 
     // Verify the getters return null
     assertNull(descriptor.getSystemId());
@@ -77,11 +71,10 @@ public class DescriptorTest {
   @Test
   void testDescriptorBuilderWithRequiredFieldsOnly() {
     // Create a Descriptor using the builder with only required fields
-    Descriptor descriptor = Descriptor.builder()
-        .systemId("A1")
-        .developerId("DEV-001")
-        .title("Test AU")
-        .build();
+    Descriptor descriptor = new Descriptor();
+    descriptor.setSystemId("A1");
+    descriptor.setDeveloperId("DEV-001");
+    descriptor.setTitle("Test AU");
 
     // Verify the getters
     assertEquals("A1", descriptor.getSystemId());

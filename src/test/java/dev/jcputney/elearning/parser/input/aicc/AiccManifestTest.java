@@ -45,55 +45,48 @@ public class AiccManifestTest {
   @Test
   void testAiccManifestBuilderAndGetters() {
     // Create a course
-    AiccCourse.Course course = AiccCourse.Course.builder()
-        .courseCreator("Test Creator")
-        .courseId("TEST-001")
-        .courseTitle("Test Course")
-        .courseSystem("HTML")
-        .level("1")
-        .maxFieldsCst("100")
-        .totalAus("1")
-        .totalBlocks("0")
-        .version("1.0")
-        .build();
+    AiccCourse.Course course = new AiccCourse.Course();
+    course.setCourseCreator("Test Creator");
+    course.setCourseId("TEST-001");
+    course.setCourseTitle("Test Course");
+    course.setCourseSystem("HTML");
+    course.setLevel("1");
+    course.setMaxFieldsCst("100");
+    course.setMaxFieldsOrt("50");
+    course.setTotalAus("1");
+    course.setTotalBlocks("0");
+    course.setVersion("1.0");
 
     // Create a course behavior
-    AiccCourse.CourseBehavior courseBehavior = AiccCourse.CourseBehavior.builder()
-        .maxNormal("1")
-        .build();
+    AiccCourse.CourseBehavior courseBehavior = new AiccCourse.CourseBehavior();
+    courseBehavior.setMaxNormal("1");
 
     // Create a course description
     Map<String, String> courseDescription = new HashMap<>();
     courseDescription.put("Test Description", "This is a test course");
 
     // Create an AiccCourse
-    AiccCourse aiccCourse = AiccCourse.builder()
-        .course(course)
-        .courseBehavior(courseBehavior)
-        .courseDescription(courseDescription)
-        .build();
+    AiccCourse aiccCourse = new AiccCourse();
+    aiccCourse.setCourse(course);
+    aiccCourse.setCourseBehavior(courseBehavior);
+    aiccCourse.setCourseDescription(courseDescription);
 
     // Create an assignable unit
-    AssignableUnit assignableUnit = AssignableUnit.builder()
-        .systemId("A1")
-        .commandLine("test.html")
-        .fileName("test.html")
-        .coreVendor("Test Vendor")
-        .build();
+    AssignableUnit assignableUnit = new AssignableUnit();
+    assignableUnit.setSystemId("A1");
+    assignableUnit.setCommandLine("test.html");
+    assignableUnit.setFileName("test.html");
+    assignableUnit.setCoreVendor("Test Vendor");
 
     // Create a descriptor
-    Descriptor descriptor = Descriptor.builder()
-        .systemId("A1")
-        .developerId("DEV-001")
-        .title("Test AU")
-        .description("Test Assignable Unit")
-        .build();
+    Descriptor descriptor = new Descriptor();
+    descriptor.setSystemId("A1");
+    descriptor.setDeveloperId("DEV-001");
+    descriptor.setTitle("Test AU");
+    descriptor.setDescription("Test Assignable Unit");
 
     // Create a course structure
-    CourseStructure courseStructure = CourseStructure.builder()
-        .block("ROOT")
-        .member("A1")
-        .build();
+    CourseStructure courseStructure = new CourseStructure("ROOT", "A1");
 
     // Create lists
     List<AssignableUnit> assignableUnits = new ArrayList<>();
@@ -106,13 +99,12 @@ public class AiccManifestTest {
     courseStructures.add(courseStructure);
 
     // Create an AiccManifest using the builder
-    AiccManifest manifest = AiccManifest.builder()
-        .course(aiccCourse)
-        .assignableUnits(assignableUnits)
-        .descriptors(descriptors)
-        .courseStructures(courseStructures)
-        .launchUrl("test.html")
-        .build();
+    AiccManifest manifest = new AiccManifest();
+    manifest.setCourse(aiccCourse);
+    manifest.setAssignableUnits(assignableUnits);
+    manifest.setDescriptors(descriptors);
+    manifest.setCourseStructures(courseStructures);
+    manifest.setLaunchUrl("test.html");
 
     // Verify the getters
     assertEquals(aiccCourse, manifest.getCourse());
@@ -136,55 +128,48 @@ public class AiccManifestTest {
   @Test
   void testAiccManifestConstructor() throws ModuleParsingException {
     // Create a course
-    AiccCourse.Course course = AiccCourse.Course.builder()
-        .courseCreator("Test Creator")
-        .courseId("TEST-001")
-        .courseTitle("Test Course")
-        .courseSystem("HTML")
-        .level("1")
-        .maxFieldsCst("100")
-        .totalAus("1")
-        .totalBlocks("0")
-        .version("1.0")
-        .build();
+    AiccCourse.Course course = new AiccCourse.Course();
+    course.setCourseCreator("Test Creator");
+    course.setCourseId("TEST-001");
+    course.setCourseTitle("Test Course");
+    course.setCourseSystem("HTML");
+    course.setLevel("1");
+    course.setMaxFieldsCst("100");
+    course.setMaxFieldsOrt("50");
+    course.setTotalAus("1");
+    course.setTotalBlocks("0");
+    course.setVersion("1.0");
 
     // Create a course behavior
-    AiccCourse.CourseBehavior courseBehavior = AiccCourse.CourseBehavior.builder()
-        .maxNormal("1")
-        .build();
+    AiccCourse.CourseBehavior courseBehavior = new AiccCourse.CourseBehavior();
+    courseBehavior.setMaxNormal("1");
 
     // Create a course description
     Map<String, String> courseDescription = new HashMap<>();
     courseDescription.put("Test Description", "This is a test course");
 
     // Create an AiccCourse
-    AiccCourse aiccCourse = AiccCourse.builder()
-        .course(course)
-        .courseBehavior(courseBehavior)
-        .courseDescription(courseDescription)
-        .build();
+    AiccCourse aiccCourse = new AiccCourse();
+    aiccCourse.setCourse(course);
+    aiccCourse.setCourseBehavior(courseBehavior);
+    aiccCourse.setCourseDescription(courseDescription);
 
     // Create an assignable unit
-    AssignableUnit assignableUnit = AssignableUnit.builder()
-        .systemId("A1")
-        .commandLine("test.html")
-        .fileName("test.html")
-        .coreVendor("Test Vendor")
-        .build();
+    AssignableUnit assignableUnit = new AssignableUnit();
+    assignableUnit.setSystemId("A1");
+    assignableUnit.setCommandLine("test.html");
+    assignableUnit.setFileName("test.html");
+    assignableUnit.setCoreVendor("Test Vendor");
 
     // Create a descriptor
-    Descriptor descriptor = Descriptor.builder()
-        .systemId("A1")
-        .developerId("DEV-001")
-        .title("Test AU")
-        .description("Test Assignable Unit")
-        .build();
+    Descriptor descriptor = new Descriptor();
+    descriptor.setSystemId("A1");
+    descriptor.setDeveloperId("DEV-001");
+    descriptor.setTitle("Test AU");
+    descriptor.setDescription("Test Assignable Unit");
 
     // Create a course structure
-    CourseStructure courseStructure = CourseStructure.builder()
-        .block("ROOT")
-        .member("A1")
-        .build();
+    CourseStructure courseStructure = new CourseStructure("ROOT", "A1");
 
     // Create lists
     List<AssignableUnit> assignableUnits = new ArrayList<>();
@@ -197,7 +182,8 @@ public class AiccManifestTest {
     courseStructures.add(courseStructure);
 
     // Create an AiccManifest using the constructor
-    AiccManifest manifest = new AiccManifest(aiccCourse, assignableUnits, descriptors, courseStructures);
+    AiccManifest manifest = new AiccManifest(aiccCourse, assignableUnits, descriptors,
+        courseStructures);
 
     // Verify the descriptor was set on the assignable unit
     assertNotNull(assignableUnit.getDescriptor());
@@ -213,50 +199,43 @@ public class AiccManifestTest {
   @Test
   void testAiccManifestConstructor_withNonRootCourseStructure() throws ModuleParsingException {
     // Create a course
-    AiccCourse.Course course = AiccCourse.Course.builder()
-        .courseCreator("Test Creator")
-        .courseId("TEST-001")
-        .courseTitle("Test Course")
-        .courseSystem("HTML")
-        .level("1")
-        .maxFieldsCst("100")
-        .totalAus("1")
-        .totalBlocks("0")
-        .version("1.0")
-        .build();
+    AiccCourse.Course course = new AiccCourse.Course();
+    course.setCourseCreator("Test Creator");
+    course.setCourseId("TEST-001");
+    course.setCourseTitle("Test Course");
+    course.setCourseSystem("HTML");
+    course.setLevel("1");
+    course.setMaxFieldsCst("100");
+    course.setMaxFieldsOrt("50");
+    course.setTotalAus("1");
+    course.setTotalBlocks("0");
+    course.setVersion("1.0");
 
     // Create a course behavior
-    AiccCourse.CourseBehavior courseBehavior = AiccCourse.CourseBehavior.builder()
-        .maxNormal("1")
-        .build();
+    AiccCourse.CourseBehavior courseBehavior = new AiccCourse.CourseBehavior();
+    courseBehavior.setMaxNormal("1");
 
     // Create an AiccCourse
-    AiccCourse aiccCourse = AiccCourse.builder()
-        .course(course)
-        .courseBehavior(courseBehavior)
-        .build();
+    AiccCourse aiccCourse = new AiccCourse();
+    aiccCourse.setCourse(course);
+    aiccCourse.setCourseBehavior(courseBehavior);
 
     // Create an assignable unit
-    AssignableUnit assignableUnit = AssignableUnit.builder()
-        .systemId("A1")
-        .commandLine("test.html")
-        .fileName("test.html")
-        .coreVendor("Test Vendor")
-        .build();
+    AssignableUnit assignableUnit = new AssignableUnit();
+    assignableUnit.setSystemId("A1");
+    assignableUnit.setCommandLine("test.html");
+    assignableUnit.setFileName("test.html");
+    assignableUnit.setCoreVendor("Test Vendor");
 
     // Create a descriptor
-    Descriptor descriptor = Descriptor.builder()
-        .systemId("A1")
-        .developerId("DEV-001")
-        .title("Test AU")
-        .description("Test Assignable Unit")
-        .build();
+    Descriptor descriptor = new Descriptor();
+    descriptor.setSystemId("A1");
+    descriptor.setDeveloperId("DEV-001");
+    descriptor.setTitle("Test AU");
+    descriptor.setDescription("Test Assignable Unit");
 
     // Create a course structure (not ROOT)
-    CourseStructure courseStructure = CourseStructure.builder()
-        .block("BLOCK1")
-        .member("A1")
-        .build();
+    CourseStructure courseStructure = new CourseStructure("BLOCK1", "A1");
 
     // Create lists
     List<AssignableUnit> assignableUnits = new ArrayList<>();
@@ -269,7 +248,8 @@ public class AiccManifestTest {
     courseStructures.add(courseStructure);
 
     // Create an AiccManifest using the constructor
-    AiccManifest manifest = new AiccManifest(aiccCourse, assignableUnits, descriptors, courseStructures);
+    AiccManifest manifest = new AiccManifest(aiccCourse, assignableUnits, descriptors,
+        courseStructures);
 
     // Verify the launch URL was set correctly (should use the first course structure)
     assertEquals("test.html", manifest.getLaunchUrl());
@@ -281,50 +261,43 @@ public class AiccManifestTest {
   @Test
   void testAiccManifestConstructor_withMissingRootAssignableUnit() {
     // Create a course
-    AiccCourse.Course course = AiccCourse.Course.builder()
-        .courseCreator("Test Creator")
-        .courseId("TEST-001")
-        .courseTitle("Test Course")
-        .courseSystem("HTML")
-        .level("1")
-        .maxFieldsCst("100")
-        .totalAus("1")
-        .totalBlocks("0")
-        .version("1.0")
-        .build();
+    AiccCourse.Course course = new AiccCourse.Course();
+    course.setCourseCreator("Test Creator");
+    course.setCourseId("TEST-001");
+    course.setCourseTitle("Test Course");
+    course.setCourseSystem("HTML");
+    course.setLevel("1");
+    course.setMaxFieldsCst("100");
+    course.setMaxFieldsOrt("50");
+    course.setTotalAus("1");
+    course.setTotalBlocks("0");
+    course.setVersion("1.0");
 
     // Create a course behavior
-    AiccCourse.CourseBehavior courseBehavior = AiccCourse.CourseBehavior.builder()
-        .maxNormal("1")
-        .build();
+    AiccCourse.CourseBehavior courseBehavior = new AiccCourse.CourseBehavior();
+    courseBehavior.setMaxNormal("1");
 
     // Create an AiccCourse
-    AiccCourse aiccCourse = AiccCourse.builder()
-        .course(course)
-        .courseBehavior(courseBehavior)
-        .build();
+    AiccCourse aiccCourse = new AiccCourse();
+    aiccCourse.setCourse(course);
+    aiccCourse.setCourseBehavior(courseBehavior);
 
     // Create an assignable unit with a different ID
-    AssignableUnit assignableUnit = AssignableUnit.builder()
-        .systemId("A2")
-        .commandLine("test.html")
-        .fileName("test.html")
-        .coreVendor("Test Vendor")
-        .build();
+    AssignableUnit assignableUnit = new AssignableUnit();
+    assignableUnit.setSystemId("A2");
+    assignableUnit.setCommandLine("test.html");
+    assignableUnit.setFileName("test.html");
+    assignableUnit.setCoreVendor("Test Vendor");
 
     // Create a descriptor
-    Descriptor descriptor = Descriptor.builder()
-        .systemId("A2")
-        .developerId("DEV-001")
-        .title("Test AU")
-        .description("Test Assignable Unit")
-        .build();
+    Descriptor descriptor = new Descriptor();
+    descriptor.setSystemId("A2");
+    descriptor.setDeveloperId("DEV-001");
+    descriptor.setTitle("Test AU");
+    descriptor.setDescription("Test Assignable Unit");
 
     // Create a course structure that references a non-existent assignable unit
-    CourseStructure courseStructure = CourseStructure.builder()
-        .block("ROOT")
-        .member("A1")  // This ID doesn't match any assignable unit
-        .build();
+    CourseStructure courseStructure = new CourseStructure("ROOT", "A1");
 
     // Create lists
     List<AssignableUnit> assignableUnits = new ArrayList<>();
@@ -337,12 +310,13 @@ public class AiccManifestTest {
     courseStructures.add(courseStructure);
 
     // Verify that the constructor throws an exception
-    ModuleParsingException exception = assertThrows(ModuleParsingException.class, () -> {
-      new AiccManifest(aiccCourse, assignableUnits, descriptors, courseStructures);
-    });
+    ModuleParsingException exception = assertThrows(ModuleParsingException.class,
+        () -> new AiccManifest(aiccCourse, assignableUnits, descriptors, courseStructures));
 
     // Verify the exception message
-    assertTrue(exception.getMessage().contains("No assignable unit found with ID: A1"));
+    assertTrue(exception
+        .getMessage()
+        .contains("No assignable unit found with ID: A1"));
   }
 
   /**
@@ -351,50 +325,43 @@ public class AiccManifestTest {
   @Test
   void testAiccManifestConstructor_withEmptyMember() {
     // Create a course
-    AiccCourse.Course course = AiccCourse.Course.builder()
-        .courseCreator("Test Creator")
-        .courseId("TEST-001")
-        .courseTitle("Test Course")
-        .courseSystem("HTML")
-        .level("1")
-        .maxFieldsCst("100")
-        .totalAus("1")
-        .totalBlocks("0")
-        .version("1.0")
-        .build();
+    AiccCourse.Course course = new AiccCourse.Course();
+    course.setCourseCreator("Test Creator");
+    course.setCourseId("TEST-001");
+    course.setCourseTitle("Test Course");
+    course.setCourseSystem("HTML");
+    course.setLevel("1");
+    course.setMaxFieldsCst("100");
+    course.setMaxFieldsOrt("50");
+    course.setTotalAus("1");
+    course.setTotalBlocks("0");
+    course.setVersion("1.0");
 
     // Create a course behavior
-    AiccCourse.CourseBehavior courseBehavior = AiccCourse.CourseBehavior.builder()
-        .maxNormal("1")
-        .build();
+    AiccCourse.CourseBehavior courseBehavior = new AiccCourse.CourseBehavior();
+    courseBehavior.setMaxNormal("1");
 
     // Create an AiccCourse
-    AiccCourse aiccCourse = AiccCourse.builder()
-        .course(course)
-        .courseBehavior(courseBehavior)
-        .build();
+    AiccCourse aiccCourse = new AiccCourse();
+    aiccCourse.setCourse(course);
+    aiccCourse.setCourseBehavior(courseBehavior);
 
     // Create an assignable unit
-    AssignableUnit assignableUnit = AssignableUnit.builder()
-        .systemId("A1")
-        .commandLine("test.html")
-        .fileName("test.html")
-        .coreVendor("Test Vendor")
-        .build();
+    AssignableUnit assignableUnit = new AssignableUnit();
+    assignableUnit.setSystemId("A1");
+    assignableUnit.setCommandLine("test.html");
+    assignableUnit.setFileName("test.html");
+    assignableUnit.setCoreVendor("Test Vendor");
 
     // Create a descriptor
-    Descriptor descriptor = Descriptor.builder()
-        .systemId("A1")
-        .developerId("DEV-001")
-        .title("Test AU")
-        .description("Test Assignable Unit")
-        .build();
+    Descriptor descriptor = new Descriptor();
+    descriptor.setSystemId("A1");
+    descriptor.setDeveloperId("DEV-001");
+    descriptor.setTitle("Test AU");
+    descriptor.setDescription("Test Assignable Unit");
 
     // Create a course structure with an empty member
-    CourseStructure courseStructure = CourseStructure.builder()
-        .block("ROOT")
-        .member("")  // Empty member
-        .build();
+    CourseStructure courseStructure = new CourseStructure("ROOT", "");
 
     // Create lists
     List<AssignableUnit> assignableUnits = new ArrayList<>();
@@ -407,9 +374,8 @@ public class AiccManifestTest {
     courseStructures.add(courseStructure);
 
     // Verify that the constructor throws an exception
-    ModuleParsingException exception = assertThrows(ModuleParsingException.class, () -> {
-      new AiccManifest(aiccCourse, assignableUnits, descriptors, courseStructures);
-    });
+    ModuleParsingException exception = assertThrows(ModuleParsingException.class,
+        () -> new AiccManifest(aiccCourse, assignableUnits, descriptors, courseStructures));
 
     // Verify the exception message
     assertEquals("No root assignable unit found.", exception.getMessage());
@@ -421,50 +387,43 @@ public class AiccManifestTest {
   @Test
   void testAiccManifestConstructor_withNullMember() {
     // Create a course
-    AiccCourse.Course course = AiccCourse.Course.builder()
-        .courseCreator("Test Creator")
-        .courseId("TEST-001")
-        .courseTitle("Test Course")
-        .courseSystem("HTML")
-        .level("1")
-        .maxFieldsCst("100")
-        .totalAus("1")
-        .totalBlocks("0")
-        .version("1.0")
-        .build();
+    AiccCourse.Course course = new AiccCourse.Course();
+    course.setCourseCreator("Test Creator");
+    course.setCourseId("TEST-001");
+    course.setCourseTitle("Test Course");
+    course.setCourseSystem("HTML");
+    course.setLevel("1");
+    course.setMaxFieldsCst("100");
+    course.setMaxFieldsOrt("50");
+    course.setTotalAus("1");
+    course.setTotalBlocks("0");
+    course.setVersion("1.0");
 
     // Create a course behavior
-    AiccCourse.CourseBehavior courseBehavior = AiccCourse.CourseBehavior.builder()
-        .maxNormal("1")
-        .build();
+    AiccCourse.CourseBehavior courseBehavior = new AiccCourse.CourseBehavior();
+    courseBehavior.setMaxNormal("1");
 
     // Create an AiccCourse
-    AiccCourse aiccCourse = AiccCourse.builder()
-        .course(course)
-        .courseBehavior(courseBehavior)
-        .build();
+    AiccCourse aiccCourse = new AiccCourse();
+    aiccCourse.setCourse(course);
+    aiccCourse.setCourseBehavior(courseBehavior);
 
     // Create an assignable unit
-    AssignableUnit assignableUnit = AssignableUnit.builder()
-        .systemId("A1")
-        .commandLine("test.html")
-        .fileName("test.html")
-        .coreVendor("Test Vendor")
-        .build();
+    AssignableUnit assignableUnit = new AssignableUnit();
+    assignableUnit.setSystemId("A1");
+    assignableUnit.setCommandLine("test.html");
+    assignableUnit.setFileName("test.html");
+    assignableUnit.setCoreVendor("Test Vendor");
 
     // Create a descriptor
-    Descriptor descriptor = Descriptor.builder()
-        .systemId("A1")
-        .developerId("DEV-001")
-        .title("Test AU")
-        .description("Test Assignable Unit")
-        .build();
+    Descriptor descriptor = new Descriptor();
+    descriptor.setSystemId("A1");
+    descriptor.setDeveloperId("DEV-001");
+    descriptor.setTitle("Test AU");
+    descriptor.setDescription("Test Assignable Unit");
 
     // Create a course structure with a null member
-    CourseStructure courseStructure = CourseStructure.builder()
-        .block("ROOT")
-        .member(null)  // Null member
-        .build();
+    CourseStructure courseStructure = new CourseStructure("ROOT", null);
 
     // Create lists
     List<AssignableUnit> assignableUnits = new ArrayList<>();
@@ -477,9 +436,8 @@ public class AiccManifestTest {
     courseStructures.add(courseStructure);
 
     // Verify that the constructor throws an exception
-    ModuleParsingException exception = assertThrows(ModuleParsingException.class, () -> {
-      new AiccManifest(aiccCourse, assignableUnits, descriptors, courseStructures);
-    });
+    ModuleParsingException exception = assertThrows(ModuleParsingException.class,
+        () -> new AiccManifest(aiccCourse, assignableUnits, descriptors, courseStructures));
 
     // Verify the exception message
     assertEquals("No root assignable unit found.", exception.getMessage());

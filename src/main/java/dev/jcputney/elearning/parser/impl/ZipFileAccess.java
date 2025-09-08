@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import lombok.Getter;
 
 /**
  * An implementation of the {@link FileAccess} interface for accessing files within a ZIP archive.
@@ -38,7 +37,6 @@ import lombok.Getter;
  */
 public class ZipFileAccess implements FileAccess, AutoCloseable {
 
-  @Getter
   private final String rootPath;
 
   private final ZipFile zipFile;
@@ -124,9 +122,10 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
     if (entry == null) {
       // Provide helpful information about available files
       String suggestion = getSimilarFiles(path);
-      throw new IOException("File not found in ZIP archive: '" + path + "' (full path: '" +
-          fullPath(path) + "') in ZIP file '" + zipFilePath + "'" +
-          (rootPath.isEmpty() ? "" : " with internal root '" + rootPath + "'") + suggestion);
+      throw new IOException(
+          "File not found in ZIP archive: '" + path + "' (full path: '" + fullPath(path)
+              + "') in ZIP file '" + zipFilePath + "'" + (rootPath.isEmpty() ? ""
+              : " with internal root '" + rootPath + "'") + suggestion);
     }
 
     InputStream inputStream = zipFile.getInputStream(entry);
@@ -177,6 +176,10 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
     }
 
     return totalSize;
+  }
+
+  public String getRootPath() {
+    return this.rootPath;
   }
 
   /**
@@ -247,17 +250,18 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
     }
 
     // Find files with similar names or in the same directory
-    String targetName = targetPath.contains("/") ?
-        targetPath.substring(targetPath.lastIndexOf("/") + 1) : targetPath;
-    String targetDir = targetPath.contains("/") ?
-        targetPath.substring(0, targetPath.lastIndexOf("/")) : "";
+    String targetName =
+        targetPath.contains("/") ? targetPath.substring(targetPath.lastIndexOf("/") + 1)
+            : targetPath;
+    String targetDir =
+        targetPath.contains("/") ? targetPath.substring(0, targetPath.lastIndexOf("/")) : "";
 
     List<String> suggestions = allFiles
         .stream()
         .filter(file -> file
             .toLowerCase()
-            .contains(targetName.toLowerCase()) ||
-            (targetDir.isEmpty() || file.startsWith(targetDir)))
+            .contains(targetName.toLowerCase()) || (targetDir.isEmpty() || file.startsWith(
+            targetDir)))
         .limit(3)
         .toList();
 
@@ -268,8 +272,8 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
           .stream()
           .limit(5)
           .reduce((a, b) -> a + ", " + b)
-          .orElse("none") +
-          (allFiles.size() > 5 ? " (and " + (allFiles.size() - 5) + " more)" : "");
+          .orElse("none") + (allFiles.size() > 5 ? " (and " + (allFiles.size() - 5) + " more)"
+          : "");
     }
   }
 }

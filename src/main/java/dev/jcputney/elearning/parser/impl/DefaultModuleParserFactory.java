@@ -138,8 +138,7 @@ public class DefaultModuleParserFactory implements ModuleParserFactory {
    * @throws ModuleParsingException if an error occurs during parsing.
    */
   @Override
-  public ModuleMetadata<?> parseModule()
-      throws ModuleDetectionException, ModuleParsingException {
+  public ModuleMetadata<?> parseModule() throws ModuleDetectionException, ModuleParsingException {
     return getParser().parse();
   }
 

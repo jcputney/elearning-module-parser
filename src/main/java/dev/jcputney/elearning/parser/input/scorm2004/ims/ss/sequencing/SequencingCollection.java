@@ -18,31 +18,20 @@
 package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
 import static dev.jcputney.elearning.parser.input.scorm2004.IMSSS.NAMESPACE_URI;
-import static lombok.AccessLevel.PRIVATE;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a collection of sequencing elements within the SCORM IMS Simple Sequencing schema. A
  * sequencing collection groups multiple {@link Sequencing} definitions, each of which can specify
  * rules, objectives, and rollup behaviors for a learning activity.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class SequencingCollection implements Serializable {
 
@@ -56,4 +45,37 @@ public class SequencingCollection implements Serializable {
   @JacksonXmlElementWrapper(localName = "sequencing", useWrapping = false)
   @JacksonXmlProperty(localName = "sequencing", namespace = NAMESPACE_URI)
   private List<Sequencing> sequencingList;
+
+  public SequencingCollection() {
+  }
+
+  public List<Sequencing> getSequencingList() {
+    return this.sequencingList;
+  }
+
+  public void setSequencingList(List<Sequencing> sequencingList) {
+    this.sequencingList = sequencingList;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof SequencingCollection that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getSequencingList(), that.getSequencingList())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getSequencingList())
+        .toHashCode();
+  }
 }

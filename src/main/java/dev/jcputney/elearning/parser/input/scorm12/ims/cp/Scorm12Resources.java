@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -28,12 +26,8 @@ import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the {@code <resources>} element in a SCORM 1.2 manifest file.
@@ -53,12 +47,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xsd:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Resources implements Serializable {
 
@@ -80,6 +68,9 @@ public class Scorm12Resources implements Serializable {
   @JacksonXmlProperty(localName = "resource", namespace = Scorm12Manifest.NAMESPACE_URI)
   private List<Scorm12Resource> resourceList;
 
+  public Scorm12Resources() {
+  }
+
   /**
    * Retrieves a resource by its identifier.
    *
@@ -96,5 +87,45 @@ public class Scorm12Resources implements Serializable {
         .stream()
         .filter(resource -> id.equals(resource.getIdentifier()))
         .findFirst();
+  }
+
+  public String getBase() {
+    return this.base;
+  }
+
+  public void setBase(String base) {
+    this.base = base;
+  }
+
+  public List<Scorm12Resource> getResourceList() {
+    return this.resourceList;
+  }
+
+  public void setResourceList(List<Scorm12Resource> resourceList) {
+    this.resourceList = resourceList;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm12Resources that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getBase(), that.getBase())
+        .append(getResourceList(), that.getResourceList())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getBase())
+        .append(getResourceList())
+        .toHashCode();
   }
 }

@@ -22,12 +22,8 @@ import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import java.util.Optional;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.experimental.SuperBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Base class for module metadata that implements the MetadataComponent interface.
@@ -39,10 +35,6 @@ import lombok.experimental.SuperBuilder;
  *
  * @param <M> The type of package manifest.
  */
-@Getter
-@SuperBuilder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(doNotUseGetters = true, callSuper = true, exclude = "compositeMetadata")
 public abstract class BaseModuleMetadata<M extends PackageManifest> extends
     ModuleMetadata<M> implements MetadataComponent {
 
@@ -107,12 +99,24 @@ public abstract class BaseModuleMetadata<M extends PackageManifest> extends
     this.compositeMetadata = new CompositeMetadata();
   }
 
+  protected BaseModuleMetadata() {
+  }
+
+  protected BaseModuleMetadata(BaseModuleMetadataBuilder<M, ?, ?> b) {
+    super(b);
+    this.compositeMetadata = b.compositeMetadata;
+  }
+
   /**
    * Adds a metadata component to this module's composite metadata.
    *
    * @param component The component to add.
    */
-  public void addMetadataComponent(@NonNull MetadataComponent component) {
+  public void addMetadataComponent(MetadataComponent component) {
+    if (component == null) {
+      throw new NullPointerException("Component cannot be null");
+    }
+
     if (compositeMetadata == null) {
       compositeMetadata = new CompositeMetadata();
     }
@@ -157,6 +161,34 @@ public abstract class BaseModuleMetadata<M extends PackageManifest> extends
     };
   }
 
+  public CompositeMetadata getCompositeMetadata() {
+    return this.compositeMetadata;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof BaseModuleMetadata<?> that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .appendSuper(super.equals(o))
+        .append(getCompositeMetadata(), that.getCompositeMetadata())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .appendSuper(super.hashCode())
+        .append(getCompositeMetadata())
+        .toHashCode();
+  }
+
   /**
    * Creates a SimpleMetadata object from the provided PackageManifest.
    *
@@ -171,5 +203,27 @@ public abstract class BaseModuleMetadata<M extends PackageManifest> extends
         .addMetadata(IDENTIFIER, manifest.getIdentifier())
         .addMetadata(VERSION, manifest.getVersion())
         .addMetadata(DURATION, manifest.getDuration());
+  }
+
+  public static abstract class BaseModuleMetadataBuilder<M extends PackageManifest, C extends BaseModuleMetadata<M>, B extends BaseModuleMetadataBuilder<M, C, B>>
+      extends ModuleMetadataBuilder<M, C, B> {
+
+    private CompositeMetadata compositeMetadata;
+
+    @JsonIgnore
+    public B compositeMetadata(CompositeMetadata compositeMetadata) {
+      this.compositeMetadata = compositeMetadata;
+      return self();
+    }
+
+    public abstract C build();
+
+    public String toString() {
+      return "BaseModuleMetadata.BaseModuleMetadataBuilder(super=" + super.toString()
+          + ", compositeMetadata="
+          + this.compositeMetadata + ")";
+    }
+
+    protected abstract B self();
   }
 }

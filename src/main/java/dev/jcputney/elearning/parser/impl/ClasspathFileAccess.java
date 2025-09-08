@@ -27,7 +27,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import lombok.Getter;
 
 /**
  * Implementation of {@link FileAccess} that reads files from the classpath, allowing testing of
@@ -39,7 +38,6 @@ public class ClasspathFileAccess implements FileAccess {
   /**
    * The root path for file access. This is the base directory where files are accessed from.
    */
-  @Getter
   private final String rootPath;
 
   /**
@@ -132,6 +130,10 @@ public class ClasspathFileAccess implements FileAccess {
     // Classpath resources don't provide a reliable way to get file sizes
     // without reading the entire content, which would be inefficient
     return -1;
+  }
+
+  public String getRootPath() {
+    return this.rootPath;
   }
 
   /**

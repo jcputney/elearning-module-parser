@@ -17,30 +17,17 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.cp;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Builder.Default;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the map element, specifying shared data configuration.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class DataMap implements Serializable {
@@ -56,13 +43,64 @@ public class DataMap implements Serializable {
    */
   @JacksonXmlProperty(localName = "readSharedData", isAttribute = true)
   @JsonProperty("readSharedData")
-  @Default
   private boolean readSharedData = true;
   /**
    * Indicates if shared data is writable.
    */
   @JacksonXmlProperty(localName = "writeSharedData", isAttribute = true)
   @JsonProperty("writeSharedData")
-  @Default
   private boolean writeSharedData = false;
+
+  public DataMap() {
+  }
+
+  public String getTargetID() {
+    return this.targetID;
+  }
+
+  public void setTargetID(String targetID) {
+    this.targetID = targetID;
+  }
+
+  public boolean isReadSharedData() {
+    return this.readSharedData;
+  }
+
+  public void setReadSharedData(boolean readSharedData) {
+    this.readSharedData = readSharedData;
+  }
+
+  public boolean isWriteSharedData() {
+    return this.writeSharedData;
+  }
+
+  public void setWriteSharedData(boolean writeSharedData) {
+    this.writeSharedData = writeSharedData;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof DataMap dataMap)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(isReadSharedData(), dataMap.isReadSharedData())
+        .append(isWriteSharedData(), dataMap.isWriteSharedData())
+        .append(getTargetID(), dataMap.getTargetID())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getTargetID())
+        .append(isReadSharedData())
+        .append(isWriteSharedData())
+        .toHashCode();
+  }
 }

@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -28,12 +26,8 @@ import dev.jcputney.elearning.parser.input.lom.types.Status;
 import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the lifecycle information about a learning object in a Learning Object Metadata (LOM)
@@ -56,12 +50,6 @@ import lombok.extern.jackson.Jacksonized;
  * </complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LifeCycle implements Serializable {
 
@@ -137,4 +125,68 @@ public class LifeCycle implements Serializable {
   @JacksonXmlElementWrapper(localName = "customElements", useWrapping = false)
   @JacksonXmlProperty(localName = "customElements")
   private List<Object> customElements;
+
+  public LifeCycle() {
+  }
+
+  public UnboundLangString getVersion() {
+    return this.version;
+  }
+
+  public void setVersion(UnboundLangString version) {
+    this.version = version;
+  }
+
+  public SourceValuePair<Status> getStatus() {
+    return this.status;
+  }
+
+  public void setStatus(
+      SourceValuePair<Status> status) {
+    this.status = status;
+  }
+
+  public List<Contribute> getContribute() {
+    return this.contribute;
+  }
+
+  public void setContribute(List<Contribute> contribute) {
+    this.contribute = contribute;
+  }
+
+  public List<Object> getCustomElements() {
+    return this.customElements;
+  }
+
+  public void setCustomElements(List<Object> customElements) {
+    this.customElements = customElements;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof LifeCycle lifeCycle)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getVersion(), lifeCycle.getVersion())
+        .append(getStatus(), lifeCycle.getStatus())
+        .append(getContribute(), lifeCycle.getContribute())
+        .append(getCustomElements(), lifeCycle.getCustomElements())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getVersion())
+        .append(getStatus())
+        .append(getContribute())
+        .append(getCustomElements())
+        .toHashCode();
+  }
 }

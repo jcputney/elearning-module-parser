@@ -17,19 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>displayStageSpec</strong> complex type.</p>
@@ -44,12 +38,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class DisplayStageSpec implements Serializable {
@@ -64,4 +52,47 @@ public class DisplayStageSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "desired")
   private StageSpec desired;
+
+  public DisplayStageSpec() {
+  }
+
+  public StageSpec getRequired() {
+    return this.required;
+  }
+
+  public void setRequired(StageSpec required) {
+    this.required = required;
+  }
+
+  public StageSpec getDesired() {
+    return this.desired;
+  }
+
+  public void setDesired(StageSpec desired) {
+    this.desired = desired;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof DisplayStageSpec that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getRequired(), that.getRequired())
+        .append(getDesired(), that.getDesired())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getRequired())
+        .append(getDesired())
+        .toHashCode();
+  }
 }

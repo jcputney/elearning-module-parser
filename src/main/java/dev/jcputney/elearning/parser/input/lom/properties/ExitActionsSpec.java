@@ -17,19 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>exitActionsSpec</strong> complex type.</p>
@@ -44,12 +38,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ExitActionsSpec implements Serializable {
@@ -64,4 +52,47 @@ public class ExitActionsSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "finalSco")
   private ScoExitActionSpec finalSco;
+
+  public ExitActionsSpec() {
+  }
+
+  public ScoExitActionSpec getIntermediateSco() {
+    return this.intermediateSco;
+  }
+
+  public void setIntermediateSco(ScoExitActionSpec intermediateSco) {
+    this.intermediateSco = intermediateSco;
+  }
+
+  public ScoExitActionSpec getFinalSco() {
+    return this.finalSco;
+  }
+
+  public void setFinalSco(ScoExitActionSpec finalSco) {
+    this.finalSco = finalSco;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof ExitActionsSpec that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getIntermediateSco(), that.getIntermediateSco())
+        .append(getFinalSco(), that.getFinalSco())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getIntermediateSco())
+        .append(getFinalSco())
+        .toHashCode();
+  }
 }

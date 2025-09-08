@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.cmi5;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -27,12 +25,8 @@ import dev.jcputney.elearning.parser.input.cmi5.types.ReferencesObjectives;
 import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a block within a CMI5 course structure. Blocks can contain nested blocks or AUs
@@ -57,12 +51,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Block implements Serializable {
 
@@ -124,4 +112,98 @@ public class Block implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("id")
   private String id;
+
+  public Block(TextType title, TextType description, ReferencesObjectives objectives,
+      List<AU> assignableUnits,
+      List<Block> nestedBlocks, String id) {
+    this.title = title;
+    this.description = description;
+    this.objectives = objectives;
+    this.assignableUnits = assignableUnits;
+    this.nestedBlocks = nestedBlocks;
+    this.id = id;
+  }
+
+  public Block() {
+  }
+
+  public TextType getTitle() {
+    return this.title;
+  }
+
+  public void setTitle(TextType title) {
+    this.title = title;
+  }
+
+  public TextType getDescription() {
+    return this.description;
+  }
+
+  public void setDescription(TextType description) {
+    this.description = description;
+  }
+
+  public ReferencesObjectives getObjectives() {
+    return this.objectives;
+  }
+
+  public void setObjectives(ReferencesObjectives objectives) {
+    this.objectives = objectives;
+  }
+
+  public List<AU> getAssignableUnits() {
+    return this.assignableUnits;
+  }
+
+  public void setAssignableUnits(List<AU> assignableUnits) {
+    this.assignableUnits = assignableUnits;
+  }
+
+  public List<Block> getNestedBlocks() {
+    return this.nestedBlocks;
+  }
+
+  public void setNestedBlocks(List<Block> nestedBlocks) {
+    this.nestedBlocks = nestedBlocks;
+  }
+
+  public String getId() {
+    return this.id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Block block)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getTitle(), block.getTitle())
+        .append(getDescription(), block.getDescription())
+        .append(getObjectives(), block.getObjectives())
+        .append(getAssignableUnits(), block.getAssignableUnits())
+        .append(getNestedBlocks(), block.getNestedBlocks())
+        .append(getId(), block.getId())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getTitle())
+        .append(getDescription())
+        .append(getObjectives())
+        .append(getAssignableUnits())
+        .append(getNestedBlocks())
+        .append(getId())
+        .toHashCode();
+  }
 }

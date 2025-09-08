@@ -17,20 +17,14 @@
 
 package dev.jcputney.elearning.parser.input.aicc;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Map;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the AICC course information.
@@ -40,12 +34,6 @@ import lombok.extern.jackson.Jacksonized;
  *
  * <p>It also provides a method to retrieve the course description.</p>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class AiccCourse implements Serializable {
@@ -66,6 +54,9 @@ public class AiccCourse implements Serializable {
   @JsonProperty(value = "Course_Description", required = true)
   private Map<String, String> courseDescription;
 
+  public AiccCourse() {
+  }
+
   /**
    * Course description information for the AICC manifest.
    *
@@ -85,15 +76,55 @@ public class AiccCourse implements Serializable {
         .orElse(null);
   }
 
+  public void setCourseDescription(Map<String, String> courseDescription) {
+    this.courseDescription = courseDescription;
+  }
+
+  public Course getCourse() {
+    return this.course;
+  }
+
+  public void setCourse(Course course) {
+    this.course = course;
+  }
+
+  public CourseBehavior getCourseBehavior() {
+    return this.courseBehavior;
+  }
+
+  public void setCourseBehavior(CourseBehavior courseBehavior) {
+    this.courseBehavior = courseBehavior;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof AiccCourse that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getCourse(), that.getCourse())
+        .append(getCourseBehavior(), that.getCourseBehavior())
+        .append(getCourseDescription(), that.getCourseDescription())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getCourse())
+        .append(getCourseBehavior())
+        .append(getCourseDescription())
+        .toHashCode();
+  }
+
   /**
    * Represents the course information in the AICC manifest.
    */
-  @Builder
-  @Getter
-  @Jacksonized
-  @EqualsAndHashCode(doNotUseGetters = true)
-  @NoArgsConstructor
-  @AllArgsConstructor(access = PRIVATE)
   @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
   public static class Course {
 
@@ -157,17 +188,154 @@ public class AiccCourse implements Serializable {
      */
     @JsonProperty(value = "Total_Objectives")
     private String totalObjectives;
+
+    public Course() {
+    }
+
+    public String getCourseCreator() {
+      return this.courseCreator;
+    }
+
+    public void setCourseCreator(String courseCreator) {
+      this.courseCreator = courseCreator;
+    }
+
+    public String getCourseId() {
+      return this.courseId;
+    }
+
+    public void setCourseId(String courseId) {
+      this.courseId = courseId;
+    }
+
+    public String getCourseTitle() {
+      return this.courseTitle;
+    }
+
+    public void setCourseTitle(String courseTitle) {
+      this.courseTitle = courseTitle;
+    }
+
+    public String getCourseSystem() {
+      return this.courseSystem;
+    }
+
+    public void setCourseSystem(String courseSystem) {
+      this.courseSystem = courseSystem;
+    }
+
+    public String getLevel() {
+      return this.level;
+    }
+
+    public void setLevel(String level) {
+      this.level = level;
+    }
+
+    public String getMaxFieldsCst() {
+      return this.maxFieldsCst;
+    }
+
+    public void setMaxFieldsCst(String maxFieldsCst) {
+      this.maxFieldsCst = maxFieldsCst;
+    }
+
+    public String getMaxFieldsOrt() {
+      return this.maxFieldsOrt;
+    }
+
+    public void setMaxFieldsOrt(String maxFieldsOrt) {
+      this.maxFieldsOrt = maxFieldsOrt;
+    }
+
+    public String getTotalAus() {
+      return this.totalAus;
+    }
+
+    public void setTotalAus(String totalAus) {
+      this.totalAus = totalAus;
+    }
+
+    public String getTotalBlocks() {
+      return this.totalBlocks;
+    }
+
+    public void setTotalBlocks(String totalBlocks) {
+      this.totalBlocks = totalBlocks;
+    }
+
+    public String getVersion() {
+      return this.version;
+    }
+
+    public void setVersion(String version) {
+      this.version = version;
+    }
+
+    public String getTotalComplexObj() {
+      return this.totalComplexObj;
+    }
+
+    public void setTotalComplexObj(String totalComplexObj) {
+      this.totalComplexObj = totalComplexObj;
+    }
+
+    public String getTotalObjectives() {
+      return this.totalObjectives;
+    }
+
+    public void setTotalObjectives(String totalObjectives) {
+      this.totalObjectives = totalObjectives;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+
+      if (!(o instanceof Course course)) {
+        return false;
+      }
+
+      return new EqualsBuilder()
+          .append(getCourseCreator(), course.getCourseCreator())
+          .append(getCourseId(), course.getCourseId())
+          .append(getCourseTitle(), course.getCourseTitle())
+          .append(getCourseSystem(), course.getCourseSystem())
+          .append(getLevel(), course.getLevel())
+          .append(getMaxFieldsCst(), course.getMaxFieldsCst())
+          .append(getMaxFieldsOrt(), course.getMaxFieldsOrt())
+          .append(getTotalAus(), course.getTotalAus())
+          .append(getTotalBlocks(), course.getTotalBlocks())
+          .append(getVersion(), course.getVersion())
+          .append(getTotalComplexObj(), course.getTotalComplexObj())
+          .append(getTotalObjectives(), course.getTotalObjectives())
+          .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+      return new HashCodeBuilder(17, 37)
+          .append(getCourseCreator())
+          .append(getCourseId())
+          .append(getCourseTitle())
+          .append(getCourseSystem())
+          .append(getLevel())
+          .append(getMaxFieldsCst())
+          .append(getMaxFieldsOrt())
+          .append(getTotalAus())
+          .append(getTotalBlocks())
+          .append(getVersion())
+          .append(getTotalComplexObj())
+          .append(getTotalObjectives())
+          .toHashCode();
+    }
   }
 
   /**
    * Represents the course behavior information in the AICC manifest.
    */
-  @Builder
-  @Getter
-  @Jacksonized
-  @EqualsAndHashCode(doNotUseGetters = true)
-  @NoArgsConstructor
-  @AllArgsConstructor(access = PRIVATE)
   @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
   public static class CourseBehavior {
 
@@ -176,5 +344,38 @@ public class AiccCourse implements Serializable {
      */
     @JsonProperty(value = "Max_Normal", required = true)
     private String maxNormal;
+
+    public CourseBehavior() {
+    }
+
+    public String getMaxNormal() {
+      return this.maxNormal;
+    }
+
+    public void setMaxNormal(String maxNormal) {
+      this.maxNormal = maxNormal;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+
+      if (!(o instanceof CourseBehavior that)) {
+        return false;
+      }
+
+      return new EqualsBuilder()
+          .append(getMaxNormal(), that.getMaxNormal())
+          .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+      return new HashCodeBuilder(17, 37)
+          .append(getMaxNormal())
+          .toHashCode();
+    }
   }
 }

@@ -128,7 +128,8 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
       // Catch any other unexpected exceptions
       throw new ModuleParsingException(
           String.format("Unexpected error parsing SCORM 1.2 module at '%s': %s",
-              this.moduleFileProvider.getRootPath(), e.getMessage()), e);
+              this.moduleFileProvider.getRootPath(),
+              e.getMessage()), e);
     }
   }
 
@@ -139,8 +140,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    * @throws XMLStreamException If an error occurs while parsing the XML.
    * @throws IOException If an error occurs while reading the file.
    */
-  void loadExternalMetadata(Scorm12Manifest manifest)
-      throws XMLStreamException, IOException {
+  void loadExternalMetadata(Scorm12Manifest manifest) throws XMLStreamException, IOException {
     if (manifest == null) {
       return;
     }
@@ -173,8 +173,8 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
     // Define the manifest path and verify its existence
     if (!moduleFileProvider.fileExists(MANIFEST_FILE)) {
       throw new ModuleParsingException(
-          String.format("SCORM 1.2 manifest file not found: %s in module at '%s'",
-              MANIFEST_FILE, moduleFileProvider.getRootPath()));
+          String.format("SCORM 1.2 manifest file not found: %s in module at '%s'", MANIFEST_FILE,
+              moduleFileProvider.getRootPath()));
     }
 
     // Parse the manifest XML file using a secure parser from BaseParser

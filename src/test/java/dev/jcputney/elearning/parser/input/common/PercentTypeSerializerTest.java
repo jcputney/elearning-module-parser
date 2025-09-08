@@ -38,18 +38,6 @@ class PercentTypeSerializerTest {
 
   private ObjectMapper objectMapper;
 
-  /**
-   * Test class with a PercentType field that uses the PercentTypeSerializer.
-   */
-  private static class TestClass {
-    @JsonSerialize(using = PercentTypeSerializer.class)
-    private final PercentType percentValue;
-
-    public TestClass(PercentType percentValue) {
-      this.percentValue = percentValue;
-    }
-  }
-
   @BeforeEach
   void setUp() {
     objectMapper = new ObjectMapper();
@@ -119,5 +107,16 @@ class PercentTypeSerializerTest {
 
     // Assert
     assertEquals("\"0.5\"", json);
+  }
+
+  /**
+   * Test class with a PercentType field that uses the PercentTypeSerializer.
+   */
+  private record TestClass(
+      @JsonSerialize(using = PercentTypeSerializer.class) PercentType percentValue) {
+
+    private TestClass(PercentType percentValue) {
+      this.percentValue = percentValue;
+    }
   }
 }

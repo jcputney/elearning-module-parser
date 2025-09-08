@@ -30,10 +30,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a node in the SCORM 2004 Activity Tree.
@@ -43,52 +41,51 @@ import lombok.extern.jackson.Jacksonized;
  * associated with the node.
  * </p>
  */
-@Builder
-@Getter
-@Jacksonized
-@EqualsAndHashCode(doNotUseGetters = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ActivityNode implements Serializable {
 
   /**
    * The unique identifier for this activity node.
    */
-  private final String identifier;
+  private String identifier;
 
   /**
    * The title or name of this activity node.
    */
-  private final String title;
+  private String title;
 
   /**
    * The parent node of this activity node in the activity tree.
    */
-  private final ActivityNode parent;
+  private ActivityNode parent;
 
   /**
    * The list of child nodes of this activity node.
    */
-  private final List<ActivityNode> children = new ArrayList<>();
+  private List<ActivityNode> children = new ArrayList<>();
 
   /**
    * The sequencing information associated with this activity node.
    */
-  private final Sequencing sequencing;
+  private Sequencing sequencing;
 
   /**
    * Indicates whether this node is a leaf node (has no children).
    */
-  private final boolean isLeaf;
+  private boolean isLeaf;
 
   /**
    * The identifier of the resource associated with this activity node.
    */
-  private final String resourceIdentifier;
+  private String resourceIdentifier;
 
   /**
    * Indicates whether this activity node is visible in the activity tree.
    */
-  private final boolean isVisible;
+  private boolean isVisible;
+
+  public ActivityNode() {
+  }
 
   /**
    * Constructor for ActivityNode.
@@ -170,6 +167,10 @@ public class ActivityNode implements Serializable {
     return Collections.unmodifiableList(children);
   }
 
+  public void setChildren(List<ActivityNode> children) {
+    this.children = children;
+  }
+
   /**
    * Gets the parent of this node.
    *
@@ -177,6 +178,10 @@ public class ActivityNode implements Serializable {
    */
   public Optional<ActivityNode> getParent() {
     return Optional.ofNullable(parent);
+  }
+
+  public void setParent(ActivityNode parent) {
+    this.parent = parent;
   }
 
   /**
@@ -188,6 +193,10 @@ public class ActivityNode implements Serializable {
     return Optional.ofNullable(sequencing);
   }
 
+  public void setSequencing(Sequencing sequencing) {
+    this.sequencing = sequencing;
+  }
+
   /**
    * Gets the resource identifier for this node.
    *
@@ -195,5 +204,77 @@ public class ActivityNode implements Serializable {
    */
   public Optional<String> getResourceIdentifier() {
     return Optional.ofNullable(resourceIdentifier);
+  }
+
+  public void setResourceIdentifier(String resourceIdentifier) {
+    this.resourceIdentifier = resourceIdentifier;
+  }
+
+  public String getIdentifier() {
+    return this.identifier;
+  }
+
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }
+
+  public String getTitle() {
+    return this.title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public boolean isLeaf() {
+    return this.isLeaf;
+  }
+
+  public void setLeaf(boolean leaf) {
+    isLeaf = leaf;
+  }
+
+  public boolean isVisible() {
+    return this.isVisible;
+  }
+
+  public void setVisible(boolean visible) {
+    isVisible = visible;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof ActivityNode that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(isLeaf(), that.isLeaf())
+        .append(isVisible(), that.isVisible())
+        .append(getIdentifier(), that.getIdentifier())
+        .append(getTitle(), that.getTitle())
+        .append(getParent(), that.getParent())
+        .append(getChildren(), that.getChildren())
+        .append(getSequencing(), that.getSequencing())
+        .append(getResourceIdentifier(), that.getResourceIdentifier())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getIdentifier())
+        .append(getTitle())
+        .append(getParent())
+        .append(getChildren())
+        .append(getSequencing())
+        .append(isLeaf())
+        .append(getResourceIdentifier())
+        .append(isVisible())
+        .toHashCode();
   }
 }

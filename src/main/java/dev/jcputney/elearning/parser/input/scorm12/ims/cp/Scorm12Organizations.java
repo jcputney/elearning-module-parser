@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.scorm12.ims.cp;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,12 +25,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the {@code <organizations>} element in the SCORM 1.2 manifest file.
@@ -53,12 +47,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xsd:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Scorm12Organizations implements Serializable {
 
@@ -76,6 +64,15 @@ public class Scorm12Organizations implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "organization", namespace = Scorm12Manifest.NAMESPACE_URI)
   private List<Scorm12Organization> organizationList;
+
+  public Scorm12Organizations(String defaultOrganization,
+      List<Scorm12Organization> organizationList) {
+    this.defaultOrganization = defaultOrganization;
+    this.organizationList = organizationList;
+  }
+
+  public Scorm12Organizations() {
+  }
 
   /**
    * Retrieves an organization by its unique identifier.
@@ -102,5 +99,47 @@ public class Scorm12Organizations implements Serializable {
   @JsonIgnore
   public Scorm12Organization getDefault() {
     return getOrganizationById(defaultOrganization);
+  }
+
+  public String getDefaultOrganization() {
+    return this.defaultOrganization;
+  }
+
+  public void setDefaultOrganization(String defaultOrganization) {
+    this.defaultOrganization = defaultOrganization;
+  }
+
+  public List<Scorm12Organization> getOrganizationList() {
+    return this.organizationList;
+  }
+
+  public void setOrganizationList(
+      List<Scorm12Organization> organizationList) {
+    this.organizationList = organizationList;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm12Organizations that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getDefaultOrganization(),
+            that.getDefaultOrganization())
+        .append(getOrganizationList(), that.getOrganizationList())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getDefaultOrganization())
+        .append(getOrganizationList())
+        .toHashCode();
   }
 }

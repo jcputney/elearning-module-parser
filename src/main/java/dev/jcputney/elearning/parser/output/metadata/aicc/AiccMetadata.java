@@ -24,8 +24,6 @@ import dev.jcputney.elearning.parser.input.aicc.AssignableUnit;
 import dev.jcputney.elearning.parser.output.metadata.BaseModuleMetadata;
 import dev.jcputney.elearning.parser.output.metadata.SimpleMetadata;
 import java.util.List;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 /**
  * Represents metadata for an AICC eLearning module, including AICC-specific fields such as course
@@ -36,9 +34,10 @@ import lombok.experimental.SuperBuilder;
  * modules, enabling structured storage of AICC format details.
  * </p>
  */
-@SuperBuilder
-@NoArgsConstructor
 public class AiccMetadata extends BaseModuleMetadata<AiccManifest> {
+
+  public AiccMetadata() {
+  }
 
   /**
    * Creates a new AiccMetadata instance with standard AICC metadata components.
@@ -48,13 +47,11 @@ public class AiccMetadata extends BaseModuleMetadata<AiccManifest> {
    * @return A new AiccMetadata instance.
    */
   public static AiccMetadata create(AiccManifest manifest, boolean xapiEnabled) {
-    AiccMetadata metadata = AiccMetadata
-        .builder()
-        .manifest(manifest)
-        .moduleType(ModuleType.AICC)
-        .moduleEditionType(ModuleEditionType.AICC)
-        .xapiEnabled(xapiEnabled)
-        .build();
+    AiccMetadata metadata = new AiccMetadata();
+    metadata.manifest = manifest;
+    metadata.moduleType = ModuleType.AICC;
+    metadata.moduleEditionType = ModuleEditionType.AICC;
+    metadata.xapiEnabled = xapiEnabled;
 
     // Add AICC specific metadata
     SimpleMetadata aiccMetadata = metadata.getSimpleMetadata(manifest);

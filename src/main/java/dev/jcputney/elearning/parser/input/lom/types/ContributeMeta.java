@@ -17,19 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the metadata-specific contribution information in the Learning Object Metadata (LOM).
@@ -69,12 +63,6 @@ import lombok.extern.jackson.Jacksonized;
  * </contribute>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ContributeMeta implements Serializable {
 
@@ -102,4 +90,64 @@ public class ContributeMeta implements Serializable {
    */
   @JacksonXmlProperty(localName = "date")
   private Date date;
+
+  public ContributeMeta(SourceValuePair<RoleMeta> role, List<String> entities, Date date) {
+    this.role = role;
+    this.entities = entities;
+    this.date = date;
+  }
+
+  public ContributeMeta() {
+  }
+
+  public SourceValuePair<RoleMeta> getRole() {
+    return this.role;
+  }
+
+  public void setRole(
+      SourceValuePair<RoleMeta> role) {
+    this.role = role;
+  }
+
+  public List<String> getEntities() {
+    return this.entities;
+  }
+
+  public void setEntities(List<String> entities) {
+    this.entities = entities;
+  }
+
+  public Date getDate() {
+    return this.date;
+  }
+
+  public void setDate(Date date) {
+    this.date = date;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof ContributeMeta that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getRole(), that.getRole())
+        .append(getEntities(), that.getEntities())
+        .append(getDate(), that.getDate())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getRole())
+        .append(getEntities())
+        .append(getDate())
+        .toHashCode();
+  }
 }

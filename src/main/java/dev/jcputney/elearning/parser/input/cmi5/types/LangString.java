@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.cmi5.types;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -26,12 +24,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import dev.jcputney.elearning.parser.input.common.TrimAndPreserveIndentationDeserializer;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents a single localized string with an optional language attribute.
@@ -50,12 +44,6 @@ import lombok.extern.jackson.Jacksonized;
  *   </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class LangString implements Serializable {
 
@@ -82,4 +70,81 @@ public class LangString implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("lang")
   private String lang;
+
+  public LangString(String value, String lang) {
+    this.value = value;
+    this.lang = lang;
+  }
+
+  public LangString() {
+  }
+
+  public static LangStringBuilder builder() {
+    return new LangStringBuilder();
+  }
+
+  public String getValue() {
+    return this.value;
+  }
+
+  public String getLang() {
+    return this.lang;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof LangString that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getValue(), that.getValue())
+        .append(getLang(), that.getLang())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getValue())
+        .append(getLang())
+        .toHashCode();
+  }
+
+  @com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder(withPrefix = "")
+  @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
+  public static class LangStringBuilder {
+
+    private String value;
+    private String lang;
+
+    LangStringBuilder() {
+    }
+
+    @JsonDeserialize(using = TrimAndPreserveIndentationDeserializer.class)
+    @JacksonXmlText
+    public LangStringBuilder value(String value) {
+      this.value = value;
+      return this;
+    }
+
+    @JacksonXmlProperty(isAttribute = true)
+    @JsonProperty("lang")
+    public LangStringBuilder lang(String lang) {
+      this.lang = lang;
+      return this;
+    }
+
+    public LangString build() {
+      return new LangString(this.value, this.lang);
+    }
+
+    public String toString() {
+      return "LangString.LangStringBuilder(value=" + this.value + ", lang=" + this.lang + ")";
+    }
+  }
 }

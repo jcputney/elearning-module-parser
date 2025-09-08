@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -27,12 +25,8 @@ import dev.jcputney.elearning.parser.input.lom.types.Cost;
 import dev.jcputney.elearning.parser.input.lom.types.SourceValuePair;
 import dev.jcputney.elearning.parser.input.lom.types.UnboundLangString;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the rights information of a learning object, including cost, copyright, and
@@ -52,12 +46,6 @@ import lombok.extern.jackson.Jacksonized;
  * </complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Rights implements Serializable {
 
@@ -112,4 +100,59 @@ public class Rights implements Serializable {
    */
   @JacksonXmlProperty(localName = "description")
   private UnboundLangString descriptions;
+
+  public Rights() {
+  }
+
+  public SourceValuePair<Cost> getCost() {
+    return this.cost;
+  }
+
+  public void setCost(
+      SourceValuePair<Cost> cost) {
+    this.cost = cost;
+  }
+
+  public SourceValuePair<CopyrightAndOtherRestrictions> getCopyrightAndOtherRestrictions() {
+    return this.copyrightAndOtherRestrictions;
+  }
+
+  public void setCopyrightAndOtherRestrictions(
+      SourceValuePair<CopyrightAndOtherRestrictions> copyrightAndOtherRestrictions) {
+    this.copyrightAndOtherRestrictions = copyrightAndOtherRestrictions;
+  }
+
+  public UnboundLangString getDescriptions() {
+    return this.descriptions;
+  }
+
+  public void setDescriptions(UnboundLangString descriptions) {
+    this.descriptions = descriptions;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Rights rights)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getCost(), rights.getCost())
+        .append(getCopyrightAndOtherRestrictions(), rights.getCopyrightAndOtherRestrictions())
+        .append(getDescriptions(), rights.getDescriptions())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getCost())
+        .append(getCopyrightAndOtherRestrictions())
+        .append(getDescriptions())
+        .toHashCode();
+  }
 }

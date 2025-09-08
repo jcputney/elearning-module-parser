@@ -37,10 +37,9 @@ public class CourseStructureTest {
   @Test
   void testCourseStructureBuilderAndGetters() {
     // Create a CourseStructure using the builder
-    CourseStructure courseStructure = CourseStructure.builder()
-        .block("ROOT")
-        .member("A1")
-        .build();
+    CourseStructure courseStructure = new CourseStructure();
+    courseStructure.setBlock("ROOT");
+    courseStructure.setMember("A1");
 
     // Verify the getters
     assertEquals("ROOT", courseStructure.getBlock());
@@ -53,10 +52,9 @@ public class CourseStructureTest {
   @Test
   void testCourseStructureBuilderWithNullValues() {
     // Create a CourseStructure using the builder with null values
-    CourseStructure courseStructure = CourseStructure.builder()
-        .block(null)
-        .member(null)
-        .build();
+    CourseStructure courseStructure = new CourseStructure();
+    courseStructure.setBlock(null);
+    courseStructure.setMember(null);
 
     // Verify the getters return null
     assertNull(courseStructure.getBlock());

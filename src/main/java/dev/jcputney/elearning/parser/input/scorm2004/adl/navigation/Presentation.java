@@ -17,31 +17,19 @@
 
 package dev.jcputney.elearning.parser.input.scorm2004.adl.navigation;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLNav;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the presentation settings for the navigation controls. This class contains additional
  * settings that may define whether the navigation interface should be shown or hidden under certain
  * conditions.
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Presentation implements Serializable {
@@ -52,4 +40,37 @@ public class Presentation implements Serializable {
    */
   @JacksonXmlProperty(localName = "navigationInterface", namespace = ADLNav.NAMESPACE_URI)
   private NavigationInterface navigationInterface;
+
+  public Presentation() {
+  }
+
+  public NavigationInterface getNavigationInterface() {
+    return this.navigationInterface;
+  }
+
+  public void setNavigationInterface(NavigationInterface navigationInterface) {
+    this.navigationInterface = navigationInterface;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Presentation that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getNavigationInterface(), that.getNavigationInterface())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getNavigationInterface())
+        .toHashCode();
+  }
 }

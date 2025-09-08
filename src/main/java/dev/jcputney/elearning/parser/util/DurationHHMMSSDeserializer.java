@@ -40,12 +40,11 @@ public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
 
   // Matches up to three groups of digits separated by optional colons.
   // Also handles the case where the string starts with a colon (e.g., ":45" for 45 minutes)
-  private static final Pattern HMS_REGEX = Pattern.compile(
-      "^"                // start of string
-          + "(\\d+)?"    // optional hours (group 1) - one or more digits
-          + "(?::(\\d+))?"   // optional colon, then minutes (group 2) - one or more digits
-          + "(?::(\\d+))?"   // optional colon, then seconds (group 3) - one or more digits
-          + "$"              // end of string
+  private static final Pattern HMS_REGEX = Pattern.compile("^"                // start of string
+      + "(\\d+)?"    // optional hours (group 1) - one or more digits
+      + "(?::(\\d+))?"   // optional colon, then minutes (group 2) - one or more digits
+      + "(?::(\\d+))?"   // optional colon, then seconds (group 3) - one or more digits
+      + "$"              // end of string
   );
 
   /**
@@ -139,8 +138,8 @@ public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
       return parseDuration(durationString);
     } catch (NumberFormatException e) {
       throw new IOException(
-          "Invalid HH:MM:SS duration format for java.time.Duration: " + durationString +
-              ". Expected format: HH:MM:SS, MM:SS, or SS.", e);
+          "Invalid HH:MM:SS duration format for java.time.Duration: " + durationString
+              + ". Expected format: HH:MM:SS, MM:SS, or SS.", e);
     }
   }
 }

@@ -17,19 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom.properties;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Feature;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * <p>Represents the <strong>exitTypesSpec</strong> complex type.</p>
@@ -46,12 +40,6 @@ import lombok.extern.jackson.Jacksonized;
  * </xs:complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ExitTypesSpec implements Serializable {
@@ -76,4 +64,75 @@ public class ExitTypesSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "logout")
   private ExitActionType logout;
+
+  public ExitTypesSpec(ExitActionType normal, ExitActionType suspend, ExitActionType timeout,
+      ExitActionType logout) {
+    this.normal = normal;
+    this.suspend = suspend;
+    this.timeout = timeout;
+    this.logout = logout;
+  }
+
+  public ExitTypesSpec() {
+  }
+
+  public ExitActionType getNormal() {
+    return this.normal;
+  }
+
+  public void setNormal(ExitActionType normal) {
+    this.normal = normal;
+  }
+
+  public ExitActionType getSuspend() {
+    return this.suspend;
+  }
+
+  public void setSuspend(ExitActionType suspend) {
+    this.suspend = suspend;
+  }
+
+  public ExitActionType getTimeout() {
+    return this.timeout;
+  }
+
+  public void setTimeout(ExitActionType timeout) {
+    this.timeout = timeout;
+  }
+
+  public ExitActionType getLogout() {
+    return this.logout;
+  }
+
+  public void setLogout(ExitActionType logout) {
+    this.logout = logout;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof ExitTypesSpec that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getNormal(), that.getNormal())
+        .append(getSuspend(), that.getSuspend())
+        .append(getTimeout(), that.getTimeout())
+        .append(getLogout(), that.getLogout())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getNormal())
+        .append(getSuspend())
+        .append(getTimeout())
+        .append(getLogout())
+        .toHashCode();
+  }
 }

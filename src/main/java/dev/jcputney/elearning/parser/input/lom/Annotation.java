@@ -17,19 +17,13 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.lom.types.Date;
 import dev.jcputney.elearning.parser.input.lom.types.SingleLangString;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the annotation information about a learning object in a Learning Object Metadata (LOM)
@@ -49,12 +43,6 @@ import lombok.extern.jackson.Jacksonized;
  * </complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Annotation implements Serializable {
 
@@ -106,4 +94,57 @@ public class Annotation implements Serializable {
    */
   @JacksonXmlProperty(localName = "description")
   private SingleLangString description;
+
+  public Annotation() {
+  }
+
+  public String getEntity() {
+    return this.entity;
+  }
+
+  public void setEntity(String entity) {
+    this.entity = entity;
+  }
+
+  public Date getDate() {
+    return this.date;
+  }
+
+  public void setDate(Date date) {
+    this.date = date;
+  }
+
+  public SingleLangString getDescription() {
+    return this.description;
+  }
+
+  public void setDescription(SingleLangString description) {
+    this.description = description;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Annotation that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getEntity(), that.getEntity())
+        .append(getDate(), that.getDate())
+        .append(getDescription(), that.getDescription())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getEntity())
+        .append(getDate())
+        .append(getDescription())
+        .toHashCode();
+  }
 }

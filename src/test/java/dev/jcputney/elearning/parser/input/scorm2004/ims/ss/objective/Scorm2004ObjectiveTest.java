@@ -36,13 +36,12 @@ public class Scorm2004ObjectiveTest {
   @Test
   void testScorm2004ObjectiveMapping() {
     // Create a Scorm2004ObjectiveMapping instance
-    Scorm2004ObjectiveMapping mapping = Scorm2004ObjectiveMapping.builder()
-        .targetObjectiveID(OBJECTIVE_1)
-        .readSatisfiedStatus(true)
-        .readNormalizedMeasure(true)
-        .writeSatisfiedStatus(true)
-        .writeNormalizedMeasure(true)
-        .build();
+    Scorm2004ObjectiveMapping mapping = new Scorm2004ObjectiveMapping();
+    mapping.setTargetObjectiveID(OBJECTIVE_1);
+    mapping.setReadSatisfiedStatus(true);
+    mapping.setReadNormalizedMeasure(true);
+    mapping.setWriteSatisfiedStatus(true);
+    mapping.setWriteNormalizedMeasure(true);
 
     // Verify the properties
     assertNotNull(mapping);
@@ -57,9 +56,8 @@ public class Scorm2004ObjectiveTest {
     assertNotNull(defaultMapping);
 
     // Test default values
-    Scorm2004ObjectiveMapping defaultValuesMapping = Scorm2004ObjectiveMapping.builder()
-        .targetObjectiveID(OBJECTIVE_2)
-        .build();
+    Scorm2004ObjectiveMapping defaultValuesMapping = new Scorm2004ObjectiveMapping();
+    defaultValuesMapping.setTargetObjectiveID(OBJECTIVE_2);
     assertNotNull(defaultValuesMapping);
     assertEquals(OBJECTIVE_2, defaultValuesMapping.getTargetObjectiveID());
     assertTrue(defaultValuesMapping.isReadSatisfiedStatus()); // Default is true
@@ -72,22 +70,21 @@ public class Scorm2004ObjectiveTest {
   void testScorm2004Objective() {
     // Create a list of mappings
     List<Scorm2004ObjectiveMapping> mapInfo = new ArrayList<>();
-    mapInfo.add(Scorm2004ObjectiveMapping.builder()
-        .targetObjectiveID(OBJECTIVE_1)
-        .writeSatisfiedStatus(true)
-        .build());
-    mapInfo.add(Scorm2004ObjectiveMapping.builder()
-        .targetObjectiveID(OBJECTIVE_2)
-        .writeNormalizedMeasure(true)
-        .build());
+    Scorm2004ObjectiveMapping mapping1 = new Scorm2004ObjectiveMapping();
+    mapping1.setTargetObjectiveID(OBJECTIVE_1);
+    mapping1.setWriteSatisfiedStatus(true);
+    mapInfo.add(mapping1);
+    Scorm2004ObjectiveMapping mapping2 = new Scorm2004ObjectiveMapping();
+    mapping2.setTargetObjectiveID(OBJECTIVE_2);
+    mapping2.setWriteNormalizedMeasure(true);
+    mapInfo.add(mapping2);
 
     // Create a Scorm2004Objective instance
-    Scorm2004Objective objective = Scorm2004Objective.builder()
-        .objectiveID("local.objective1")
-        .satisfiedByMeasure(true)
-        .minNormalizedMeasure(0.8)
-        .mapInfo(mapInfo)
-        .build();
+    Scorm2004Objective objective = new Scorm2004Objective();
+    objective.setObjectiveID("local.objective1");
+    objective.setSatisfiedByMeasure(true);
+    objective.setMinNormalizedMeasure(0.8);
+    objective.setMapInfo(mapInfo);
 
     // Verify the properties
     assertNotNull(objective);
@@ -95,20 +92,33 @@ public class Scorm2004ObjectiveTest {
     assertTrue(objective.getSatisfiedByMeasure());
     assertEquals(0.8, objective.getMinNormalizedMeasure());
     assertNotNull(objective.getMapInfo());
-    assertEquals(2, objective.getMapInfo().size());
-    assertEquals(OBJECTIVE_1, objective.getMapInfo().get(0).getTargetObjectiveID());
-    assertTrue(objective.getMapInfo().get(0).isWriteSatisfiedStatus());
-    assertEquals(OBJECTIVE_2, objective.getMapInfo().get(1).getTargetObjectiveID());
-    assertTrue(objective.getMapInfo().get(1).isWriteNormalizedMeasure());
+    assertEquals(2, objective
+        .getMapInfo()
+        .size());
+    assertEquals(OBJECTIVE_1, objective
+        .getMapInfo()
+        .get(0)
+        .getTargetObjectiveID());
+    assertTrue(objective
+        .getMapInfo()
+        .get(0)
+        .isWriteSatisfiedStatus());
+    assertEquals(OBJECTIVE_2, objective
+        .getMapInfo()
+        .get(1)
+        .getTargetObjectiveID());
+    assertTrue(objective
+        .getMapInfo()
+        .get(1)
+        .isWriteNormalizedMeasure());
 
     // Test default constructor
     Scorm2004Objective defaultObjective = new Scorm2004Objective();
     assertNotNull(defaultObjective);
 
     // Test default values
-    Scorm2004Objective defaultValuesObjective = Scorm2004Objective.builder()
-        .objectiveID("local.objective2")
-        .build();
+    Scorm2004Objective defaultValuesObjective = new Scorm2004Objective();
+    defaultValuesObjective.setObjectiveID("local.objective2");
     assertNotNull(defaultValuesObjective);
     assertEquals("local.objective2", defaultValuesObjective.getObjectiveID());
     assertFalse(defaultValuesObjective.getSatisfiedByMeasure()); // Default is false
@@ -117,38 +127,50 @@ public class Scorm2004ObjectiveTest {
   @Test
   void testScorm2004Objectives() {
     // Create a primary objective
-    Scorm2004Objective primaryObjective = Scorm2004Objective.builder()
-        .objectiveID("primary.objective")
-        .satisfiedByMeasure(true)
-        .minNormalizedMeasure(0.7)
-        .build();
+    Scorm2004Objective primaryObjective = new Scorm2004Objective();
+    primaryObjective.setObjectiveID("primary.objective");
+    primaryObjective.setMinNormalizedMeasure(0.7);
+    primaryObjective.setSatisfiedByMeasure(true);
 
     // Create a list of objectives
     List<Scorm2004Objective> objectiveList = new ArrayList<>();
-    objectiveList.add(Scorm2004Objective.builder()
-        .objectiveID("secondary.objective1")
-        .build());
-    objectiveList.add(Scorm2004Objective.builder()
-        .objectiveID("secondary.objective2")
-        .build());
+    Scorm2004Objective objective1 = new Scorm2004Objective();
+    objective1.setObjectiveID("secondary.objective1");
+    objectiveList.add(objective1);
+    Scorm2004Objective objective2 = new Scorm2004Objective();
+    objective2.setObjectiveID("secondary.objective2");
+    objectiveList.add(objective2);
 
     // Create a Scorm2004Objectives instance
-    Scorm2004Objectives objectives = Scorm2004Objectives.builder()
-        .primaryObjective(primaryObjective)
-        .objectiveList(objectiveList)
-        .build();
+    Scorm2004Objectives objectives = new Scorm2004Objectives();
+    objectives.setPrimaryObjective(primaryObjective);
+    objectives.setObjectiveList(objectiveList);
 
     // Verify the properties
     assertNotNull(objectives);
     assertNotNull(objectives.getPrimaryObjective());
-    assertEquals("primary.objective", objectives.getPrimaryObjective().getObjectiveID());
-    assertTrue(objectives.getPrimaryObjective().getSatisfiedByMeasure());
-    assertEquals(0.7, objectives.getPrimaryObjective().getMinNormalizedMeasure());
+    assertEquals("primary.objective", objectives
+        .getPrimaryObjective()
+        .getObjectiveID());
+    assertTrue(objectives
+        .getPrimaryObjective()
+        .getSatisfiedByMeasure());
+    assertEquals(0.7, objectives
+        .getPrimaryObjective()
+        .getMinNormalizedMeasure());
 
     assertNotNull(objectives.getObjectiveList());
-    assertEquals(2, objectives.getObjectiveList().size());
-    assertEquals("secondary.objective1", objectives.getObjectiveList().get(0).getObjectiveID());
-    assertEquals("secondary.objective2", objectives.getObjectiveList().get(1).getObjectiveID());
+    assertEquals(2, objectives
+        .getObjectiveList()
+        .size());
+    assertEquals("secondary.objective1", objectives
+        .getObjectiveList()
+        .get(0)
+        .getObjectiveID());
+    assertEquals("secondary.objective2", objectives
+        .getObjectiveList()
+        .get(1)
+        .getObjectiveID());
 
     // Test default constructor
     Scorm2004Objectives defaultObjectives = new Scorm2004Objectives();

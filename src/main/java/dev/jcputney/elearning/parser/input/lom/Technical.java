@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.input.lom;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -30,12 +28,8 @@ import dev.jcputney.elearning.parser.input.lom.types.Requirement;
 import dev.jcputney.elearning.parser.input.lom.types.SingleLangString;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents the technical information about a learning object in a Learning Object Metadata (LOM)
@@ -59,12 +53,6 @@ import lombok.extern.jackson.Jacksonized;
  * </complexType>
  * }</pre>
  */
-@Builder
-@Getter
-@Jacksonized
-@NoArgsConstructor
-@EqualsAndHashCode(doNotUseGetters = true)
-@AllArgsConstructor(access = PRIVATE)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Technical implements Serializable {
 
@@ -218,4 +206,133 @@ public class Technical implements Serializable {
   @JacksonXmlElementWrapper(localName = "customElements", useWrapping = false)
   @JacksonXmlProperty(localName = "customElements")
   private List<Object> customElements;
+
+  public Technical(List<String> format, Integer size, List<String> location,
+      List<Requirement> requirements, SingleLangString installationRemarks,
+      SingleLangString otherPlatformRequirements, LomDuration duration,
+      PackageProperties packageProperties, List<Object> customElements) {
+    this.format = format;
+    this.size = size;
+    this.location = location;
+    this.requirements = requirements;
+    this.installationRemarks = installationRemarks;
+    this.otherPlatformRequirements = otherPlatformRequirements;
+    this.duration = duration;
+    this.packageProperties = packageProperties;
+    this.customElements = customElements;
+  }
+
+  public Technical() {
+  }
+
+  public List<String> getFormat() {
+    return this.format;
+  }
+
+  public void setFormat(List<String> format) {
+    this.format = format;
+  }
+
+  public Integer getSize() {
+    return this.size;
+  }
+
+  public void setSize(Integer size) {
+    this.size = size;
+  }
+
+  public List<String> getLocation() {
+    return this.location;
+  }
+
+  public void setLocation(List<String> location) {
+    this.location = location;
+  }
+
+  public List<Requirement> getRequirements() {
+    return this.requirements;
+  }
+
+  public void setRequirements(List<Requirement> requirements) {
+    this.requirements = requirements;
+  }
+
+  public SingleLangString getInstallationRemarks() {
+    return this.installationRemarks;
+  }
+
+  public void setInstallationRemarks(SingleLangString installationRemarks) {
+    this.installationRemarks = installationRemarks;
+  }
+
+  public SingleLangString getOtherPlatformRequirements() {
+    return this.otherPlatformRequirements;
+  }
+
+  public void setOtherPlatformRequirements(
+      SingleLangString otherPlatformRequirements) {
+    this.otherPlatformRequirements = otherPlatformRequirements;
+  }
+
+  public LomDuration getDuration() {
+    return this.duration;
+  }
+
+  public void setDuration(LomDuration duration) {
+    this.duration = duration;
+  }
+
+  public PackageProperties getPackageProperties() {
+    return this.packageProperties;
+  }
+
+  public void setPackageProperties(PackageProperties packageProperties) {
+    this.packageProperties = packageProperties;
+  }
+
+  public List<Object> getCustomElements() {
+    return this.customElements;
+  }
+
+  public void setCustomElements(List<Object> customElements) {
+    this.customElements = customElements;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Technical technical)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .append(getFormat(), technical.getFormat())
+        .append(getSize(), technical.getSize())
+        .append(getLocation(), technical.getLocation())
+        .append(getRequirements(), technical.getRequirements())
+        .append(getInstallationRemarks(), technical.getInstallationRemarks())
+        .append(getOtherPlatformRequirements(), technical.getOtherPlatformRequirements())
+        .append(getDuration(), technical.getDuration())
+        .append(getPackageProperties(), technical.getPackageProperties())
+        .append(getCustomElements(), technical.getCustomElements())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(getFormat())
+        .append(getSize())
+        .append(getLocation())
+        .append(getRequirements())
+        .append(getInstallationRemarks())
+        .append(getOtherPlatformRequirements())
+        .append(getDuration())
+        .append(getPackageProperties())
+        .append(getCustomElements())
+        .toHashCode();
+  }
 }
