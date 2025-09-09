@@ -110,6 +110,10 @@ public record MeasureType(BigDecimal value) implements Serializable {
         .toPlainString();
   }
 
+  public BigDecimal getValue() {
+    return value;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

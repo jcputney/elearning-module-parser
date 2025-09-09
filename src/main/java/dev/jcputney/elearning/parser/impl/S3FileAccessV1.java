@@ -115,6 +115,13 @@ public class S3FileAccessV1 extends AbstractS3FileAccess {
             .stream()
             .map(S3ObjectSummary::getKey)
             .filter(key -> !key.endsWith("/")) // Filter out directory markers
+            .map(key -> {
+              // Strip the root path to return relative paths
+              if (rootPath != null && !rootPath.isEmpty() && key.startsWith(rootPath + "/")) {
+                return key.substring(rootPath.length() + 1);
+              }
+              return key;
+            })
             .toList());
         request.setMarker(listing.getNextMarker());
       } while (listing.isTruncated());

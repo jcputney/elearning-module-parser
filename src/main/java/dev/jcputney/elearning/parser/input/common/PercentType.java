@@ -93,6 +93,11 @@ public record PercentType(BigDecimal value) implements Serializable {
   }
 
   @Override
+  public BigDecimal value() {
+    return value;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;

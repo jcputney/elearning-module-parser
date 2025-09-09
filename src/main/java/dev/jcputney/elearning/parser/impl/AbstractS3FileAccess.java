@@ -226,10 +226,13 @@ public abstract class AbstractS3FileAccess implements FileAccess {
             if (checkFileExistsOnS3(file)) {
               // Get file size first
               long size = getFileSizeOnS3(file);
-              fileSizeCache.put(file, size);
+              // Only cache non-zero sizes to avoid caching failed lookups
+              if (size > 0) {
+                fileSizeCache.put(file, size);
+              }
 
               // Only cache small files
-              if (size <= STREAMING_THRESHOLD) {
+              if (size > 0 && size <= STREAMING_THRESHOLD) {
                 byte[] content = getS3ObjectAsBytes(fullFilePath);
                 smallFileCache.put(file, content);
                 // Prefetched file successfully
@@ -398,7 +401,10 @@ public abstract class AbstractS3FileAccess implements FileAccess {
         // Fetch size asynchronously
         futures.add(CompletableFuture.supplyAsync(() -> {
           long size = getFileSizeOnS3(finalRelativePath);
-          fileSizeCache.put(finalRelativePath, size);
+          // Only cache non-zero sizes to avoid caching failed lookups
+          if (size > 0) {
+            fileSizeCache.put(finalRelativePath, size);
+          }
           return size;
         }, executorService));
       }
