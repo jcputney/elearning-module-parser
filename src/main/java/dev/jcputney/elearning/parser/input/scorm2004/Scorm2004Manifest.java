@@ -424,6 +424,7 @@ public class Scorm2004Manifest implements PackageManifest {
    *
    * @return A set of global objective IDs, or an empty set if none are found
    */
+  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   public Set<String> getGlobalObjectiveIds() {
     if (organizations == null) {
       return Collections.emptySet();
@@ -446,9 +447,15 @@ public class Scorm2004Manifest implements PackageManifest {
    * A SCO (Shareable Content Object) is a resource with scormType="sco". SCOs are the trackable,
    * interactive components of a SCORM package that communicate with the LMS.
    * </p>
+   * <p>
+   * JSON serialization note: This property is exposed as "scoids" for backward compatibility but
+   * is marked as read-only to prevent Jackson from attempting to populate it during deserialization
+   * (which could cause UnsupportedOperationException due to immutable Sets).
+   * </p>
    *
    * @return A set of SCO IDs, or an empty set if none are found
    */
+  @JsonProperty(value = "scoids", access = JsonProperty.Access.READ_ONLY)
   public Set<String> getSCOIds() {
     if (resources == null || resources.getResourceList() == null) {
       return Collections.emptySet();
