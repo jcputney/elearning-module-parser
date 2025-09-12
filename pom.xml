@@ -67,7 +67,7 @@
     <version.plugin.shade>3.6.0</version.plugin.shade>
     <version.plugin.source>3.3.1</version.plugin.source>
     <version.plugin.surefire>3.5.3</version.plugin.surefire>
-    <version.plugin.wrapper>3.3.2</version.plugin.wrapper>
+    <version.plugin.wrapper>3.3.4</version.plugin.wrapper>
     <version.slf4j>2.0.17</version.slf4j>
     <version.testcontainers>1.21.3</version.testcontainers>
     <version.threeten>1.8.0</version.threeten>
