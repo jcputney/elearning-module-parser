@@ -157,3 +157,4 @@ release.properties
 pom.xml.releaseBackup
 /logs/
 docs/sequencing.md
+/test_modules/

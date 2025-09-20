@@ -1,0 +1,55 @@
+name: PR Test Guard
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+
+permissions:
+  contents: read
+
+jobs:
+  require-tests-for-code:
+    name: Ensure tests accompany code changes
+    runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.draft }}
+    steps:
+      - name: Check override labels
+        id: override
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = (context.payload.pull_request.labels || []).map(l => l.name.toLowerCase());
+            const overrides = ['skip-tests', 'tests-not-required', 'docs'];
+            const skip = labels.some(l => overrides.includes(l));
+            core.setOutput('skip', skip ? 'true' : 'false');
+
+      - name: Checkout repository
+        if: steps.override.outputs.skip != 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute changed files
+        if: steps.override.outputs.skip != 'true'
+        run: |
+          git fetch origin ${{ github.base_ref }} --no-tags --depth=1
+          git diff --name-only origin/${{ github.base_ref }}...HEAD > changed_files.txt
+          echo "Changed files:" && cat changed_files.txt || true
+
+      - name: Enforce tests when src/main changes
+        if: steps.override.outputs.skip != 'true'
+        run: |
+          if grep -E -q '^src/main/' changed_files.txt; then
+            echo "Detected changes under src/main.";
+            if grep -E -q '^src/test/' changed_files.txt; then
+              echo "Companion tests detected under src/test. Guard passed.";
+              exit 0;
+            else
+              echo "ERROR: Code changes under src/main detected without test changes under src/test." >&2;
+              echo "Please add or update tests, or apply an override label: 'skip-tests' or 'tests-not-required'." >&2;
+              exit 1;
+            fi
+          else
+            echo "No src/main changes detected. Guard passed.";
+          fi
+

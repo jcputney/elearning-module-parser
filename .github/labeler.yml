@@ -1,0 +1,43 @@
+bug:
+  - '(?i)\bbug\b'
+  - '(?i)exception|stack trace|NullPointerException|IllegalArgumentException'
+
+enhancement:
+  - '(?i)feature request|enhancement|proposal|Proposed Solution'
+
+scorm-12:
+  - '(?i)SCORM\s*1\.2\b'
+
+scorm-2004:
+  - '(?i)SCORM\s*2004\b'
+
+aicc:
+  - '(?i)\bAICC\b'
+
+cmi5:
+  - '(?i)\bCMI5\b'
+
+backend-zip:
+  - '(?i)ZipFileAccess|\.zip\b'
+
+backend-s3:
+  - '(?i)S3FileAccess|AWS S3|s3Client'
+
+backend-local:
+  - '(?i)LocalFileAccess'
+
+area-factory:
+  - '(?i)ModuleParserFactory'
+
+area-detection:
+  - '(?i)ModuleTypeDetector'
+
+area-parsers:
+  - '(?i)\bParser\b'
+
+area-input:
+  - '(?i)input model|manifest|imsmanifest|cmi5\.xml|\.crs|AICC files'
+
+area-output:
+  - '(?i)ModuleMetadata|metadata'
+

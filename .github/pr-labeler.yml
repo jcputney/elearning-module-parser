@@ -1,0 +1,43 @@
+area-parsers:
+  - 'src/**/parsers/**'
+
+area-factory:
+  - 'src/**/DefaultModuleParserFactory.java'
+  - 'src/**/api/ModuleParserFactory.java'
+
+area-detection:
+  - 'src/**/DefaultModuleTypeDetector.java'
+  - 'src/**/util/detector/**'
+  - 'src/**/util/ScormVersionDetector.java'
+  - 'src/**/api/ModuleTypeDetector*.java'
+
+area-input:
+  - 'src/**/input/**'
+
+area-output:
+  - 'src/**/output/**'
+
+backend-zip:
+  - 'src/**/ZipFileAccess.java'
+
+backend-local:
+  - 'src/**/LocalFileAccess.java'
+
+backend-s3:
+  - 'src/**/S3FileAccess*.java'
+  - 'src/**/AbstractS3FileAccess.java'
+
+type-tests:
+  - 'src/test/**'
+
+docs:
+  - 'README.md'
+  - 'AGENTS.md'
+  - 'CONTRIBUTING.md'
+  - 'CODE_OF_CONDUCT.md'
+  - 'docs/**'
+
+build-ci:
+  - '.github/**'
+  - 'pom.xml'
+

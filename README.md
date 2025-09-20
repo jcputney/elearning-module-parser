@@ -187,6 +187,31 @@ switch (metadata.getModuleType()) {
 }
 ```
 
+SCORM 2004 modules expose ADL/IMSSS details through typed accessors on
+`Scorm2004Metadata` (for example `getControlModes()`, `getCompletionThresholds()` and
+`getHideLmsUi()`). Delivery controls are available directly on the metadata instance:
+
+```java
+Scorm2004Metadata scorm2004 = (Scorm2004Metadata) metadata;
+Map<String, DeliveryControls> controlsByActivity = scorm2004.getActivityDeliveryControls();
+boolean overridesDefaults = scorm2004.overridesDeliveryControlDefaults("item_1");
+```
+
+Other module types expose their rich metadata in a similar fashion:
+
+- `Cmi5Metadata` → assignable unit details via `getAuDetails()`, mastery scores via
+  `getMasteryScores()`, etc.
+- `AiccMetadata` → prerequisites summaries via `getPrerequisitesGraph()` and
+  `getPrerequisitesEdgeCount()`.
+- `Scorm12Metadata` → item-level data through `getPrerequisites()`, `getMasteryScores()` and
+  `getCustomData()`.
+
+Every activity appears in the map with resolved `DeliveryControls`, honoring SCORM defaults when no
+modifiers are defined in the manifest (`tracked` defaults to `true`, completion/objective flags
+default to `false`). Use `getActivitiesOverridingDeliveryControlDefaults()` or
+`overridesDeliveryControlDefaults(String)` to discover which activities explicitly set delivery
+controls in the manifest.
+
 ### Error Handling
 
 ```java

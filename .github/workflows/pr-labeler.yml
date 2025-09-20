@@ -1,0 +1,59 @@
+name: PR Labeler
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  ensure-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure common labels exist
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = [
+              {name: 'area-parsers', color: '5319e7', description: 'Parser implementations'},
+              {name: 'area-factory', color: 'b60205', description: 'Factory/creation logic'},
+              {name: 'area-detection', color: '1d76db', description: 'Module type detection'},
+              {name: 'area-input', color: '0052cc', description: 'Input models/ingest'},
+              {name: 'area-output', color: 'fbca04', description: 'Output/metadata'},
+              {name: 'backend-zip', color: 'fef2c0', description: 'Zip backend'},
+              {name: 'backend-local', color: 'c2e0c6', description: 'Local file backend'},
+              {name: 'backend-s3', color: 'f9d0c4', description: 'AWS S3 backend'},
+              {name: 'type-tests', color: '0e8a16', description: 'Unit/integration tests'},
+              {name: 'docs', color: 'c5def5', description: 'Documentation changes'},
+              {name: 'build-ci', color: 'd4c5f9', description: 'Build or CI changes'}
+            ];
+            const existing = await github.paginate(
+              github.rest.issues.listLabelsForRepo,
+              { owner: context.repo.owner, repo: context.repo.repo, per_page: 100 }
+            );
+            const byName = new Map(existing.map(l => [l.name.toLowerCase(), l]));
+            for (const l of labels) {
+              if (!byName.has(l.name.toLowerCase())) {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: l.name,
+                  color: l.color,
+                  description: l.description
+                });
+              }
+            }
+
+  label-pr:
+    needs: ensure-labels
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply labels by changed files
+        uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/pr-labeler.yml
+          sync-labels: false
+
