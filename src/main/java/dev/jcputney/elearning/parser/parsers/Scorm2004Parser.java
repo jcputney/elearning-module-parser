@@ -26,11 +26,15 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organization;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resource;
 import dev.jcputney.elearning.parser.output.metadata.scorm2004.Scorm2004Metadata;
+import dev.jcputney.elearning.parser.util.Scorm2004SchemaValidator;
+import dev.jcputney.elearning.parser.util.XmlParsingUtils;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.xml.stream.XMLStreamException;
+import org.xml.sax.SAXException;
 
 /**
  * Parses SCORM 2004 modules by reading the imsmanifest.xml file and extracting core metadata,
@@ -113,6 +117,41 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
   @Override
   public Class<Scorm2004Manifest> getManifestClass() {
     return Scorm2004Manifest.class;
+  }
+
+  /**
+   * Parses and optionally XSD-validates the SCORM 2004 manifest.
+   */
+  @Override
+  public Scorm2004Manifest parseManifest(String manifestPath)
+      throws IOException, XMLStreamException, ModuleParsingException {
+    if (manifestPath == null) {
+      throw new IllegalArgumentException("Manifest path cannot be null");
+    }
+    eventListener.onParsingStarted("manifest", manifestPath);
+    try (InputStream manifestStream = moduleFileProvider.getFileContents(manifestPath)) {
+      byte[] bytes = manifestStream.readAllBytes();
+
+      if (Scorm2004SchemaValidator.isEnabled()) {
+        try {
+          Scorm2004SchemaValidator.validate(bytes);
+          eventListener.onParsingProgress("SCORM 2004 XSD validation passed", 25);
+        } catch (SAXException e) {
+          throw new ModuleParsingException("SCORM 2004 XSD validation failed: " + e.getMessage(), e);
+        }
+      }
+
+      Scorm2004Manifest manifest = XmlParsingUtils
+          .parseXmlToObject(new java.io.ByteArrayInputStream(bytes), getManifestClass(), manifestPath);
+      loadExternalMetadata(manifest);
+      return manifest;
+    } catch (IOException e) {
+      throw new ModuleParsingException(
+          String.format("Failed to read manifest file '%s': %s", manifestPath, e.getMessage()), e);
+    } catch (XMLStreamException e) {
+      throw new ModuleParsingException(
+          String.format("Failed to parse manifest XML at '%s': %s", manifestPath, e.getMessage()), e);
+    }
   }
 
   /**

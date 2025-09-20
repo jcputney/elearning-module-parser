@@ -33,8 +33,8 @@ import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.DefaultModuleParserFactory;
 import dev.jcputney.elearning.parser.impl.ZipFileAccess;
+import dev.jcputney.elearning.parser.input.scorm2004.SequencingUsageDetector.SequencingLevel;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
-import dev.jcputney.elearning.parser.output.metadata.CompositeMetadata;
 import dev.jcputney.elearning.parser.output.metadata.aicc.AiccMetadata;
 import dev.jcputney.elearning.parser.output.metadata.cmi5.Cmi5Metadata;
 import dev.jcputney.elearning.parser.output.metadata.scorm12.Scorm12Metadata;
@@ -50,6 +50,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
@@ -133,9 +134,6 @@ class ModuleParserFactoryTest {
           Assertions
               .assertThat(metadata)
               .usingRecursiveComparison()
-              .ignoringFieldsOfTypes(
-                  CompositeMetadata.class
-              )
               .withComparatorForType(
                   (o1, o2) -> {
                     if (o1 != null && o2 != null) {
@@ -147,10 +145,10 @@ class ModuleParserFactoryTest {
               .isEqualTo(result);
 
           boolean jsonParsedEquals = metadata.equals(result);
-          boolean hasSequencing = false;
+          String sequencingInfo = "N/A";
           if (metadata.getModuleType() == ModuleType.SCORM_2004
               && metadata instanceof Scorm2004Metadata scorm2004Metadata) {
-            hasSequencing = (scorm2004Metadata).isHasSequencing();
+            sequencingInfo = formatSequencingLevel(scorm2004Metadata.getSequencingLevel());
           }
           rows.add(new RowData(
               jsonParsedEquals ? PASS : FAIL,
@@ -162,7 +160,7 @@ class ModuleParserFactoryTest {
                   .getModuleType()
                   .name(),
               jsonParsedEquals,
-              hasSequencing
+              sequencingInfo
           ));
 
         } catch (IOException e) {
@@ -230,11 +228,8 @@ class ModuleParserFactoryTest {
                     .header("JSON PARSED")
                     .with(r -> r.jsonParsed ? "YES" : "NO"),
                 new Column()
-                    .header("SEQUENCING")
-                    .with(
-                        r -> !r.moduleTypeOrError.equals("SCORM_2004") ? "N/A"
-                            : r.hasSequencing ? "YES" : "NO"
-                    )
+                    .header("SEQUENCING LEVEL")
+                    .with(r -> r.sequencingInfo)
             )
         )
         .writeTo(System.out);
@@ -247,6 +242,16 @@ class ModuleParserFactoryTest {
     objectMapper.registerModule(new JavaTimeModule());
     objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     return objectMapper;
+  }
+
+  private static String formatSequencingLevel(SequencingLevel level) {
+    if (level == null) {
+      return "N/A";
+    }
+    String lower = level
+        .name()
+        .toLowerCase(Locale.ROOT);
+    return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
   }
 
   @Test
@@ -303,10 +308,10 @@ class ModuleParserFactoryTest {
     final Duration duration;
     final String moduleTypeOrError;
     final boolean jsonParsed;
-    final boolean hasSequencing;
+    final String sequencingInfo;
 
     RowData(String result, String filename, String title, String description, Duration duration,
-        String moduleTypeOrError, boolean jsonParsed, boolean hasSequencing) {
+        String moduleTypeOrError, boolean jsonParsed, String sequencingInfo) {
       this.result = result;
       this.filename = filename;
       this.title = title;
@@ -314,11 +319,11 @@ class ModuleParserFactoryTest {
       this.moduleTypeOrError = moduleTypeOrError;
       this.duration = duration;
       this.jsonParsed = jsonParsed;
-      this.hasSequencing = hasSequencing;
+      this.sequencingInfo = sequencingInfo;
     }
 
     RowData(String result, String filename, String moduleTypeOrError) {
-      this(result, filename, "", "", Duration.ZERO, moduleTypeOrError, false, false);
+      this(result, filename, "", "", Duration.ZERO, moduleTypeOrError, false, "N/A");
     }
   }
 }

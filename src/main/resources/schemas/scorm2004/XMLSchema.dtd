@@ -1,0 +1,144 @@
+<!-- DTD for XML Schemas: Part 1: Structures
+     Public Identifier: -//W3C//DTD XMLSCHEMA 200102//EN
+     Official Location: http://www.w3.org/2001/XMLSchema.dtd
+     Author: David Beech, W3C XML Schema WG
+-->
+
+<!ENTITY % p "-//W3C//DTD XMLSCHEMA 200102//EN">
+<!ENTITY % s "http://www.w3.org/2001/XMLSchema.dtd">
+<!ENTITY % NSdecl "xmlns:xs CDATA #IMPLIED">
+<!ENTITY % Schema "%NSdecl; xs:schema">
+<!ENTITY % simpleDerivationSet 'CDATA'>
+<!ENTITY % complexDerivationSet 'CDATA'>
+<!ENTITY % blockSet 'CDATA'>
+<!ENTITY % formValues '(qualified|unqualified)'>
+<!ENTITY % simpleType 'xs:simpleType'>
+<!ENTITY % complexType 'xs:complexType'>
+<!ENTITY % group 'xs:group'>
+<!ENTITY % all 'xs:all'>
+<!ENTITY % choice 'xs:choice'>
+<!ENTITY % sequence 'xs:sequence'>
+<!ENTITY % any 'xs:any'>
+<!ENTITY % element 'xs:element'>
+<!ENTITY % attribute 'xs:attribute'>
+<!ENTITY % attributeGroup 'xs:attributeGroup'>
+<!ENTITY % anyAttribute 'xs:anyAttribute'>
+<!ENTITY % notation 'xs:notation'>
+<!ENTITY % annotation 'xs:annotation'>
+<!ENTITY % appinfo 'xs:appinfo'>
+<!ENTITY % documentation 'xs:documentation'>
+<!ENTITY % schemaAttrs 'CDATA'>
+<!ENTITY % public 'CDATA'>
+<!ENTITY % system 'CDATA'>
+<!ENTITY % simpleRestriction 'CDATA'>
+<!ENTITY % length 'CDATA'>
+<!ENTITY % minLength 'CDATA'>
+<!ENTITY % maxLength 'CDATA'>
+<!ENTITY % pattern 'CDATA'>
+<!ENTITY % enumeration 'CDATA'>
+<!ENTITY % whiteSpace 'CDATA'>
+<!ENTITY % maxInclusive 'CDATA'>
+<!ENTITY % maxExclusive 'CDATA'>
+<!ENTITY % minInclusive 'CDATA'>
+<!ENTITY % minExclusive 'CDATA'>
+<!ENTITY % totalDigits 'CDATA'>
+<!ENTITY % fractionDigits 'CDATA'>
+<!ENTITY % list 'CDATA'>
+<!ENTITY % union 'CDATA'>
+<!ENTITY % extension 'CDATA'>
+<!ENTITY % restriction 'CDATA'>
+<!ENTITY % contentSpec 'CDATA'>
+<!ENTITY % complexContent 'CDATA'>
+<!ENTITY % sequenceOrChoice 'CDATA'>
+<!ENTITY % allOrChoiceOrSequence 'CDATA'>
+<!ENTITY % identityConstraint 'CDATA'>
+<!ENTITY % unique 'CDATA'>
+<!ENTITY % key 'CDATA'>
+<!ENTITY % keyref 'CDATA'>
+<!ENTITY % selector 'CDATA'>
+<!ENTITY % field 'CDATA'>
+<!ENTITY % simpleContent 'CDATA'>
+<!ENTITY % redefine 'CDATA'>
+<!ENTITY % import 'CDATA'>
+<!ENTITY % include 'CDATA'>
+<!ENTITY % selectorAttrs 'CDATA'>
+<!ENTITY % formChoice 'CDATA'>
+<!ENTITY % blockOrFinal '(#PCDATA)'>
+<!ENTITY % derivationChoice '(#PCDATA)'>
+<!ENTITY % occurrence 'CDATA'>
+<!ENTITY % occurrence-range 'CDATA'>
+<!ENTITY % QName 'CDATA'>
+<!ENTITY % QName-list 'CDATA'>
+<!ENTITY % ID 'ID'>
+<!ENTITY % IDREF 'IDREF'>
+<!ENTITY % boolean '(true|false)'>
+<!ENTITY % nonNegativeInteger 'CDATA'>
+<!ENTITY % namespace 'CDATA'>
+
+<!-- Note: This is a minimal DTD sufficient for schema parsing in this validator context. -->
+
+<!ELEMENT %Schema; ( %annotation; | %simpleType; | %complexType; | %group; | %attributeGroup; | %element; | %attribute; | %notation; | %redefine; | %import; | %include; )* >
+
+<!ELEMENT %annotation; ( %appinfo; | %documentation; )* >
+<!ATTLIST %annotation; %schemaAttrs; >
+
+<!ELEMENT %documentation; (#PCDATA) >
+<!ATTLIST %documentation; %schemaAttrs; >
+
+<!ELEMENT %appinfo; (#PCDATA) >
+<!ATTLIST %appinfo; %schemaAttrs; source %system; #IMPLIED>
+
+<!ELEMENT %simpleType; ( %annotation; | %restriction; | %list; | %union; )* >
+<!ATTLIST %simpleType; name %ID; #IMPLIED final %simpleDerivationSet; #IMPLIED>
+
+<!ELEMENT %complexType; ( %annotation; | %simpleContent; | %complexContent; | %allOrChoiceOrSequence; | %group; )* >
+<!ATTLIST %complexType; name %ID; #IMPLIED abstract %boolean; #IMPLIED final %complexDerivationSet; #IMPLIED block %complexDerivationSet; #IMPLIED mixed %boolean; #IMPLIED>
+
+<!ELEMENT %group; ( %annotation; | %allOrChoiceOrSequence; )* >
+<!ATTLIST %group; name %ID; #IMPLIED ref %QName; #IMPLIED minOccurs %occurrence; #IMPLIED maxOccurs %occurrence-range; #IMPLIED>
+
+<!ELEMENT %all; ( %annotation; | %element; )* >
+<!ATTLIST %all; minOccurs %occurrence; #IMPLIED maxOccurs (1) #IMPLIED>
+
+<!ELEMENT %choice; ( %annotation; | %sequenceOrChoice; | %element; | %group; | %any; )* >
+<!ATTLIST %choice; minOccurs %occurrence; #IMPLIED maxOccurs %occurrence-range; #IMPLIED>
+
+<!ELEMENT %sequence; ( %annotation; | %sequenceOrChoice; | %element; | %group; | %any; )* >
+<!ATTLIST %sequence; minOccurs %occurrence; #IMPLIED maxOccurs %occurrence-range; #IMPLIED>
+
+<!ELEMENT %any; ( %annotation; )* >
+<!ATTLIST %any; namespace %namespace; #IMPLIED processContents (skip|lax|strict) "strict" minOccurs %occurrence; #IMPLIED maxOccurs %occurrence-range; #IMPLIED>
+
+<!ELEMENT %element; ( %annotation; | %complexType; | %simpleType; | %identityConstraint; )* >
+<!ATTLIST %element; name %ID; #IMPLIED ref %QName; #IMPLIED type %QName; #IMPLIED minOccurs %occurrence; #IMPLIED maxOccurs %occurrence-range; #IMPLIED default CDATA #IMPLIED fixed CDATA #IMPLIED nillable %boolean; #IMPLIED abstract %boolean; #IMPLIED substitutionGroup %QName-list; #IMPLIED block %blockSet; #IMPLIED final %final; #IMPLIED>
+
+<!ELEMENT %identityConstraint; ( %annotation; | %selector; | %field; )* >
+<!ATTLIST %identityConstraint; name %ID; #IMPLIED>
+
+<!ELEMENT %selector; ( %annotation; )* >
+<!ATTLIST %selector; xpath CDATA #REQUIRED>
+
+<!ELEMENT %field; ( %annotation; )* >
+<!ATTLIST %field; xpath CDATA #REQUIRED>
+
+<!ELEMENT %attribute; ( %annotation; | %simpleType; )* >
+<!ATTLIST %attribute; name %ID; #IMPLIED ref %QName; #IMPLIED type %QName; #IMPLIED use (prohibited|required|optional) #IMPLIED default CDATA #IMPLIED fixed CDATA #IMPLIED form %formChoice; #IMPLIED>
+
+<!ELEMENT %attributeGroup; ( %annotation; | %attribute; | %anyAttribute; | %attributeGroup; )* >
+<!ATTLIST %attributeGroup; name %ID; #IMPLIED ref %QName; #IMPLIED>
+
+<!ELEMENT %anyAttribute; ( %annotation; )* >
+<!ATTLIST %anyAttribute; namespace %namespace; #IMPLIED processContents (skip|lax|strict) "strict">
+
+<!ELEMENT %notation; ( %annotation; )* >
+<!ATTLIST %notation; name %ID; #REQUIRED public %public; #IMPLIED system %system; #IMPLIED>
+
+<!ELEMENT %redefine; ( %annotation; | %simpleType; | %complexType; | %group; | %attributeGroup; )* >
+<!ATTLIST %redefine; schemaLocation %system; #REQUIRED>
+
+<!ELEMENT %import; ( %annotation; )* >
+<!ATTLIST %import; namespace %namespace; #IMPLIED schemaLocation %system; #IMPLIED>
+
+<!ELEMENT %include; ( %annotation; )* >
+<!ATTLIST %include; schemaLocation %system; #REQUIRED>
+

@@ -32,7 +32,6 @@ import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import dev.jcputney.elearning.parser.parsers.Scorm2004Parser;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -44,7 +43,8 @@ public class ActivityTreeTest {
    * Tests building an ActivityTree from a SCORM 2004 manifest.
    */
   @Test
-  void testBuildActivityTree() throws IOException, javax.xml.stream.XMLStreamException, dev.jcputney.elearning.parser.exception.ModuleParsingException {
+  void testBuildActivityTree()
+      throws IOException, javax.xml.stream.XMLStreamException, dev.jcputney.elearning.parser.exception.ModuleParsingException {
     // Parse a SCORM 2004 manifest
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingOneFilePerSCO_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);
@@ -52,18 +52,19 @@ public class ActivityTreeTest {
     Scorm2004Manifest manifest = parser.parseManifest(Scorm2004Parser.MANIFEST_FILE);
 
     // Build an ActivityTree from the manifest
-    Optional<ActivityTree> treeOpt = manifest.buildActivityTree();
+    ActivityTree tree = manifest.buildActivityTree();
 
     // Verify that the ActivityTree was built successfully
-    assertTrue(treeOpt.isPresent(), "ActivityTree should be present");
+    assertTrue(tree != null, "ActivityTree should be present");
 
-    ActivityTree tree = treeOpt.get();
     ActivityNode root = tree.getRoot();
 
     // Verify the root node
     assertNotNull(root, "Root node should not be null");
-    assertEquals("golf_sample_default_org", root.getIdentifier(), "Root node identifier should match");
-    assertEquals("Golf Explained - CP One File Per SCO", root.getTitle(), "Root node title should match");
+    assertEquals("golf_sample_default_org", root.getIdentifier(),
+        "Root node identifier should match");
+    assertEquals("Golf Explained - CP One File Per SCO", root.getTitle(),
+        "Root node title should match");
     assertFalse(root.isLeaf(), "Root node should not be a leaf");
     assertTrue(root.isVisible(), "Root node should be visible");
 
@@ -84,29 +85,34 @@ public class ActivityTreeTest {
     assertFalse(grandchildren.isEmpty(), "First child should have children");
     ActivityNode firstGrandchild = grandchildren.get(0);
     assertNotNull(firstGrandchild, "First grandchild should not be null");
-    assertEquals("playing_playing_item", firstGrandchild.getIdentifier(), "First grandchild identifier should match");
+    assertEquals("playing_playing_item", firstGrandchild.getIdentifier(),
+        "First grandchild identifier should match");
     assertEquals("How to Play", firstGrandchild.getTitle(), "First grandchild title should match");
     assertTrue(firstGrandchild.isLeaf(), "First grandchild should be a leaf");
     assertTrue(firstGrandchild.isVisible(), "First grandchild should be visible");
-    assertTrue(firstGrandchild.getResourceIdentifier().isPresent(), "First grandchild should have a resource identifier");
-    assertEquals("playing_playing_resource", firstGrandchild.getResourceIdentifier().get(), "First grandchild resource identifier should match");
+    assertNotNull(firstGrandchild.getResourceIdentifier(),
+        "First grandchild should have a resource identifier");
+    assertEquals("playing_playing_resource", firstGrandchild.getResourceIdentifier(),
+        "First grandchild resource identifier should match");
 
     // Verify that the node map contains all nodes
-    Optional<ActivityNode> rootByIdOpt = tree.getNodeByIdentifier("golf_sample_default_org");
-    assertTrue(rootByIdOpt.isPresent(), "Root node should be in the node map");
-    assertEquals(root, rootByIdOpt.get(), "Root node from node map should match");
+    ActivityNode rootByIdOpt = tree.getNodeByIdentifier("golf_sample_default_org");
+    assertNotNull(rootByIdOpt, "Root node should be in the node map");
+    assertEquals(root, rootByIdOpt, "Root node from node map should match");
 
-    Optional<ActivityNode> firstChildByIdOpt = tree.getNodeByIdentifier("playing_item");
-    assertTrue(firstChildByIdOpt.isPresent(), "First child should be in the node map");
-    assertEquals(firstChild, firstChildByIdOpt.get(), "First child from node map should match");
+    ActivityNode firstChildByIdOpt = tree.getNodeByIdentifier("playing_item");
+    assertNotNull(firstChildByIdOpt, "First child should be in the node map");
+    assertEquals(firstChild, firstChildByIdOpt, "First child from node map should match");
 
-    Optional<ActivityNode> firstGrandchildByIdOpt = tree.getNodeByIdentifier("playing_playing_item");
-    assertTrue(firstGrandchildByIdOpt.isPresent(), "First grandchild should be in the node map");
-    assertEquals(firstGrandchild, firstGrandchildByIdOpt.get(), "First grandchild from node map should match");
+    ActivityNode firstGrandchildByIdOpt = tree.getNodeByIdentifier("playing_playing_item");
+    assertNotNull(firstGrandchildByIdOpt, "First grandchild should be in the node map");
+    assertEquals(firstGrandchild, firstGrandchildByIdOpt,
+        "First grandchild from node map should match");
 
     // Verify leaf nodes
     List<ActivityNode> leafNodes = tree.getLeafNodes();
     assertFalse(leafNodes.isEmpty(), "Tree should have leaf nodes");
-    assertTrue(leafNodes.contains(firstGrandchild), "Leaf nodes should contain the first grandchild");
+    assertTrue(leafNodes.contains(firstGrandchild),
+        "Leaf nodes should contain the first grandchild");
   }
 }

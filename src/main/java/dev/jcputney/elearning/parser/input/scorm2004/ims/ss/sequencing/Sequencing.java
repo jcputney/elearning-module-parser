@@ -19,6 +19,7 @@ package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLSeq;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
@@ -39,6 +40,16 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class Sequencing implements Serializable {
 
+  /**
+   * Identifier for this sequencing definition, required when stored in a sequencing collection.
+   */
+  @JacksonXmlProperty(isAttribute = true, localName = "ID")
+  private String id;
+  /**
+   * Reference to a shared sequencing definition defined elsewhere in the document.
+   */
+  @JacksonXmlProperty(isAttribute = true, localName = "IDRef")
+  private String idRef;
   /**
    * Control modes that specify the navigation options available to the learner.
    */
@@ -74,7 +85,8 @@ public class Sequencing implements Serializable {
   /**
    * The ADL objectives for this sequencing element.
    */
-  @JacksonXmlProperty(localName = "adlseq:objectives", namespace = ADLSeq.NAMESPACE_URI)
+  @JacksonXmlProperty(localName = "objectives", namespace = ADLSeq.NAMESPACE_URI)
+  @JsonProperty("adlObjectives")
   private Scorm2004Objectives adlObjectives;
   /**
    * Controls the randomization of child activities within a sequence.
@@ -101,6 +113,22 @@ public class Sequencing implements Serializable {
   private ConstrainChoiceConsiderations constrainChoiceConsiderations;
 
   public Sequencing() {
+  }
+
+  public String getId() {
+    return this.id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getIdRef() {
+    return this.idRef;
+  }
+
+  public void setIdRef(String idRef) {
+    this.idRef = idRef;
   }
 
   public ControlMode getControlMode() {
@@ -151,10 +179,12 @@ public class Sequencing implements Serializable {
     this.objectives = objectives;
   }
 
+  @JsonProperty("adlObjectives")
   public Scorm2004Objectives getAdlObjectives() {
     return this.adlObjectives;
   }
 
+  @JsonProperty("adlObjectives")
   public void setAdlObjectives(Scorm2004Objectives adlObjectives) {
     this.adlObjectives = adlObjectives;
   }
@@ -203,6 +233,8 @@ public class Sequencing implements Serializable {
     }
 
     return new EqualsBuilder()
+        .append(getId(), that.getId())
+        .append(getIdRef(), that.getIdRef())
         .append(getControlMode(), that.getControlMode())
         .append(getSequencingRules(), that.getSequencingRules())
         .append(getLimitConditions(), that.getLimitConditions())
@@ -220,6 +252,8 @@ public class Sequencing implements Serializable {
   @Override
   public int hashCode() {
     return new HashCodeBuilder(17, 37)
+        .append(getId())
+        .append(getIdRef())
         .append(getControlMode())
         .append(getSequencingRules())
         .append(getLimitConditions())

@@ -97,11 +97,9 @@ public class ScormVersionDetector {
       }
     }
 
-    // Check for SCORM 2004-specific namespaces
-    if (document
-        .getDocumentElement()
-        .getAttribute("xmlns:adlcp")
-        .contains("adlcp_v1p3")) {
+    // Check for SCORM 2004-specific namespaces (adlcp v1p3 for 3rd/4th, v1p2 for 2nd)
+    String adlcpNs = document.getDocumentElement().getAttribute("xmlns:adlcp");
+    if (adlcpNs != null && (adlcpNs.contains("adlcp_v1p3") || adlcpNs.contains("adlcp_v1p2"))) {
       return SCORM_2004;
     }
 

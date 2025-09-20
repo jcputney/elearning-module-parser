@@ -84,27 +84,18 @@ public class Cmi5ParserTest {
         .getLaunchMethod());
 
     // Test metadata extraction
-    @SuppressWarnings("unchecked")
-    Map<String, Double> masteryScores = (Map<String, Double>) metadata
-        .getMetadata("cmi5.masteryScores")
-        .orElse(null);
+    Map<String, Double> masteryScores = metadata.getMasteryScores();
     assertNotNull(masteryScores);
     assertEquals(1, masteryScores.size());
     assertEquals(0.3, masteryScores.get(
         "https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-single-au-mastery-score-framed/1"));
 
-    @SuppressWarnings("unchecked")
-    Map<String, String> moveOnCriteria = (Map<String, String>) metadata
-        .getMetadata("cmi5.moveOnCriteria")
-        .orElse(null);
+    Map<String, String> moveOnCriteria = metadata.getMoveOnCriteria();
     assertNotNull(moveOnCriteria);
     assertEquals("COMPLETED_OR_PASSED", moveOnCriteria.get(
         "https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-single-au-mastery-score-framed/1"));
 
-    @SuppressWarnings("unchecked")
-    Map<String, String> launchMethods = (Map<String, String>) metadata
-        .getMetadata("cmi5.launchMethods")
-        .orElse(null);
+    Map<String, String> launchMethods = metadata.getLaunchMethods();
     assertNotNull(launchMethods);
     assertEquals("OWN_WINDOW", launchMethods.get(
         "https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-single-au-mastery-score-framed/1"));
@@ -187,10 +178,7 @@ public class Cmi5ParserTest {
         .getLaunchMethod());
 
     // Test metadata extraction for multiple AUs
-    @SuppressWarnings("unchecked")
-    Map<String, Map<String, Object>> auDetails = (Map<String, Map<String, Object>>) metadata
-        .getMetadata("cmi5.auDetails")
-        .orElse(null);
+    Map<String, Map<String, Object>> auDetails = metadata.getAuDetails();
     assertNotNull(auDetails);
     assertEquals(8, auDetails.size());
 
@@ -204,10 +192,7 @@ public class Cmi5ParserTest {
         "This course will introduce you into the basics of geology. This includes subjects such as\nplate tectonics, geological materials and the history of the Earth.",
         firstAuDetails.get("description"));
 
-    @SuppressWarnings("unchecked")
-    Map<String, String> moveOnCriteria = (Map<String, String>) metadata
-        .getMetadata("cmi5.moveOnCriteria")
-        .orElse(null);
+    Map<String, String> moveOnCriteria = metadata.getMoveOnCriteria();
     assertNotNull(moveOnCriteria);
     assertEquals(8, moveOnCriteria.size());
     assertEquals("COMPLETED_OR_PASSED", moveOnCriteria.get(

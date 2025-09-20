@@ -25,12 +25,12 @@ import dev.jcputney.elearning.parser.input.cmi5.Cmi5Manifest;
 import dev.jcputney.elearning.parser.input.cmi5.ObjectivesList;
 import dev.jcputney.elearning.parser.input.cmi5.types.Objective;
 import dev.jcputney.elearning.parser.output.metadata.BaseModuleMetadata;
-import dev.jcputney.elearning.parser.output.metadata.SimpleMetadata;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Represents metadata for a cmi5 module, including cmi5-specific fields such as prerequisites,
@@ -42,6 +42,17 @@ import java.util.Optional;
  * </p>
  */
 public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
+
+  private final List<String> assignableUnitIds = new ArrayList<>();
+  private final List<String> assignableUnitUrls = new ArrayList<>();
+  private final Map<String, Map<String, Object>> auDetails = new HashMap<>();
+  private final Map<String, Double> masteryScores = new HashMap<>();
+  private final Map<String, String> moveOnCriteria = new HashMap<>();
+  private final Map<String, String> launchMethods = new HashMap<>();
+  private final Map<String, String> activityTypes = new HashMap<>();
+  private final Map<String, String> launchParameters = new HashMap<>();
+  private final List<String> blockIds = new ArrayList<>();
+  private final List<String> objectiveIds = new ArrayList<>();
 
   protected Cmi5Metadata() {
   }
@@ -60,30 +71,20 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
     metadata.moduleEditionType = ModuleEditionType.CMI5;
     metadata.xapiEnabled = xapiEnabled;
 
-    // Add cmi5 specific metadata
-    SimpleMetadata cmi5Metadata = metadata.getSimpleMetadata(manifest);
-
     // Extract all AUs (from root level and blocks)
     List<AU> allAUs = getAllAssignableUnits(manifest);
 
     if (!allAUs.isEmpty()) {
       // Add comprehensive AU metadata
-      Map<String, Map<String, Object>> auDetails = new HashMap<>();
-      Map<String, Double> masteryScores = new HashMap<>();
-      Map<String, String> moveOnCriteria = new HashMap<>();
-      Map<String, String> launchMethods = new HashMap<>();
-      Map<String, String> activityTypes = new HashMap<>();
-      Map<String, String> launchParameters = new HashMap<>();
-
       for (AU au : allAUs) {
         String auId = au.getId();
 
         // Create detailed AU info
-        auDetails.put(auId, getActivityUnitMetadata(au));
+        metadata.auDetails.put(auId, getActivityUnitMetadata(au));
 
         // Extract mastery score
         if (au.getMasteryScore() != null) {
-          masteryScores.put(auId, au
+          metadata.masteryScores.put(auId, au
               .getMasteryScore()
               .value()
               .doubleValue());
@@ -91,69 +92,47 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
 
         // Extract moveOn criteria
         if (au.getMoveOn() != null) {
-          moveOnCriteria.put(auId, au
+          metadata.moveOnCriteria.put(auId, au
               .getMoveOn()
               .name());
         }
 
         // Extract launch method
         if (au.getLaunchMethod() != null) {
-          launchMethods.put(auId, au
+          metadata.launchMethods.put(auId, au
               .getLaunchMethod()
               .name());
         }
 
         // Extract activity type
         if (au.getActivityType() != null) {
-          activityTypes.put(auId, au.getActivityType());
+          metadata.activityTypes.put(auId, au.getActivityType());
         }
 
         // Extract launch parameters
         if (au.getLaunchParameters() != null) {
-          launchParameters.put(auId, au.getLaunchParameters());
+          metadata.launchParameters.put(auId, au.getLaunchParameters());
         }
       }
 
-      // Add all extracted data to metadata
-      cmi5Metadata.addMetadata("cmi5.auDetails", auDetails);
-      if (!masteryScores.isEmpty()) {
-        cmi5Metadata.addMetadata("cmi5.masteryScores", masteryScores);
-      }
-      if (!moveOnCriteria.isEmpty()) {
-        cmi5Metadata.addMetadata("cmi5.moveOnCriteria", moveOnCriteria);
-      }
-      if (!launchMethods.isEmpty()) {
-        cmi5Metadata.addMetadata("cmi5.launchMethods", launchMethods);
-      }
-      if (!activityTypes.isEmpty()) {
-        cmi5Metadata.addMetadata("cmi5.activityTypes", activityTypes);
-      }
-      if (!launchParameters.isEmpty()) {
-        cmi5Metadata.addMetadata("cmi5.launchParameters", launchParameters);
-      }
-
-      // Keep legacy fields for backward compatibility
-      List<String> assignableUnitIds = allAUs
+      metadata.assignableUnitIds.addAll(allAUs
           .stream()
           .map(AU::getId)
-          .toList();
-      List<String> assignableUnitUrls = allAUs
+          .collect(Collectors.toCollection(ArrayList::new)));
+      metadata.assignableUnitUrls.addAll(allAUs
           .stream()
           .map(AU::getUrl)
-          .toList();
-      cmi5Metadata.addMetadata("assignableUnitIds", assignableUnitIds);
-      cmi5Metadata.addMetadata("assignableUnitUrls", assignableUnitUrls);
+          .collect(Collectors.toCollection(ArrayList::new)));
     }
 
     // Add blocks if available
     List<Block> blocks = manifest.getBlocks();
     if (blocks != null && !blocks.isEmpty()) {
       // Add block IDs
-      List<String> blockIds = blocks
+      metadata.blockIds.addAll(blocks
           .stream()
           .map(Block::getId)
-          .toList();
-      cmi5Metadata.addMetadata("blockIds", blockIds);
+          .collect(Collectors.toCollection(ArrayList::new)));
     }
 
     // Add objectives if available
@@ -163,15 +142,11 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
         .filter(objectiveList -> !objectiveList.isEmpty())
         .ifPresent(objectiveList -> {
           // Add objective IDs
-          List<String> objectiveIds = objectiveList
+          metadata.objectiveIds.addAll(objectiveList
               .stream()
               .map(Objective::getId)
-              .toList();
-          cmi5Metadata.addMetadata("objectiveIds", objectiveIds);
+              .collect(Collectors.toCollection(ArrayList::new)));
         });
-
-    // Add the cmi5 metadata component to the composite
-    metadata.addMetadataComponent(cmi5Metadata);
 
     return metadata;
   }
@@ -252,5 +227,45 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
     }
 
     return aus;
+  }
+
+  public List<String> getAssignableUnitIds() {
+    return List.copyOf(assignableUnitIds);
+  }
+
+  public List<String> getAssignableUnitUrls() {
+    return List.copyOf(assignableUnitUrls);
+  }
+
+  public Map<String, Map<String, Object>> getAuDetails() {
+    return Map.copyOf(auDetails);
+  }
+
+  public Map<String, Double> getMasteryScores() {
+    return Map.copyOf(masteryScores);
+  }
+
+  public Map<String, String> getMoveOnCriteria() {
+    return Map.copyOf(moveOnCriteria);
+  }
+
+  public Map<String, String> getLaunchMethods() {
+    return Map.copyOf(launchMethods);
+  }
+
+  public Map<String, String> getActivityTypes() {
+    return Map.copyOf(activityTypes);
+  }
+
+  public Map<String, String> getLaunchParameters() {
+    return Map.copyOf(launchParameters);
+  }
+
+  public List<String> getBlockIds() {
+    return List.copyOf(blockIds);
+  }
+
+  public List<String> getObjectiveIds() {
+    return List.copyOf(objectiveIds);
   }
 }

@@ -29,7 +29,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -174,10 +173,10 @@ public class ActivityNode implements Serializable {
   /**
    * Gets the parent of this node.
    *
-   * @return An Optional containing the parent node, or empty if this is the root node
+   * @return The parent node, or null if this is the root node
    */
-  public Optional<ActivityNode> getParent() {
-    return Optional.ofNullable(parent);
+  public ActivityNode getParent() {
+    return parent;
   }
 
   public void setParent(ActivityNode parent) {
@@ -187,10 +186,10 @@ public class ActivityNode implements Serializable {
   /**
    * Gets the sequencing information for this node.
    *
-   * @return An Optional containing the sequencing information, or empty if none is defined
+   * @return The sequencing information
    */
-  public Optional<Sequencing> getSequencing() {
-    return Optional.ofNullable(sequencing);
+  public Sequencing getSequencing() {
+    return sequencing;
   }
 
   public void setSequencing(Sequencing sequencing) {
@@ -202,8 +201,8 @@ public class ActivityNode implements Serializable {
    *
    * @return An Optional containing the resource identifier or empty if none is defined
    */
-  public Optional<String> getResourceIdentifier() {
-    return Optional.ofNullable(resourceIdentifier);
+  public String getResourceIdentifier() {
+    return resourceIdentifier;
   }
 
   public void setResourceIdentifier(String resourceIdentifier) {

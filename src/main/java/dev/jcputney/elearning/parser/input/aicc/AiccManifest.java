@@ -22,6 +22,7 @@ import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -58,6 +59,18 @@ public class AiccManifest implements PackageManifest {
    */
   @SuppressWarnings("unused")
   private List<CourseStructure> courseStructures;
+
+  /**
+   * Optional prerequisites table (.pre) rows, if present in the package.
+   * Each row is a case-insensitive map of column name to value.
+   */
+  private List<Map<String, String>> prerequisitesTable;
+
+  /**
+   * Optional objective relations table (.ort) rows, if present in the package.
+   * Each row is a case-insensitive map of column name to value.
+   */
+  private List<Map<String, String>> objectivesRelationTable;
 
   /**
    * The launch URL for the AICC manifest.
@@ -201,6 +214,22 @@ public class AiccManifest implements PackageManifest {
 
   public void setLaunchUrl(String launchUrl) {
     this.launchUrl = launchUrl;
+  }
+
+  public List<Map<String, String>> getPrerequisitesTable() {
+    return this.prerequisitesTable;
+  }
+
+  public void setPrerequisitesTable(List<Map<String, String>> prerequisitesTable) {
+    this.prerequisitesTable = prerequisitesTable;
+  }
+
+  public List<Map<String, String>> getObjectivesRelationTable() {
+    return this.objectivesRelationTable;
+  }
+
+  public void setObjectivesRelationTable(List<Map<String, String>> objectivesRelationTable) {
+    this.objectivesRelationTable = objectivesRelationTable;
   }
 
   @Override

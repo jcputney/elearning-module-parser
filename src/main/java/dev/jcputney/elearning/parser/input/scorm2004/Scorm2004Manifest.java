@@ -253,6 +253,42 @@ public class Scorm2004Manifest implements PackageManifest {
    */
   public static final String NAMESPACE_URI = "http://www.imsglobal.org/xsd/imscp_v1p1";
   /**
+   * Captures the declared ADLCP namespace on the manifest root element (e.g.,
+   * http://www.adlnet.org/xsd/adlcp_v1p2 or http://www.adlnet.org/xsd/adlcp_v1p3). This helps with
+   * SCORM 2004 edition detection when schemaversion is absent.
+   */
+  @JacksonXmlProperty(isAttribute = true, localName = "adlcp", namespace = "http://www.w3.org/2000/xmlns/")
+  @JsonProperty("xmlns:adlcp")
+  private String adlcpNamespaceUri;
+  /**
+   * Captures the declared IMSSS namespace on the manifest root element. Its presence is a strong
+   * signal that sequencing is implemented.
+   */
+  @JacksonXmlProperty(isAttribute = true, localName = "imsss", namespace = "http://www.w3.org/2000/xmlns/")
+  @JsonProperty("xmlns:imsss")
+  private String imsssNamespaceUri;
+  /**
+   * Captures the declared ADL Sequencing namespace on the manifest root element. This namespace
+   * exposes ADL sequencing extensions such as constrained choice and rollup considerations.
+   */
+  @JacksonXmlProperty(isAttribute = true, localName = "adlseq", namespace = "http://www.w3.org/2000/xmlns/")
+  @JsonProperty("xmlns:adlseq")
+  private String adlseqNamespaceUri;
+  /**
+   * Captures the declared ADL Navigation namespace on the manifest root element. This namespace
+   * enables presentation controls such as adlnav:presentation and hideLMSUI.
+   */
+  @JacksonXmlProperty(isAttribute = true, localName = "adlnav", namespace = "http://www.w3.org/2000/xmlns/")
+  @JsonProperty("xmlns:adlnav")
+  private String adlnavNamespaceUri;
+  /**
+   * Captures the xsi:schemaLocation attribute value to assist in edition detection when
+   * schemaversion is missing.
+   */
+  @JacksonXmlProperty(isAttribute = true, localName = "schemaLocation", namespace = "http://www.w3.org/2001/XMLSchema-instance")
+  @JsonProperty("xsi:schemaLocation")
+  private String schemaLocation;
+  /**
    * The unique identifier for the manifest. This attribute is used to uniquely identify the content
    * package within an LMS.
    */
@@ -344,14 +380,26 @@ public class Scorm2004Manifest implements PackageManifest {
   @Override
   @JsonIgnore
   public String getLaunchUrl() {
-    // get relative URL from the first resource
-    return Optional
-        .ofNullable(resources)
-        .map(Scorm2004Resources::getResourceList)
-        .filter(resourceList -> !resourceList.isEmpty())
-        .map(resourceList -> resourceList.get(0))
-        .map(Scorm2004Resource::getHref)
-        .orElse(null);
+    // Resolve launch URL by walking the default organization items and using identifierref → resource href
+    List<String> resourceIds = Optional
+        .ofNullable(organizations)
+        .map(Scorm2004Organizations::getDefault)
+        .map(Scorm2004Organization::getItems)
+        .map(this::findAllItemsWithIdentifierRef)
+        .orElse(List.of());
+
+    for (String resourceId : resourceIds) {
+      String href = Optional
+          .ofNullable(resources)
+          .flatMap(r -> r.getResourceById(resourceId))
+          .map(Scorm2004Resource::getHref)
+          .orElse(null);
+      if (href != null && !href.isEmpty()) {
+        return href;
+      }
+    }
+
+    return null;
   }
 
   /**
@@ -361,6 +409,7 @@ public class Scorm2004Manifest implements PackageManifest {
    * @param itemId the unique identifier of the item
    * @return an Optional containing the launch URL for the item, or empty if no URL is available
    */
+  @JsonIgnore
   public Optional<String> getLaunchUrlForItem(String itemId) {
     // search all organizations for an item with itemId
     Optional<Scorm2004Item> resourceItemOpt = Optional
@@ -373,12 +422,15 @@ public class Scorm2004Manifest implements PackageManifest {
 
     Scorm2004Item resourceItem = resourceItemOpt.get();
 
-    // get relative URL from item
+    // Resolve the resource referenced by this item via identifierref
+    String identifierRef = resourceItem.getIdentifierRef();
+    if (identifierRef == null || identifierRef.isEmpty()) {
+      return Optional.empty();
+    }
+
     Optional<String> hrefOpt = Optional
         .ofNullable(resources)
-        .map(Scorm2004Resources::getResourceList)
-        .filter(resourceList -> !resourceList.isEmpty())
-        .map(resourceList -> resourceList.get(0))
+        .flatMap(r -> r.getResourceById(identifierRef))
         .map(Scorm2004Resource::getHref)
         .filter(href -> !href.isEmpty());
 
@@ -448,8 +500,8 @@ public class Scorm2004Manifest implements PackageManifest {
    * interactive components of a SCORM package that communicate with the LMS.
    * </p>
    * <p>
-   * JSON serialization note: This property is exposed as "scoids" for backward compatibility but
-   * is marked as read-only to prevent Jackson from attempting to populate it during deserialization
+   * JSON serialization note: This property is exposed as "scoids" for backward compatibility but is
+   * marked as read-only to prevent Jackson from attempting to populate it during deserialization
    * (which could cause UnsupportedOperationException due to immutable Sets).
    * </p>
    *
@@ -479,7 +531,7 @@ public class Scorm2004Manifest implements PackageManifest {
    *
    * @return An Optional containing the ActivityTree or empty if no default organization is found
    */
-  public Optional<ActivityTree> buildActivityTree() {
+  public ActivityTree buildActivityTree() {
     return ActivityTree.buildFromManifest(this);
   }
 
@@ -493,17 +545,33 @@ public class Scorm2004Manifest implements PackageManifest {
    * @return true if this manifest uses sequencing, false otherwise
    */
   public boolean usesSequencing() {
-    if (sequencingCollection != null) {
-      return true;
-    }
+    return SequencingUsageDetector
+        .detect(this)
+        .hasSequencing();
+  }
 
-    return organizations != null && organizations
-        .getOrganizationList()
-        .stream()
-        .anyMatch(org -> org.getSequencing() != null || org
-            .getItems()
-            .stream()
-            .anyMatch(this::hasSequencing));
+  /**
+   * Returns the detected sequencing level for this manifest.
+   *
+   * @return the sequencing level (NONE, MINIMAL, or FULL)
+   */
+  @JsonIgnore
+  public SequencingUsageDetector.SequencingLevel getSequencingLevel() {
+    return SequencingUsageDetector
+        .detect(this)
+        .getLevel();
+  }
+
+  /**
+   * Returns the set of sequencing indicators discovered within this manifest.
+   *
+   * @return immutable set of detected sequencing indicators
+   */
+  @JsonIgnore
+  public Set<SequencingUsageDetector.SequencingIndicator> getSequencingIndicators() {
+    return SequencingUsageDetector
+        .detect(this)
+        .getIndicators();
   }
 
   @Override
@@ -554,6 +622,61 @@ public class Scorm2004Manifest implements PackageManifest {
 
   public void setSequencingCollection(SequencingCollection sequencingCollection) {
     this.sequencingCollection = sequencingCollection;
+  }
+
+  /**
+   * Returns the declared ADLCP namespace URI on the manifest root element, if present.
+   */
+  public String getAdlcpNamespaceUri() {
+    return this.adlcpNamespaceUri;
+  }
+
+  public void setAdlcpNamespaceUri(String adlcpNamespaceUri) {
+    this.adlcpNamespaceUri = adlcpNamespaceUri;
+  }
+
+  /**
+   * Returns the declared IMSSS namespace URI on the manifest root element, if present.
+   */
+  public String getImsssNamespaceUri() {
+    return this.imsssNamespaceUri;
+  }
+
+  public void setImsssNamespaceUri(String imsssNamespaceUri) {
+    this.imsssNamespaceUri = imsssNamespaceUri;
+  }
+
+  /**
+   * Returns the declared ADL Sequencing namespace URI on the manifest root element, if present.
+   */
+  public String getAdlseqNamespaceUri() {
+    return this.adlseqNamespaceUri;
+  }
+
+  public void setAdlseqNamespaceUri(String adlseqNamespaceUri) {
+    this.adlseqNamespaceUri = adlseqNamespaceUri;
+  }
+
+  /**
+   * Returns the declared ADL Navigation namespace URI on the manifest root element, if present.
+   */
+  public String getAdlnavNamespaceUri() {
+    return this.adlnavNamespaceUri;
+  }
+
+  public void setAdlnavNamespaceUri(String adlnavNamespaceUri) {
+    this.adlnavNamespaceUri = adlnavNamespaceUri;
+  }
+
+  /**
+   * Returns the declared schemaLocation attribute value from the manifest root element.
+   */
+  public String getSchemaLocation() {
+    return this.schemaLocation;
+  }
+
+  public void setSchemaLocation(String schemaLocation) {
+    this.schemaLocation = schemaLocation;
   }
 
   @Override
@@ -618,24 +741,36 @@ public class Scorm2004Manifest implements PackageManifest {
   }
 
   /**
-   * Recursively checks if an item or any of its children has sequencing information.
+   * Recursively searches for all items with a non-null identifierRef in reading order.
    *
-   * @param item The item to check
-   * @return true if the item or any of its children has sequencing, false otherwise
+   * @param items The list of items to search.
+   * @return Ordered list of identifierRefs for items that reference a resource.
    */
-  private boolean hasSequencing(Scorm2004Item item) {
-    if (item.getSequencing() != null) {
-      return true;
+  private List<String> findAllItemsWithIdentifierRef(List<Scorm2004Item> items) {
+    if (items == null || items.isEmpty()) {
+      return List.of();
     }
 
-    if (item.getItems() != null) {
-      for (Scorm2004Item child : item.getItems()) {
-        if (hasSequencing(child)) {
-          return true;
-        }
+    List<String> result = new java.util.ArrayList<>();
+
+    // First, collect identifierRefs at this level
+    for (Scorm2004Item item : items) {
+      if (item.getIdentifierRef() != null && !item
+          .getIdentifierRef()
+          .isEmpty()) {
+        result.add(item.getIdentifierRef());
       }
     }
 
-    return false;
+    // Then, recurse into children
+    for (Scorm2004Item item : items) {
+      if (item.getItems() != null && !item
+          .getItems()
+          .isEmpty()) {
+        result.addAll(findAllItemsWithIdentifierRef(item.getItems()));
+      }
+    }
+
+    return result;
   }
 }

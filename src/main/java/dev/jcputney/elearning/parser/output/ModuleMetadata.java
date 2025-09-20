@@ -34,7 +34,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  *
  * @param <M> the type of the package manifest
  */
-@SuppressWarnings("NullableProblems")
 public abstract class ModuleMetadata<M extends PackageManifest> implements PackageManifest {
 
   /**
@@ -74,34 +73,9 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
     this.moduleType = moduleType;
     this.moduleEditionType = moduleEditionType;
     this.xapiEnabled = xapiEnabled;
-    this.sizeOnDisk = -1; // Initialize default value explicitly
   }
 
   protected ModuleMetadata() {
-  }
-
-  protected ModuleMetadata(ModuleMetadataBuilder<M, ?, ?> b) {
-    this.manifest = b.manifest;
-    this.moduleType = b.moduleType;
-    this.moduleEditionType = b.moduleEditionType;
-    if (b.xapiEnabled$set) {
-      this.xapiEnabled = b.xapiEnabled$value;
-    } else {
-      this.xapiEnabled = $default$xapiEnabled();
-    }
-    if (b.sizeOnDisk$set) {
-      this.sizeOnDisk = b.sizeOnDisk$value;
-    } else {
-      this.sizeOnDisk = $default$sizeOnDisk();
-    }
-  }
-
-  private static boolean $default$xapiEnabled() {
-    return false;
-  }
-
-  private static long $default$sizeOnDisk() {
-    return -1;
   }
 
   @Override
@@ -199,55 +173,5 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
 
   public boolean isXapiEnabled() {
     return this.xapiEnabled;
-  }
-
-  public static abstract class ModuleMetadataBuilder<M extends PackageManifest, C extends ModuleMetadata<M>, B extends ModuleMetadataBuilder<M, C, B>> {
-
-    private M manifest;
-    private ModuleType moduleType;
-    private ModuleEditionType moduleEditionType;
-    private boolean xapiEnabled$value;
-    private boolean xapiEnabled$set;
-    private long sizeOnDisk$value;
-    private boolean sizeOnDisk$set;
-
-    public B manifest(M manifest) {
-      this.manifest = manifest;
-      return self();
-    }
-
-    public B moduleType(ModuleType moduleType) {
-      this.moduleType = moduleType;
-      return self();
-    }
-
-    public B moduleEditionType(ModuleEditionType moduleEditionType) {
-      this.moduleEditionType = moduleEditionType;
-      return self();
-    }
-
-    public B xapiEnabled(boolean xapiEnabled) {
-      this.xapiEnabled$value = xapiEnabled;
-      this.xapiEnabled$set = true;
-      return self();
-    }
-
-    public B sizeOnDisk(long sizeOnDisk) {
-      this.sizeOnDisk$value = sizeOnDisk;
-      this.sizeOnDisk$set = true;
-      return self();
-    }
-
-    public abstract C build();
-
-    public String toString() {
-      return "ModuleMetadata.ModuleMetadataBuilder(manifest=" + this.manifest + ", moduleType="
-          + this.moduleType
-          + ", moduleEditionType=" + this.moduleEditionType + ", xapiEnabled$value="
-          + this.xapiEnabled$value
-          + ", sizeOnDisk$value=" + this.sizeOnDisk$value + ")";
-    }
-
-    protected abstract B self();
   }
 }

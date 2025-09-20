@@ -18,6 +18,7 @@
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -25,6 +26,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -68,6 +70,23 @@ public class Scorm2004Resources implements Serializable {
 
   public void setResourceList(List<Scorm2004Resource> resourceList) {
     this.resourceList = resourceList;
+  }
+
+  /**
+   * Retrieves a resource by its identifier.
+   *
+   * @param id The identifier of the resource to retrieve.
+   * @return An Optional containing the resource if found, or an empty Optional if not found.
+   */
+  @JsonIgnore
+  public Optional<Scorm2004Resource> getResourceById(String id) {
+    if (id == null || resourceList == null) {
+      return Optional.empty();
+    }
+    return resourceList
+        .stream()
+        .filter(r -> id.equals(r.getIdentifier()))
+        .findFirst();
   }
 
   @Override

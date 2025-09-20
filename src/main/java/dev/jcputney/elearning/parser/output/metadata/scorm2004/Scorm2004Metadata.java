@@ -21,13 +21,22 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
+import dev.jcputney.elearning.parser.input.scorm2004.SequencingUsageDetector;
+import dev.jcputney.elearning.parser.input.scorm2004.SequencingUsageDetector.SequencingLevel;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004Objective;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004ObjectiveMapping;
+import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.DeliveryControls;
+import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.Sequencing;
 import dev.jcputney.elearning.parser.output.metadata.BaseModuleMetadata;
-import dev.jcputney.elearning.parser.output.metadata.SimpleMetadata;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -45,7 +54,17 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
 
+  private final Map<String, DeliveryControls> activityDeliveryControls = new LinkedHashMap<>();
+  private final Set<String> deliveryControlOverrides = new LinkedHashSet<>();
+  private final Set<String> globalObjectiveIds = new LinkedHashSet<>();
+  private final List<String> sequencingIndicators = new ArrayList<>();
+  private final Map<String, Map<String, Object>> completionThresholds = new LinkedHashMap<>();
+  private final Map<String, String> timeLimitActions = new LinkedHashMap<>();
+  private final Map<String, String> dataFromLms = new LinkedHashMap<>();
+  private final Map<String, List<String>> hideLmsUi = new LinkedHashMap<>();
+  private final Map<String, Map<String, Boolean>> controlModes = new LinkedHashMap<>();
   private boolean hasSequencing;
+  private SequencingLevel sequencingLevel = SequencingLevel.NONE;
 
   protected Scorm2004Metadata() {
     super();
@@ -67,31 +86,55 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
           .getSchemaVersion();
     }
 
-    // Determine the specific edition type
+    // Determine the specific edition type. If schemaversion is absent or ambiguous, fall back to
+    // namespace-based detection (adlcp_v1p2 => 2nd Edition; adlcp_v1p3 => 3rd/4th, unknown which).
     ModuleEditionType editionType = ModuleEditionType.fromModuleType(ModuleType.SCORM_2004,
         schemaVersion);
+    if (editionType == ModuleEditionType.SCORM_2004) {
+      String adlcpNs = manifest.getAdlcpNamespaceUri();
+      if (adlcpNs != null && adlcpNs
+          .toLowerCase()
+          .contains("adlcp_v1p2")) {
+        editionType = ModuleEditionType.SCORM_2004_2ND_EDITION;
+      } else {
+        String schemaLoc = manifest.getSchemaLocation();
+        if (schemaLoc != null && schemaLoc
+            .toLowerCase()
+            .contains("adlcp_v1p2")) {
+          editionType = ModuleEditionType.SCORM_2004_2ND_EDITION;
+        }
+      }
+    }
+
+    var sequencingResult = SequencingUsageDetector.detect(manifest);
 
     Scorm2004Metadata metadata = new Scorm2004Metadata();
     metadata.manifest = manifest;
     metadata.moduleType = ModuleType.SCORM_2004;
     metadata.moduleEditionType = editionType;
     metadata.xapiEnabled = xapiEnabled;
-    metadata.hasSequencing = hasSequencing(manifest);
+    metadata.hasSequencing = sequencingResult.hasSequencing();
+    metadata.sequencingLevel = sequencingResult.getLevel();
 
-    // Add SCORM 2004 specific metadata
-    SimpleMetadata scorm2004Metadata = metadata.getSimpleMetadata(manifest);
+    // Extract SCORM 2004 item-level attributes (ADLCP/ADLNav/IMSSS highlights)
+    metadata.extractScorm2004SpecificMetadata(manifest);
 
     // Add global objective IDs
-    Set<String> globalObjectiveIds = metadata.getGlobalObjectiveIds();
-    if (!globalObjectiveIds.isEmpty()) {
-      scorm2004Metadata.addMetadata("globalObjectiveIds", globalObjectiveIds);
+    metadata.globalObjectiveIds.clear();
+    metadata.globalObjectiveIds.addAll(metadata.collectGlobalObjectiveIds());
+
+    // Add sequencing flag and indicators
+    metadata.sequencingIndicators.clear();
+    if (!sequencingResult
+        .getIndicators()
+        .isEmpty()) {
+      metadata.sequencingIndicators.addAll(sequencingResult
+          .getIndicators()
+          .stream()
+          .map(Enum::name)
+          .sorted()
+          .toList());
     }
-
-    // Add sequencing flag
-    scorm2004Metadata.addMetadata("hasSequencing", metadata.hasSequencing);
-
-    // Add the SCORM 2004 metadata component to the composite
-    metadata.addMetadataComponent(scorm2004Metadata);
 
     return metadata;
   }
@@ -136,43 +179,17 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
    * @return true if the manifest contains sequencing information, false otherwise.
    */
   public static boolean hasSequencing(Scorm2004Manifest manifest) {
-    if (manifest == null || manifest.getOrganizations() == null) {
+    if (manifest == null) {
       return false;
     }
 
-    return manifest
-        .getOrganizations()
-        .getOrganizationList()
-        .stream()
-        .flatMap(org -> safeStream(org.getItems()))
-        .anyMatch(Scorm2004Metadata::hasSequencingInItem);
+    return SequencingUsageDetector
+        .detect(manifest)
+        .hasSequencing();
   }
 
-  /**
-   * Recursively checks if an item or any of its subitems has sequencing.
-   *
-   * @param item The item to check.
-   * @return true if the item or any subitem has sequencing, false otherwise.
-   */
-  private static boolean hasSequencingInItem(Scorm2004Item item) {
-    if (item == null) {
-      return false;
-    }
-
-    // Check if this item has sequencing
-    if (item.getSequencing() != null) {
-      return true;
-    }
-
-    // Check subitems recursively
-    if (item.getItems() != null) {
-      return item
-          .getItems()
-          .stream()
-          .anyMatch(Scorm2004Metadata::hasSequencingInItem);
-    }
-
-    return false;
+  public Set<String> getDeliveryControlOverrides() {
+    return deliveryControlOverrides;
   }
 
   /**
@@ -183,16 +200,31 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
    */
   @JsonIgnore
   public Set<String> getGlobalObjectiveIds() {
-    return manifest
-        .getOrganizations()
-        .getOrganizationList()
-        .stream()
-        .flatMap(org -> safeStream(org.getItems())) // Null-safe stream for items
-        .flatMap(item -> safeStream(getObjectives(item))) // Null-safe stream for objectives
-        .flatMap(obj -> safeStream(obj.getMapInfo())) // Null-safe stream for mapInfo
-        .map(Scorm2004ObjectiveMapping::getTargetObjectiveID)
-        .filter(id -> id != null && !id.isEmpty()) // Filter non-null and non-empty IDs
-        .collect(Collectors.toSet());
+    return Collections.unmodifiableSet(globalObjectiveIds);
+  }
+
+  public List<String> getSequencingIndicators() {
+    return List.copyOf(sequencingIndicators);
+  }
+
+  public Map<String, Map<String, Object>> getCompletionThresholds() {
+    return Map.copyOf(completionThresholds);
+  }
+
+  public Map<String, String> getTimeLimitActions() {
+    return Map.copyOf(timeLimitActions);
+  }
+
+  public Map<String, String> getDataFromLms() {
+    return Map.copyOf(dataFromLms);
+  }
+
+  public Map<String, List<String>> getHideLmsUi() {
+    return Map.copyOf(hideLmsUi);
+  }
+
+  public Map<String, Map<String, Boolean>> getControlModes() {
+    return Map.copyOf(controlModes);
   }
 
   @Override
@@ -208,6 +240,7 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
     return new EqualsBuilder()
         .appendSuper(super.equals(o))
         .append(isHasSequencing(), that.isHasSequencing())
+        .append(getSequencingLevel(), that.getSequencingLevel())
         .isEquals();
   }
 
@@ -216,10 +249,236 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
     return new HashCodeBuilder(17, 37)
         .appendSuper(super.hashCode())
         .append(isHasSequencing())
+        .append(getSequencingLevel())
         .toHashCode();
   }
 
   public boolean isHasSequencing() {
     return this.hasSequencing;
+  }
+
+  public SequencingLevel getSequencingLevel() {
+    return sequencingLevel;
+  }
+
+  public Map<String, DeliveryControls> getActivityDeliveryControls() {
+    return Collections.unmodifiableMap(activityDeliveryControls);
+  }
+
+  @JsonIgnore
+  public Set<String> getActivitiesOverridingDeliveryControlDefaults() {
+    return Collections.unmodifiableSet(deliveryControlOverrides);
+  }
+
+  @JsonIgnore
+  public boolean overridesDeliveryControlDefaults(String activityId) {
+    return deliveryControlOverrides.contains(activityId);
+  }
+
+  /**
+   * Extracts SCORM 2004 item-level attributes and surfaces them in simple metadata: -
+   * completionThresholds (minProgressMeasure, progressWeight, completedByMeasure) -
+   * timeLimitActions - dataFromLMS - hideLMSUI (from ADLNav presentation/navigationInterface) -
+   * controlModes (IMSSS controlMode flags)
+   */
+  private void extractScorm2004SpecificMetadata(Scorm2004Manifest manifest) {
+    activityDeliveryControls.clear();
+    deliveryControlOverrides.clear();
+    completionThresholds.clear();
+    timeLimitActions.clear();
+    dataFromLms.clear();
+    hideLmsUi.clear();
+    controlModes.clear();
+    if (manifest.getOrganizations() == null || manifest
+        .getOrganizations()
+        .getDefault() == null || manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems() == null) {
+      return;
+    }
+
+    var items = manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems();
+
+    ItemMetadataAccumulator accumulator = new ItemMetadataAccumulator(this);
+    accumulator.collect(items);
+    accumulator.publish();
+  }
+
+  private void recordDeliveryControls(String itemId, Sequencing sequencing) {
+    if (itemId == null || itemId.isEmpty()) {
+      return;
+    }
+    DeliveryControls resolved = findDeliveryControls(sequencing);
+    DeliveryControls effective = buildEffectiveDeliveryControls(resolved);
+    activityDeliveryControls.put(itemId, effective);
+    if (resolved != null) {
+      deliveryControlOverrides.add(itemId);
+    }
+  }
+
+  private DeliveryControls buildEffectiveDeliveryControls(DeliveryControls resolved) {
+    DeliveryControls effective = new DeliveryControls();
+    if (resolved != null) {
+      effective.setTracked(resolved.isTracked());
+      effective.setCompletionSetByContent(resolved.isCompletionSetByContent());
+      effective.setObjectiveSetByContent(resolved.isObjectiveSetByContent());
+    }
+    return effective;
+  }
+
+  private DeliveryControls findDeliveryControls(Sequencing sequencing) {
+    if (sequencing == null) {
+      return null;
+    }
+    DeliveryControls deliveryControls = sequencing.getDeliveryControls();
+    if (deliveryControls == null && sequencing.getIdRef() != null && manifest != null
+        && manifest.getSequencingCollection() != null) {
+      deliveryControls = manifest
+          .getSequencingCollection()
+          .resolveDeliveryControlsById(sequencing.getIdRef());
+    }
+    return deliveryControls;
+  }
+
+  private Set<String> collectGlobalObjectiveIds() {
+    return manifest
+        .getOrganizations()
+        .getOrganizationList()
+        .stream()
+        .flatMap(org -> safeStream(org.getItems()))
+        .flatMap(item -> safeStream(getObjectives(item)))
+        .flatMap(obj -> safeStream(obj.getMapInfo()))
+        .map(Scorm2004ObjectiveMapping::getTargetObjectiveID)
+        .filter(id -> id != null && !id.isEmpty())
+        .collect(Collectors.toCollection(LinkedHashSet::new));
+  }
+
+  private static final class ItemMetadataAccumulator {
+
+    private final Scorm2004Metadata owner;
+    private final Map<String, Map<String, Object>> completionThresholds = new LinkedHashMap<>();
+    private final Map<String, String> timeLimitActions = new LinkedHashMap<>();
+    private final Map<String, String> dataFromLms = new LinkedHashMap<>();
+    private final Map<String, List<String>> hideLmsUi = new LinkedHashMap<>();
+    private final Map<String, Map<String, Boolean>> controlModes = new LinkedHashMap<>();
+
+    private ItemMetadataAccumulator(Scorm2004Metadata owner) {
+      this.owner = owner;
+    }
+
+    void collect(List<Scorm2004Item> rootItems) {
+      if (rootItems == null || rootItems.isEmpty()) {
+        return;
+      }
+      ArrayDeque<Scorm2004Item> stack = new ArrayDeque<>(rootItems);
+      while (!stack.isEmpty()) {
+        Scorm2004Item item = stack.pop();
+        processItem(item);
+        if (item.getItems() != null && !item
+            .getItems()
+            .isEmpty()) {
+          List<Scorm2004Item> children = item.getItems();
+          for (int i = children.size() - 1; i >= 0; i--) {
+            stack.push(children.get(i));
+          }
+        }
+      }
+    }
+
+    void publish() {
+      owner.completionThresholds.putAll(completionThresholds);
+      owner.timeLimitActions.putAll(timeLimitActions);
+      owner.dataFromLms.putAll(dataFromLms);
+      owner.hideLmsUi.putAll(hideLmsUi);
+      owner.controlModes.putAll(controlModes);
+    }
+
+    private void processItem(Scorm2004Item item) {
+      if (item == null) {
+        return;
+      }
+      String itemId = item.getIdentifier();
+      owner.recordDeliveryControls(itemId, item.getSequencing());
+      if (itemId == null || itemId.isEmpty()) {
+        return;
+      }
+
+      if (item.getCompletionThreshold() != null) {
+        var threshold = item.getCompletionThreshold();
+        Map<String, Object> values = new LinkedHashMap<>();
+        if (threshold.getMinProgressMeasure() != null && threshold
+            .getMinProgressMeasure()
+            .getValue() != null) {
+          values.put("minProgressMeasure", threshold
+              .getMinProgressMeasure()
+              .getValue());
+        }
+        if (threshold.getProgressWeight() != null && threshold
+            .getProgressWeight()
+            .value() != null) {
+          values.put("progressWeight", threshold
+              .getProgressWeight()
+              .value());
+        }
+        if (threshold.getCompletedByMeasure() != null) {
+          values.put("completedByMeasure", threshold.getCompletedByMeasure());
+        }
+        if (!values.isEmpty()) {
+          completionThresholds.put(itemId, values);
+        }
+      }
+
+      if (item.getTimeLimitAction() != null) {
+        timeLimitActions.put(itemId, item
+            .getTimeLimitAction()
+            .name());
+      }
+
+      if (item.getDataFromLMS() != null && !item
+          .getDataFromLMS()
+          .isEmpty()) {
+        dataFromLms.put(itemId, item.getDataFromLMS());
+      }
+
+      if (item.getPresentation() != null && item
+          .getPresentation()
+          .getNavigationInterface() != null && item
+          .getPresentation()
+          .getNavigationInterface()
+          .getHideLMSUI() != null && !item
+          .getPresentation()
+          .getNavigationInterface()
+          .getHideLMSUI()
+          .isEmpty()) {
+        List<String> hidden = item
+            .getPresentation()
+            .getNavigationInterface()
+            .getHideLMSUI()
+            .stream()
+            .map(Enum::name)
+            .collect(Collectors.toList());
+        hideLmsUi.put(itemId, hidden);
+      }
+
+      if (item.getSequencing() != null && item
+          .getSequencing()
+          .getControlMode() != null) {
+        var mode = item
+            .getSequencing()
+            .getControlMode();
+        Map<String, Boolean> values = new LinkedHashMap<>();
+        values.put("choice", mode.isChoice());
+        values.put("choiceExit", mode.isChoiceExit());
+        values.put("flow", mode.isFlow());
+        values.put("forwardOnly", mode.isForwardOnly());
+        values.put("useCurrentAttemptObjectiveInfo", mode.isUseCurrentAttemptObjectiveInfo());
+        values.put("useCurrentAttemptProgressInfo", mode.isUseCurrentAttemptProgressInfo());
+        controlModes.put(itemId, values);
+      }
+    }
   }
 }

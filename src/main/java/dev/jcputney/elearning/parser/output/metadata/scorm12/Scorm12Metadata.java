@@ -22,8 +22,7 @@ import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Item;
 import dev.jcputney.elearning.parser.output.metadata.BaseModuleMetadata;
-import dev.jcputney.elearning.parser.output.metadata.SimpleMetadata;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +35,10 @@ import java.util.Map;
  * </p>
  */
 public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
+
+  private final Map<String, String> prerequisites = new LinkedHashMap<>();
+  private final Map<String, Double> masteryScores = new LinkedHashMap<>();
+  private final Map<String, String> customData = new LinkedHashMap<>();
 
   protected Scorm12Metadata() {
   }
@@ -54,16 +57,22 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
     metadata.moduleEditionType = ModuleEditionType.SCORM_12;
     metadata.xapiEnabled = xapiEnabled;
 
-    // Add SCORM 1.2 specific metadata
-    SimpleMetadata scorm12Metadata = metadata.getSimpleMetadata(manifest);
-
     // Add SCORM 1.2 specific fields from items
-    metadata.extractScorm12SpecificMetadata(manifest, scorm12Metadata);
-
-    // Add the SCORM 1.2 metadata component to the composite
-    metadata.addMetadataComponent(scorm12Metadata);
+    metadata.extractScorm12SpecificMetadata(manifest);
 
     return metadata;
+  }
+
+  public Map<String, String> getPrerequisites() {
+    return Map.copyOf(prerequisites);
+  }
+
+  public Map<String, Double> getMasteryScores() {
+    return Map.copyOf(masteryScores);
+  }
+
+  public Map<String, String> getCustomData() {
+    return Map.copyOf(customData);
   }
 
   /**
@@ -71,9 +80,8 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
    * scores, and other item-level information.
    *
    * @param manifest The SCORM 1.2 manifest.
-   * @param metadata The SimpleMetadata object to populate.
    */
-  private void extractScorm12SpecificMetadata(Scorm12Manifest manifest, SimpleMetadata metadata) {
+  private void extractScorm12SpecificMetadata(Scorm12Manifest manifest) {
     if (manifest.getOrganizations() != null && manifest
         .getOrganizations()
         .getDefault() != null && manifest
@@ -86,23 +94,11 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
           .getDefault()
           .getItems();
 
-      // Extract prerequisites map
-      Map<String, String> prerequisites = new HashMap<>();
-      Map<String, Double> masteryScores = new HashMap<>();
-      Map<String, String> customData = new HashMap<>();
+      prerequisites.clear();
+      masteryScores.clear();
+      customData.clear();
 
       extractItemData(items, prerequisites, masteryScores, customData);
-
-      // Add the extracted data to metadata
-      if (!prerequisites.isEmpty()) {
-        metadata.addMetadata("scorm12.prerequisites", prerequisites);
-      }
-      if (!masteryScores.isEmpty()) {
-        metadata.addMetadata("scorm12.masteryScores", masteryScores);
-      }
-      if (!customData.isEmpty()) {
-        metadata.addMetadata("scorm12.customData", customData);
-      }
     }
   }
 

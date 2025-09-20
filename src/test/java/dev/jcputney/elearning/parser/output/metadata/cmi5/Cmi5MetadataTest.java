@@ -32,7 +32,6 @@ import dev.jcputney.elearning.parser.input.cmi5.types.Objective;
 import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -63,22 +62,12 @@ class Cmi5MetadataTest {
     assertTrue(metadata.isXapiEnabled());
     assertEquals(manifest, metadata.getManifest());
 
-    // Verify assignable unit metadata
-    assertTrue(metadata.hasMetadata("assignableUnitIds"));
-    assertTrue(metadata.hasMetadata("assignableUnitUrls"));
-
-    Optional<Object> assignableUnitIdsOpt = metadata.getMetadata("assignableUnitIds");
-    assertTrue(assignableUnitIdsOpt.isPresent());
-    @SuppressWarnings("unchecked")
-    List<String> assignableUnitIds = (List<String>) assignableUnitIdsOpt.get();
+    List<String> assignableUnitIds = metadata.getAssignableUnitIds();
     assertEquals(2, assignableUnitIds.size());
     assertEquals("au1", assignableUnitIds.get(0));
     assertEquals("au2", assignableUnitIds.get(1));
 
-    Optional<Object> assignableUnitUrlsOpt = metadata.getMetadata("assignableUnitUrls");
-    assertTrue(assignableUnitUrlsOpt.isPresent());
-    @SuppressWarnings("unchecked")
-    List<String> assignableUnitUrls = (List<String>) assignableUnitUrlsOpt.get();
+    List<String> assignableUnitUrls = metadata.getAssignableUnitUrls();
     assertEquals(2, assignableUnitUrls.size());
     assertEquals("url1", assignableUnitUrls.get(0));
     assertEquals("url2", assignableUnitUrls.get(1));
@@ -106,13 +95,7 @@ class Cmi5MetadataTest {
     assertFalse(metadata.isXapiEnabled());
     assertEquals(manifest, metadata.getManifest());
 
-    // Verify block metadata
-    assertTrue(metadata.hasMetadata("blockIds"));
-
-    Optional<Object> blockIdsOpt = metadata.getMetadata("blockIds");
-    assertTrue(blockIdsOpt.isPresent());
-    @SuppressWarnings("unchecked")
-    List<String> blockIds = (List<String>) blockIdsOpt.get();
+    List<String> blockIds = metadata.getBlockIds();
     assertEquals(2, blockIds.size());
     assertEquals("block1", blockIds.get(0));
     assertEquals("block2", blockIds.get(1));
@@ -141,13 +124,7 @@ class Cmi5MetadataTest {
     assertTrue(metadata.isXapiEnabled());
     assertEquals(manifest, metadata.getManifest());
 
-    // Verify objective metadata
-    assertTrue(metadata.hasMetadata("objectiveIds"));
-
-    Optional<Object> objectiveIdsOpt = metadata.getMetadata("objectiveIds");
-    assertTrue(objectiveIdsOpt.isPresent());
-    @SuppressWarnings("unchecked")
-    List<String> objectiveIds = (List<String>) objectiveIdsOpt.get();
+    List<String> objectiveIds = metadata.getObjectiveIds();
     assertEquals(2, objectiveIds.size());
     assertEquals("objective1", objectiveIds.get(0));
     assertEquals("objective2", objectiveIds.get(1));
@@ -172,12 +149,6 @@ class Cmi5MetadataTest {
     assertEquals(ModuleType.CMI5, metadata.getModuleType());
     assertTrue(metadata.isXapiEnabled());
     assertEquals(manifest, metadata.getManifest());
-
-    // Verify no metadata was added
-    assertFalse(metadata.hasMetadata("assignableUnitIds"));
-    assertFalse(metadata.hasMetadata("assignableUnitUrls"));
-    assertFalse(metadata.hasMetadata("blockIds"));
-    assertFalse(metadata.hasMetadata("objectiveIds"));
   }
 
   /**
@@ -206,16 +177,16 @@ class Cmi5MetadataTest {
 
     // Verify no metadata was added
     assertTrue(metadata
-        .getMetadata("assignableUnitIds")
+        .getAssignableUnitIds()
         .isEmpty());
     assertTrue(metadata
-        .getMetadata("assignableUnitUrls")
+        .getAssignableUnitUrls()
         .isEmpty());
     assertTrue(metadata
-        .getMetadata("blockIds")
+        .getBlockIds()
         .isEmpty());
     assertTrue(metadata
-        .getMetadata("objectiveIds")
+        .getObjectiveIds()
         .isEmpty());
   }
 

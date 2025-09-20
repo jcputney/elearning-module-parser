@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.LocalFileAccess;
+import dev.jcputney.elearning.parser.input.scorm2004.SequencingUsageDetector.SequencingLevel;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.ScormType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organization;
@@ -63,22 +64,56 @@ public class Scorm2004ManifestTest {
 
     // Verify that usesSequencing returns true
     assertTrue(manifest.usesSequencing(), "Manifest should use sequencing");
+    assertEquals(SequencingLevel.FULL, manifest.getSequencingLevel());
+  }
+
+  @Test
+  void testGetSequencingIndicatorsFromRealManifest()
+      throws IOException, XMLStreamException, ModuleParsingException {
+    String modulePath = "src/test/resources/modules/scorm2004/AdlAttributes_SCORM20043rdEdition";
+    FileAccess fileAccess = new LocalFileAccess(modulePath);
+    Scorm2004Parser parser = new Scorm2004Parser(fileAccess);
+    Scorm2004Manifest manifest = parser.parseManifest(Scorm2004Parser.MANIFEST_FILE);
+
+    Set<SequencingUsageDetector.SequencingIndicator> indicators = manifest.getSequencingIndicators();
+
+    assertTrue(
+        indicators.contains(SequencingUsageDetector.SequencingIndicator.ACTIVITY_SEQUENCING));
+    assertTrue(
+        indicators.contains(SequencingUsageDetector.SequencingIndicator.SEQUENCING_CONTROL_MODE));
+    assertTrue(
+        indicators.contains(SequencingUsageDetector.SequencingIndicator.PRESENTATION_CONTROLS));
+    assertTrue(
+        indicators.contains(SequencingUsageDetector.SequencingIndicator.COMPLETION_THRESHOLD));
+    assertEquals(SequencingLevel.FULL, manifest.getSequencingLevel());
   }
 
   /**
    * Tests the usesSequencing method with a manifest that doesn't use sequencing.
    */
   @Test
-  void testUsesSequencingWithoutSequencing()
+  void testUsesSequencingWithNamespaceOnlyReturnsFalse()
       throws IOException, XMLStreamException, ModuleParsingException {
-    // Parse a SCORM 2004 manifest that doesn't use sequencing
+    // Parse a SCORM 2004 manifest that declares sequencing namespaces but relies on implicit rules
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingOneFilePerSCO_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);
     Scorm2004Parser parser = new Scorm2004Parser(fileAccess);
     Scorm2004Manifest manifest = parser.parseManifest(Scorm2004Parser.MANIFEST_FILE);
 
-    // Verify that usesSequencing returns false
-    assertFalse(manifest.usesSequencing(), "Manifest should not use sequencing");
+    // Namespace declaration and SCO definitions imply sequencing involvement
+    assertFalse(manifest.usesSequencing(),
+        "Namespace declarations alone should not imply sequencing usage");
+    assertEquals(SequencingLevel.NONE, manifest.getSequencingLevel());
+  }
+
+  /**
+   * Ensures usesSequencing returns false when no sequencing indicators are present.
+   */
+  @Test
+  void testUsesSequencingWithoutIndicators() {
+    Scorm2004Manifest manifest = new Scorm2004Manifest();
+
+    assertFalse(manifest.usesSequencing(), "Empty manifest should not use sequencing");
   }
 
   /**
@@ -221,15 +256,13 @@ public class Scorm2004ManifestTest {
     Scorm2004Manifest manifest = parser.parseManifest(Scorm2004Parser.MANIFEST_FILE);
 
     // Build the activity tree
-    Optional<ActivityTree> activityTree = manifest.buildActivityTree();
+    ActivityTree activityTree = manifest.buildActivityTree();
 
     // Verify that the activity tree is present and has the expected structure
-    assertTrue(activityTree.isPresent(), "Activity tree should be present");
+    assertNotNull(activityTree, "Activity tree should be present");
     assertNotNull(activityTree
-        .get()
         .getRoot(), "Root node should not be null");
     assertFalse(activityTree
-            .get()
             .getRoot()
             .getChildren()
             .isEmpty(),

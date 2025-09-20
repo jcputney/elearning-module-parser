@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -75,15 +74,15 @@ public class ActivityTree implements Serializable {
    * @param manifest The manifest to build the tree from
    * @return The built ActivityTree, or empty if no default organization is found
    */
-  public static Optional<ActivityTree> buildFromManifest(Scorm2004Manifest manifest) {
+  public static ActivityTree buildFromManifest(Scorm2004Manifest manifest) {
     Scorm2004Organizations organizations = manifest.getOrganizations();
     if (organizations == null) {
-      return Optional.empty();
+      return null;
     }
 
     Scorm2004Organization defaultOrg = organizations.getDefault();
     if (defaultOrg == null) {
-      return Optional.empty();
+      return null;
     }
 
     ActivityNode rootNode = ActivityNode.fromOrganization(defaultOrg);
@@ -97,7 +96,7 @@ public class ActivityTree implements Serializable {
       }
     }
 
-    return Optional.of(tree);
+    return tree;
   }
 
   /**
@@ -106,8 +105,8 @@ public class ActivityTree implements Serializable {
    * @param identifier The identifier of the node to get
    * @return An Optional containing the node or empty if not found
    */
-  public Optional<ActivityNode> getNodeByIdentifier(String identifier) {
-    return Optional.ofNullable(nodeMap.get(identifier));
+  public ActivityNode getNodeByIdentifier(String identifier) {
+    return nodeMap.get(identifier);
   }
 
   /**
@@ -138,8 +137,7 @@ public class ActivityTree implements Serializable {
     return this.nodeMap;
   }
 
-  public void setNodeMap(
-      Map<String, ActivityNode> nodeMap) {
+  public void setNodeMap(Map<String, ActivityNode> nodeMap) {
     this.nodeMap = nodeMap;
   }
 

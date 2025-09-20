@@ -70,6 +70,16 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
   public static final String CST_EXTENSION = ".cst";
 
   /**
+   * The file extension for the AICC objectives relation table file.
+   */
+  public static final String ORT_EXTENSION = ".ort";
+
+  /**
+   * The file extension for the AICC prerequisites file.
+   */
+  public static final String PRE_EXTENSION = ".pre";
+
+  /**
    * Default constructor for the AiccParser class.
    *
    * @param fileAccess An instance of FileAccess for reading files.
@@ -143,7 +153,21 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
     var assignableUnits = parseCsvFile(AssignableUnit.class, AU_EXTENSION);
     var courseStructure = parseCsvFile(CourseStructure.class, CST_EXTENSION);
 
-    return new AiccManifest(aiccCourse, assignableUnits, descriptors, courseStructure);
+    AiccManifest manifest = new AiccManifest(aiccCourse, assignableUnits, descriptors,
+        courseStructure);
+
+    // Optional AICC files: .pre (prerequisites) and .ort (objective relations)
+    // Parse if present; ignore if missing.
+    List<Map<String, String>> prerequisites = parseOptionalCsvAsMap(PRE_EXTENSION);
+    if (prerequisites != null) {
+      manifest.setPrerequisitesTable(prerequisites);
+    }
+    List<Map<String, String>> objectives = parseOptionalCsvAsMap(ORT_EXTENSION);
+    if (objectives != null) {
+      manifest.setObjectivesRelationTable(objectives);
+    }
+
+    return manifest;
   }
 
   @Override
@@ -175,6 +199,36 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
               .withQuoteChar('"'))
           .readValues(inputStream);
       return new ArrayList<>(objectMappingIterator.readAll());
+    }
+  }
+
+  /**
+   * Parses a CSV file with an unknown schema into a list of case-insensitive maps.
+   * Returns null if the file is not present (optional files).
+   */
+  @SuppressWarnings("unchecked")
+  private List<Map<String, String>> parseOptionalCsvAsMap(String extension) throws IOException {
+    String fileName = findFileByExtension(extension);
+    if (fileName == null) {
+      return null; // Optional
+    }
+
+    try (InputStream inputStream = moduleFileProvider.getFileContents(fileName)) {
+      MappingIterator<Map<String, String>> it = new CsvMapper()
+          .readerFor(Map.class)
+          .with(CsvSchema
+              .emptySchema()
+              .withHeader()
+              .withColumnSeparator(',')
+              .withQuoteChar('"'))
+          .readValues(inputStream);
+      List<Map<String, String>> rows = new ArrayList<>(it.readAll());
+      // filter out completely empty rows that some authoring tools include
+      rows.removeIf(row -> row == null || row
+          .values()
+          .stream()
+          .allMatch(v -> v == null || v.trim().isEmpty()));
+      return rows;
     }
   }
 

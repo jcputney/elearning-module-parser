@@ -57,6 +57,22 @@ public class SequencingCollection implements Serializable {
     this.sequencingList = sequencingList;
   }
 
+  public DeliveryControls resolveDeliveryControlsById(String sequenceId) {
+    if (sequenceId == null || sequenceId.isBlank()) {
+      return null;
+    }
+    if (sequencingList == null || sequencingList.isEmpty()) {
+      return null;
+    }
+    for (Sequencing sequencing : sequencingList) {
+      if (sequencing != null && sequenceId.equals(sequencing.getId())
+          && sequencing.getDeliveryControls() != null) {
+        return sequencing.getDeliveryControls();
+      }
+    }
+    return null;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

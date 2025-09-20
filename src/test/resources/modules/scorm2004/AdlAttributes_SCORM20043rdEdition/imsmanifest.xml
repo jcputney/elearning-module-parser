@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="adl.attrs.example" version="1"
+          xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3"
+          xmlns:adlnav="http://www.adlnet.org/xsd/adlnav_v1p3"
+          xmlns:imsss="http://www.imsglobal.org/xsd/imsss"
+          xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 imscp_v1p1.xsd">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>2004 3rd Edition</schemaversion>
+  </metadata>
+  <organizations default="org1">
+    <organization identifier="org1">
+      <title>ADL Attributes Example</title>
+      <item identifier="item1" identifierref="res1">
+        <title>Launchable Item</title>
+        <adlcp:dataFromLMS>Launch Data</adlcp:dataFromLMS>
+        <adlcp:timeLimitAction>exit,message</adlcp:timeLimitAction>
+        <adlcp:completionThreshold minProgressMeasure="0.75" progressWeight="1.0" completedByMeasure="true"/>
+        <adlnav:presentation>
+          <adlnav:navigationInterface>
+            <adlnav:hideLMSUI>exit</adlnav:hideLMSUI>
+            <adlnav:hideLMSUI>continue</adlnav:hideLMSUI>
+          </adlnav:navigationInterface>
+        </adlnav:presentation>
+        <imsss:sequencing>
+          <imsss:controlMode choice="false" choiceExit="false" flow="true" forwardOnly="false"
+                             useCurrentAttemptObjectiveInfo="true"
+                             useCurrentAttemptProgressInfo="true"/>
+        </imsss:sequencing>
+      </item>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="res1" type="webcontent" href="index.html" />
+  </resources>
+</manifest>
+

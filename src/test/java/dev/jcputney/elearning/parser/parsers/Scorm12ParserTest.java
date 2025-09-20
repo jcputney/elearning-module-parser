@@ -298,10 +298,7 @@ public class Scorm12ParserTest {
     assertEquals(90.0, module4.getMasteryScore());
 
     // Verify prerequisites are accessible through metadata interface
-    @SuppressWarnings("unchecked")
-    var prerequisitesMap = (Map<String, String>) metadata
-        .getMetadata("scorm12.prerequisites")
-        .orElse(null);
+    var prerequisitesMap = metadata.getPrerequisites();
     assertNotNull(prerequisitesMap);
     assertEquals(3, prerequisitesMap.size()); // module2, module3, module4 have prerequisites
     assertEquals("module1", prerequisitesMap.get("module2"));
@@ -309,20 +306,14 @@ public class Scorm12ParserTest {
     assertEquals("(module1 AND module2) OR module3", prerequisitesMap.get("module4"));
 
     // Verify mastery scores are accessible
-    @SuppressWarnings("unchecked")
-    var masteryScoresMap = (Map<String, Double>) metadata
-        .getMetadata("scorm12.masteryScores")
-        .orElse(null);
+    var masteryScoresMap = metadata.getMasteryScores();
     assertNotNull(masteryScoresMap);
     assertEquals(2, masteryScoresMap.size()); // module1 and module4 have mastery scores
     assertEquals(80.0, masteryScoresMap.get("module1"));
     assertEquals(90.0, masteryScoresMap.get("module4"));
 
     // Verify custom data is accessible
-    @SuppressWarnings("unchecked")
-    var customDataMap = (Map<String, String>) metadata
-        .getMetadata("scorm12.customData")
-        .orElse(null);
+    var customDataMap = metadata.getCustomData();
     assertNotNull(customDataMap);
     assertEquals(1, customDataMap.size()); // only module2 has custom data
     assertEquals("custom_data_for_module2", customDataMap.get("module2"));
