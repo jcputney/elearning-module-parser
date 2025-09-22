@@ -58,7 +58,7 @@
     <version.logback>1.5.18</version.logback>
     <version.org.json>20250517</version.org.json>
     <version.plugin.central-publishing>0.8.0</version.plugin.central-publishing>
-    <version.plugin.compiler>3.14.0</version.plugin.compiler>
+    <version.plugin.compiler>3.14.1</version.plugin.compiler>
     <version.plugin.failsafe>3.5.3</version.plugin.failsafe>
     <version.plugin.gpg>3.2.8</version.plugin.gpg>
     <version.plugin.jacoco>0.8.13</version.plugin.jacoco>
