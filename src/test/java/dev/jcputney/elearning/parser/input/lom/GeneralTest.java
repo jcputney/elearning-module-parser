@@ -20,6 +20,7 @@ import static dev.jcputney.elearning.parser.input.lom.types.AggregationLevel.LEV
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -198,6 +199,34 @@ class GeneralTest {
 
     assertTrue(foundEnglish, "English title should be present");
     assertTrue(foundSpanish, "Spanish title should be present");
+  }
+
+  @Test
+  void testDeserializeIdentifierFromStringValue() throws Exception {
+    // Given
+    String xml = """
+        <lom xmlns=\"http://ltsc.ieee.org/xsd/LOM\">
+          <general>
+            <identifier>ID-90F88F55-281B-4EB2-B74D-58DB4D6A7D72</identifier>
+          </general>
+        </lom>
+        """;
+
+    // When
+    LOM lom = xmlMapper.readValue(xml, LOM.class);
+
+    // Then
+    assertNotNull(lom);
+    assertNotNull(lom.getGeneral());
+    assertNotNull(lom
+        .getGeneral()
+        .getIdentifiers());
+    Identifier identifier = lom
+        .getGeneral()
+        .getIdentifiers()
+        .get(0);
+    assertNull(identifier.getCatalog());
+    assertEquals("ID-90F88F55-281B-4EB2-B74D-58DB4D6A7D72", identifier.getEntry());
   }
 
   /**

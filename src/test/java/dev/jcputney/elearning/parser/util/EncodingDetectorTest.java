@@ -203,11 +203,15 @@ class EncodingDetectorTest {
     assertEquals(StandardCharsets.UTF_8, result.charset());
 
     // Verify BOM is consumed - first byte should be '<' not 0xEF
-    int firstByte = result.inputStream().read();
+    int firstByte = result
+        .inputStream()
+        .read();
     assertEquals('<', firstByte, "BOM should be consumed, first byte should be '<'");
-    
+
     // Read rest of the content to verify it's valid XML
-    byte[] remainingBytes = result.inputStream().readAllBytes();
+    byte[] remainingBytes = result
+        .inputStream()
+        .readAllBytes();
     String content = new String(remainingBytes, StandardCharsets.UTF_8);
     assertEquals("?xml version=\"1.0\"?><root>Test</root>", content);
   }
@@ -224,7 +228,45 @@ class EncodingDetectorTest {
     assertEquals(StandardCharsets.UTF_8, result.charset());
 
     // Verify content is unchanged
-    byte[] content = result.inputStream().readAllBytes();
+    byte[] content = result
+        .inputStream()
+        .readAllBytes();
     assertEquals(xmlContent, new String(content, StandardCharsets.UTF_8));
+  }
+
+  @Test
+  void testWindows1252FallbackWithoutDeclaration() throws IOException {
+    // Content encoded in Windows-1252 with smart apostrophes and en dash
+    String xmlContent = "<?xml version=\"1.0\"?><root>State\u2019s beer tax memes \u2013 test</root>";
+
+    byte[] bytes = xmlContent.getBytes(Charset.forName("windows-1252"));
+    InputStream input = new ByteArrayInputStream(bytes);
+    EncodingDetector.EncodingAwareInputStream result = EncodingDetector.detectEncoding(input);
+
+    assertNotNull(result);
+    assertEquals(Charset.forName("windows-1252"), result.charset());
+
+    String decoded = new String(result
+        .inputStream()
+        .readAllBytes(), result.charset());
+    assertEquals(xmlContent, decoded);
+  }
+
+  @Test
+  void testWindows1252FallbackWhenMisdeclaredUtf8() throws IOException {
+    // Declared UTF-8 but actually encoded as Windows-1252
+    String xmlContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><root>State\u2019s beer tax \u2013 test</root>";
+
+    byte[] bytes = xmlContent.getBytes(Charset.forName("windows-1252"));
+    InputStream input = new ByteArrayInputStream(bytes);
+    EncodingDetector.EncodingAwareInputStream result = EncodingDetector.detectEncoding(input);
+
+    assertNotNull(result);
+    assertEquals(Charset.forName("windows-1252"), result.charset());
+
+    String decoded = new String(result
+        .inputStream()
+        .readAllBytes(), result.charset());
+    assertEquals(xmlContent, decoded);
   }
 }

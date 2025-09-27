@@ -50,8 +50,11 @@ public class TrimAndPreserveIndentationDeserializer extends JsonDeserializer<Str
       return "";
     }
 
-    // Split into lines
-    String[] lines = rawText.split("\n");
+    // Normalise Windows/legacy Mac line endings before processing
+    String[] lines = rawText
+        .replace("\r\n", "\n")
+        .replace('\r', '\n')
+        .split("\n");
     if (lines.length == 0) {
       return "";
     }

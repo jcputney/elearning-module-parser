@@ -21,6 +21,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,11 +43,13 @@ public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
   // Matches up to three groups of digits separated by optional colons.
   // Also handles the case where the string starts with a colon (e.g., ":45" for 45 minutes)
   private static final Pattern HMS_REGEX = Pattern.compile("^"                // start of string
-      + "(\\d+)?"    // optional hours (group 1) - one or more digits
-      + "(?::(\\d+))?"   // optional colon, then minutes (group 2) - one or more digits
-      + "(?::(\\d+))?"   // optional colon, then seconds (group 3) - one or more digits
-      + "$"              // end of string
+      + "(\\d+)?"      // optional hours (group 1) - one or more digits
+      + "(?::(\\d+))?" // optional colon, then minutes (group 2) - one or more digits
+      + "(?::(\\d+(?:[.,]\\d+)?))?" // optional colon then seconds (group 3) with optional decimal
+      + "$"                // end of string
   );
+
+  private static final BigDecimal ONE_BILLION = new BigDecimal("1000000000");
 
   /**
    * Default constructor for the deserializer.
@@ -84,11 +88,13 @@ public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
       return Duration.ZERO;
     }
 
-    if (NumberUtils.isParsable(durationString)) {
-      return Duration.ofSeconds((long) Double.parseDouble(durationString));
+    String trimmedDuration = durationString.trim();
+
+    if (NumberUtils.isParsable(trimmedDuration)) {
+      return Duration.ofSeconds((long) Double.parseDouble(trimmedDuration));
     }
 
-    Matcher matcher = HMS_REGEX.matcher(durationString);
+    Matcher matcher = HMS_REGEX.matcher(trimmedDuration);
     if (!matcher.matches()) {
       throw new IllegalArgumentException("Invalid format: " + durationString);
     }
@@ -99,17 +105,36 @@ public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
 
     int hours = parseOrZero(hoursPart);
     int minutes = parseOrZero(minutesPart);
-    int seconds = parseOrZero(secondsPart);
-
-    return Duration
+    Duration duration = Duration
         .ofHours(hours)
-        .plusMinutes(minutes)
-        .plusSeconds(seconds);
+        .plusMinutes(minutes);
+
+    return appendSeconds(duration, secondsPart, durationString);
   }
 
   private static int parseOrZero(String s) {
     // If the group is null or empty, treat it as zero
     return (s == null || s.isEmpty()) ? 0 : Integer.parseInt(s);
+  }
+
+  private static Duration appendSeconds(Duration base, String secondsPart, String originalInput) {
+    if (secondsPart == null || secondsPart.isEmpty()) {
+      return base;
+    }
+
+    String normalizedSeconds = secondsPart.replace(',', '.');
+    try {
+      BigDecimal seconds = new BigDecimal(normalizedSeconds);
+      long wholeSeconds = seconds.longValue();
+      BigDecimal fractional = seconds.subtract(BigDecimal.valueOf(wholeSeconds));
+      int nanos = fractional
+          .multiply(ONE_BILLION)
+          .setScale(0, RoundingMode.DOWN)
+          .intValueExact();
+      return base.plusSeconds(wholeSeconds).plusNanos(nanos);
+    } catch (NumberFormatException | ArithmeticException e) {
+      throw new IllegalArgumentException("Invalid format: " + originalInput, e);
+    }
   }
 
   /**

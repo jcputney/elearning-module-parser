@@ -169,4 +169,28 @@ class TrimAndPreserveIndentationDeserializerTest {
     // The deserializer trims all lines, not preserving mixed indentation
     assertEquals("Line 1\nLine 2\nLine 3", result.getText());
   }
+
+  @Test
+  void deserialize_windowsLineEndings_shouldNormaliseCarriageReturns() throws IOException {
+    // Arrange
+    String json = "{\"text\": \"  Line 1\\r\\n  Line 2\\r\\n  Line 3\"}";
+
+    // Act
+    TestClass result = objectMapper.readValue(json, TestClass.class);
+
+    // Assert
+    assertEquals("Line 1\nLine 2\nLine 3", result.getText());
+  }
+
+  @Test
+  void deserialize_oldMacLineEndings_shouldNormaliseCarriageReturns() throws IOException {
+    // Arrange
+    String json = "{\"text\": \"  Line 1\\r  Line 2\\r  Line 3\"}";
+
+    // Act
+    TestClass result = objectMapper.readValue(json, TestClass.class);
+
+    // Assert
+    assertEquals("Line 1\nLine 2\nLine 3", result.getText());
+  }
 }

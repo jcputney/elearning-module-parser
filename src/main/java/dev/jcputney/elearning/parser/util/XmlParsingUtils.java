@@ -24,9 +24,13 @@ import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.LoadableMetadata;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
 import dev.jcputney.elearning.parser.input.lom.LOM;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.nio.charset.Charset;
 import java.time.Duration;
+import java.util.regex.Pattern;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -44,6 +48,9 @@ public final class XmlParsingUtils {
   private XmlParsingUtils() {
     throw new AssertionError("Utility class should not be instantiated");
   }
+
+  private static final Pattern UNESCAPED_AMPERSAND_PATTERN = Pattern.compile(
+      "&(?!(?:#\\d+|#x[0-9A-Fa-f]+|[A-Za-z][A-Za-z0-9._-]*);)");
 
   /**
    * Creates and configures an XmlMapper with custom deserializers.
@@ -106,22 +113,26 @@ public final class XmlParsingUtils {
     EncodingDetector.EncodingAwareInputStream encodingAwareStream =
         EncodingDetector.detectEncoding(stream);
 
+    String xmlContent = readStreamToString(encodingAwareStream.inputStream(),
+        encodingAwareStream
+            .charset());
+    String sanitizedXml = sanitizeXmlContent(xmlContent);
+
     try {
       XMLInputFactory factory = XMLInputFactory.newFactory();
       factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, true);
       factory.setProperty(XMLInputFactory.IS_VALIDATING, false);
       factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
 
-      // Create a reader with detected encoding
-      XMLStreamReader reader = factory.createXMLStreamReader(
-          encodingAwareStream.inputStream(),
-          encodingAwareStream
-              .charset()
-              .name()
-      );
-
       XmlMapper xmlMapper = createConfiguredXmlMapper();
-      return xmlMapper.readValue(reader, clazz);
+      try (StringReader stringReader = new StringReader(sanitizedXml)) {
+        XMLStreamReader reader = factory.createXMLStreamReader(stringReader);
+        try {
+          return xmlMapper.readValue(reader, clazz);
+        } finally {
+          reader.close();
+        }
+      }
     } catch (IOException | XMLStreamException e) {
       String errorMsg = String.format(
           "Failed to parse XML file '%s' to %s (encoding: %s): %s",
@@ -245,5 +256,47 @@ public final class XmlParsingUtils {
       }
       // File not found is not an error - metadata is optional
     }
+  }
+
+  private static String readStreamToString(InputStream stream, Charset charset) throws IOException {
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    byte[] buffer = new byte[8192];
+    int bytesRead;
+    while ((bytesRead = stream.read(buffer)) != -1) {
+      outputStream.write(buffer, 0, bytesRead);
+    }
+    return new String(outputStream.toByteArray(), charset);
+  }
+
+  private static String sanitizeXmlContent(String xmlContent) {
+    if (xmlContent.indexOf('&') == -1) {
+      return xmlContent;
+    }
+
+    StringBuilder sanitized = new StringBuilder(xmlContent.length());
+    int index = 0;
+    while (index < xmlContent.length()) {
+      int cdataStart = xmlContent.indexOf("<![CDATA[", index);
+      if (cdataStart == -1) {
+        sanitized.append(replaceBareAmpersands(xmlContent.substring(index)));
+        break;
+      }
+
+      int cdataEnd = xmlContent.indexOf("]]>", cdataStart);
+      if (cdataEnd == -1) {
+        sanitized.append(replaceBareAmpersands(xmlContent.substring(index)));
+        index = xmlContent.length();
+      } else {
+        sanitized.append(replaceBareAmpersands(xmlContent.substring(index, cdataStart)));
+        sanitized.append(xmlContent, cdataStart, cdataEnd + 3);
+        index = cdataEnd + 3;
+      }
+    }
+
+    return sanitized.toString();
+  }
+
+  private static String replaceBareAmpersands(String segment) {
+    return UNESCAPED_AMPERSAND_PATTERN.matcher(segment).replaceAll("&amp;");
   }
 }

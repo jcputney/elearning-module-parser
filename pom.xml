@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>dev.jcputney</groupId>
@@ -55,7 +57,9 @@
     <version.jmh>1.37</version.jmh>
     <version.jqwik>1.9.3</version.jqwik>
     <version.junit>5.13.4</version.junit>
+    <version.log4j-to-slf4j>2.25.2</version.log4j-to-slf4j>
     <version.logback>1.5.18</version.logback>
+    <version.mockito>5.18.0</version.mockito>
     <version.org.json>20250517</version.org.json>
     <version.plugin.central-publishing>0.8.0</version.plugin.central-publishing>
     <version.plugin.compiler>3.14.0</version.plugin.compiler>
@@ -71,7 +75,6 @@
     <version.slf4j>2.0.17</version.slf4j>
     <version.testcontainers>1.21.3</version.testcontainers>
     <version.threeten>1.8.0</version.threeten>
-    <version.mockito>5.18.0</version.mockito>
   </properties>
 
   <dependencyManagement>
@@ -154,17 +157,32 @@
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>s3</artifactId>
-      <scope>provided</scope>
+      <scope>compile</scope>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>auth</artifactId>
-      <scope>provided</scope>
+      <scope>compile</scope>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>aws-core</artifactId>
-      <scope>provided</scope>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>sso</artifactId>
+      <scope>test</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>ssooidc</artifactId>
+      <scope>test</scope>
+      <optional>true</optional>
     </dependency>
 
     <!-- Test Dependencies -->
@@ -259,6 +277,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>5.2.5</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
       <version>${version.assertj}</version>
@@ -268,14 +292,22 @@
 
     <!-- Logging Dependencies -->
     <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-to-slf4j</artifactId>
+      <version>${version.log4j-to-slf4j}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${version.slf4j}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <version>${version.logback}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -288,7 +320,7 @@
           <version>${version.plugin.release}</version>
           <configuration>
             <arguments>-ntp</arguments>
-            <scmCommentPrefix />
+            <scmCommentPrefix/>
             <tagNameFormat>v@{project.version}</tagNameFormat>
             <releaseProfiles>central</releaseProfiles>
           </configuration>
@@ -436,10 +468,12 @@
                 <configuration>
                   <finalName>benchmarks</finalName>
                   <transformers>
-                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                    <transformer
+                      implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                       <mainClass>org.openjdk.jmh.Main</mainClass>
                     </transformer>
-                    <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                    <transformer
+                      implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                   </transformers>
                   <filters>
                     <filter>

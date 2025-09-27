@@ -21,7 +21,11 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,6 +40,8 @@ public class EncodingDetector {
       Pattern.compile("encoding\\s*=\\s*['\"]([^'\"]+)['\"]", Pattern.CASE_INSENSITIVE);
 
   private static final int BUFFER_SIZE = 8192;
+
+  private static final Charset WINDOWS_1252 = Charset.forName("windows-1252");
 
   /**
    * Detects the encoding of an XML input stream. First checks for BOM, then falls back to XML
@@ -67,16 +73,116 @@ public class EncodingDetector {
         ? pushbackStream
         : new BufferedInputStream(pushbackStream, BUFFER_SIZE);
 
+    // First honour the declaration if present and valid for the underlying bytes
     markableStream.mark(BUFFER_SIZE);
     Charset xmlDeclCharset = detectFromXmlDeclaration(markableStream);
+    markableStream.reset();
     if (xmlDeclCharset != null) {
+      markableStream.mark(BUFFER_SIZE);
+      boolean declaredEncodingMatchesContent = isContentValidForCharset(markableStream,
+          xmlDeclCharset);
       markableStream.reset();
-      return new EncodingAwareInputStream(markableStream, xmlDeclCharset);
+      if (declaredEncodingMatchesContent) {
+        return new EncodingAwareInputStream(markableStream, xmlDeclCharset);
+      }
     }
 
-    // Default to UTF-8
+    // Fall back to heuristics (UTF-8 vs Windows-1252)
+    markableStream.mark(BUFFER_SIZE);
+    Charset heuristic = detectLikelyEncoding(markableStream);
     markableStream.reset();
-    return new EncodingAwareInputStream(markableStream, StandardCharsets.UTF_8);
+    return new EncodingAwareInputStream(markableStream, heuristic);
+  }
+
+  private static Charset detectLikelyEncoding(InputStream inputStream) throws IOException {
+    byte[] buffer = new byte[BUFFER_SIZE];
+    int bytesRead = inputStream.read(buffer);
+
+    if (bytesRead <= 0) {
+      return StandardCharsets.UTF_8;
+    }
+
+    boolean hasHighBit = false;
+    for (int i = 0; i < bytesRead; i++) {
+      if ((buffer[i] & 0x80) != 0) {
+        hasHighBit = true;
+        break;
+      }
+    }
+
+    if (!hasHighBit || looksLikeUtf8(buffer, bytesRead)) {
+      return StandardCharsets.UTF_8;
+    }
+
+    return WINDOWS_1252;
+  }
+
+  private static boolean looksLikeUtf8(byte[] buffer, int length) {
+    int i = 0;
+    while (i < length) {
+      int b = buffer[i] & 0xFF;
+      if (b < 0x80) {
+        i++;
+        continue;
+      }
+
+      if (b < 0xC2) {
+        return false; // Continuation byte or overlong sequence indicator
+      }
+
+      int expectedContinuationBytes;
+      if (b < 0xE0) {
+        expectedContinuationBytes = 1;
+      } else if (b < 0xF0) {
+        expectedContinuationBytes = 2;
+      } else if (b <= 0xF4) {
+        expectedContinuationBytes = 3;
+      } else {
+        return false;
+      }
+
+      if (i + expectedContinuationBytes >= length) {
+        // Not enough bytes in the sample to validate fully; assume UTF-8 to avoid false negatives
+        return true;
+      }
+
+      for (int j = 1; j <= expectedContinuationBytes; j++) {
+        int continuation = buffer[i + j] & 0xFF;
+        if ((continuation & 0xC0) != 0x80) {
+          return false;
+        }
+      }
+
+      i += expectedContinuationBytes + 1;
+    }
+
+    return true;
+  }
+
+  private static boolean isContentValidForCharset(InputStream inputStream, Charset charset)
+      throws IOException {
+    if (charset == null) {
+      return false;
+    }
+
+    byte[] buffer = new byte[BUFFER_SIZE];
+    int bytesRead = inputStream.read(buffer);
+
+    if (bytesRead <= 0) {
+      return true;
+    }
+
+    CharsetDecoder decoder = charset
+        .newDecoder()
+        .onMalformedInput(CodingErrorAction.REPORT)
+        .onUnmappableCharacter(CodingErrorAction.REPORT);
+
+    try {
+      decoder.decode(ByteBuffer.wrap(buffer, 0, bytesRead));
+      return true;
+    } catch (CharacterCodingException e) {
+      return false;
+    }
   }
 
   /**

@@ -79,6 +79,9 @@ public class CompletionThreshold implements Serializable {
   }
 
   public void setMinProgressMeasure(MeasureType minProgressMeasure) {
+    if (minProgressMeasure == null) {
+      return;
+    }
     this.minProgressMeasure = minProgressMeasure;
   }
 

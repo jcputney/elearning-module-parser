@@ -20,11 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.Duration;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Tests for {@link DurationHHMMSSDeserializer} to ensure proper parsing of duration strings in
@@ -88,6 +91,21 @@ class DurationHHMMSSDeserializerTest {
         .plusMinutes(expectedMinutes)
         .plusSeconds(expectedSeconds);
     assertEquals(expected, DurationHHMMSSDeserializer.parseDuration(input));
+  }
+
+  @ParameterizedTest
+  @MethodSource("fractionalDurationProvider")
+  void parseDuration_fractionalSeconds_returnsDuration(String input, Duration expected) {
+    assertEquals(expected, DurationHHMMSSDeserializer.parseDuration(input));
+  }
+
+  private static Stream<Arguments> fractionalDurationProvider() {
+    return Stream.of(
+        Arguments.of("0:03:45.08", Duration.ofMinutes(3).plusSeconds(45).plusMillis(80)),
+        Arguments.of("10:00:00.5", Duration.ofHours(10).plusMillis(500)),
+        Arguments.of("00:00:59.999", Duration.ofSeconds(59).plusMillis(999)),
+        Arguments.of("0:00:45,25", Duration.ofSeconds(45).plusMillis(250))
+    );
   }
 
   /**

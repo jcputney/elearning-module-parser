@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input.lom.types;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -52,6 +53,16 @@ public class Identifier implements Serializable {
   private String entry;
 
   public Identifier() {
+  }
+
+  /**
+   * Creates an identifier from a plain text value where only an entry is provided.
+   *
+   * @param value the string value of the identifier entry
+   */
+  @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+  public Identifier(String value) {
+    this.entry = value;
   }
 
   public String getCatalog() {

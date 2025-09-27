@@ -9,6 +9,7 @@ import dev.jcputney.elearning.parser.parsers.Scorm12Parser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
@@ -91,7 +92,7 @@ class ScormVersionDetectorTest {
   private static class MockFileAccess implements FileAccess {
 
     private final String rootPath;
-    private final Map<String, String> fileContents = new HashMap<>();
+    private final Map<String, byte[]> fileContents = new HashMap<>();
 
     MockFileAccess(String rootPath) {
       this.rootPath = rootPath;
@@ -114,12 +115,41 @@ class ScormVersionDetectorTest {
 
     @Override
     public InputStream getFileContentsInternal(String path) throws IOException {
-      String contents = fileContents.getOrDefault(path, "");
-      return new ByteArrayInputStream(contents.getBytes(StandardCharsets.UTF_8));
+      byte[] contents = fileContents.get(path);
+      if (contents == null) {
+        contents = new byte[0];
+      }
+      return new ByteArrayInputStream(contents);
     }
 
     void setFileContents(String contents) {
+      fileContents.put(Scorm12Parser.MANIFEST_FILE,
+          contents.getBytes(StandardCharsets.UTF_8));
+    }
+
+    void setFileContents(byte[] contents) {
       fileContents.put(Scorm12Parser.MANIFEST_FILE, contents);
     }
+  }
+
+  @Test
+  void detectScormVersionFallbacksToWindows1252WhenUtf8ParsingFails() throws Exception {
+    String manifest = """
+        <?xml version=\"1.0\" encoding=\"UTF-8\"?>
+        <manifest>
+          <metadata>
+            <schema>ADL SCORM</schema>
+            <schemaversion>1.2</schemaversion>
+            <description>Owner\u2019s guide module</description>
+          </metadata>
+        </manifest>
+        """;
+    MockFileAccess fileAccess = new MockFileAccess("root/path");
+    byte[] cp1252Bytes = manifest.getBytes(Charset.forName("windows-1252"));
+    fileAccess.setFileContents(cp1252Bytes);
+
+    ModuleType result = ScormVersionDetector.detectScormVersion(fileAccess);
+
+    assertEquals(ModuleType.SCORM_12, result);
   }
 }

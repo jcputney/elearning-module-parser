@@ -82,11 +82,13 @@ public class Scorm12Organizations implements Serializable {
    */
   @JsonIgnore
   public Scorm12Organization getOrganizationById(String id) {
+    if (organizationList == null || id == null) {
+      return null;
+    }
+
     return organizationList
         .stream()
-        .filter(org -> org
-            .getIdentifier()
-            .equals(id))
+        .filter(org -> id.equals(org.getIdentifier()))
         .findFirst()
         .orElse(null);
   }
@@ -98,7 +100,16 @@ public class Scorm12Organizations implements Serializable {
    */
   @JsonIgnore
   public Scorm12Organization getDefault() {
-    return getOrganizationById(defaultOrganization);
+    Scorm12Organization defaultOrg = getOrganizationById(defaultOrganization);
+    if (defaultOrg != null) {
+      return defaultOrg;
+    }
+
+    if (organizationList == null || organizationList.isEmpty()) {
+      return null;
+    }
+
+    return organizationList.get(0);
   }
 
   public String getDefaultOrganization() {

@@ -129,6 +129,38 @@ class Scorm12ManifestTest {
     assertEquals(TEST_HREF, launchUrl);
   }
 
+  @Test
+  void getLaunchUrlFallsBackToSingleOrganizationWhenDefaultMissing() {
+    Scorm12Item item = new Scorm12Item();
+    item.setIdentifier("item-id");
+    item.setTitle("Item Title");
+    item.setIdentifierRef("resource-id");
+
+    Scorm12Organization organization = new Scorm12Organization();
+    organization.setIdentifier("org-id");
+    organization.setItems(Collections.singletonList(item));
+
+    Scorm12Organizations organizations = new Scorm12Organizations();
+    organizations.setOrganizationList(Collections.singletonList(organization));
+    organizations.setDefaultOrganization("typo-id");
+
+    Scorm12Resource resource = new Scorm12Resource();
+    resource.setIdentifier("resource-id");
+    resource.setHref(TEST_HREF);
+    resource.setType("webcontent");
+    Scorm12Resources resources = new Scorm12Resources();
+    resources.setResourceList(Collections.singletonList(resource));
+
+    Scorm12Manifest manifest = new Scorm12Manifest();
+    manifest.setIdentifier(TEST_ID);
+    manifest.setOrganizations(organizations);
+    manifest.setResources(resources);
+
+    String launchUrl = manifest.getLaunchUrl();
+
+    assertEquals(TEST_HREF, launchUrl);
+  }
+
   /**
    * Tests that getDuration() returns the duration from LOM.
    */

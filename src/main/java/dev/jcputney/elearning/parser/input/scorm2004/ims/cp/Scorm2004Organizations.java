@@ -63,6 +63,10 @@ public class Scorm2004Organizations implements Serializable {
    */
   @JsonIgnore
   public Scorm2004Organization getOrganizationById(String id) {
+    if (organizationList == null || id == null) {
+      return null;
+    }
+
     return organizationList
         .stream()
         .filter(org -> org
@@ -79,7 +83,16 @@ public class Scorm2004Organizations implements Serializable {
    */
   @JsonIgnore
   public Scorm2004Organization getDefault() {
-    return getOrganizationById(defaultOrganization);
+    Scorm2004Organization defaultOrg = getOrganizationById(defaultOrganization);
+    if (defaultOrg != null) {
+      return defaultOrg;
+    }
+
+    if (organizationList == null || organizationList.isEmpty()) {
+      return null;
+    }
+
+    return organizationList.get(0);
   }
 
   /**

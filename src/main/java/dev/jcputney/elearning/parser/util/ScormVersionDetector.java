@@ -23,13 +23,22 @@ import static dev.jcputney.elearning.parser.parsers.Scorm12Parser.MANIFEST_FILE;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.enums.ModuleType;
+import java.io.ByteArrayInputStream;
+import java.io.CharConversionException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * Utility class for detecting the version of SCORM modules based on their manifest files.
@@ -74,8 +83,8 @@ public class ScormVersionDetector {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware(true);
     factory.setExpandEntityReferences(false);
-    DocumentBuilder builder = factory.newDocumentBuilder();
-    Document document = builder.parse(fileAccess.getFileContents(MANIFEST_FILE));
+    byte[] manifestBytes = readManifestBytes(fileAccess);
+    Document document = parseManifest(factory, manifestBytes);
 
     // Check schema version
     Element schemaElement = (Element) document
@@ -105,5 +114,95 @@ public class ScormVersionDetector {
 
     // Default to SCORM 1.2 if uncertain
     return SCORM_12;
+  }
+
+  private static byte[] readManifestBytes(FileAccess fileAccess) throws IOException {
+    try (InputStream inputStream = fileAccess.getFileContents(MANIFEST_FILE)) {
+      return inputStream.readAllBytes();
+    }
+  }
+
+  private static Document parseManifest(DocumentBuilderFactory factory, byte[] manifestBytes)
+      throws ParserConfigurationException, IOException, SAXException {
+    try {
+      return parseWithDefault(factory, manifestBytes);
+    } catch (SAXException ex) {
+      if (!hasCharConversionCause(ex)) {
+        throw ex;
+      }
+    }
+
+    SAXException lastFailure = null;
+    for (Charset charset : fallbackCharsets()) {
+      try {
+        return parseWithCharset(factory, manifestBytes, charset);
+      } catch (SAXException ex) {
+        lastFailure = ex;
+      }
+    }
+
+    if (lastFailure != null) {
+      throw lastFailure;
+    }
+    throw new SAXException("Unable to parse manifest contents with available encodings");
+  }
+
+  private static Document parseWithDefault(DocumentBuilderFactory factory, byte[] manifestBytes)
+      throws ParserConfigurationException, IOException, SAXException {
+    DocumentBuilder builder = createDocumentBuilder(factory);
+    try (ByteArrayInputStream inputStream = new ByteArrayInputStream(manifestBytes)) {
+      return builder.parse(inputStream);
+    }
+  }
+
+  private static Document parseWithCharset(DocumentBuilderFactory factory, byte[] manifestBytes,
+      Charset charset)
+      throws ParserConfigurationException, IOException, SAXException {
+    DocumentBuilder builder = createDocumentBuilder(factory);
+    InputSource source = new InputSource();
+    source.setEncoding(charset.name());
+    source.setCharacterStream(new java.io.StringReader(new String(manifestBytes, charset)));
+    return builder.parse(source);
+  }
+
+  private static DocumentBuilder createDocumentBuilder(DocumentBuilderFactory factory)
+      throws ParserConfigurationException {
+    DocumentBuilder builder = factory.newDocumentBuilder();
+    builder.setErrorHandler(SilentErrorHandler.INSTANCE);
+    return builder;
+  }
+
+  private static boolean hasCharConversionCause(Throwable throwable) {
+    Throwable current = throwable;
+    while (current != null) {
+      if (current instanceof CharConversionException) {
+        return true;
+      }
+      current = current.getCause();
+    }
+    return false;
+  }
+
+  private static List<Charset> fallbackCharsets() {
+    return List.of(StandardCharsets.ISO_8859_1, Charset.forName("windows-1252"));
+  }
+
+  private enum SilentErrorHandler implements ErrorHandler {
+    INSTANCE;
+
+    @Override
+    public void warning(SAXParseException exception) {
+      // ignore warnings during detection attempts
+    }
+
+    @Override
+    public void error(SAXParseException exception) throws SAXException {
+      throw exception;
+    }
+
+    @Override
+    public void fatalError(SAXParseException exception) throws SAXException {
+      throw exception;
+    }
   }
 }

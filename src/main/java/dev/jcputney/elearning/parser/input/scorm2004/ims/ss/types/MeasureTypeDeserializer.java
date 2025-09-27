@@ -47,11 +47,20 @@ public class MeasureTypeDeserializer extends JsonDeserializer<MeasureType> {
    */
   @Override
   public MeasureType deserialize(JsonParser p, DeserializationContext context) throws IOException {
-    String value = p.getText();
+    String rawValue = p.getValueAsString();
+    if (rawValue == null) {
+      return null;
+    }
+
+    String value = rawValue.trim();
+    if (value.isEmpty()) {
+      return null;
+    }
+
     try {
       return new MeasureType(new BigDecimal(value));
     } catch (IllegalArgumentException e) {
-      throw new IOException("Invalid MeasureType value: " + value, e);
+      return null;
     }
   }
 }

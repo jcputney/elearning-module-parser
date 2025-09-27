@@ -172,6 +172,22 @@ class S3FileAccessV2Test {
   }
 
   @Test
+  void listFiles_withOverlappingModulePrefixes_isolatedToSelectedModule() throws IOException {
+    uploadTestFile("modules/shared/1/imsmanifest.xml", TEST_MANIFEST_CONTENT);
+    uploadTestFile("modules/shared/10/imsmanifest.xml", TEST_MANIFEST_CONTENT);
+
+    S3FileAccessV2 moduleScopedAccess = new S3FileAccessV2(s3Client, TEST_BUCKET_NAME, "");
+    moduleScopedAccess.prepareForModule("modules/shared/1");
+
+    List<String> files = moduleScopedAccess.listFiles("");
+
+    assertTrue(files.contains("imsmanifest.xml"));
+    assertFalse(files.stream().anyMatch(key -> key.startsWith("modules/shared/10")));
+
+    moduleScopedAccess.shutdown();
+  }
+
+  @Test
   void listFiles_withNullPath_throwsIllegalArgumentException() {
     assertThrows(IllegalArgumentException.class, () -> s3FileAccess.listFiles(null));
   }

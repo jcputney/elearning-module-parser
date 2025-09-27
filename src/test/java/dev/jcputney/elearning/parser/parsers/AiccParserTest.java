@@ -196,6 +196,64 @@ class AiccParserTest {
         .size());
   }
 
+  @Test
+  void testParse_iniKeyWithoutValue_succeeds(@TempDir Path tempDir)
+      throws IOException, ModuleParsingException {
+    Path csPath = tempDir.resolve("course.cst");
+    Files.writeString(csPath,
+        """
+            block,member
+            ROOT,A1
+            """);
+
+    Path crsPath = tempDir.resolve("course.crs");
+    Files.writeString(crsPath,
+        """
+            [COURSE]
+            COURSE_ID = Minimal_AICC_Course
+            COURSE_TITLE = Minimal AICC Course
+            COURSE_CREATOR = Test Creator
+            COURSE_SYSTEM = Test System
+            Level = 1
+            Version = 1.0
+            Total_AUs = 1
+            Total_Blocks = 0
+            Max_Fields_CST = 100
+            Max_Fields_ORT
+
+            [COURSE_BEHAVIOR]
+            MAX_NORMAL = 1
+
+            [COURSE_DESCRIPTION]
+            A minimal AICC course for regression testing = Parser should ignore null properties.
+            """);
+
+    Path auPath = tempDir.resolve("au.au");
+    Files.writeString(auPath,
+        """
+            System_ID,Command_Line,File_Name,Core_Vendor,Type
+            A1,test.html,test.html,Test Vendor,
+            """);
+
+    Path desPath = tempDir.resolve("course.des");
+    Files.writeString(desPath,
+        """
+            System_ID,Developer_ID,Title,Description
+            A1,DEV-001,Test AU,Test Assignable Unit
+            """);
+
+    AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
+    AiccMetadata metadata = parser.parse();
+
+    assertNotNull(metadata);
+    assertEquals("Minimal AICC Course", metadata
+        .getManifest()
+        .getTitle());
+    assertEquals("test.html", metadata
+        .getManifest()
+        .getLaunchUrl());
+  }
+
   /**
    * Tests that the parser correctly handles an AICC package with multiple assignable units.
    */

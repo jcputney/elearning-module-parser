@@ -271,9 +271,10 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
         Iterator<String> keyIterator = confSection.getKeys();
         while (keyIterator.hasNext()) {
           String key = keyIterator.next();
-          String value = confSection
-              .getProperty(key)
-              .toString();
+          Object rawValue = confSection.getProperty(key);
+          // Authoring tools sometimes emit keys without values; treat those as null instead of
+          // failing with a NullPointerException when calling toString().
+          String value = rawValue != null ? rawValue.toString() : null;
           subSectionMap.put(key, value);
         }
         mapData.put(section, subSectionMap);

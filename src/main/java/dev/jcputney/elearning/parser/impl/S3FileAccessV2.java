@@ -42,6 +42,7 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 public class S3FileAccessV2 extends AbstractS3FileAccess {
 
   private final S3Client s3Client;
+  private final boolean eagerCache;
   private final ThreadLocal<StreamingProgressListener> currentProgressListener = new ThreadLocal<>();
 
   /**
@@ -66,11 +67,29 @@ public class S3FileAccessV2 extends AbstractS3FileAccess {
   public S3FileAccessV2(S3Client s3Client, String bucketName, String rootPath, boolean eagerCache) {
     super(bucketName, rootPath);  // Don't eager-cache in parent constructor
     this.s3Client = s3Client;
+    this.eagerCache = eagerCache;
 
     if (eagerCache) {
       // Eagerly cache all files to avoid individual S3 API calls later
       try {
         // Eagerly caching all files for S3 bucket
+        getAllFiles();
+      } catch (IOException e) {
+        // Failed to eagerly cache files from S3, will fall back to lazy loading
+      }
+    }
+  }
+
+  /**
+   * Prepare this file access instance for interacting with a specific module root. Clears any
+   * cached state and optionally re-populates caches when eager caching is enabled.
+   *
+   * @param moduleRoot The module prefix/key to scope subsequent operations to.
+   */
+  public void prepareForModule(String moduleRoot) {
+    reconfigureRootPath(moduleRoot);
+    if (eagerCache) {
+      try {
         getAllFiles();
       } catch (IOException e) {
         // Failed to eagerly cache files from S3, will fall back to lazy loading
@@ -156,6 +175,9 @@ public class S3FileAccessV2 extends AbstractS3FileAccess {
     try {
       List<String> allKeys = new ArrayList<>();
       String prefix = fullPath(directoryPath);
+      if (!prefix.isEmpty() && !prefix.endsWith("/")) {
+        prefix = prefix + "/";
+      }
 
       ListObjectsV2Request.Builder requestBuilder = ListObjectsV2Request
           .builder()
@@ -175,9 +197,20 @@ public class S3FileAccessV2 extends AbstractS3FileAccess {
             .stream()
             .map(S3Object::key)
             .filter(key -> !key.endsWith("/")) // Filter out directory markers
+            .filter(key -> {
+              if (rootPath == null || rootPath.isEmpty()) {
+                return true;
+              }
+              if (key.equals(rootPath)) {
+                return true;
+              }
+              return key.startsWith(rootPath + "/");
+            })
             .map(key -> {
-              // Strip the root path to return relative paths
-              if (rootPath != null && !rootPath.isEmpty() && key.startsWith(rootPath + "/")) {
+              if (rootPath == null || rootPath.isEmpty()) {
+                return key;
+              }
+              if (key.startsWith(rootPath + "/")) {
                 return key.substring(rootPath.length() + 1);
               }
               return key;

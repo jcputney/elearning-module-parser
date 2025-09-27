@@ -54,6 +54,16 @@ class XmlParsingUtilsTest {
   }
 
   @Test
+  void parseXmlToObjectWithBareAmpersandSanitizesAndParses() throws Exception {
+    String xml = "<TextXmlClass><value>Health & Safety</value></TextXmlClass>";
+    InputStream stream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+
+    TextXmlClass result = XmlParsingUtils.parseXmlToObject(stream, TextXmlClass.class);
+
+    assertEquals("Health & Safety", result.getValue());
+  }
+
+  @Test
   void parseXmlToObjectWithNullInputStreamThrowsIllegalArgumentException() {
     assertThrows(IllegalArgumentException.class,
         () -> XmlParsingUtils.parseXmlToObject(null, TestXmlClass.class));
@@ -147,6 +157,22 @@ class XmlParsingUtilsTest {
     }
 
     public void setValue(int value) {
+      this.value = value;
+    }
+  }
+
+  /**
+   * A simple test class for XML parsing where text should be preserved.
+   */
+  public static class TextXmlClass {
+
+    private String value;
+
+    public String getValue() {
+      return value;
+    }
+
+    public void setValue(String value) {
       this.value = value;
     }
   }

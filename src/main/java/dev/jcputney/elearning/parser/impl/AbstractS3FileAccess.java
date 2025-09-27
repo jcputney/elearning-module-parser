@@ -116,19 +116,33 @@ public abstract class AbstractS3FileAccess implements FileAccess {
   protected AbstractS3FileAccess(String bucketName, String rootPath) {
     this.bucketName = bucketName;
     this.executorService = Executors.newFixedThreadPool(10);
+    initializeRootPath(rootPath);
+  }
 
+  private void initializeRootPath(String rootPath) {
     String processedPath = rootPath;
     if (processedPath == null) {
       processedPath = "";
     }
 
-    // Lazy initialization of root path detection
-    this.rootPath = processedPath;
-
-    String localRootPath = this.rootPath;
-    if (localRootPath.endsWith("/")) {
-      this.rootPath = localRootPath.substring(0, localRootPath.length() - 1);
+    if (processedPath.endsWith("/")) {
+      processedPath = processedPath.substring(0, processedPath.length() - 1);
     }
+
+    this.rootPath = processedPath;
+  }
+
+  protected final void reconfigureRootPath(String newRootPath) {
+    clearAllCaches();
+    initializeRootPath(newRootPath);
+  }
+
+  private void clearAllCaches() {
+    fileExistsCache.clear();
+    directoryListCache.clear();
+    smallFileCache.clear();
+    fileSizeCache.clear();
+    allFilesCache = null;
   }
 
   /**
@@ -148,8 +162,11 @@ public abstract class AbstractS3FileAccess implements FileAccess {
     // If we have the allFilesCache populated, use it to determine existence
     List<String> allFiles = allFilesCache;
     if (allFiles != null) {
-      String fullFilePath = fullPath(path);
-      boolean exists = allFiles.contains(fullFilePath);
+      boolean exists = allFiles.contains(path);
+      if (!exists) {
+        // SDK-specific implementations may cache absolute keys; fall back to that form
+        exists = allFiles.contains(fullPath(path));
+      }
       fileExistsCache.put(path, exists);
       return exists;
     }
