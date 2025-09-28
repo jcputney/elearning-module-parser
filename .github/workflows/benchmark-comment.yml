@@ -1,0 +1,100 @@
+name: Benchmarks PR Comment
+
+on:
+  workflow_run:
+    workflows: ["Benchmarks"]
+    types: [completed]
+
+jobs:
+  comment:
+    if: ${{ github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion != 'cancelled' && github.event.workflow_run.conclusion != 'skipped' && github.event.workflow_run.pull_requests[0] != null }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Download benchmark artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: benchmark-results
+          path: benchmark
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          if-no-files-found: warn
+
+      - name: Comment PR with benchmark results
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const pr = context.payload.workflow_run.pull_requests[0];
+            if (!pr) {
+              core.info('No associated pull request; skipping comment.');
+              return;
+            }
+
+            const resultsPath = path.join(process.cwd(), 'benchmark', 'benchmark-results.json');
+            if (!fs.existsSync(resultsPath)) {
+              core.info('benchmark-results.json not found in artifact; skipping comment.');
+              return;
+            }
+
+            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
+            const runUrl = context.payload.workflow_run.html_url;
+
+            let comment = '## 📊 Benchmark Results\\n\\n';
+            comment += `Triggered by [workflow run](${runUrl}).\\n\\n`;
+            comment += '| Benchmark | Score | Error | Unit |\\n';
+            comment += '|-----------|-------|-------|------|\\n';
+
+            let hasRegression = false;
+
+            results.forEach(result => {
+              const score = result.primaryMetric.score;
+              const error = result.primaryMetric.scoreError;
+              const unit = result.primaryMetric.scoreUnit;
+              const benchmark = result.benchmark.split('.').pop();
+
+              const emoji = score > 50 ? '🔴' : '🟢';
+              if (score > 50) hasRegression = true;
+
+              comment += `| ${emoji} ${benchmark} | ${score.toFixed(3)} | ±${error.toFixed(3)} | ${unit} |\\n`;
+            });
+
+            if (hasRegression) {
+              comment += '\\n⚠️ **Performance regression detected**: One or more benchmarks exceeded the 50ms threshold.\\n';
+            } else {
+              comment += '\\n✅ **All benchmarks passed** performance thresholds.\\n';
+            }
+
+            const { owner, repo } = context.repo;
+            const issue_number = pr.number;
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner,
+              repo,
+              issue_number,
+            });
+
+            const existing = comments.find(comment =>
+              comment.user.type === 'Bot' && comment.body.includes('📊 Benchmark Results')
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body: comment,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body: comment,
+              });
+            }

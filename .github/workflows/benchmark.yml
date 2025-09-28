@@ -10,8 +10,6 @@ jobs:
   benchmark:
     permissions:
       contents: read
-      issues: write
-      pull-requests: write
     runs-on: ubuntu-latest
     
     steps:
@@ -73,69 +71,3 @@ jobs:
           name: benchmark-results
           path: benchmark-results.json
           retention-days: 30
-
-      - name: Comment PR with benchmark results
-        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-        uses: actions/github-script@v8
-        with:
-          script: |
-            const fs = require('fs');
-            
-            if (!fs.existsSync('benchmark-results.json')) {
-              console.log('No benchmark results found');
-              return;
-            }
-            
-            const results = JSON.parse(fs.readFileSync('benchmark-results.json', 'utf8'));
-            
-            let comment = '## 📊 Benchmark Results\n\n';
-            comment += '| Benchmark | Score | Error | Unit |\n';
-            comment += '|-----------|-------|-------|------|\n';
-            
-            let hasRegression = false;
-            
-            results.forEach(result => {
-              const score = result.primaryMetric.score;
-              const error = result.primaryMetric.scoreError;
-              const unit = result.primaryMetric.scoreUnit;
-              const benchmark = result.benchmark.split('.').pop();
-            
-              // Check if score exceeds threshold
-              const emoji = score > 50 ? '🔴' : '🟢';
-              if (score > 50) hasRegression = true;
-            
-              comment += `| ${emoji} ${benchmark} | ${score.toFixed(3)} | ±${error.toFixed(3)} | ${unit} |\n`;
-            });
-            
-            if (hasRegression) {
-              comment += '\n⚠️ **Performance regression detected**: One or more benchmarks exceeded the 50ms threshold.\n';
-            } else {
-              comment += '\n✅ **All benchmarks passed** performance thresholds.\n';
-            }
-            
-            // Find and update or create comment
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-            
-            const botComment = comments.find(comment => 
-              comment.user.type === 'Bot' && comment.body.includes('📊 Benchmark Results')
-            );
-            
-            if (botComment) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: botComment.id,
-                body: comment
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body: comment
-              });
-            }
