@@ -2,7 +2,7 @@ name: Issue Labeler
 
 on:
   issues:
-    types: [opened, edited, reopened, transferred]
+    types: [ opened, edited, reopened, transferred ]
 
 permissions:
   issues: write
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ensure common labels exist
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const labels = [
