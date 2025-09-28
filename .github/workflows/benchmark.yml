@@ -24,12 +24,17 @@ jobs:
 
       - name: Run benchmarks
         run: |
-          ./mvnw clean test-compile exec:java -P benchmark -Djmh.options="-wi 2 -i 3 -f 1 -rf json -rff benchmark-results.json"
+          ./mvnw --batch-mode clean package exec:java -P benchmark -Djmh.options="-wi 2 -i 3 -f 1 -rf json -rff benchmark-results.json"
 
       - name: Process benchmark results
         if: always()
         run: |
           if [ -f benchmark-results.json ]; then
+            ENTRY_COUNT=$(jq 'length' benchmark-results.json)
+            if [ "$ENTRY_COUNT" -eq 0 ]; then
+              echo "::error::benchmark-results.json contained no benchmark entries"
+              exit 1
+            fi
             echo "## Benchmark Results" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
           

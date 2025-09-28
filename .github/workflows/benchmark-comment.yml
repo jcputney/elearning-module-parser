@@ -38,37 +38,74 @@ jobs:
 
             const resultsPath = path.join(process.cwd(), 'benchmark', 'benchmark-results.json');
             if (!fs.existsSync(resultsPath)) {
-              core.info('benchmark-results.json not found in artifact; skipping comment.');
+              core.setFailed('benchmark-results.json not found in artifact.');
               return;
             }
 
-            const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-            const runUrl = context.payload.workflow_run.html_url;
-
-            let comment = '## 📊 Benchmark Results\\n\\n';
-            comment += `Triggered by [workflow run](${runUrl}).\\n\\n`;
-            comment += '| Benchmark | Score | Error | Unit |\\n';
-            comment += '|-----------|-------|-------|------|\\n';
-
-            let hasRegression = false;
-
-            results.forEach(result => {
-              const score = result.primaryMetric.score;
-              const error = result.primaryMetric.scoreError;
-              const unit = result.primaryMetric.scoreUnit;
-              const benchmark = result.benchmark.split('.').pop();
-
-              const emoji = score > 50 ? '🔴' : '🟢';
-              if (score > 50) hasRegression = true;
-
-              comment += `| ${emoji} ${benchmark} | ${score.toFixed(3)} | ±${error.toFixed(3)} | ${unit} |\\n`;
-            });
-
-            if (hasRegression) {
-              comment += '\\n⚠️ **Performance regression detected**: One or more benchmarks exceeded the 50ms threshold.\\n';
-            } else {
-              comment += '\\n✅ **All benchmarks passed** performance thresholds.\\n';
+            const raw = fs.readFileSync(resultsPath, 'utf8').trim();
+            if (!raw) {
+              core.setFailed('benchmark-results.json is empty');
+              return;
             }
+
+            let parsed;
+            try {
+              parsed = JSON.parse(raw);
+            } catch (error) {
+              core.setFailed(`Failed to parse benchmark-results.json: ${error.message}`);
+              throw error;
+            }
+
+            const benchmarks = Array.isArray(parsed)
+              ? parsed
+              : Array.isArray(parsed?.benchmarks)
+                ? parsed.benchmarks
+                : [];
+
+            const runUrl = context.payload.workflow_run.html_url;
+            const commentLines = [
+              '## 📊 Benchmark Results',
+              '',
+              `Triggered by [workflow run](${runUrl}).`,
+              '',
+            ];
+
+            if (benchmarks.length === 0) {
+              commentLines.push('⚠️ **No benchmark data was produced.** Check the workflow run logs for failures in the benchmark phase.');
+            } else {
+              commentLines.push('| Benchmark | Score | Error | Unit |');
+              commentLines.push('|-----------|-------|-------|------|');
+
+              let hasRegression = false;
+
+              for (const result of benchmarks) {
+                const score = Number(result?.primaryMetric?.score ?? NaN);
+                const error = Number(result?.primaryMetric?.scoreError ?? NaN);
+                const unit = result?.primaryMetric?.scoreUnit ?? 'ops';
+                const benchmark = (result?.benchmark ?? 'unknown').split('.').pop();
+
+                if (!Number.isFinite(score)) {
+                  commentLines.push(`| ⚠️ ${benchmark} | n/a | n/a | ${unit} |`);
+                  core.warning(`Missing score for benchmark ${result?.benchmark ?? 'unknown'}`);
+                  continue;
+                }
+
+                const emoji = score > 50 ? '🔴' : '🟢';
+                if (score > 50) hasRegression = true;
+
+                const errorDisplay = Number.isFinite(error) ? error.toFixed(3) : 'n/a';
+                commentLines.push(`| ${emoji} ${benchmark} | ${score.toFixed(3)} | ±${errorDisplay} | ${unit} |`);
+              }
+
+              commentLines.push('');
+              if (hasRegression) {
+                commentLines.push('⚠️ **Performance regression detected**: One or more benchmarks exceeded the 50ms threshold.');
+              } else {
+                commentLines.push('✅ **All benchmarks passed** performance thresholds.');
+              }
+            }
+
+            const comment = commentLines.join('\n');
 
             const { owner, repo } = context.repo;
             const issue_number = pr.number;
@@ -97,4 +134,8 @@ jobs:
                 issue_number,
                 body: comment,
               });
+            }
+
+            if (benchmarks.length === 0) {
+              core.setFailed('No benchmark entries were found in benchmark-results.json.');
             }
