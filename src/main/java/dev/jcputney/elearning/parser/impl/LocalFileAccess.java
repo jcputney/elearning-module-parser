@@ -158,13 +158,19 @@ public class LocalFileAccess implements FileAccess {
               + details + " in root '" + getRootPath() + "'");
     }
 
-    try (InputStream inputStream = Files.newInputStream(filePath, StandardOpenOption.READ)) {
+    long fileSize = Files.size(filePath);
 
-      // Get file size for progress tracking
-      long fileSize = Files.size(filePath);
-
-      // Apply streaming enhancements
-      return StreamingUtils.createEnhancedStream(inputStream, fileSize, progressListener);
+    InputStream inputStream = Files.newInputStream(filePath, StandardOpenOption.READ);
+    boolean success = false;
+    try {
+      InputStream enhancedStream =
+          StreamingUtils.createEnhancedStream(inputStream, fileSize, progressListener);
+      success = true;
+      return enhancedStream;
+    } finally {
+      if (!success) {
+        inputStream.close();
+      }
     }
   }
 

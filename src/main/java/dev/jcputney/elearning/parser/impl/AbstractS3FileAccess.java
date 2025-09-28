@@ -30,6 +30,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Abstract base class for S3 FileAccess implementations with common caching and optimization logic.
@@ -99,13 +100,13 @@ public abstract class AbstractS3FileAccess implements FileAccess {
    * A thread-safe cache storing the list of all file paths within the module.
    * <p>
    * This cache is intended to improve performance for file-related operations by storing the result
-   * of a full scan of the S3 bucket or prefix. The cache is synchronized to ensure thread safety in
-   * concurrent environments.
+   * of a full scan of the S3 bucket or prefix. The cache is stored in an {@link AtomicReference}
+   * to ensure safe publication across threads once populated.
    * <p>
    * Modifications to this cache should be controlled to maintain data consistency across the class,
    * particularly when the underlying S3 bucket contents change.
    */
-  protected List<String> allFilesCache = Collections.synchronizedList(new ArrayList<>());
+  protected final AtomicReference<List<String>> allFilesCache = new AtomicReference<>();
 
   /**
    * The root path within the S3 bucket to access. This is used to construct full paths for files
@@ -141,7 +142,7 @@ public abstract class AbstractS3FileAccess implements FileAccess {
     }
 
     // If we have the allFilesCache populated, use it to determine existence
-    List<String> allFiles = allFilesCache;
+    List<String> allFiles = allFilesCache.get();
     if (allFiles != null) {
       boolean exists = allFiles.contains(path);
       if (!exists) {
@@ -283,7 +284,7 @@ public abstract class AbstractS3FileAccess implements FileAccess {
     directoryListCache.clear();
     smallFileCache.clear();
     fileSizeCache.clear();
-    allFilesCache = null;
+    allFilesCache.set(null);
     // All caches cleared
   }
 
@@ -298,14 +299,14 @@ public abstract class AbstractS3FileAccess implements FileAccess {
    */
   @Override
   public List<String> getAllFiles() throws IOException {
-    List<String> cached = allFilesCache;
+    List<String> cached = allFilesCache.get();
     if (cached != null) {
       return cached;
     }
 
     synchronized (this) {
       // Double-check after acquiring a lock
-      cached = allFilesCache;
+      cached = allFilesCache.get();
       if (cached != null) {
         return cached;
       }
@@ -318,9 +319,9 @@ public abstract class AbstractS3FileAccess implements FileAccess {
         fileExistsCache.put(file, true);
       }
 
-      allFilesCache = allFiles;
+      allFilesCache.set(Collections.unmodifiableList(allFiles));
       // Found total files in the module
-      return allFiles;
+      return allFilesCache.get();
     }
   }
 
