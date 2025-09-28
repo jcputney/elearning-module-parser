@@ -24,8 +24,10 @@ jobs:
 
       - name: Run benchmarks
         run: |
-          ./mvnw --batch-mode clean package -P benchmark -Dmaven.test.skip
-          java -jar target/benchmarks.jar -rf json -rff benchmark-results.json -wi 2 -i 3 -f 1 ${JMH_INCLUDE:+-include ${JMH_INCLUDE}}
+          ./mvnw --batch-mode clean test-compile -P benchmark
+          ./mvnw --batch-mode -q -P benchmark dependency:build-classpath -DincludeScope=test -Dmdep.outputFile=target/benchmark-classpath.txt
+          CLASSPATH="target/test-classes:target/classes:$(< target/benchmark-classpath.txt)"
+          java -cp "$CLASSPATH" org.openjdk.jmh.Main -wi 2 -i 3 -f 1 -rf json -rff benchmark-results.json ${JMH_INCLUDE:+-include ${JMH_INCLUDE}}
 
       - name: Process benchmark results
         if: always()
