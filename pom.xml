@@ -73,6 +73,7 @@
     <version.plugin.source>3.3.1</version.plugin.source>
     <version.plugin.surefire>3.5.4</version.plugin.surefire>
     <version.plugin.wrapper>3.3.4</version.plugin.wrapper>
+    <version.poi.ooxml>5.4.1</version.poi.ooxml>
     <version.slf4j>2.0.17</version.slf4j>
     <version.testcontainers>1.21.3</version.testcontainers>
     <version.threeten>1.8.0</version.threeten>
@@ -280,7 +281,7 @@
     <dependency>
       <groupId>org.apache.poi</groupId>
       <artifactId>poi-ooxml</artifactId>
-      <version>5.2.5</version>
+      <version>${version.poi.ooxml}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

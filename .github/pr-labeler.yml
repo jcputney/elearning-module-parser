@@ -1,43 +1,53 @@
 area-parsers:
-  - 'src/**/parsers/**'
+  - changed-files:
+      - any-glob-to-any-file: 'src/**/parsers/**'
 
 area-factory:
-  - 'src/**/DefaultModuleParserFactory.java'
-  - 'src/**/api/ModuleParserFactory.java'
+  - changed-files:
+      - any-glob-to-any-file: 'src/**/DefaultModuleParserFactory.java'
+      - any-glob-to-any-file: 'src/**/api/ModuleParserFactory.java'
 
 area-detection:
-  - 'src/**/DefaultModuleTypeDetector.java'
-  - 'src/**/util/detector/**'
-  - 'src/**/util/ScormVersionDetector.java'
-  - 'src/**/api/ModuleTypeDetector*.java'
+  - changed-files:
+      - any-glob-to-any-file: 'src/**/DefaultModuleTypeDetector.java'
+      - any-glob-to-any-file: 'src/**/util/detector/**'
+      - any-glob-to-any-file: 'src/**/util/ScormVersionDetector.java'
+      - any-glob-to-any-file: 'src/**/api/ModuleTypeDetector*.java'
 
 area-input:
-  - 'src/**/input/**'
+  - changed-files:
+      - any-glob-to-any-file: 'src/**/input/**'
 
 area-output:
-  - 'src/**/output/**'
+  - changed-files:
+      - any-glob-to-any-file: 'src/**/output/**'
 
 backend-zip:
-  - 'src/**/ZipFileAccess.java'
+  - changed-files:
+      - any-glob-to-any-file: 'src/**/ZipFileAccess.java'
 
 backend-local:
-  - 'src/**/LocalFileAccess.java'
+  - changed-files:
+      - any-glob-to-any-file: 'src/**/LocalFileAccess.java'
 
 backend-s3:
-  - 'src/**/S3FileAccess*.java'
-  - 'src/**/AbstractS3FileAccess.java'
+  - changed-files:
+      - any-glob-to-any-file: 'src/**/S3FileAccess*.java'
+      - any-glob-to-any-file: 'src/**/AbstractS3FileAccess.java'
 
 type-tests:
-  - 'src/test/**'
+  - changed-files:
+      - any-glob-to-any-file: 'src/test/**'
 
 docs:
-  - 'README.md'
-  - 'AGENTS.md'
-  - 'CONTRIBUTING.md'
-  - 'CODE_OF_CONDUCT.md'
-  - 'docs/**'
+  - changed-files:
+      - any-glob-to-any-file: 'README.md'
+      - any-glob-to-any-file: 'AGENTS.md'
+      - any-glob-to-any-file: 'CONTRIBUTING.md'
+      - any-glob-to-any-file: 'CODE_OF_CONDUCT.md'
+      - any-glob-to-any-file: 'docs/**'
 
 build-ci:
-  - '.github/**'
-  - 'pom.xml'
-
+  - changed-files:
+      - any-glob-to-any-file: '.github/**'
+      - any-glob-to-any-file: 'pom.xml'
