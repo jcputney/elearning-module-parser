@@ -47,6 +47,7 @@ public class DisplayStageSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "required")
   private StageSpec required;
+
   /**
    * The {@code <desired>} element, which specifies the desired display stage.
    */
@@ -54,6 +55,7 @@ public class DisplayStageSpec implements Serializable {
   private StageSpec desired;
 
   public DisplayStageSpec() {
+    // no-op
   }
 
   public StageSpec getRequired() {

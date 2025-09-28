@@ -40,16 +40,19 @@ public class Descriptor implements Serializable {
    */
   @JsonProperty(value = "System_ID", required = true)
   private String systemId;
+
   /**
    * The developer ID of the descriptor element.
    */
   @JsonProperty(value = "Developer_ID", required = true)
   private String developerId;
+
   /**
    * The title of the descriptor element.
    */
   @JsonProperty(value = "Title", required = true)
   private String title;
+
   /**
    * The version of the descriptor element.
    */
@@ -64,6 +67,7 @@ public class Descriptor implements Serializable {
   }
 
   public Descriptor() {
+    // no-op
   }
 
   public String getSystemId() {

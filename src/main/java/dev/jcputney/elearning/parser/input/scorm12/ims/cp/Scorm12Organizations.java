@@ -57,6 +57,7 @@ public class Scorm12Organizations implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "default", namespace = Scorm12Manifest.NAMESPACE_URI)
   @JsonProperty("default")
   private String defaultOrganization;
+
   /**
    * A list of organizations within the content package, each representing a structured hierarchy of
    * learning items.
@@ -72,6 +73,7 @@ public class Scorm12Organizations implements Serializable {
   }
 
   public Scorm12Organizations() {
+    // no-op
   }
 
   /**
@@ -124,8 +126,7 @@ public class Scorm12Organizations implements Serializable {
     return this.organizationList;
   }
 
-  public void setOrganizationList(
-      List<Scorm12Organization> organizationList) {
+  public void setOrganizationList(List<Scorm12Organization> organizationList) {
     this.organizationList = organizationList;
   }
 

@@ -252,14 +252,17 @@ public class Scorm2004Manifest implements PackageManifest {
    * The XML namespace URI for SCORM IMS Content Packaging (imscp_v1p1).
    */
   public static final String NAMESPACE_URI = "http://www.imsglobal.org/xsd/imscp_v1p1";
+
   /**
    * Captures the declared ADLCP namespace on the manifest root element (e.g.,
-   * http://www.adlnet.org/xsd/adlcp_v1p2 or http://www.adlnet.org/xsd/adlcp_v1p3). This helps with
-   * SCORM 2004 edition detection when schemaversion is absent.
+   * <a href="http://www.adlnet.org/xsd/adlcp_v1p2">...</a> or <a
+   * href="http://www.adlnet.org/xsd/adlcp_v1p3">...</a>). This helps with SCORM 2004 edition
+   * detection when schemaversion is absent.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "adlcp", namespace = "http://www.w3.org/2000/xmlns/")
   @JsonProperty("xmlns:adlcp")
   private String adlcpNamespaceUri;
+
   /**
    * Captures the declared IMSSS namespace on the manifest root element. Its presence is a strong
    * signal that sequencing is implemented.
@@ -267,6 +270,7 @@ public class Scorm2004Manifest implements PackageManifest {
   @JacksonXmlProperty(isAttribute = true, localName = "imsss", namespace = "http://www.w3.org/2000/xmlns/")
   @JsonProperty("xmlns:imsss")
   private String imsssNamespaceUri;
+
   /**
    * Captures the declared ADL Sequencing namespace on the manifest root element. This namespace
    * exposes ADL sequencing extensions such as constrained choice and rollup considerations.
@@ -274,6 +278,7 @@ public class Scorm2004Manifest implements PackageManifest {
   @JacksonXmlProperty(isAttribute = true, localName = "adlseq", namespace = "http://www.w3.org/2000/xmlns/")
   @JsonProperty("xmlns:adlseq")
   private String adlseqNamespaceUri;
+
   /**
    * Captures the declared ADL Navigation namespace on the manifest root element. This namespace
    * enables presentation controls such as adlnav:presentation and hideLMSUI.
@@ -281,6 +286,7 @@ public class Scorm2004Manifest implements PackageManifest {
   @JacksonXmlProperty(isAttribute = true, localName = "adlnav", namespace = "http://www.w3.org/2000/xmlns/")
   @JsonProperty("xmlns:adlnav")
   private String adlnavNamespaceUri;
+
   /**
    * Captures the xsi:schemaLocation attribute value to assist in edition detection when
    * schemaversion is missing.
@@ -288,6 +294,7 @@ public class Scorm2004Manifest implements PackageManifest {
   @JacksonXmlProperty(isAttribute = true, localName = "schemaLocation", namespace = "http://www.w3.org/2001/XMLSchema-instance")
   @JsonProperty("xsi:schemaLocation")
   private String schemaLocation;
+
   /**
    * The unique identifier for the manifest. This attribute is used to uniquely identify the content
    * package within an LMS.
@@ -295,6 +302,7 @@ public class Scorm2004Manifest implements PackageManifest {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("identifier")
   private String identifier;
+
   /**
    * The version of the manifest. Specifies the version of the content package, which may be used by
    * the LMS to manage content versions.
@@ -302,24 +310,28 @@ public class Scorm2004Manifest implements PackageManifest {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("version")
   private String version;
+
   /**
    * Metadata associated with the manifest, typically including schema and version information,
    * which provide context for the content package.
    */
   @JacksonXmlProperty(localName = "metadata", namespace = NAMESPACE_URI)
   private Scorm2004CourseMetadata metadata;
+
   /**
    * Contains the set of organizations that represent the structure of the content. Each
    * organization defines a hierarchical structure of learning resources.
    */
   @JacksonXmlProperty(localName = "organizations", namespace = NAMESPACE_URI)
   private Scorm2004Organizations organizations;
+
   /**
    * Contains the list of resources within the content package, each representing a learning object
    * or asset to be delivered within the LMS.
    */
   @JacksonXmlProperty(localName = "resources", namespace = NAMESPACE_URI)
   private Scorm2004Resources resources;
+
   /**
    * Contains the sequencing collection for the content package, which defines rules, objectives,
    * and rollup behaviors for the content.
@@ -328,6 +340,7 @@ public class Scorm2004Manifest implements PackageManifest {
   private SequencingCollection sequencingCollection;
 
   public Scorm2004Manifest() {
+    // no-op
   }
 
   /**
@@ -381,6 +394,7 @@ public class Scorm2004Manifest implements PackageManifest {
   @JsonIgnore
   public String getLaunchUrl() {
     // Resolve launch URL by walking the default organization items and using identifierref → resource href
+    //noinspection DuplicatedCode
     List<String> resourceIds = Optional
         .ofNullable(organizations)
         .map(Scorm2004Organizations::getDefault)
@@ -448,6 +462,12 @@ public class Scorm2004Manifest implements PackageManifest {
     return Optional.of(href);
   }
 
+  /**
+   * Retrieves the duration of the content package in a null-safe manner. If no duration is
+   * available, a default value of Duration.ZERO is returned.
+   *
+   * @return the duration of the content package, or Duration.ZERO if unavailable
+   */
   @Override
   @JsonIgnore
   public Duration getDuration() {

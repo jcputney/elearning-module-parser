@@ -44,13 +44,43 @@ import javax.xml.stream.XMLStreamReader;
  */
 public final class XmlParsingUtils {
 
-  // Private constructor to prevent instantiation
+  /**
+   * A precompiled {@link Pattern} designed to match unescaped ampersand characters in a string.
+   * <p>
+   * This pattern identifies ampersands that are not part of a valid HTML or XML entity. Unescaped
+   * ampersands can lead to parsing issues in XML or HTML processing, and this pattern can be used
+   * to locate or replace such occurrences.
+   * <p>
+   * The regular expression specifically matches: - An ampersand symbol (`&`) that is not
+   * immediately followed by: - A numeric character reference (e.g., `&#123;` or `&#x7B;`). - A
+   * named HTML/XML entity (e.g., `&amp;`, `&lt;`).
+   * <p>
+   * This is often used to sanitize or preprocess XML/HTML content before parsing or rendering.
+   */
+  private static final Pattern UNESCAPED_AMPERSAND_PATTERN = Pattern.compile(
+      "&(?!(?:#\\d+|#x[0-9A-Fa-f]+|[A-Za-z][A-Za-z0-9._-]*);)");
+
+  /**
+   * Utility class containing methods and logic for processing and parsing XML data. This class is
+   * not intended to be instantiated.
+   *
+   * <p>
+   * The {@code XmlParsingUtils} class provides static methods for configuring XML parsing tools,
+   * reading and sanitizing XML content, and converting XML data into Java objects. It also includes
+   * methods for loading metadata into specific objects. Each utility method is focused on
+   * simplifying common XML processing tasks while ensuring proper error handling and input
+   * validation.
+   * </p>
+   *
+   * <p>
+   * Since this is a utility class, its constructor is private and throws an {@code AssertionError}
+   * if instantiation is attempted. All methods within this class are static and should be accessed
+   * directly through the class itself.
+   * </p>
+   */
   private XmlParsingUtils() {
     throw new AssertionError("Utility class should not be instantiated");
   }
-
-  private static final Pattern UNESCAPED_AMPERSAND_PATTERN = Pattern.compile(
-      "&(?!(?:#\\d+|#x[0-9A-Fa-f]+|[A-Za-z][A-Za-z0-9._-]*);)");
 
   /**
    * Creates and configures an XmlMapper with custom deserializers.
@@ -258,6 +288,16 @@ public final class XmlParsingUtils {
     }
   }
 
+  /**
+   * Reads the contents of an InputStream into a String using the specified Charset. This method
+   * processes the stream in chunks to ensure efficient reading of data.
+   *
+   * @param stream The InputStream to read data from. Must not be null.
+   * @param charset The Charset to use for decoding the InputStream into a String. Must not be
+   * null.
+   * @return A String containing the content of the InputStream decoded with the specified Charset.
+   * @throws IOException If an I/O error occurs while reading from the InputStream.
+   */
   private static String readStreamToString(InputStream stream, Charset charset) throws IOException {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     byte[] buffer = new byte[8192];
@@ -265,9 +305,16 @@ public final class XmlParsingUtils {
     while ((bytesRead = stream.read(buffer)) != -1) {
       outputStream.write(buffer, 0, bytesRead);
     }
-    return new String(outputStream.toByteArray(), charset);
+    return outputStream.toString(charset);
   }
 
+  /**
+   * Sanitizes the given XML content by replacing unescaped ampersands (&) outside of CDATA sections
+   * with properly escaped representations. CDATA sections are preserved as-is.
+   *
+   * @param xmlContent The input XML content to sanitize. Must not be null.
+   * @return A sanitized version of the input XML content with unescaped ampersands replaced.
+   */
   private static String sanitizeXmlContent(String xmlContent) {
     if (xmlContent.indexOf('&') == -1) {
       return xmlContent;
@@ -296,7 +343,16 @@ public final class XmlParsingUtils {
     return sanitized.toString();
   }
 
+  /**
+   * Replaces all occurrences of unescaped ampersands (&) in the given string with their
+   * corresponding escaped representation (&amp;).
+   *
+   * @param segment The input string in which bare ampersands will be replaced. Must not be null.
+   * @return A string with all unescaped ampersands replaced with their escaped representation.
+   */
   private static String replaceBareAmpersands(String segment) {
-    return UNESCAPED_AMPERSAND_PATTERN.matcher(segment).replaceAll("&amp;");
+    return UNESCAPED_AMPERSAND_PATTERN
+        .matcher(segment)
+        .replaceAll("&amp;");
   }
 }

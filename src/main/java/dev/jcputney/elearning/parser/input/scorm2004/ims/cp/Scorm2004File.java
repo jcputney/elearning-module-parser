@@ -40,12 +40,14 @@ public class Scorm2004File implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("href")
   private String href;
+
   /**
    * Metadata associated with this file, providing details such as file size, creation date, and
    * other descriptive information relevant to the file.
    */
   @JacksonXmlProperty(localName = "metadata", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private Scorm2004SubMetadata metadata;
+
   /**
    * Specifies whether the file exists in the content package. This is not parsed from the manifest
    * but is set during processing.
@@ -53,6 +55,7 @@ public class Scorm2004File implements Serializable {
   private boolean exists = false;
 
   public Scorm2004File() {
+    // no-op
   }
 
   public String getHref() {

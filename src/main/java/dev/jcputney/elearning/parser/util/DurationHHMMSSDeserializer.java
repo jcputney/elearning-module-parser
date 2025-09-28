@@ -112,11 +112,35 @@ public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
     return appendSeconds(duration, secondsPart, durationString);
   }
 
+  /**
+   * Parses the given string into an integer or returns 0 if the string is null or empty.
+   *
+   * @param s the string to parse, can be null or empty
+   * @return the resulting integer value from the parsed string, or 0 if the input is null or empty
+   */
   private static int parseOrZero(String s) {
     // If the group is null or empty, treat it as zero
     return (s == null || s.isEmpty()) ? 0 : Integer.parseInt(s);
   }
 
+  /**
+   * Appends the "seconds" portion to a base {@link Duration}, handling whole and fractional
+   * seconds. This method parses the "seconds" value from a string, allowing for both integer and
+   * decimal formats.
+   * <p>
+   * If the "seconds" portion is invalid or cannot be parsed, an {@link IllegalArgumentException} is
+   * thrown.
+   *
+   * @param base the base {@link Duration} to which the seconds will be appended, must not be null
+   * @param secondsPart the string representation of the "seconds" portion to append can be null or
+   * empty
+   * @param originalInput the original input string from which the secondsPart was extracted, used
+   * for error messaging
+   * @return a new {@link Duration} instance with the "seconds" portion appended to the base
+   * duration
+   * @throws IllegalArgumentException if secondsPart is not a valid number or exceeds fractional
+   * precision
+   */
   private static Duration appendSeconds(Duration base, String secondsPart, String originalInput) {
     if (secondsPart == null || secondsPart.isEmpty()) {
       return base;
@@ -131,7 +155,9 @@ public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
           .multiply(ONE_BILLION)
           .setScale(0, RoundingMode.DOWN)
           .intValueExact();
-      return base.plusSeconds(wholeSeconds).plusNanos(nanos);
+      return base
+          .plusSeconds(wholeSeconds)
+          .plusNanos(nanos);
     } catch (NumberFormatException | ArithmeticException e) {
       throw new IllegalArgumentException("Invalid format: " + originalInput, e);
     }

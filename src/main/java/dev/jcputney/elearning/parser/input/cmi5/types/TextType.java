@@ -76,6 +76,7 @@ public class TextType implements Serializable {
   }
 
   public TextType() {
+    // no-op
   }
 
   public List<LangString> getStrings() {

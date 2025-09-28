@@ -59,6 +59,7 @@ public class Course implements Serializable {
    */
   @JacksonXmlProperty(localName = "title")
   private TextType title;
+
   /**
    * The description of the course, represented as a localized text type.
    *
@@ -68,6 +69,7 @@ public class Course implements Serializable {
    */
   @JacksonXmlProperty(localName = "description")
   private TextType description;
+
   /**
    * A list of additional custom elements (extensions) included in the course definition.
    *
@@ -78,6 +80,7 @@ public class Course implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "anyElement")
   private List<Object> customExtensions;
+
   /**
    * The unique identifier for the course, represented as an anyURI.
    *
@@ -97,6 +100,7 @@ public class Course implements Serializable {
   }
 
   public Course() {
+    // no-op
   }
 
   public TextType getTitle() {

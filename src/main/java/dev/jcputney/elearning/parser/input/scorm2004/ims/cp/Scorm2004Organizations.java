@@ -44,6 +44,7 @@ public class Scorm2004Organizations implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "default")
   @JsonProperty("default")
   private String defaultOrganization;
+
   /**
    * A list of organizations within the content package, each representing a structured hierarchy of
    * learning items.
@@ -53,6 +54,7 @@ public class Scorm2004Organizations implements Serializable {
   private List<Scorm2004Organization> organizationList;
 
   public Scorm2004Organizations() {
+    // no-op
   }
 
   /**

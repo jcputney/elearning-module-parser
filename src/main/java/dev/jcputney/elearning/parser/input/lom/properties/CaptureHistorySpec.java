@@ -47,6 +47,7 @@ public class CaptureHistorySpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "captureHistory")
   private YesNoType captureHistory;
+
   /**
    * The detailed capture history flag.
    */
@@ -59,6 +60,7 @@ public class CaptureHistorySpec implements Serializable {
   }
 
   public CaptureHistorySpec() {
+    // no-op
   }
 
   public YesNoType getCaptureHistory() {

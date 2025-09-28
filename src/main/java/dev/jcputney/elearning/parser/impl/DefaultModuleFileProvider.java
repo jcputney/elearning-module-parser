@@ -31,6 +31,7 @@ import java.util.Map;
  * providing a consistent interface for parsers to use without directly depending on the FileAccess
  * interface.
  */
+@SuppressWarnings("ClassCanBeRecord")
 public class DefaultModuleFileProvider implements ModuleFileProvider {
 
   /**
@@ -153,6 +154,7 @@ public class DefaultModuleFileProvider implements ModuleFileProvider {
    *
    * <p>This implementation delegates to the underlying FileAccess implementation.
    */
+  @Override
   public void prefetchCommonFiles() {
     fileAccess.prefetchCommonFiles();
   }

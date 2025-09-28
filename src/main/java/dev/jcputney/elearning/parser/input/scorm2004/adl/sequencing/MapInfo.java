@@ -54,6 +54,7 @@ public class MapInfo implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "targetObjectiveID")
   @JsonProperty("targetObjectiveID")
   private String targetObjectiveID;
+
   /**
    * Indicates whether the raw score for this objective should be read from the mapped global
    * objective.
@@ -61,6 +62,7 @@ public class MapInfo implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "readRawScore")
   @JsonProperty("readRawScore")
   private boolean readRawScore = true;
+
   /**
    * Indicates whether the minimum score for this objective should be read from the mapped global
    * objective.
@@ -68,6 +70,7 @@ public class MapInfo implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "readMinScore")
   @JsonProperty("readMinScore")
   private boolean readMinScore = true;
+
   /**
    * Indicates whether the maximum score for this objective should be read from the mapped global
    * objective.
@@ -75,6 +78,7 @@ public class MapInfo implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "readMaxScore")
   @JsonProperty("readMaxScore")
   private boolean readMaxScore = true;
+
   /**
    * Indicates whether the completion status for this objective should be read from the mapped
    * global objective.
@@ -82,6 +86,7 @@ public class MapInfo implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "readCompletionStatus")
   @JsonProperty("readCompletionStatus")
   private boolean readCompletionStatus = true;
+
   /**
    * Indicates whether the progress measure for this objective should be read from the mapped global
    * objective.
@@ -89,6 +94,7 @@ public class MapInfo implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "readProgressMeasure")
   @JsonProperty("readProgressMeasure")
   private boolean readProgressMeasure = true;
+
   /**
    * Indicates whether the raw score for this objective should be written to the mapped global
    * objective.
@@ -96,6 +102,7 @@ public class MapInfo implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "writeRawScore")
   @JsonProperty("writeRawScore")
   private boolean writeRawScore = false;
+
   /**
    * Indicates whether the minimum score for this objective should be written to the mapped global
    * objective.
@@ -103,6 +110,7 @@ public class MapInfo implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "writeMinScore")
   @JsonProperty("writeMinScore")
   private boolean writeMinScore = false;
+
   /**
    * Indicates whether the maximum score for this objective should be written to the mapped global
    * objective.
@@ -110,6 +118,7 @@ public class MapInfo implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "writeMaxScore")
   @JsonProperty("writeMaxScore")
   private boolean writeMaxScore = false;
+
   /**
    * Indicates whether the completion status for this objective should be written to the mapped
    * global objective.
@@ -117,6 +126,7 @@ public class MapInfo implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "writeCompletionStatus")
   @JsonProperty("writeCompletionStatus")
   private boolean writeCompletionStatus = false;
+
   /**
    * Indicates whether the progress measure for this objective should be written to the mapped
    * global objective.
@@ -126,6 +136,7 @@ public class MapInfo implements Serializable {
   private boolean writeProgressMeasure = false;
 
   public MapInfo() {
+    // no-op
   }
 
   public String getTargetObjectiveID() {

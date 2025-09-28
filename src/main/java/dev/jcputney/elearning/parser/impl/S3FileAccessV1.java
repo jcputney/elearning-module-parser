@@ -74,6 +74,12 @@ public class S3FileAccessV1 extends AbstractS3FileAccess {
 
   // SDK-specific implementations
 
+  /**
+   * Checks if a file exists on the specified S3 bucket at the given path.
+   *
+   * @param path The relative path of the file within the S3 bucket.
+   * @return true if the file exists on the S3 bucket, false otherwise.
+   */
   @Override
   protected boolean checkFileExistsOnS3(String path) {
     try {
@@ -84,6 +90,12 @@ public class S3FileAccessV1 extends AbstractS3FileAccess {
     }
   }
 
+  /**
+   * Retrieves the size of a file stored in an S3 bucket.
+   *
+   * @param path The relative path of the file within the S3 bucket.
+   * @return The size of the file in bytes, or 0 if the file size cannot be retrieved.
+   */
   @Override
   protected long getFileSizeOnS3(String path) {
     try {
@@ -96,6 +108,16 @@ public class S3FileAccessV1 extends AbstractS3FileAccess {
     }
   }
 
+  /**
+   * Lists the files in a specified directory path on an S3 bucket. Only files are returned,
+   * excluding any directory markers. The result is a list of relative paths, relative to the root
+   * path of the bucket (if configured).
+   *
+   * @param directoryPath The relative directory path within the S3 bucket from which files are to
+   * be listed. This path is combined with the root path to form the full S3 key prefix.
+   * @return A list of file paths within the specified directory on S3. Returns an empty list if an
+   * error occurs or no files are found.
+   */
   @Override
   protected List<String> listFilesOnS3(String directoryPath) {
     try {
@@ -134,6 +156,13 @@ public class S3FileAccessV1 extends AbstractS3FileAccess {
     }
   }
 
+  /**
+   * Retrieves the content of a specified S3 object as a byte array.
+   *
+   * @param fullPath The complete path of the object within the S3 bucket.
+   * @return A byte array containing the content of the specified S3 object.
+   * @throws IOException If an error occurs while accessing the S3 object or reading its content.
+   */
   @Override
   protected byte[] getS3ObjectAsBytes(String fullPath) throws IOException {
     return s3Client
@@ -141,12 +170,28 @@ public class S3FileAccessV1 extends AbstractS3FileAccess {
         .getBytes();
   }
 
+  /**
+   * Retrieves an S3 object's content as an input stream based on the specified S3 object path.
+   *
+   * @param fullPath The complete path of the object within the S3 bucket.
+   * @return An InputStream containing the content of the specified S3 object.
+   * @throws IOException If an error occurs while accessing the S3 object.
+   */
   @Override
   protected InputStream getS3ObjectStream(String fullPath) throws IOException {
     S3Object s3Object = s3Client.getObject(new GetObjectRequest(bucketName, fullPath));
     return s3Object.getObjectContent();
   }
 
+  /**
+   * Detects the internal root directory based on the specified root path by querying the S3 bucket
+   * for common prefixes. If there is exactly one common prefix, it is considered the internal root
+   * directory; otherwise, the original root path is returned.
+   *
+   * @param rootPath The root path within the S3 bucket to evaluate for an internal root directory.
+   * @return The detected internal root directory if a single common prefix is found, or the
+   * original root path if no single common prefix is identified or an error occurs.
+   */
   @Override
   protected String detectInternalRootDirectory(String rootPath) {
     try {
@@ -163,6 +208,14 @@ public class S3FileAccessV1 extends AbstractS3FileAccess {
     }
   }
 
+  /**
+   * Wraps the provided InputStream without modification. This implementation does not support
+   * progress listeners and simply returns the input stream as-is.
+   *
+   * @param stream The input stream to be wrapped.
+   * @param fileSize The size of the file represented by the input stream, in bytes.
+   * @return The same input stream that was provided, unmodified.
+   */
   @Override
   protected InputStream getInputStreamWrapper(InputStream stream, long fileSize) {
     // S3FileAccessV1 doesn't support progress listeners, so just return the stream as-is

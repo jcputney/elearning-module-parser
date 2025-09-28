@@ -47,6 +47,7 @@ public class SingleLangString implements Serializable {
   private LangString langString;
 
   public SingleLangString() {
+    // no-op
   }
 
   public LangString getLangString() {

@@ -63,6 +63,7 @@ public class Block implements Serializable {
    */
   @JacksonXmlProperty(localName = "title")
   private TextType title;
+
   /**
    * The description of the block, represented as a localized text type.
    *
@@ -72,6 +73,7 @@ public class Block implements Serializable {
    */
   @JacksonXmlProperty(localName = "description")
   private TextType description;
+
   /**
    * The objectives for the block, if specified. This references existing objectives defined in the
    * course.
@@ -82,6 +84,7 @@ public class Block implements Serializable {
    */
   @JacksonXmlProperty(localName = "objectives")
   private ReferencesObjectives objectives;
+
   /**
    * Nested assignable units (AUs) within the block.
    *
@@ -92,6 +95,7 @@ public class Block implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "au")
   private List<AU> assignableUnits;
+
   /**
    * Nested blocks within this block, allowing for hierarchical structure.
    *
@@ -102,6 +106,7 @@ public class Block implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "block")
   private List<Block> nestedBlocks;
+
   /**
    * The unique identifier for the block, represented as an anyURI.
    *
@@ -125,6 +130,7 @@ public class Block implements Serializable {
   }
 
   public Block() {
+    // no-op
   }
 
   public TextType getTitle() {

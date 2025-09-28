@@ -66,6 +66,7 @@ public class Rights implements Serializable {
   @JacksonXmlElementWrapper(localName = "cost", useWrapping = false)
   @JacksonXmlProperty(localName = "cost")
   private SourceValuePair<Cost> cost;
+
   /**
    * Copyright and other restrictions associated with the learning object, represented as a
    * source-value pair.
@@ -84,6 +85,7 @@ public class Rights implements Serializable {
   @JacksonXmlElementWrapper(localName = "copyrightAndOtherRestrictions", useWrapping = false)
   @JacksonXmlProperty(localName = "copyrightAndOtherRestrictions")
   private SourceValuePair<CopyrightAndOtherRestrictions> copyrightAndOtherRestrictions;
+
   /**
    * Descriptions of the "rights" information, represented as a list of language-specific strings.
    *
@@ -102,6 +104,7 @@ public class Rights implements Serializable {
   private UnboundLangString descriptions;
 
   public Rights() {
+    // no-op
   }
 
   public SourceValuePair<Cost> getCost() {

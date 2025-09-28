@@ -49,24 +49,28 @@ public class RollupConsiderations implements Serializable {
   @JacksonXmlProperty(localName = "requiredForSatisfied", isAttribute = true)
   @JsonProperty("requiredForSatisfied")
   private RollupConsiderationType requiredForSatisfied = RollupConsiderationType.ALWAYS;
+
   /**
    * Specifies when not satisfaction is required for rollup. Default is "always".
    */
   @JacksonXmlProperty(localName = "requiredForNotSatisfied", isAttribute = true)
   @JsonProperty("requiredForNotSatisfied")
   private RollupConsiderationType requiredForNotSatisfied = RollupConsiderationType.ALWAYS;
+
   /**
    * Specifies when completion is required for rollup. Default is "always".
    */
   @JacksonXmlProperty(localName = "requiredForCompleted", isAttribute = true)
   @JsonProperty("requiredForCompleted")
   private RollupConsiderationType requiredForCompleted = RollupConsiderationType.ALWAYS;
+
   /**
    * Specifies when incompletion is required for rollup. Default is "always".
    */
   @JacksonXmlProperty(localName = "requiredForIncomplete", isAttribute = true)
   @JsonProperty("requiredForIncomplete")
   private RollupConsiderationType requiredForIncomplete = RollupConsiderationType.ALWAYS;
+
   /**
    * Indicates if satisfaction is measured only when active. Default is true.
    */
@@ -75,6 +79,7 @@ public class RollupConsiderations implements Serializable {
   private boolean measureSatisfactionIfActive = true;
 
   public RollupConsiderations() {
+    // no-op
   }
 
   public RollupConsiderationType getRequiredForSatisfied() {

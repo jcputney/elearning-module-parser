@@ -32,7 +32,6 @@ public class MeasureTypeDeserializer extends JsonDeserializer<MeasureType> {
   /**
    * Default constructor for the MeasureTypeDeserializer class.
    */
-  @SuppressWarnings("unused")
   public MeasureTypeDeserializer() {
     // Default constructor
   }

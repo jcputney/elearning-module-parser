@@ -58,7 +58,6 @@ public record MeasureType(BigDecimal value) implements Serializable {
   /**
    * Default constructor for the MeasureType class.
    */
-  @SuppressWarnings("unused")
   public MeasureType() {
     this(BigDecimal.ZERO.setScale(SCALE, RoundingMode.HALF_UP));
   }

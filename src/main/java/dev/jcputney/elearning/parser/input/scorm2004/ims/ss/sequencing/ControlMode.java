@@ -62,6 +62,7 @@ public class ControlMode implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("choice")
   private boolean choice = true;
+
   /**
    * Indicates whether the learner is allowed to exit from an activity and return to a previously
    * accessed one. When set to <code>true</code>, the learner can exit and reselect previously
@@ -72,6 +73,7 @@ public class ControlMode implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("choiceExit")
   private boolean choiceExit = true;
+
   /**
    * Enables linear or sequential navigation through activities in the sequence. When set to
    * <code>true</code>, the learner is required to progress sequentially through the activities,
@@ -83,6 +85,7 @@ public class ControlMode implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("flow")
   private boolean flow = false;
+
   /**
    * Restricts the learner to only moving forward through the activities without being allowed to go
    * back. When set to <code>true</code>, the learner cannot revisit previously accessed activities
@@ -94,6 +97,7 @@ public class ControlMode implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("forwardOnly")
   private boolean forwardOnly = false;
+
   /**
    * Indicates whether the current attempt's objective information is used in sequencing decisions.
    * When set to <code>true</code>, the system uses information about objectives completed within
@@ -104,6 +108,7 @@ public class ControlMode implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("useCurrentAttemptObjectiveInfo")
   private boolean useCurrentAttemptObjectiveInfo = true;
+
   /**
    * Indicates whether the current attempt's progress information is used in sequencing decisions.
    * When set to <code>true</code>, the system uses information about progress made within the
@@ -126,6 +131,7 @@ public class ControlMode implements Serializable {
   }
 
   public ControlMode() {
+    // no-op
   }
 
   public boolean isChoice() {

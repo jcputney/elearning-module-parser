@@ -47,6 +47,7 @@ public class SequencingCollection implements Serializable {
   private List<Sequencing> sequencingList;
 
   public SequencingCollection() {
+    // no-op
   }
 
   public List<Sequencing> getSequencingList() {
@@ -57,6 +58,16 @@ public class SequencingCollection implements Serializable {
     this.sequencingList = sequencingList;
   }
 
+  /**
+   * Resolves and retrieves the {@link DeliveryControls} associated with the given sequencing
+   * identifier. This method searches through the list of {@link Sequencing} elements within the
+   * sequencing collection and returns the delivery controls of the matching sequence, if found.
+   *
+   * @param sequenceId the identifier of the sequencing element for which the delivery controls need
+   * to be resolved. Must not be null or blank.
+   * @return the {@link DeliveryControls} associated with the specified sequence identifier, or null
+   * if no matching sequencing element or delivery controls are found.
+   */
   public DeliveryControls resolveDeliveryControlsById(String sequenceId) {
     if (sequenceId == null || sequenceId.isBlank()) {
       return null;

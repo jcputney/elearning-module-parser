@@ -47,6 +47,7 @@ public class CatalogEntry implements Serializable {
    */
   @JacksonXmlProperty(localName = "catalog")
   private String catalog;
+
   /**
    * The entry in the catalog.
    *
@@ -56,6 +57,7 @@ public class CatalogEntry implements Serializable {
   private UnboundLangString entry;
 
   public CatalogEntry() {
+    // no-op
   }
 
   public String getCatalog() {

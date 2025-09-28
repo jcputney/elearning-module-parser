@@ -46,6 +46,7 @@ public class RollupRule implements Serializable {
    */
   @JacksonXmlProperty(localName = "rollupConditions", namespace = IMSSS.NAMESPACE_URI)
   private RollupConditions rollupConditions;
+
   /**
    * The action to perform if the rule’s conditions are met. The rollup action determines how the
    * child activities' statuses impact the parent activity’s rollup status, such as marking the
@@ -53,6 +54,7 @@ public class RollupRule implements Serializable {
    */
   @JacksonXmlProperty(localName = "rollupAction", namespace = IMSSS.NAMESPACE_URI)
   private RollupAction rollupAction;
+
   /**
    * Specifies the set of child activities to consider when evaluating this rollup rule. This
    * attribute controls whether the rollup rule should apply to all child activities, any child
@@ -61,6 +63,7 @@ public class RollupRule implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("childActivitySet")
   private ChildActivitySet childActivitySet = ChildActivitySet.ALL;
+
   /**
    * Specifies the minimum number of child activities that must meet the rollup conditions for this
    * rule to apply. This attribute is only relevant when <code>childActivitySet</code> is set to
@@ -71,6 +74,7 @@ public class RollupRule implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("minimumCount")
   private int minimumCount = 0;
+
   /**
    * Specifies the minimum percentage of child activities that must meet the rollup conditions for
    * this rule to apply. This attribute is only relevant when <code>childActivitySet</code> is set
@@ -85,6 +89,7 @@ public class RollupRule implements Serializable {
   private PercentType minimumPercent = new PercentType(BigDecimal.ZERO);
 
   public RollupRule() {
+    // no-op
   }
 
   public RollupConditions getRollupConditions() {

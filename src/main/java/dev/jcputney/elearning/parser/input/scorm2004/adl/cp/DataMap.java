@@ -38,12 +38,14 @@ public class DataMap implements Serializable {
   @JacksonXmlProperty(localName = "targetID", isAttribute = true)
   @JsonProperty("targetID")
   private String targetID;
+
   /**
    * Indicates if shared data is readable.
    */
   @JacksonXmlProperty(localName = "readSharedData", isAttribute = true)
   @JsonProperty("readSharedData")
   private boolean readSharedData = true;
+
   /**
    * Indicates if shared data is writable.
    */
@@ -52,6 +54,7 @@ public class DataMap implements Serializable {
   private boolean writeSharedData = false;
 
   public DataMap() {
+    // no-op
   }
 
   public String getTargetID() {

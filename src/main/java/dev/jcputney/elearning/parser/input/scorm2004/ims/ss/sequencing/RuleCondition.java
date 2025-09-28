@@ -46,6 +46,7 @@ public class RuleCondition implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("referencedObjective")
   private String referencedObjective;
+
   /**
    * The minimum measure threshold for the objective. This value indicates the level of achievement
    * required for the condition to be met, typically represented as a decimal.
@@ -54,6 +55,7 @@ public class RuleCondition implements Serializable {
   @JsonDeserialize(using = MeasureTypeDeserializer.class)
   @JsonProperty("measureThreshold")
   private MeasureType measureThreshold;
+
   /**
    * Specifies the operator to use when evaluating the rule condition. Possible values are:
    * <ul>
@@ -64,6 +66,7 @@ public class RuleCondition implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("operator")
   private ConditionOperatorType operator = ConditionOperatorType.NO_OP;
+
   /**
    * Specifies the condition evaluated for this rule. The condition can include criteria such as
    * "satisfied", "completed", "attempted", or other learning activity states.

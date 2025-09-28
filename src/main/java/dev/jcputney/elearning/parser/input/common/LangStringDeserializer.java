@@ -40,9 +40,18 @@ public class LangStringDeserializer extends JsonDeserializer<LangString> {
    * Default constructor for the LangStringDeserializer class.
    */
   public LangStringDeserializer() {
-    // Default constructor
+    // no-op
   }
 
+  /**
+   * Deserializes a JSON or XML representation of a LangString object. The method extracts the
+   * language and value fields from the provided input and constructs a new LangString instance.
+   *
+   * @param p the JSON parser used to read the input data
+   * @param context the deserialization context providing additional functionality
+   * @return a LangString object constructed from the deserialized data
+   * @throws IOException if an error occurs during the deserialization process
+   */
   @Override
   public LangString deserialize(JsonParser p, DeserializationContext context) throws IOException {
     ObjectMapper mapper = (ObjectMapper) p.getCodec();

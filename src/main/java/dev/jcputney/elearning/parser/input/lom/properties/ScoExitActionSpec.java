@@ -47,6 +47,7 @@ public class ScoExitActionSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "satisfied")
   private ExitTypesSpec satisfied;
+  
   /**
    * The action to take when the SCO is not satisfied.
    */
@@ -59,6 +60,7 @@ public class ScoExitActionSpec implements Serializable {
   }
 
   public ScoExitActionSpec() {
+    // no-op
   }
 
   public ExitTypesSpec getSatisfied() {

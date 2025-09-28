@@ -63,6 +63,7 @@ public class OrComposite implements Serializable {
   @JacksonXmlElementWrapper(localName = "type", useWrapping = false)
   @JacksonXmlProperty(localName = "type")
   private SourceValuePair<Type> type;
+
   /**
    * The name of the platform or software, represented as controlled vocabulary.
    * <p>
@@ -80,6 +81,7 @@ public class OrComposite implements Serializable {
   @JacksonXmlElementWrapper(localName = "name", useWrapping = false)
   @JacksonXmlProperty(localName = "name")
   private SourceValuePair<Name> name;
+
   /**
    * The minimum version of the platform or software required.
    * <p>
@@ -96,6 +98,7 @@ public class OrComposite implements Serializable {
    */
   @JacksonXmlProperty(localName = "minimumVersion")
   private String minimumVersion;
+
   /**
    * The maximum version of the platform or software required.
    * <p>
@@ -114,22 +117,39 @@ public class OrComposite implements Serializable {
   private String maximumVersion;
 
   public OrComposite() {
+    // no-op
   }
 
   public SourceValuePair<Type> getType() {
     return this.type;
   }
 
+  public void setType(SourceValuePair<Type> type) {
+    this.type = type;
+  }
+
   public SourceValuePair<Name> getName() {
     return this.name;
+  }
+
+  public void setName(SourceValuePair<Name> name) {
+    this.name = name;
   }
 
   public String getMinimumVersion() {
     return this.minimumVersion;
   }
 
+  public void setMinimumVersion(String minimumVersion) {
+    this.minimumVersion = minimumVersion;
+  }
+
   public String getMaximumVersion() {
     return this.maximumVersion;
+  }
+
+  public void setMaximumVersion(String maximumVersion) {
+    this.maximumVersion = maximumVersion;
   }
 
   @Override

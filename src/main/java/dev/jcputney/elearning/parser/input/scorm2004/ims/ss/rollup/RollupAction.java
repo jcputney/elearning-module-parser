@@ -55,6 +55,7 @@ public class RollupAction implements Serializable {
   }
 
   public RollupAction() {
+    // no-op
   }
 
   public RollupActionType getAction() {

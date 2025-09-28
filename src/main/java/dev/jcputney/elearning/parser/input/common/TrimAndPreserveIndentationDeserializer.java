@@ -32,7 +32,7 @@ public class TrimAndPreserveIndentationDeserializer extends JsonDeserializer<Str
    * Default constructor for the TrimAndPreserveIndentationDeserializer class.
    */
   public TrimAndPreserveIndentationDeserializer() {
-    // Default constructor
+    // no-op
   }
 
   /**
@@ -50,7 +50,7 @@ public class TrimAndPreserveIndentationDeserializer extends JsonDeserializer<Str
       return "";
     }
 
-    // Normalise Windows/legacy Mac line endings before processing
+    // Normalize Windows/legacy Mac line endings before processing
     String[] lines = rawText
         .replace("\r\n", "\n")
         .replace('\r', '\n')

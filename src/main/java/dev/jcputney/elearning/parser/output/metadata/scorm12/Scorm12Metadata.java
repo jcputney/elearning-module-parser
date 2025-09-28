@@ -25,6 +25,8 @@ import dev.jcputney.elearning.parser.output.metadata.BaseModuleMetadata;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents metadata for SCORM 1.2 eLearning modules, including SCORM 1.2-specific fields such as
@@ -40,6 +42,10 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
   private final Map<String, Double> masteryScores = new LinkedHashMap<>();
   private final Map<String, String> customData = new LinkedHashMap<>();
 
+  /**
+   * Protected constructor for the Scorm12Metadata class. Initializes a new instance while
+   * restricting direct instantiation outside the class or its subclasses.
+   */
   protected Scorm12Metadata() {
   }
 
@@ -61,6 +67,34 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
     metadata.extractScorm12SpecificMetadata(manifest);
 
     return metadata;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (!(o instanceof Scorm12Metadata that)) {
+      return false;
+    }
+
+    return new EqualsBuilder()
+        .appendSuper(super.equals(o))
+        .append(getPrerequisites(), that.getPrerequisites())
+        .append(getMasteryScores(), that.getMasteryScores())
+        .append(getCustomData(), that.getCustomData())
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .appendSuper(super.hashCode())
+        .append(getPrerequisites())
+        .append(getMasteryScores())
+        .append(getCustomData())
+        .toHashCode();
   }
 
   public Map<String, String> getPrerequisites() {

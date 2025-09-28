@@ -44,18 +44,21 @@ public class Scorm2004Resource implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("identifier")
   private String identifier;
+
   /**
    * Specifies the type of resource, such as "webcontent".
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("type")
   private String type = "webcontent";
+
   /**
    * The URL or path to the main entry point file for this resource.
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("href")
   private String href;
+
   /**
    * The base URL for all resources in the content package. This URL is used to resolve relative
    * paths for resources.
@@ -63,6 +66,7 @@ public class Scorm2004Resource implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "base", namespace = "http://www.w3.org/XML/1998/namespace")
   @JsonProperty("base")
   private String base;
+
   /**
    * Specifies the SCORM type (e.g., "sco" or "asset") to define if this resource is trackable or a
    * static asset.
@@ -70,12 +74,14 @@ public class Scorm2004Resource implements Serializable {
   @JacksonXmlProperty(namespace = ADLCP.NAMESPACE_URI, isAttribute = true)
   @JsonProperty("scormtype")
   private ScormType scormType;
+
   /**
    * Metadata associated with this resource, providing details such as author, creation date, and
    * other descriptive information relevant to the resource.
    */
   @JacksonXmlProperty(localName = "metadata", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private Scorm2004SubMetadata metadata;
+
   /**
    * A list of files associated with this resource, representing the physical files that are part of
    * the learning object.
@@ -83,6 +89,7 @@ public class Scorm2004Resource implements Serializable {
   @JacksonXmlElementWrapper(localName = "file", useWrapping = false)
   @JacksonXmlProperty(localName = "file", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private List<Scorm2004File> files;
+
   /**
    * A list of dependencies that this resource requires. Dependencies define other resources that
    * must be available for this resource to function correctly.
@@ -92,6 +99,7 @@ public class Scorm2004Resource implements Serializable {
   private List<Scorm2004Dependency> dependencies;
 
   public Scorm2004Resource() {
+    // no-op
   }
 
   public String getIdentifier() {

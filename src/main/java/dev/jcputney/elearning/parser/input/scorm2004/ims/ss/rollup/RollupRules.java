@@ -61,6 +61,7 @@ public class RollupRules implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "rollupRule", namespace = IMSSS.NAMESPACE_URI)
   private List<RollupRule> rollupRuleList;
+
   /**
    * Indicates whether the objective satisfaction status of the parent activity should be based on
    * the rollup of its child activities' statuses. When set to <code>true</code>, the parent
@@ -71,6 +72,7 @@ public class RollupRules implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("rollupObjectiveSatisfied")
   private boolean rollupObjectiveSatisfied = true;
+
   /**
    * Indicates whether the progress completion status of the parent activity should be based on the
    * rollup of its child activities' completion statuses. When set to <code>true</code>, the parent
@@ -81,6 +83,7 @@ public class RollupRules implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("rollupProgressCompletion")
   private boolean rollupProgressCompletion = true;
+
   /**
    * Specifies the weighting applied to the measure of each child activity’s objective when
    * determining the rollup satisfaction of the parent activity. This value allows each child
@@ -102,6 +105,7 @@ public class RollupRules implements Serializable {
   }
 
   public RollupRules() {
+    // no-op
   }
 
   public List<RollupRule> getRollupRuleList() {

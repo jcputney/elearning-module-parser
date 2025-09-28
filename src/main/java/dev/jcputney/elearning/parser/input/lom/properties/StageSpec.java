@@ -49,6 +49,7 @@ public class StageSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "width")
   private BigInteger width;
+
   /**
    * Per XSD, this is xs:nonNegativeInteger, so we use BigInteger.
    */
@@ -62,6 +63,7 @@ public class StageSpec implements Serializable {
   private YesNoType fullscreen;
 
   public StageSpec() {
+    // no-op
   }
 
   public BigInteger getWidth() {

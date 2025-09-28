@@ -43,19 +43,18 @@ public class AiccCourse implements Serializable {
    */
   @JsonProperty(value = "Course", required = true)
   private Course course;
+
   /**
    * Course behavior information for the AICC manifest.
    */
   @JsonProperty(value = "Course_Behavior", required = true)
   private CourseBehavior courseBehavior;
+
   /**
    * Course description information for the AICC manifest.
    */
   @JsonProperty(value = "Course_Description", required = true)
   private Map<String, String> courseDescription;
-
-  public AiccCourse() {
-  }
 
   /**
    * Course description information for the AICC manifest.
@@ -125,72 +124,81 @@ public class AiccCourse implements Serializable {
   /**
    * Represents the course information in the AICC manifest.
    */
+  @JsonIgnoreProperties(ignoreUnknown = true)
   @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-  public static class Course {
+  public static class Course implements Serializable {
 
     /**
      * The course creator.
      */
     @JsonProperty(value = "Course_Creator", required = true)
     private String courseCreator;
+
     /**
      * The course ID.
      */
     @JsonProperty(value = "Course_ID", required = true)
     private String courseId;
+
     /**
      * The course title.
      */
     @JsonProperty(value = "Course_Title", required = true)
     private String courseTitle;
+
     /**
      * The course system.
      */
     @JsonProperty(value = "Course_System", required = true)
     private String courseSystem;
+
     /**
      * The course level.
      */
     @JsonProperty(value = "Level", required = true)
     private String level;
+
     /**
      * The maximum fields CST.
      */
     @JsonProperty(value = "Max_Fields_CST", required = true)
     private String maxFieldsCst;
+
     /**
      * The maximum fields ORT.
      */
     @JsonProperty(value = "Max_Fields_ORT")
     private String maxFieldsOrt;
+
     /**
      * The total AUs.
      */
     @JsonProperty(value = "Total_AUs", required = true)
     private String totalAus;
+
     /**
      * The total blocks.
      */
     @JsonProperty(value = "Total_Blocks", required = true)
     private String totalBlocks;
+
     /**
      * The version of the course.
      */
     @JsonProperty(value = "Version", required = true)
     private String version;
+
     /**
      * The total complex objects.
      */
     @JsonProperty(value = "Total_Complex_Obj")
     private String totalComplexObj;
+
     /**
      * The total objectives.
      */
     @JsonProperty(value = "Total_Objectives")
     private String totalObjectives;
-
-    public Course() {
-    }
 
     public String getCourseCreator() {
       return this.courseCreator;
@@ -334,10 +342,23 @@ public class AiccCourse implements Serializable {
   }
 
   /**
-   * Represents the course behavior information in the AICC manifest.
+   * Represents the behavior properties of a course in an AICC module.
+   * <p>
+   * This class is designed to capture and manage configurable behavior properties such as maximum
+   * normal value, mastery score, maximum time allowed, and time limit action. It supports
+   * case-insensitive property mapping for JSON deserialization.
+   * <p>
+   * This class implements {@link Serializable}, allowing its instances to be serialized and
+   * deserialized as part of larger processes.
+   * <p>
+   * Properties: - maxNormal: Represents the maximum normal value for the course. - masteryScore:
+   * Indicates the score required to achieve mastery for the course. - maxTimeAllowed: Specifies the
+   * maximum allowable time for the course. - timeLimitAction: Defines the actions taken when the
+   * time limit is exceeded.
    */
+  @JsonIgnoreProperties(ignoreUnknown = true)
   @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-  public static class CourseBehavior {
+  public static class CourseBehavior implements Serializable {
 
     /**
      * The maximum normal value.
@@ -345,8 +366,38 @@ public class AiccCourse implements Serializable {
     @JsonProperty(value = "Max_Normal", required = true)
     private String maxNormal;
 
-    public CourseBehavior() {
-    }
+    /**
+     * Represents the score required to achieve mastery for the course.
+     * <p>
+     * This field is used to define the threshold score that determines when a learner has
+     * successfully mastered the course material. It is mapped to the "Mastery_Score" JSON property
+     * for serialization and deserialization, ensuring compatibility with external systems following
+     * the defined schema.
+     */
+    @JsonProperty(value = "Mastery_Score")
+    private String masteryScore;
+
+    /**
+     * Specifies the maximum amount of time allowed for a course or learning module.
+     * <p>
+     * This field represents a time limit set for the course, if applicable, and is typically
+     * expressed in a specific format (e.g., HH:MM:SS). It is annotated to map to the JSON property
+     * with the name "Max_Time_Allowed". The value of this field is used to control the permissible
+     * duration a learner has to complete the course or module.
+     */
+    @JsonProperty(value = "Max_Time_Allowed")
+    private String maxTimeAllowed;
+
+    /**
+     * Defines the action to be taken when the time limit for a course is exceeded.
+     * <p>
+     * This field is mapped to the JSON property "Time_Limit_Action" and determines how the course
+     * behaves when the maximum allowed time is surpassed. The value of this property typically
+     * indicates a specific behavior, such as suspending or terminating the course session, or
+     * providing a warning to the user.
+     */
+    @JsonProperty(value = "Time_Limit_Action")
+    private String timeLimitAction;
 
     public String getMaxNormal() {
       return this.maxNormal;
@@ -354,6 +405,30 @@ public class AiccCourse implements Serializable {
 
     public void setMaxNormal(String maxNormal) {
       this.maxNormal = maxNormal;
+    }
+
+    public String getMasteryScore() {
+      return this.masteryScore;
+    }
+
+    public void setMasteryScore(String masteryScore) {
+      this.masteryScore = masteryScore;
+    }
+
+    public String getMaxTimeAllowed() {
+      return this.maxTimeAllowed;
+    }
+
+    public void setMaxTimeAllowed(String maxTimeAllowed) {
+      this.maxTimeAllowed = maxTimeAllowed;
+    }
+
+    public String getTimeLimitAction() {
+      return this.timeLimitAction;
+    }
+
+    public void setTimeLimitAction(String timeLimitAction) {
+      this.timeLimitAction = timeLimitAction;
     }
 
     @Override
@@ -368,6 +443,9 @@ public class AiccCourse implements Serializable {
 
       return new EqualsBuilder()
           .append(getMaxNormal(), that.getMaxNormal())
+          .append(getMasteryScore(), that.getMasteryScore())
+          .append(getMaxTimeAllowed(), that.getMaxTimeAllowed())
+          .append(getTimeLimitAction(), that.getTimeLimitAction())
           .isEquals();
     }
 
@@ -375,6 +453,9 @@ public class AiccCourse implements Serializable {
     public int hashCode() {
       return new HashCodeBuilder(17, 37)
           .append(getMaxNormal())
+          .append(getMasteryScore())
+          .append(getMaxTimeAllowed())
+          .append(getTimeLimitAction())
           .toHashCode();
     }
   }

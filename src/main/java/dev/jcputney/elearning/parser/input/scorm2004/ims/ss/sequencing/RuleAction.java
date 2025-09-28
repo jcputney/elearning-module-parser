@@ -51,6 +51,7 @@ public class RuleAction implements Serializable {
   private String action;
 
   public RuleAction() {
+    // no-op
   }
 
   public String getAction() {

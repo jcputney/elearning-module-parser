@@ -53,6 +53,7 @@ public class UnboundLangString implements Serializable {
   private List<LangString> langStrings;
 
   public UnboundLangString() {
+    // no-op
   }
 
   public UnboundLangString(List<LangString> langStrings) {

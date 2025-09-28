@@ -73,6 +73,7 @@ public class Technical implements Serializable {
   @JacksonXmlElementWrapper(localName = "format", useWrapping = false)
   @JacksonXmlProperty(localName = "format")
   private List<String> format;
+
   /**
    * The size of the learning object, in bytes.
    *
@@ -89,6 +90,7 @@ public class Technical implements Serializable {
    */
   @JacksonXmlProperty(localName = "size")
   private Integer size;
+
   /**
    * The list of locations where the learning object can be accessed. Each location is represented
    * as a URL or file path.
@@ -107,6 +109,7 @@ public class Technical implements Serializable {
   @JacksonXmlElementWrapper(localName = "location", useWrapping = false)
   @JacksonXmlProperty(localName = "location")
   private List<String> location;
+
   /**
    * The list of requirements for the learning object, each represented as an {@link OrComposite}.
    *
@@ -124,6 +127,7 @@ public class Technical implements Serializable {
   @JacksonXmlElementWrapper(localName = "requirement", useWrapping = false)
   @JacksonXmlProperty(localName = "requirement")
   private List<Requirement> requirements;
+
   /**
    * Remarks or instructions about how to install the learning object.
    *
@@ -140,6 +144,7 @@ public class Technical implements Serializable {
    */
   @JacksonXmlProperty(localName = "installationRemarks")
   private SingleLangString installationRemarks;
+
   /**
    * Additional platform requirements, represented as a single {@link LangString}.
    *
@@ -156,6 +161,7 @@ public class Technical implements Serializable {
    */
   @JacksonXmlProperty(localName = "otherPlatformRequirements")
   private SingleLangString otherPlatformRequirements;
+
   /**
    * The duration metadata of the learning object, including the duration value and an optional
    * description.
@@ -223,6 +229,7 @@ public class Technical implements Serializable {
   }
 
   public Technical() {
+    // no-op
   }
 
   public List<String> getFormat() {

@@ -37,6 +37,7 @@ public class Scorm12Prerequisites implements Serializable {
    */
   @JacksonXmlText
   private String value;
+
   /**
    * The type attribute of the prerequisites element, which is optional. Example value:
    * "aicc_script".
@@ -46,6 +47,7 @@ public class Scorm12Prerequisites implements Serializable {
   private String type;
 
   public Scorm12Prerequisites() {
+    // no-op
   }
 
   public String getValue() {

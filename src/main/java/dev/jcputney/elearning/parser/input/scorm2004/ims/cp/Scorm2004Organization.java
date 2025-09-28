@@ -47,6 +47,7 @@ public class Scorm2004Organization implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("identifier")
   private String identifier;
+
   /**
    * The structure of this organization, defining the hierarchical arrangement of items within the
    * organization. The structure is typically a tree-like arrangement of items, but is not typically
@@ -55,12 +56,14 @@ public class Scorm2004Organization implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("structure")
   private String structure = "hierarchical";
+
   /**
    * The title of this organization providing a descriptive label for the learning structure it
    * represents.
    */
   @JacksonXmlProperty(localName = "title", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private String title;
+
   /**
    * A list of items within this organization, representing a hierarchical structure of learning
    * objects.
@@ -68,6 +71,7 @@ public class Scorm2004Organization implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "item", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private List<Scorm2004Item> items;
+
   /**
    * The default for the adlcp:objectivesGlobalToSystem attribute for items in this organization. If
    * true, objectives defined in this organization are considered global to the system. If false,
@@ -76,6 +80,7 @@ public class Scorm2004Organization implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "objectivesGlobalToSystem", namespace = ADLSeq.NAMESPACE_URI)
   @JsonProperty("objectivesGlobalToSystem")
   private boolean objectivesGlobalToSystem = false;
+
   /**
    * The default for the adlcp:sharedDataGlobalToSystem attribute for items in this organization. If
    * true, "sharedData" defined in this organization is considered global to the system. If false,
@@ -84,12 +89,14 @@ public class Scorm2004Organization implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "sharedDataGlobalToSystem", namespace = ADLCP.NAMESPACE_URI)
   @JsonProperty("sharedDataGlobalToSystem")
   private boolean sharedDataGlobalToSystem = false;
+
   /**
    * Metadata associated with this organization, providing details such as creation date, and other
    * descriptive information relevant to the organization.
    */
   @JacksonXmlProperty(localName = "metadata", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private Scorm2004SubMetadata metadata;
+
   /**
    * The sequencing element for this organization, defining control modes, delivery controls, and
    * sequencing rules.
@@ -98,6 +105,7 @@ public class Scorm2004Organization implements Serializable {
   private Sequencing sequencing;
 
   public Scorm2004Organization() {
+    // no-op
   }
 
   public String getIdentifier() {

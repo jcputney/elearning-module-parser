@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -159,13 +160,9 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
     // Optional AICC files: .pre (prerequisites) and .ort (objective relations)
     // Parse if present; ignore if missing.
     List<Map<String, String>> prerequisites = parseOptionalCsvAsMap(PRE_EXTENSION);
-    if (prerequisites != null) {
-      manifest.setPrerequisitesTable(prerequisites);
-    }
+    manifest.setPrerequisitesTable(prerequisites);
     List<Map<String, String>> objectives = parseOptionalCsvAsMap(ORT_EXTENSION);
-    if (objectives != null) {
-      manifest.setObjectivesRelationTable(objectives);
-    }
+    manifest.setObjectivesRelationTable(objectives);
 
     return manifest;
   }
@@ -181,7 +178,17 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
   }
 
   /**
-   * Parses a CSV file and returns a list of objects of the specified class.
+   * Parses a CSV file with the specified extension into a list of objects of the given class type.
+   * This method reads the contents of the CSV file, maps it to the schema of the provided class,
+   * and returns a list of mapped objects. If the file is not found, an {@code IOException} is
+   * thrown.
+   *
+   * @param <T> The type of the objects into which the CSV file will be parsed.
+   * @param clazz The {@code Class} object representing the type of objects in the resulting list.
+   * @param extension The file extension used to locate the target CSV file.
+   * @return A {@code List} containing objects of the specified type parsed from the CSV file.
+   * @throws IOException If the file cannot be located or an error occurs while reading its
+   * contents.
    */
   private <T> List<T> parseCsvFile(Class<T> clazz, String extension) throws IOException {
     String fileName = findFileByExtension(extension);
@@ -203,14 +210,13 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
   }
 
   /**
-   * Parses a CSV file with an unknown schema into a list of case-insensitive maps.
-   * Returns null if the file is not present (optional files).
+   * Parses a CSV file with an unknown schema into a list of case-insensitive maps. Returns an empty
+   * list if the file is not found.
    */
-  @SuppressWarnings("unchecked")
   private List<Map<String, String>> parseOptionalCsvAsMap(String extension) throws IOException {
     String fileName = findFileByExtension(extension);
     if (fileName == null) {
-      return null; // Optional
+      return Collections.emptyList();
     }
 
     try (InputStream inputStream = moduleFileProvider.getFileContents(fileName)) {
@@ -227,11 +233,22 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
       rows.removeIf(row -> row == null || row
           .values()
           .stream()
-          .allMatch(v -> v == null || v.trim().isEmpty()));
+          .allMatch(v -> v == null || v
+              .trim()
+              .isEmpty()));
       return rows;
     }
   }
 
+  /**
+   * Checks for available files in the module package with the specified extension. If no matching
+   * file is found, an {@code IOException} is thrown containing suggestions for available files.
+   *
+   * @param extension The file extension to look for.
+   * @param x The prefix message describing the error or context.
+   * @throws IOException If no file with the specified extension is found or an error occurs while
+   * fetching the list of files.
+   */
   private void checkAvailableFiles(String extension, String x) throws IOException {
     List<String> availableFiles = moduleFileProvider.listFiles("");
     String suggestion = availableFiles
@@ -252,7 +269,16 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
   }
 
   /**
-   * Parses an INI file and returns an object of the specified class.
+   * Parses an AICC INI file with the specified extension, converting its contents into an object of
+   * the target type. This method reads the INI configuration, processes its sections and keys into
+   * a structured map, and maps the resulting data to the target class using a JSON object mapper.
+   * If the file is not found or is improperly formatted, appropriate exceptions are thrown.
+   *
+   * @param <T> The target type to which the parsed INI data will be mapped.
+   * @return An object of the specified type containing the parsed INI data.
+   * @throws IOException If the INI file cannot be located or an error occurs while reading its
+   * contents.
+   * @throws ManifestParseException If an error occurs during INI file parsing or data conversion.
    */
   private <T> T parseIniFile() throws IOException, ManifestParseException {
     String fileName = findFileByExtension(AiccParser.CRS_EXTENSION);
@@ -290,6 +316,16 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
     }
   }
 
+  /**
+   * Finds a file with the specified extension in the module package. This method searches through
+   * the list of available files and returns the first file that matches the given extension, or
+   * null if no such file is found.
+   *
+   * @param extension The file extension to search for. Must not be null or empty.
+   * @return The name of the first file matching the specified extension, or null if no file is
+   * found.
+   * @throws IOException If an error occurs while accessing the file system.
+   */
   private String findFileByExtension(String extension) throws IOException {
     return moduleFileProvider
         .listFiles("")

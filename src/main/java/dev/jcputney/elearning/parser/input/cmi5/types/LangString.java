@@ -60,6 +60,7 @@ public class LangString implements Serializable {
   @JacksonXmlText
   @JsonDeserialize(using = TrimAndPreserveIndentationDeserializer.class)
   private String value;
+
   /**
    * The language of the string, represented as an optional attribute.
    *
@@ -77,6 +78,7 @@ public class LangString implements Serializable {
   }
 
   public LangString() {
+    // no-op
   }
 
   public static LangStringBuilder builder() {

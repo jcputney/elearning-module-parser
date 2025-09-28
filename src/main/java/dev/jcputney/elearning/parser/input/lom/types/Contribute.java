@@ -84,6 +84,7 @@ public class Contribute implements Serializable {
   @JacksonXmlElementWrapper(localName = "role", useWrapping = false)
   @JacksonXmlProperty(localName = "role")
   private SourceValuePair<Role> role;
+
   /**
    * A list of entities contributing to the learning object, typically represented as vCard data.
    * Example:
@@ -110,6 +111,7 @@ public class Contribute implements Serializable {
   @JacksonXmlElementWrapper(localName = "entity", useWrapping = false)
   @JacksonXmlProperty(localName = "entity")
   private List<String> entities;
+
   /**
    * A list of entities contributing to the learning object, typically represented as vCard data.
    *
@@ -125,6 +127,7 @@ public class Contribute implements Serializable {
   @JacksonXmlElementWrapper(localName = "centity", useWrapping = false)
   @JacksonXmlProperty(localName = "centity")
   private List<ContributeEntity> cEntities;
+
   /**
    * The date associated with the contribution, such as when the contribution was made or its
    * significance.
@@ -146,6 +149,7 @@ public class Contribute implements Serializable {
   private Date date;
 
   public Contribute() {
+    // no-op
   }
 
   public SourceValuePair<Role> getRole() {

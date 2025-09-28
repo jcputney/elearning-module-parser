@@ -21,10 +21,11 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
@@ -36,12 +37,141 @@ import java.util.regex.Pattern;
  */
 public class EncodingDetector {
 
+  /**
+   * A regular expression pattern to match the encoding declaration in an XML header. This pattern
+   * is case-insensitive and searches for the `encoding` attribute within an XML declaration,
+   * capturing the value enclosed in single or double quotes.
+   * <p>
+   * Example matches: - encoding='UTF-8' - encoding="ISO-8859-1"
+   * <p>
+   * Used primarily to detect the character encoding specified in an XML document.
+   */
   private static final Pattern XML_ENCODING_PATTERN =
       Pattern.compile("encoding\\s*=\\s*['\"]([^'\"]+)['\"]", Pattern.CASE_INSENSITIVE);
-
+  
+  /**
+   * Defines the size of the buffer used for reading input streams in the encoding detection
+   * process. This constant helps optimize performance by specifying an appropriate buffer size for
+   * data handling.
+   */
   private static final int BUFFER_SIZE = 8192;
 
+  /**
+   * Represents the Windows-1252 character set (also known as "Western European" or "Windows Latin
+   * 1") used for encoding text. This charset is commonly used in legacy applications and file
+   * formats where extended Latin character support is required.
+   * <p>
+   * It is a static and final Charset instance initialized with the standard name "windows-1252".
+   * This field provides a centralized and reusable reference to the Windows-1252 charset within the
+   * EncodingDetector class.
+   * <p>
+   * In the context of encoding detection, it may be utilized to verify or handle text content
+   * encoded using this specific character set.
+   */
   private static final Charset WINDOWS_1252 = Charset.forName("windows-1252");
+
+  /**
+   * Represents the UTF-32 Big Endian (UTF-32 BE) encoding Byte Order Mark (BOM). This byte array
+   * serves as a signature to indicate that the text following it is encoded in UTF-32 with a
+   * big-endian byte order.
+   */
+  private static final byte[] UTF32_BE = new byte[]{0x00, 0x00, (byte) 0xFE, (byte) 0xFF};
+
+  /**
+   * Represents the UTF-8 Byte Order Mark (BOM) as a byte array. The BOM is comprised of the three
+   * bytes: 0xEF, 0xBB, and 0xBF, which indicate that the text stream is encoded in UTF-8.
+   * <p>
+   * This constant is used to detect the presence of a UTF-8 BOM in data streams and to
+   * differentiate between text encoded with and without the BOM marker.
+   */
+  private static final byte[] UTF8 = new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF};
+
+  /**
+   * Represents the Byte Order Mark (BOM) for UTF-16 Big Endian encoding. The BOM is used to signal
+   * the endianness of the encoding when reading text data. For UTF-16 Big Endian, the BOM is
+   * represented by the byte sequence 0xFE, 0xFF.
+   */
+  private static final byte[] UTF16_BE = new byte[]{(byte) 0xFE, (byte) 0xFF};
+
+  /**
+   * Represents the UTF-16 Little Endian (UTF-16 LE) Byte Order Mark (BOM) as a byte array. The BOM
+   * is used to indicate that the text stream is encoded in UTF-16 LE format. This constant is
+   * primarily used for encoding detection purposes.
+   */
+  private static final byte[] UTF16_LE = new byte[]{(byte) 0xFF, (byte) 0xFE};
+
+  /**
+   * A byte array representing the suffix used to identify UTF-32 Little Endian (UTF-32 LE)
+   * encoding. This suffix consists of two null bytes (0x00, 0x00) and is typically used in encoding
+   * detection to confirm the byte order.
+   */
+  private static final byte[] UTF32_LE_SUFFIX = new byte[]{0x00, 0x00};
+
+  /**
+   * Represents the maximum value of a 7-bit ASCII character as defined by the standard ASCII table.
+   * The value is 0x80 (128 in decimal), corresponding to the upper bound for valid ASCII characters
+   * (0-127). This constant is used to identify and distinguish ASCII characters from extended
+   * character sets.
+   */
+  private static final int ASCII_MAX = 0x80;        // 0xxxxxxx
+
+  /**
+   * Represents the minimum valid value for a 2-byte lead in UTF-8 encoding.
+   * <p>
+   * The value ensures that overlong encodings, such as those starting with C0 or C1, are avoided.
+   * It is used as a lower bound check for determining the validity of 2-byte UTF-8 sequences.
+   */
+  private static final int LEAD_MIN_2 = 0xC2;       // valid 2-byte lead starts at C2 (avoid overlongs: C0/C1)
+
+  /**
+   * Represents the maximum lead byte value allowed for two-byte encodings in the context of
+   * encoding detection. This value is inclusive.
+   * <p>
+   * LEAD_MAX_2 is used for validating or processing character encodings where a lead byte is
+   * expected to fall within a specific range, particularly for encodings that involve two-byte
+   * sequences.
+   */
+  private static final int LEAD_MAX_2 = 0xDF;       // inclusive
+
+  /**
+   * Represents the maximum inclusive value for the third range of lead bytes used in the detection
+   * of encoding or character classification. This value is used to signify the upper bound for
+   * specific lead-byte comparisons during encoding analysis.
+   */
+  private static final int LEAD_MAX_3 = 0xEF;       // inclusive
+
+  /**
+   * The upper bound for a UTF-8 lead byte used in enforcing encoding limits, specifically for the
+   * four-byte sequences as per RFC 3629. In UTF-8 encoding, this value represents the highest
+   * possible valid lead byte for sequences requiring four bytes.
+   */
+  private static final int LEAD_MAX_4 = 0xF4;       // RFC 3629 upper bound
+
+  /**
+   * Defines the maximum number of bytes to be scanned when attempting to detect the encoding from
+   * an XML declaration.
+   * <p>
+   * This value is used as a limit to ensure that only the initial portion of the input stream is
+   * analyzed for an XML declaration, optimizing performance and preventing unnecessary reading of
+   * large streams.
+   */
+  private static final int MAX_DECLARATION_SCAN_BYTES = 200;
+
+  /**
+   * A collection of encoding declarations commonly found in text or document metadata. This array
+   * represents potential character sets that may be detected or processed when analyzing input
+   * streams or document content.
+   * <p>
+   * The encodings included are: - UTF-8: A widely used encoding for Unicode text. - ISO-8859-1: A
+   * single-byte character encoding covering Western European languages. - UTF-16: A variable-width
+   * encoding for Unicode, often used with a BOM. - UTF-16BE: Big-endian representation of
+   * UTF-16-encoded text. - UTF-16LE: Little-endian representation of UTF-16-encoded text.
+   * <p>
+   * This collection is immutable and serves as a reference point for encoding detection logic
+   * within the application.
+   */
+  private static final String[] CANDIDATE_DECLARATIONS = {"UTF-8", "ISO-8859-1", "UTF-16",
+      "UTF-16BE", "UTF-16LE"};
 
   /**
    * Detects the encoding of an XML input stream. First checks for BOM, then falls back to XML
@@ -94,6 +224,16 @@ public class EncodingDetector {
     return new EncodingAwareInputStream(markableStream, heuristic);
   }
 
+  /**
+   * Detects the likely character encoding of the provided input stream. The method analyzes the
+   * input stream's data to determine if it contains characters with high-bit values or if it
+   * appears to be UTF-8 encoded. If no high-bit characters are detected or the content resembles
+   * UTF-8 encoding, UTF-8 is returned as the default encoding. Otherwise, Windows-1252 is assumed.
+   *
+   * @param inputStream The input stream to analyze for likely encoding detection.
+   * @return The detected Charset, either UTF-8 or Windows-1252.
+   * @throws IOException If an I/O error occurs while reading the input stream.
+   */
   private static Charset detectLikelyEncoding(InputStream inputStream) throws IOException {
     byte[] buffer = new byte[BUFFER_SIZE];
     int bytesRead = inputStream.read(buffer);
@@ -110,47 +250,56 @@ public class EncodingDetector {
       }
     }
 
-    if (!hasHighBit || looksLikeUtf8(buffer, bytesRead)) {
+    if (!hasHighBit || isPlausibleUtf8(buffer, bytesRead)) {
       return StandardCharsets.UTF_8;
     }
 
     return WINDOWS_1252;
   }
 
-  private static boolean looksLikeUtf8(byte[] buffer, int length) {
+  /**
+   * Checks if the given byte array slice appears to represent UTF-8-encoded text by analyzing its
+   * byte patterns.
+   *
+   * @param buffer The byte array to be analyzed.
+   * @param length The number of bytes (from start of buffer) to analyze.
+   * @return true if the byte array looks like it is UTF-8-encoded, false otherwise.
+   */
+  private static boolean isPlausibleUtf8(byte[] buffer, int length) {
     int i = 0;
     while (i < length) {
       int b = buffer[i] & 0xFF;
-      if (b < 0x80) {
+
+      if (b < ASCII_MAX) {
         i++;
         continue;
       }
 
-      if (b < 0xC2) {
-        return false; // Continuation byte or overlong sequence indicator
-      }
-
-      int expectedContinuationBytes;
-      if (b < 0xE0) {
-        expectedContinuationBytes = 1;
-      } else if (b < 0xF0) {
-        expectedContinuationBytes = 2;
-      } else if (b <= 0xF4) {
-        expectedContinuationBytes = 3;
-      } else {
+      if (b < LEAD_MIN_2) {
+        // Continuation byte or overlong sequence prefix (C0/C1) cannot start a new sequence
         return false;
       }
 
-      if (i + expectedContinuationBytes >= length) {
+      int expectedContinuationBytes;
+      if (b <= LEAD_MAX_2) {
+        expectedContinuationBytes = 1; // 110xxxxx
+      } else if (b <= LEAD_MAX_3) {
+        expectedContinuationBytes = 2; // 1110xxxx
+      } else if (b <= LEAD_MAX_4) {
+        expectedContinuationBytes = 3; // 11110xxx
+      } else {
+        // > F4 or invalid range
+        return false;
+      }
+
+      int remaining = length - i - 1;
+      if (remaining < expectedContinuationBytes) {
         // Not enough bytes in the sample to validate fully; assume UTF-8 to avoid false negatives
         return true;
       }
 
-      for (int j = 1; j <= expectedContinuationBytes; j++) {
-        int continuation = buffer[i + j] & 0xFF;
-        if ((continuation & 0xC0) != 0x80) {
-          return false;
-        }
+      if (!areValidContinuationBytes(buffer, i + 1, expectedContinuationBytes)) {
+        return false;
       }
 
       i += expectedContinuationBytes + 1;
@@ -159,6 +308,38 @@ public class EncodingDetector {
     return true;
   }
 
+  /**
+   * Validates that the specified slice of a byte array contains only valid UTF-8 continuation
+   * bytes. A valid UTF-8 continuation byte must have the most significant two bits set to `10`.
+   *
+   * @param buffer The byte array to validate.
+   * @param start The starting index within the array from which to begin validation.
+   * @param count The number of bytes to validate, starting from the specified index.
+   * @return true if all the specified bytes are valid UTF-8 continuation bytes, false otherwise.
+   */
+  private static boolean areValidContinuationBytes(byte[] buffer, int start, int count) {
+    for (int idx = 0; idx < count; idx++) {
+      int c = buffer[start + idx] & 0xFF;
+      if ((c & 0xC0) != 0x80) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Validates whether the content of the provided input stream is valid for the given character
+   * set. The method reads a portion of the input stream and attempts to decode it using the
+   * specified charset. If the content is successfully decoded, it is considered valid for the
+   * charset.
+   *
+   * @param inputStream The input stream whose content is to be validated.
+   * @param charset The character set to validate the content against. A null value will result in a
+   * false return.
+   * @return true if the content of the input stream is valid for the charset, false if it cannot be
+   * decoded or if the charset is null.
+   * @throws IOException If an I/O error occurs while reading the input stream.
+   */
   private static boolean isContentValidForCharset(InputStream inputStream, Charset charset)
       throws IOException {
     if (charset == null) {
@@ -194,106 +375,157 @@ public class EncodingDetector {
    */
   private static BomDetectionResult detectBOMWithStream(PushbackInputStream pushbackStream)
       throws IOException {
-    byte[] bom = new byte[4];
-    int bytesRead = pushbackStream.read(bom);
+    byte[] bomBuffer = new byte[4];
+    int readCount = pushbackStream.read(bomBuffer);
 
-    // UTF-32 BE BOM: 00 00 FE FF (check this first as it requires 4 bytes)
-    if (bytesRead >= 4 && bom[0] == 0x00 && bom[1] == 0x00 &&
-        bom[2] == (byte) 0xFE && bom[3] == (byte) 0xFF) {
-      // All 4 bytes consumed
+    // UTF-32 BE BOM: 00 00 FE FF (check first as it requires 4 bytes)
+    if (readCount >= 4 && hasPrefix(bomBuffer, UTF32_BE)) {
       return new BomDetectionResult(Charset.forName("UTF-32BE"), pushbackStream);
     }
 
     // UTF-8 BOM: EF BB BF
-    if (bytesRead >= 3 && bom[0] == (byte) 0xEF && bom[1] == (byte) 0xBB && bom[2] == (byte) 0xBF) {
-      // BOM detected and consumed, push back any extra bytes
-      if (bytesRead > 3) {
-        pushbackStream.unread(bom[3]);
-      }
+    if (readCount >= 3 && hasPrefix(bomBuffer, UTF8)) {
+      unreadExtraBytes(pushbackStream, bomBuffer, readCount, 3);
       return new BomDetectionResult(StandardCharsets.UTF_8, pushbackStream);
     }
 
     // UTF-16 BE BOM: FE FF
-    if (bytesRead >= 2 && bom[0] == (byte) 0xFE && bom[1] == (byte) 0xFF) {
-      // BOM detected and consumed, push back extra bytes
-      if (bytesRead > 2) {
-        pushbackStream.unread(bom, 2, bytesRead - 2);
-      }
+    if (readCount >= 2 && hasPrefix(bomBuffer, UTF16_BE)) {
+      unreadExtraBytes(pushbackStream, bomBuffer, readCount, 2);
       return new BomDetectionResult(StandardCharsets.UTF_16BE, pushbackStream);
     }
 
     // UTF-16 LE BOM: FF FE (or UTF-32 LE BOM: FF FE 00 00)
-    if (bytesRead >= 2 && bom[0] == (byte) 0xFF && bom[1] == (byte) 0xFE) {
-      if (bytesRead >= 4 && bom[2] == 0x00 && bom[3] == 0x00) {
+    if (readCount >= 2 && hasPrefix(bomBuffer, UTF16_LE)) {
+      if (readCount >= 4 && bomBuffer[2] == UTF32_LE_SUFFIX[0]
+          && bomBuffer[3] == UTF32_LE_SUFFIX[1]) {
         // UTF-32 LE BOM: FF FE 00 00 - all 4 bytes consumed
         return new BomDetectionResult(Charset.forName("UTF-32LE"), pushbackStream);
       }
-      // UTF-16 LE BOM - push back extra bytes
-      if (bytesRead > 2) {
-        pushbackStream.unread(bom, 2, bytesRead - 2);
-      }
+      unreadExtraBytes(pushbackStream, bomBuffer, readCount, 2);
       return new BomDetectionResult(StandardCharsets.UTF_16LE, pushbackStream);
     }
 
     // No BOM found, push back all bytes
-    if (bytesRead > 0) {
-      pushbackStream.unread(bom, 0, bytesRead);
+    if (readCount > 0) {
+      pushbackStream.unread(bomBuffer, 0, readCount);
     }
-
     return new BomDetectionResult(null, pushbackStream);
   }
 
   /**
-   * Detects encoding from XML declaration.
+   * Checks whether the provided byte array {@code buffer} starts with the specified byte array
+   * {@code prefix}.
    *
-   * @param inputStream The input stream to analyze
-   * @return The detected charset or null if not found
-   * @throws IOException if an I/O error occurs
+   * @param buffer The byte array to check. This represents the main data to be analyzed. Must not
+   * be null and should have a length greater than or equal to {@code prefix}.
+   * @param prefix The byte array that represents the prefix to be compared against. Must not be
+   * null and should have a valid length to perform the comparison.
+   * @return {@code true} if {@code buffer} starts with the content of {@code prefix}, {@code false}
+   * otherwise.
+   */
+  private static boolean hasPrefix(byte[] buffer, byte[] prefix) {
+    if (buffer == null || prefix == null || buffer.length < prefix.length) {
+      return false;
+    }
+    for (int i = 0; i < prefix.length; i++) {
+      if (buffer[i] != prefix[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Rewinds any extra bytes read from the stream that were not consumed, so they can be re-read
+   * later. If the number of extra bytes to be unread is greater than zero, the unread bytes are
+   * pushed back into the stream using the unread method of PushbackInputStream.
+   *
+   * @param stream The pushback input stream to which the extra bytes should be unread. Must not be
+   * null.
+   * @param buffer The buffer containing the bytes read from the stream. Must not be null.
+   * @param readCount The total number of bytes read from the stream into the buffer.
+   * @param consumedLength The number of bytes that were actually processed or consumed.
+   * @throws IOException If an I/O error occurs while trying to unread bytes into the stream.
+   */
+  private static void unreadExtraBytes(PushbackInputStream stream, byte[] buffer, int readCount,
+      int consumedLength)
+      throws IOException {
+    int extra = readCount - consumedLength;
+    if (extra > 0) {
+      // For 1 extra byte, unread(int) is equivalent, but unread(byte[],off,len) is consistent
+      stream.unread(buffer, consumedLength, extra);
+    }
+  }
+
+  /**
+   * Attempts to detect the character encoding of an XML document by analyzing its XML declaration.
+   * This method reads a portion of the input stream and checks for a declared encoding within the
+   * XML declaration using a series of candidate encodings.
+   *
+   * @param inputStream The input stream containing the XML content. Must not be null and should
+   * contain enough data for the XML declaration to be analyzed.
+   * @return The detected Charset based on the encoding specified in the XML declaration, or null if
+   * no encoding can be determined.
+   * @throws IOException If an I/O error occurs while reading the input stream.
    */
   private static Charset detectFromXmlDeclaration(InputStream inputStream) throws IOException {
-    // Read enough bytes to find the XML declaration
-    byte[] buffer = new byte[BUFFER_SIZE];
-    int bytesRead = inputStream.read(buffer);
-
-    if (bytesRead <= 0) {
+    byte[] previewBuffer = new byte[BUFFER_SIZE];
+    int previewBytesRead = inputStream.read(previewBuffer);
+    if (previewBytesRead <= 0) {
       return null;
     }
 
-    // Try common encodings to read the XML declaration
-    String[] testEncodings = {"UTF-8", "ISO-8859-1", "UTF-16", "UTF-16BE", "UTF-16LE"};
-
-    for (String encoding : testEncodings) {
+    int scanLength = Math.min(previewBytesRead, MAX_DECLARATION_SCAN_BYTES);
+    for (String candidateEncoding : CANDIDATE_DECLARATIONS) {
       try {
-        String xmlStart = new String(buffer, 0, Math.min(bytesRead, 200), encoding);
-
-        // Look for XML declaration
-        if (xmlStart.contains("<?xml")) {
-          int declEnd = xmlStart.indexOf("?>");
-          if (declEnd > 0) {
-            String declaration = xmlStart.substring(0, declEnd + 2);
-            Matcher matcher = XML_ENCODING_PATTERN.matcher(declaration);
-
-            if (matcher.find()) {
-              String encodingName = matcher
-                  .group(1)
-                  .trim();
-              try {
-                return Charset.forName(encodingName);
-              } catch (Exception e) {
-                // Unknown encoding in XML declaration
-              }
-            }
-
-            // XML declaration found but no encoding specified
-            return StandardCharsets.UTF_8;
-          }
+        String xmlStart = new String(previewBuffer, 0, scanLength, candidateEncoding);
+        Charset parsed = parseEncodingFromXmlDeclaration(xmlStart);
+        if (parsed != null) {
+          return parsed;
         }
-      } catch (Exception e) {
-        // Try next encoding
+      } catch (UnsupportedEncodingException | IllegalArgumentException e) {
+        // Unknown candidateEncoding; try the next one.
       }
     }
-
     return null;
+  }
+
+  /**
+   * Parses the character encoding from the provided XML declaration string, if available. If the
+   * string contains an XML declaration with a specified encoding attribute, this method extracts
+   * and returns the corresponding Charset. If no encoding is found, it defaults to UTF-8 as
+   * recommended by the XML specification.
+   *
+   * @param xmlStart The beginning of the XML file as a string, which may contain an XML
+   * declaration. Must not be null but can be empty. If no declaration or encoding is detected, this
+   * method falls back to returning UTF-8.
+   * @return The detected Charset based on the XML declaration or null if the input is invalid or
+   * the encoding cannot be determined.
+   */
+  private static Charset parseEncodingFromXmlDeclaration(String xmlStart) {
+    if (xmlStart == null || !xmlStart.contains("<?xml")) {
+      return null;
+    }
+    int declEnd = xmlStart.indexOf("?>");
+    if (declEnd <= 0) {
+      return null;
+    }
+
+    String declaration = xmlStart.substring(0, declEnd + 2);
+    Matcher matcher = XML_ENCODING_PATTERN.matcher(declaration);
+    if (matcher.find()) {
+      String encodingName = matcher
+          .group(1)
+          .trim();
+      try {
+        return Charset.forName(encodingName);
+      } catch (IllegalArgumentException ex) {
+        // Unknown encoding specified; fall through to default behavior below.
+      }
+    }
+    // XML declaration found but no encoding specified; default per XML spec recommendation.
+    return StandardCharsets.UTF_8;
   }
 
   /**

@@ -63,12 +63,14 @@ public class RandomizationControls implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("randomizationTiming")
   private RandomizationTiming randomizationTiming = RandomizationTiming.NEVER;
+
   /**
    * Specifies the timing of selection for child activities within the sequence.
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("selectionTiming")
   private RandomizationTiming selectionTiming = RandomizationTiming.NEVER;
+
   /**
    * Indicates whether the order of child activities within the sequence can be changed. When set
    * to
@@ -84,6 +86,7 @@ public class RandomizationControls implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("reorderChildren")
   private boolean reorderChildren = false;
+
   /**
    * Specifies the number of child activities to be selected from the available set. This attribute
    * enables partial selection from a larger pool, allowing only a subset of activities to be
@@ -98,6 +101,7 @@ public class RandomizationControls implements Serializable {
   private Integer selectCount;
 
   public RandomizationControls() {
+    // no-op
   }
 
   public RandomizationTiming getRandomizationTiming() {

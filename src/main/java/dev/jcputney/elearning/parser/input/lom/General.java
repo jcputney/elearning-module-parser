@@ -70,6 +70,7 @@ public class General implements Serializable {
   @JacksonXmlElementWrapper(localName = "identifier", useWrapping = false)
   @JacksonXmlProperty(localName = "identifier")
   private List<Identifier> identifiers;
+
   /**
    * A list of titles for the learning object. Titles are represented as language-specific strings.
    *
@@ -80,6 +81,7 @@ public class General implements Serializable {
    */
   @JacksonXmlProperty(localName = "title")
   private UnboundLangString title;
+
   /**
    * A list of catalog entries for the learning object. Catalog entries provide information about
    * the learning object in a structured format.
@@ -92,6 +94,7 @@ public class General implements Serializable {
   @JacksonXmlElementWrapper(localName = "catalogentry", useWrapping = false)
   @JacksonXmlProperty(localName = "catalogentry")
   private List<CatalogEntry> catalogEntries;
+
   /**
    * The primary language of the learning object. This can also indicate the absence of a language.
    *
@@ -102,12 +105,14 @@ public class General implements Serializable {
    */
   @JacksonXmlProperty(localName = "language")
   private String language;
+
   /**
    * A wrapper for a list of descriptions for the learning object, represented as language-specific
    * strings.
    */
   @JacksonXmlProperty(localName = "description")
   private UnboundLangString description;
+
   /**
    * A wrapper for a list of keywords or phrases describing the content of the learning object,
    * represented as language-specific strings.
@@ -115,12 +120,14 @@ public class General implements Serializable {
   @JacksonXmlElementWrapper(localName = "keyword", useWrapping = false)
   @JacksonXmlProperty(localName = "keyword")
   private List<UnboundLangString> keywords;
+
   /**
    * A wrapper for a list of coverage statements for the learning object, represented as
    * language-specific strings. Coverage defines the extent or scope of the content.
    */
   @JacksonXmlProperty(localName = "coverage")
   private UnboundLangString coverage;
+
   /**
    * The structure of the learning object, such as hierarchical or linear. Represented as a
    * source-value pair.
@@ -133,6 +140,7 @@ public class General implements Serializable {
   @JacksonXmlElementWrapper(localName = "structure", useWrapping = false)
   @JacksonXmlProperty(localName = "structure")
   private SourceValuePair<Structure> structure;
+
   /**
    * The aggregation level of the learning object, indicating its granularity or size. Represented
    * as a source-value pair.
@@ -162,6 +170,7 @@ public class General implements Serializable {
   }
 
   public General() {
+    // no-op
   }
 
   public List<Identifier> getIdentifiers() {

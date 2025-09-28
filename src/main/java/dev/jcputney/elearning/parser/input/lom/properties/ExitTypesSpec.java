@@ -49,16 +49,19 @@ public class ExitTypesSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "normal")
   private ExitActionType normal;
+
   /**
    * The exit action type for suspend exit.
    */
   @JacksonXmlProperty(localName = "suspend")
   private ExitActionType suspend;
+
   /**
    * The exit action type for timeout exit.
    */
   @JacksonXmlProperty(localName = "timeout")
   private ExitActionType timeout;
+
   /**
    * The exit action type for logout exit.
    */
@@ -74,6 +77,7 @@ public class ExitTypesSpec implements Serializable {
   }
 
   public ExitTypesSpec() {
+    // no-op
   }
 
   public ExitActionType getNormal() {

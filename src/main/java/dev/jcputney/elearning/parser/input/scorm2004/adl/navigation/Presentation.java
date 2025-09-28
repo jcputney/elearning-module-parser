@@ -42,6 +42,7 @@ public class Presentation implements Serializable {
   private NavigationInterface navigationInterface;
 
   public Presentation() {
+    // no-op
   }
 
   public NavigationInterface getNavigationInterface() {

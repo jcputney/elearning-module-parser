@@ -57,6 +57,7 @@ public class Scorm2004Objectives implements Serializable {
    */
   @JacksonXmlProperty(localName = "primaryObjective", namespace = IMSSS.NAMESPACE_URI)
   private Scorm2004Objective primaryObjective;
+
   /**
    * A list of additional objectives for the activity. These objectives may serve as supplementary
    * goals that are tracked but do not necessarily affect the rollup of progress or satisfaction.
@@ -75,6 +76,7 @@ public class Scorm2004Objectives implements Serializable {
   }
 
   public Scorm2004Objectives() {
+    // no-op
   }
 
   public Scorm2004Objective getPrimaryObjective() {

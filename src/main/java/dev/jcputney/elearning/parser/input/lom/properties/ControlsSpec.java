@@ -58,61 +58,73 @@ public class ControlsSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "showFinishButton")
   private YesNoType showFinishButton;
+
   /**
    * The flag indicating whether to show the close item.
    */
   @JacksonXmlProperty(localName = "showCloseItem")
   private YesNoType showCloseItem;
+
   /**
    * The flag indicating whether to show help.
    */
   @JacksonXmlProperty(localName = "showHelp")
   private YesNoType showHelp;
+
   /**
    * The flag indicating whether to show the progress bar.
    */
   @JacksonXmlProperty(localName = "showProgressBar")
   private YesNoType showProgressBar;
+
   /**
    * The flag indicating whether to use the measure progress bar.
    */
   @JacksonXmlProperty(localName = "useMeasureProgressBar")
   private YesNoType useMeasureProgressBar;
+
   /**
    * The flag indicating whether to show the course structure.
    */
   @JacksonXmlProperty(localName = "showCourseStructure")
   private YesNoType showCourseStructure;
+
   /**
    * The flag indicating whether the course structure starts open.
    */
   @JacksonXmlProperty(localName = "courseStructureStartsOpen")
   private YesNoType courseStructureStartsOpen;
+
   /**
    * The flag indicating whether to show the navigation bar.
    */
   @JacksonXmlProperty(localName = "showNavBar")
   private YesNoType showNavBar;
+
   /**
    * The flag indicating whether to show the title bar.
    */
   @JacksonXmlProperty(localName = "showTitleBar")
   private YesNoType showTitleBar;
+
   /**
    * The flag indicating whether to enable flow navigation.
    */
   @JacksonXmlProperty(localName = "enableFlowNav")
   private YesNoType enableFlowNav;
+
   /**
    * The flag indicating whether to enable choice navigation.
    */
   @JacksonXmlProperty(localName = "enableChoiceNav")
   private YesNoType enableChoiceNav;
+
   /**
    * The status display type.
    */
   @JacksonXmlProperty(localName = "statusDisplay")
   private StatusDisplayType statusDisplay;
+
   /**
    * The flag indicating whether to force disable the root choice.
    */
@@ -120,6 +132,7 @@ public class ControlsSpec implements Serializable {
   private YesNoType forceDisableRootChoice;
 
   public ControlsSpec() {
+    // no-op
   }
 
   public YesNoType getShowFinishButton() {

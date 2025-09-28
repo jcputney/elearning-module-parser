@@ -57,6 +57,7 @@ public class RuleConditions implements Serializable {
   private ConditionCombinationType conditionCombination = ConditionCombinationType.ANY;
 
   public RuleConditions() {
+    // no-op
   }
 
   public List<RuleCondition> getRuleConditionList() {

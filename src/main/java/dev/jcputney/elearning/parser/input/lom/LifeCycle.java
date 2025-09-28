@@ -70,6 +70,7 @@ public class LifeCycle implements Serializable {
    */
   @JacksonXmlProperty(localName = "version")
   private UnboundLangString version;
+
   /**
    * The status of the learning object, indicating its stage in the lifecycle (e.g., draft, final,
    * revised).
@@ -88,6 +89,7 @@ public class LifeCycle implements Serializable {
   @JacksonXmlElementWrapper(localName = "status", useWrapping = false)
   @JacksonXmlProperty(localName = "status")
   private SourceValuePair<Status> status;
+
   /**
    * The list of contributions made to the learning object. Each contribution includes information
    * about the role of the contributor, their entity (e.g., name or organization), and the date of
@@ -109,6 +111,7 @@ public class LifeCycle implements Serializable {
   @JacksonXmlElementWrapper(localName = "contribute", useWrapping = false)
   @JacksonXmlProperty(localName = "contribute")
   private List<Contribute> contribute;
+
   /**
    * A placeholder for custom elements that extend the lifecycle information. This allows for
    * additional metadata to be included that is not part of the standard schema.
@@ -127,6 +130,7 @@ public class LifeCycle implements Serializable {
   private List<Object> customElements;
 
   public LifeCycle() {
+    // no-op
   }
 
   public UnboundLangString getVersion() {

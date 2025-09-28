@@ -48,6 +48,7 @@ public class CompletionThreshold implements Serializable {
   @JsonDeserialize(using = MeasureTypeDeserializer.class)
   @JsonProperty("minProgressMeasure")
   private MeasureType minProgressMeasure = new MeasureType(BigDecimal.ONE);
+
   /**
    * Specifies the relative weight of this content item towards overall progress. The value is
    * between 0.0 and 1.0, where 1.0 indicates the full weight.
@@ -56,6 +57,7 @@ public class CompletionThreshold implements Serializable {
   @JsonDeserialize(using = PercentTypeDeserializer.class)
   @JsonProperty("progressWeight")
   private PercentType progressWeight = new PercentType(BigDecimal.ONE);
+
   /**
    * Indicates whether a measure determines completion. If true, completion is based on achieving
    * the minimum progress measure defined.
@@ -72,6 +74,7 @@ public class CompletionThreshold implements Serializable {
   }
 
   public CompletionThreshold() {
+    // no-op
   }
 
   public MeasureType getMinProgressMeasure() {

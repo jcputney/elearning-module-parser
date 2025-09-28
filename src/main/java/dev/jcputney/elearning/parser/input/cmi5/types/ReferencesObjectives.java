@@ -66,6 +66,7 @@ public class ReferencesObjectives implements Serializable {
   }
 
   public ReferencesObjectives() {
+    // no-op
   }
 
   public List<ObjectiveReference> getObjectives() {

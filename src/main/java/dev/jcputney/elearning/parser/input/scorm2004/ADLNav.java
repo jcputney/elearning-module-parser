@@ -81,7 +81,6 @@ public class ADLNav implements Serializable {
   /**
    * Default constructor for the ADLNav class.
    */
-  @SuppressWarnings("unused")
   private ADLNav() {
     // Default constructor
   }

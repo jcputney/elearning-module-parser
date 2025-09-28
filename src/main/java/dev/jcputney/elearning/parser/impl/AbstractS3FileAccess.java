@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,7 +41,7 @@ public abstract class AbstractS3FileAccess implements FileAccess {
    * Threshold for streaming files instead of caching them in memory. Files larger than this size
    * will be streamed directly from S3.
    */
-  protected static final long STREAMING_THRESHOLD = 5 * 1024 * 1024; // 5MB
+  protected static final long STREAMING_THRESHOLD = 5 * 1024 * 1024L; // 5MB
 
   /**
    * Maximum size of the small file cache. This limits the number of small files (less than
@@ -95,10 +96,16 @@ public abstract class AbstractS3FileAccess implements FileAccess {
   protected final Map<String, Long> fileSizeCache = new ConcurrentHashMap<>();
 
   /**
-   * Cache for all files in the module, populated lazily. This is used to speed up file existence
-   * checks and listing operations.
+   * A thread-safe cache storing the list of all file paths within the module.
+   * <p>
+   * This cache is intended to improve performance for file-related operations by storing the result
+   * of a full scan of the S3 bucket or prefix. The cache is synchronized to ensure thread safety in
+   * concurrent environments.
+   * <p>
+   * Modifications to this cache should be controlled to maintain data consistency across the class,
+   * particularly when the underlying S3 bucket contents change.
    */
-  protected volatile List<String> allFilesCache = null;
+  protected List<String> allFilesCache = Collections.synchronizedList(new ArrayList<>());
 
   /**
    * The root path within the S3 bucket to access. This is used to construct full paths for files
@@ -117,32 +124,6 @@ public abstract class AbstractS3FileAccess implements FileAccess {
     this.bucketName = bucketName;
     this.executorService = Executors.newFixedThreadPool(10);
     initializeRootPath(rootPath);
-  }
-
-  private void initializeRootPath(String rootPath) {
-    String processedPath = rootPath;
-    if (processedPath == null) {
-      processedPath = "";
-    }
-
-    if (processedPath.endsWith("/")) {
-      processedPath = processedPath.substring(0, processedPath.length() - 1);
-    }
-
-    this.rootPath = processedPath;
-  }
-
-  protected final void reconfigureRootPath(String newRootPath) {
-    clearAllCaches();
-    initializeRootPath(newRootPath);
-  }
-
-  private void clearAllCaches() {
-    fileExistsCache.clear();
-    directoryListCache.clear();
-    smallFileCache.clear();
-    fileSizeCache.clear();
-    allFilesCache = null;
   }
 
   /**
@@ -221,48 +202,37 @@ public abstract class AbstractS3FileAccess implements FileAccess {
   }
 
   /**
-   * Prefetch common module files in parallel for faster subsequent access.
+   * Prefetches common files that are not already present in the small file cache.
+   * <p>
+   * This method identifies files that are listed in the COMMON_MODULE_FILES collection but are not
+   * yet loaded into the small file cache. For each file that is missing from the cache, a prefetch
+   * task is initiated asynchronously using the provided executorService. All asynchronous tasks are
+   * executed concurrently, and the method blocks until all tasks complete.
+   * <p>
+   * Key logic details: - Filters the COMMON_MODULE_FILES to identify files absent from the small
+   * file cache. - Asynchronously prefetches missing files using independent tasks. - Waits for all
+   * asynchronous tasks to complete before returning.
+   * <p>
+   * This method is designed to optimize the availability of commonly used files and reduce the
+   * latency during their access by loading them in advance.
    */
   @Override
   public void prefetchCommonFiles() {
-    List<String> commonFiles = COMMON_MODULE_FILES
+    List<String> filesToPrefetch = COMMON_MODULE_FILES
         .stream()
         .filter(file -> !smallFileCache.containsKey(file))
         .toList();
-
-    if (commonFiles.isEmpty()) {
+    if (filesToPrefetch.isEmpty()) {
       return;
     }
 
-    // Prefetching common module files
-    List<CompletableFuture<Void>> futures = commonFiles
+    List<CompletableFuture<Void>> prefetchTasks = filesToPrefetch
         .stream()
-        .map(file -> CompletableFuture.runAsync(() -> {
-          try {
-            String fullFilePath = fullPath(file);
-            if (checkFileExistsOnS3(file)) {
-              // Get file size first
-              long size = getFileSizeOnS3(file);
-              // Only cache non-zero sizes to avoid caching failed lookups
-              if (size > 0) {
-                fileSizeCache.put(file, size);
-              }
-
-              // Only cache small files
-              if (size > 0 && size <= STREAMING_THRESHOLD) {
-                byte[] content = getS3ObjectAsBytes(fullFilePath);
-                smallFileCache.put(file, content);
-                // Prefetched file successfully
-              }
-            }
-          } catch (Exception e) {
-            // Failed to prefetch file - this is expected for missing files
-          }
-        }, executorService))
+        .map(file -> CompletableFuture.runAsync(() -> prefetchSingleFile(file), executorService))
         .toList();
 
     CompletableFuture
-        .allOf(futures.toArray(new CompletableFuture[0]))
+        .allOf(prefetchTasks.toArray(new CompletableFuture[0]))
         .join();
   }
 
@@ -479,6 +449,18 @@ public abstract class AbstractS3FileAccess implements FileAccess {
   }
 
   /**
+   * Reconfigures the root path for the S3 file access. This method clears all internal caches and
+   * re-initializes the root path to the specified value.
+   *
+   * @param newRootPath The new root path to set. This value will be normalized and stored as the
+   * root path.
+   */
+  protected final void reconfigureRootPath(String newRootPath) {
+    clearCaches();
+    initializeRootPath(newRootPath);
+  }
+
+  /**
    * Base implementation for getting file contents with intelligent streaming/caching. Protected to
    * allow subclasses to extend with additional functionality.
    *
@@ -599,4 +581,50 @@ public abstract class AbstractS3FileAccess implements FileAccess {
    * @return The detected internal root directory
    */
   protected abstract String detectInternalRootDirectory(String rootPath);
+
+  /**
+   * Prefetches a single file by retrieving its metadata and, if the file is within a predefined
+   * size threshold, caching its content. This method performs a best-effort retrieval, ignoring
+   * transient errors.
+   *
+   * @param file the name or identifier of the file to be prefetched
+   */
+  private void prefetchSingleFile(String file) {
+    try {
+      final String s3Path = fullPath(file);
+      if (!checkFileExistsOnS3(file)) {
+        return;
+      }
+      long size = getFileSizeOnS3(file);
+      if (size <= 0) {
+        return; // avoid caching failed lookups or empty files
+      }
+      fileSizeCache.put(file, size);
+      if (size <= STREAMING_THRESHOLD) {
+        byte[] content = getS3ObjectAsBytes(s3Path);
+        smallFileCache.put(file, content);
+      }
+    } catch (Exception ignored) {
+      // Best-effort prefetch: ignore failures (e.g., missing files or transient errors)
+    }
+  }
+
+  /**
+   * Initializes and normalizes the root path for the class. Ensures that the path does not end with
+   * a trailing slash and handles null values by defaulting to an empty string.
+   *
+   * @param rootPath The initial root path to be set. Can be null.
+   */
+  private void initializeRootPath(String rootPath) {
+    String processedPath = rootPath;
+    if (processedPath == null) {
+      processedPath = "";
+    }
+
+    if (processedPath.endsWith("/")) {
+      processedPath = processedPath.substring(0, processedPath.length() - 1);
+    }
+
+    this.rootPath = processedPath;
+  }
 }

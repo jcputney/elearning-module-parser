@@ -66,6 +66,7 @@ public class LimitConditions implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("attemptLimit")
   private Integer attemptLimit;
+
   /**
    * The absolute duration limit for an attempt, represented as an ISO 8601 duration (e.g., "PT30M"
    * for 30 minutes). This attribute defines the maximum allowable time for a single attempt on the
@@ -80,6 +81,7 @@ public class LimitConditions implements Serializable {
   @JsonDeserialize(using = DurationIso8601Deserializer.class)
   @JsonProperty("attemptAbsoluteDurationLimit")
   private Duration attemptAbsoluteDurationLimit;
+
   /**
    * The experienced duration limit for an attempt, represented as an ISO 8601 duration. This
    * duration measures the time actively spent by the learner on the activity, excluding idle or
@@ -94,6 +96,7 @@ public class LimitConditions implements Serializable {
   @JsonDeserialize(using = DurationIso8601Deserializer.class)
   @JsonProperty("attemptExperiencedDurationLimit")
   private Duration attemptExperiencedDurationLimit;
+
   /**
    * The absolute duration limit for the entire activity, represented as an ISO 8601 duration. This
    * limit defines the maximum allowable time for the activity across all attempts.
@@ -107,6 +110,7 @@ public class LimitConditions implements Serializable {
   @JsonDeserialize(using = DurationIso8601Deserializer.class)
   @JsonProperty("activityAbsoluteDurationLimit")
   private Duration activityAbsoluteDurationLimit;
+
   /**
    * The experienced duration limit for the activity, represented as an ISO 8601 duration. This
    * duration measures the active time spent on the activity across all attempts, excluding idle
@@ -121,6 +125,7 @@ public class LimitConditions implements Serializable {
   @JsonDeserialize(using = DurationIso8601Deserializer.class)
   @JsonProperty("activityExperiencedDurationLimit")
   private Duration activityExperiencedDurationLimit;
+
   /**
    * Specifies a start time for the activity as an ISO 8601 date-time (e.g.,
    * "2024-11-13T09:00:00Z"). This attribute defines the earliest time at which the learner can
@@ -135,6 +140,7 @@ public class LimitConditions implements Serializable {
   @JsonDeserialize(using = InstantDeserializer.class)
   @JsonProperty("beginTimeLimit")
   private Instant beginTimeLimit;
+
   /**
    * Specifies an end time for the activity as an ISO 8601 date-time. This attribute defines the
    * latest time at which the learner can interact with the activity.
@@ -162,6 +168,7 @@ public class LimitConditions implements Serializable {
   }
 
   public LimitConditions() {
+    // no-op
   }
 
   public Integer getAttemptLimit() {

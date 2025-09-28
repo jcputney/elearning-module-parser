@@ -70,6 +70,7 @@ public class MetaMetadata implements Serializable {
   @JacksonXmlElementWrapper(localName = "identifier", useWrapping = false)
   @JacksonXmlProperty(localName = "identifier")
   private List<Identifier> identifier;
+
   /**
    * A list of catalog entries for the metadata.
    *
@@ -81,6 +82,7 @@ public class MetaMetadata implements Serializable {
   @JacksonXmlElementWrapper(localName = "catalogentry", useWrapping = false)
   @JacksonXmlProperty(localName = "catalogentry")
   private List<CatalogEntry> catalogEntries;
+
   /**
    * The list of contributors to the metadata, including their roles, entities, and contribution
    * dates.
@@ -101,6 +103,7 @@ public class MetaMetadata implements Serializable {
   @JacksonXmlElementWrapper(localName = "contribute", useWrapping = false)
   @JacksonXmlProperty(localName = "contribute")
   private List<ContributeMeta> contribute;
+
   /**
    * The metadata schema or standard being used. Typically represented as a list of strings.
    *
@@ -119,6 +122,7 @@ public class MetaMetadata implements Serializable {
   @JacksonXmlProperty(localName = "metadataSchema")
   @JsonAlias("metadatascheme")
   private List<String> metadataSchema;
+
   /**
    * The language used for the metadata content.
    *
@@ -135,6 +139,7 @@ public class MetaMetadata implements Serializable {
    */
   @JacksonXmlProperty(localName = "language")
   private String language;
+
   /**
    * A placeholder for custom elements that extend the meta-metadata information. This allows for
    * additional metadata to be included that is not part of the standard schema.
@@ -153,6 +158,7 @@ public class MetaMetadata implements Serializable {
   private List<Object> customElements;
 
   public MetaMetadata() {
+    // no-op
   }
 
   public List<Identifier> getIdentifier() {

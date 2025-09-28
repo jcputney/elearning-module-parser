@@ -30,7 +30,6 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
-import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
@@ -38,7 +37,6 @@ import software.amazon.awssdk.services.s3.model.S3Object;
  * Optimized implementation of FileAccess using AWS S3 SDK v2 with batch operations, streaming
  * support, and intelligent caching.
  */
-@SuppressWarnings("unused")
 public class S3FileAccessV2 extends AbstractS3FileAccess {
 
   private final S3Client s3Client;
@@ -125,6 +123,17 @@ public class S3FileAccessV2 extends AbstractS3FileAccess {
     }
   }
 
+  /**
+   * Wraps the provided InputStream to add optional progress tracking functionality if a
+   * StreamingProgressListener is available in the thread-local context. If no listener is set, the
+   * original InputStream is returned unmodified.
+   *
+   * @param stream The InputStream to be wrapped or returned as-is if no progress listener is
+   * found.
+   * @param fileSize The size of the file being read, in bytes, or -1 if unknown.
+   * @return An InputStream that may provide progress tracking via a wrapped implementation, or the
+   * original InputStream if no listener is available.
+   */
   @Override
   protected InputStream getInputStreamWrapper(InputStream stream, long fileSize) {
     // Get the progress listener from thread-local storage
@@ -135,8 +144,12 @@ public class S3FileAccessV2 extends AbstractS3FileAccess {
     return stream;
   }
 
-  // SDK-specific implementations
-
+  /**
+   * Checks if a file exists in the S3 bucket at the specified path.
+   *
+   * @param path The relative path of the file to check within the S3 bucket.
+   * @return true if the file exists on S3, otherwise false.
+   */
   @Override
   protected boolean checkFileExistsOnS3(String path) {
     try {
@@ -146,14 +159,19 @@ public class S3FileAccessV2 extends AbstractS3FileAccess {
           .key(fullPath(path))
           .build());
       return true;
-    } catch (NoSuchKeyException e) {
-      return false;
     } catch (SdkException e) {
       // Failed to check file existence
       return false;
     }
   }
 
+  /**
+   * Retrieves the file size of a specified file stored on S3.
+   *
+   * @param path The relative path of the file within the S3 bucket.
+   * @return The size of the file in bytes if found, or 0 if the file does not exist or an error
+   * occurs.
+   */
   @Override
   protected long getFileSizeOnS3(String path) {
     try {
@@ -170,20 +188,28 @@ public class S3FileAccessV2 extends AbstractS3FileAccess {
     }
   }
 
+  /**
+   * Lists all files in a specified directory within an S3 bucket. The method recursively retrieves
+   * all file keys under the specified directory path, filtering out directory markers or irrelevant
+   * paths.
+   *
+   * @param directoryPath The relative path of the directory within the S3 bucket to list files
+   * from.
+   * @return A list of file keys representing the files in the specified directory. If an error
+   * occurs during the operation, an empty list is returned.
+   */
   @Override
   protected List<String> listFilesOnS3(String directoryPath) {
     try {
       List<String> allKeys = new ArrayList<>();
-      String prefix = fullPath(directoryPath);
-      if (!prefix.isEmpty() && !prefix.endsWith("/")) {
-        prefix = prefix + "/";
-      }
+      String prefix = buildDirectoryPrefix(directoryPath);
 
+      final int DEFAULT_MAX_KEYS = 1000;
       ListObjectsV2Request.Builder requestBuilder = ListObjectsV2Request
           .builder()
           .bucket(bucketName)
           .prefix(prefix)
-          .maxKeys(1000);
+          .maxKeys(DEFAULT_MAX_KEYS);
 
       String continuationToken = null;
       do {
@@ -197,37 +223,26 @@ public class S3FileAccessV2 extends AbstractS3FileAccess {
             .stream()
             .map(S3Object::key)
             .filter(key -> !key.endsWith("/")) // Filter out directory markers
-            .filter(key -> {
-              if (rootPath == null || rootPath.isEmpty()) {
-                return true;
-              }
-              if (key.equals(rootPath)) {
-                return true;
-              }
-              return key.startsWith(rootPath + "/");
-            })
-            .map(key -> {
-              if (rootPath == null || rootPath.isEmpty()) {
-                return key;
-              }
-              if (key.startsWith(rootPath + "/")) {
-                return key.substring(rootPath.length() + 1);
-              }
-              return key;
-            })
+            .filter(this::shouldIncludeKey)
+            .map(this::toRelativeKey)
             .toList());
 
         continuationToken = response.nextContinuationToken();
       } while (continuationToken != null);
 
-      // Listed files in a directory
       return allKeys;
     } catch (SdkException e) {
-      // Failed to list files in the S3 directory
       return List.of();
     }
   }
 
+  /**
+   * Retrieves an object stored in S3 as a byte array.
+   *
+   * @param fullPath The full path of the object in the S3 bucket.
+   * @return A byte array containing the data of the specified object from S3.
+   * @throws IOException If an error occurs while fetching the object from S3.
+   */
   @Override
   protected byte[] getS3ObjectAsBytes(String fullPath) throws IOException {
     try {
@@ -242,6 +257,14 @@ public class S3FileAccessV2 extends AbstractS3FileAccess {
     }
   }
 
+  /**
+   * Retrieves the InputStream of an object stored in S3 at the specified full path.
+   *
+   * @param fullPath The full path of the object in the S3 bucket, including directories and file
+   * name.
+   * @return An InputStream allowing access to the content of the object stored in S3.
+   * @throws IOException If an error occurs while accessing the object in S3.
+   */
   @Override
   protected InputStream getS3ObjectStream(String fullPath) throws IOException {
     try {
@@ -255,6 +278,17 @@ public class S3FileAccessV2 extends AbstractS3FileAccess {
     }
   }
 
+  /**
+   * Detects the internal root directory from a given root path by querying the S3 bucket and
+   * inspecting the common prefixes. If exactly one common prefix is found, it is returned as the
+   * internal root directory; otherwise, the provided rootPath is returned. This method is used to
+   * resolve a potential internal hierarchy structure within the provided root path.
+   *
+   * @param rootPath The initial root path within the S3 bucket to detect the internal root
+   * directory from.
+   * @return The detected internal root directory based on the common prefixes in the S3 bucket. If
+   * detection fails or no single common prefix is found, the original rootPath is returned.
+   */
   @Override
   protected String detectInternalRootDirectory(String rootPath) {
     try {
@@ -276,5 +310,52 @@ public class S3FileAccessV2 extends AbstractS3FileAccess {
       // Failed to detect internal root directory
       return rootPath;
     }
+  }
+
+  /**
+   * Builds a directory prefix for the given directory path, ensuring that it ends with a slash if
+   * it is not empty and does not already end with one.
+   *
+   * @param directoryPath The directory path for which to build the prefix.
+   * @return The directory prefix derived from the input path, guaranteed to end with a slash unless
+   * the input is empty.
+   */
+  private String buildDirectoryPrefix(String directoryPath) {
+    String prefix = fullPath(directoryPath);
+    if (!prefix.isEmpty() && !prefix.endsWith("/")) {
+      prefix = prefix + "/";
+    }
+    return prefix;
+  }
+
+  /**
+   * Determines if the specified key should be included based on the configured root path. If no
+   * root path is set or the key matches the root path or starts with the root path followed by a
+   * slash, the key is included.
+   *
+   * @param key The key to evaluate for inclusion.
+   * @return true if the key should be included, otherwise false.
+   */
+  private boolean shouldIncludeKey(String key) {
+    if (rootPath == null || rootPath.isEmpty()) {
+      return true;
+    }
+    return key.equals(rootPath) || key.startsWith(rootPath + "/");
+  }
+
+  /**
+   * Converts an absolute S3 key to a relative key by removing the configured root path, if
+   * applicable. If the root path is not set or does not match the start of the key, the original
+   * key is returned unchanged.
+   *
+   * @param key The absolute S3 key to convert to a relative key. Must not be null.
+   * @return The relative key obtained by removing the root path from the absolute key, or the
+   * original key if no root path is set or it does not match the beginning of the key.
+   */
+  private String toRelativeKey(String key) {
+    if (rootPath == null || rootPath.isEmpty()) {
+      return key;
+    }
+    return key.startsWith(rootPath + "/") ? key.substring(rootPath.length() + 1) : key;
   }
 }

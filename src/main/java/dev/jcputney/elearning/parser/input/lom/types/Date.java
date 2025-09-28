@@ -43,6 +43,7 @@ public class Date implements Serializable {
    */
   @JacksonXmlProperty(localName = "dateTime")
   private String dateTime;
+
   /**
    * A description of the date, typically a LangString.
    */
@@ -50,6 +51,7 @@ public class Date implements Serializable {
   private UnboundLangString description;
 
   public Date() {
+    // no-op
   }
 
   public String getDateTime() {

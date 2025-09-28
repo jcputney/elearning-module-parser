@@ -49,6 +49,7 @@ public class SequencingRule implements Serializable {
   private RuleAction ruleAction;
 
   public SequencingRule() {
+    // no-op
   }
 
   public RuleConditions getRuleConditions() {

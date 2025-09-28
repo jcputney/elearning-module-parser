@@ -46,6 +46,7 @@ public class Scorm2004Dependency implements Serializable {
   }
 
   public Scorm2004Dependency() {
+    // no-op
   }
 
   public String getIdentifierRef() {

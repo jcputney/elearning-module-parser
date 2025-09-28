@@ -48,8 +48,6 @@ import java.util.zip.ZipInputStream;
  *     ModuleMetadata metadata = parser.parse();
  * }
  * }</pre>
- *
- * @since 0.0.19
  */
 public class InMemoryFileAccess implements FileAccess, AutoCloseable {
 
@@ -109,6 +107,12 @@ public class InMemoryFileAccess implements FileAccess, AutoCloseable {
     return rootPath;
   }
 
+  /**
+   * Checks if a file specified by the given path exists in the in-memory file system.
+   *
+   * @param path The relative or absolute path of the file to check. Must not be null.
+   * @return {@code true} if the file exists; {@code false} otherwise.
+   */
   @Override
   public boolean fileExistsInternal(String path) {
     String fullPath = fullPath(path);
@@ -119,6 +123,15 @@ public class InMemoryFileAccess implements FileAccess, AutoCloseable {
             .equals(fullPath));
   }
 
+  /**
+   * Lists all files available within the specified directory in the in-memory file system. If the
+   * directory path is an empty string, all files in the system are returned.
+   *
+   * @param directoryPath The path of the directory to list files from. If empty, all files will be
+   * included in the result. The path should be relative or normalized.
+   * @return A list of file paths that exist within the specified directory.
+   * @throws IOException If an error occurs while retrieving file information.
+   */
   @Override
   public List<String> listFilesInternal(String directoryPath) throws IOException {
     String fullPath = fullPath(directoryPath);
@@ -136,6 +149,14 @@ public class InMemoryFileAccess implements FileAccess, AutoCloseable {
     return files;
   }
 
+  /**
+   * Retrieves the contents of a file as an InputStream. This method internally delegates to an
+   * overloaded version that allows optional progress tracking.
+   *
+   * @param path The path of the file to retrieve contents from. Must not be null.
+   * @return An InputStream of the file contents.
+   * @throws IOException If the file cannot be found or read.
+   */
   @Override
   public InputStream getFileContentsInternal(String path) throws IOException {
     return getFileContentsInternal(path, null);
@@ -170,6 +191,13 @@ public class InMemoryFileAccess implements FileAccess, AutoCloseable {
             (rootPath.isEmpty() ? "" : " with internal root '" + rootPath + "'") + suggestion);
   }
 
+  /**
+   * Retrieves a list of all file paths stored in memory.
+   *
+   * @return A list of strings representing the relative paths of all files in the in-memory file
+   * system.
+   * @throws IOException If an error occurs while accessing the file information.
+   */
   @Override
   public List<String> getAllFiles() throws IOException {
     return fileEntries
@@ -301,17 +329,7 @@ public class InMemoryFileAccess implements FileAccess, AutoCloseable {
 
     for (FileEntry entry : fileEntries) {
       String entryName = entry.getPath();
-      int slashIndex = entryName.indexOf('/');
-
-      if (slashIndex > 0) {
-        String topLevel = entryName.substring(0, slashIndex);
-        topLevelDirs.add(topLevel);
-
-        if (topLevelDirs.size() > 1) {
-          return "";
-        }
-      } else {
-        // File at root level
+      if (checkForRootPath(topLevelDirs, entryName)) {
         return "";
       }
     }
@@ -361,7 +379,8 @@ public class InMemoryFileAccess implements FileAccess, AutoCloseable {
   }
 
   /**
-   * Container for file content stored in memory.
+   * Represents a file entry in an in-memory file system, storing its path, content, and size. This
+   * is a utility class to encapsulate metadata and contents associated with a file.
    */
   private static class FileEntry {
 

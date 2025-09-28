@@ -48,6 +48,7 @@ public class RsopSpec implements Serializable {
   private OfflineSynchModeType offlineSynchMode;
 
   public RsopSpec() {
+    // no-op
   }
 
   public OfflineSynchModeType getOfflineSynchMode() {

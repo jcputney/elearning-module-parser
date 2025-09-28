@@ -82,6 +82,7 @@ public class SequencingRules implements Serializable {
   private List<SequencingRule> postConditionRules;
 
   public SequencingRules() {
+    // no-op
   }
 
   public List<SequencingRule> getPreConditionRules() {

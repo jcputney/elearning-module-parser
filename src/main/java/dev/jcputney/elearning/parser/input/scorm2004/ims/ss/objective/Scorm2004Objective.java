@@ -42,6 +42,7 @@ public class Scorm2004Objective implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("objectiveID")
   private String objectiveID;
+
   /**
    * satisfiedByMeasure is a boolean value that indicates whether the objective is satisfied based
    * on the measure value.
@@ -53,6 +54,7 @@ public class Scorm2004Objective implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("satisfiedByMeasure")
   private Boolean satisfiedByMeasure = false;
+
   /**
    * The minimum normalized measure required to consider this objective as satisfied. This value
    * represents the minimum level of achievement, typically as a decimal between 0 and 1, where 1.0
@@ -62,6 +64,7 @@ public class Scorm2004Objective implements Serializable {
    */
   @JacksonXmlProperty(localName = "minNormalizedMeasure", namespace = IMSSS.NAMESPACE_URI)
   private Double minNormalizedMeasure;
+
   /**
    * A list of mappings to global objectives. These mappings associate this local objective with
    * broader goals or learning objectives across multiple activities or sequences.
@@ -83,6 +86,7 @@ public class Scorm2004Objective implements Serializable {
   }
 
   public Scorm2004Objective() {
+    // no-op
   }
 
   public String getObjectiveID() {

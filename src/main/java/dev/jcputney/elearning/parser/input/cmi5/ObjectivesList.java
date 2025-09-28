@@ -76,6 +76,7 @@ public class ObjectivesList implements Serializable {
   }
 
   public ObjectivesList() {
+    // no-op
   }
 
   public List<Objective> getObjectives() {

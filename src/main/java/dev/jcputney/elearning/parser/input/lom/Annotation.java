@@ -62,6 +62,7 @@ public class Annotation implements Serializable {
    */
   @JacksonXmlProperty(localName = "entity")
   private String entity;
+
   /**
    * The date when the annotation was created or last modified.
    *
@@ -78,6 +79,7 @@ public class Annotation implements Serializable {
    */
   @JacksonXmlProperty(localName = "date")
   private Date date;
+
   /**
    * A description of the annotation, represented as a language-specific string.
    *
@@ -96,6 +98,7 @@ public class Annotation implements Serializable {
   private SingleLangString description;
 
   public Annotation() {
+    // no-op
   }
 
   public String getEntity() {

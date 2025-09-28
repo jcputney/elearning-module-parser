@@ -65,6 +65,7 @@ public class LomDuration implements Serializable {
   @JsonAlias("datetime")
   @JsonDeserialize(using = DurationIso8601Deserializer.class)
   private Duration duration;
+
   /**
    * A natural language description of the duration, represented as a {@link LangString}.
    * <p>
@@ -79,6 +80,7 @@ public class LomDuration implements Serializable {
   private SingleLangString description;
 
   public LomDuration() {
+    // no-op
   }
 
   public LomDuration(Duration duration) {

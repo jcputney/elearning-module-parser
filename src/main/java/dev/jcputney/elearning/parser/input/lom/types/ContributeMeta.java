@@ -73,6 +73,7 @@ public class ContributeMeta implements Serializable {
   @JacksonXmlElementWrapper(localName = "role", useWrapping = false)
   @JacksonXmlProperty(localName = "role")
   private SourceValuePair<RoleMeta> role;
+
   /**
    * A list of entities contributing to the metadata, typically represented as vCard data. Example:
    * <pre>{@code
@@ -85,6 +86,7 @@ public class ContributeMeta implements Serializable {
   @JacksonXmlElementWrapper(localName = "entity", useWrapping = false)
   @JacksonXmlProperty(localName = "entity")
   private List<String> entities;
+
   /**
    * The date associated with the contribution, including optional descriptions.
    */
@@ -98,6 +100,7 @@ public class ContributeMeta implements Serializable {
   }
 
   public ContributeMeta() {
+    // no-op
   }
 
   public SourceValuePair<RoleMeta> getRole() {

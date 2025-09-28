@@ -45,9 +45,19 @@ public class LangStringListDeserializer extends JsonDeserializer<List<LangString
    * Default constructor for the LangStringListDeserializer class.
    */
   public LangStringListDeserializer() {
-    // Default constructor
+    // no-op
   }
 
+  /**
+   * Deserializes JSON input into a list of LangString objects. The method processes JSON structures
+   * such as single values, arrays, or objects containing specific node types (e.g., "string" or
+   * "langstring") and converts them into the LangString data model.
+   *
+   * @param p the {@link JsonParser} used to read the JSON content
+   * @param context the deserialization context
+   * @return a list of LangString objects deserialized from the JSON input
+   * @throws IOException if an I/O error occurs during the deserialization process
+   */
   @Override
   public List<LangString> deserialize(JsonParser p, DeserializationContext context)
       throws IOException {

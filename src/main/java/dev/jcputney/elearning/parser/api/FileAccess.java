@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -93,6 +94,31 @@ public interface FileAccess {
       throw new IllegalArgumentException("Directory path cannot be null");
     }
     return listFilesInternal(directoryPath);
+  }
+
+  /**
+   * Checks if a file entry represents a root-level directory or if multiple top-level directories
+   * are present in the provided set.
+   *
+   * @param topLevelDirs A set of strings representing the top-level directories encountered so far.
+   * This set is modified by the method to add new entries if applicable.
+   * @param entryName The name of the file entry to evaluate, potentially containing a directory
+   * path.
+   * @return True if the file entry is at the root level or if more than one top-level directory is
+   * present; false otherwise.
+   */
+  default boolean checkForRootPath(Set<String> topLevelDirs, String entryName) {
+    int slashIndex = entryName.indexOf('/');
+
+    if (slashIndex > 0) {
+      String topLevel = entryName.substring(0, slashIndex);
+      topLevelDirs.add(topLevel);
+
+      return topLevelDirs.size() > 1;
+    } else {
+      // File at root level
+      return true;
+    }
   }
 
   /**

@@ -47,6 +47,7 @@ public class CommunicationsSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "maxFailedSubmissions")
   private Integer maxFailedSubmissions;
+
   /**
    * The frequency of commits.
    */
@@ -54,6 +55,7 @@ public class CommunicationsSpec implements Serializable {
   private Integer commitFrequency;
 
   public CommunicationsSpec() {
+    // no-op
   }
 
   public Integer getMaxFailedSubmissions() {

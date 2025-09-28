@@ -39,6 +39,7 @@ public class Objective implements Serializable {
    */
   @JacksonXmlProperty(localName = "title")
   private TextType title;
+
   /**
    * The description of the objective, represented as a localized text type.
    *
@@ -48,6 +49,7 @@ public class Objective implements Serializable {
    */
   @JacksonXmlProperty(localName = "description")
   private TextType description;
+
   /**
    * The unique identifier for the objective, represented as an anyURI.
    *
@@ -60,6 +62,7 @@ public class Objective implements Serializable {
   private String id;
 
   public Objective() {
+    // no-op
   }
 
   public TextType getTitle() {

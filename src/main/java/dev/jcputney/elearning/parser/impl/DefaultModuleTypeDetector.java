@@ -49,7 +49,25 @@ import java.util.List;
  */
 public class DefaultModuleTypeDetector implements ModuleTypeDetector {
 
+  /**
+   * Represents the FileAccess implementation used by the DefaultModuleTypeDetector for accessing
+   * and interacting with module files in the file system.
+   * <p>
+   * This variable is initialized through the constructor and is immutable, ensuring consistent file
+   * access operations throughout the lifecycle of the DefaultModuleTypeDetector.
+   */
   private final FileAccess fileAccess;
+
+  /**
+   * A list of registered {@link ModuleTypeDetectorPlugin} instances.
+   * <p>
+   * Each plugin in this list is responsible for detecting a specific type of eLearning module based
+   * on the module's structure and manifest files. Plugins are used in the order of their priority
+   * to determine the module type.
+   * <p>
+   * This field is immutable and cannot be modified directly. Plugins can be added or removed using
+   * the provided methods in the containing class.
+   */
   private final List<ModuleTypeDetectorPlugin> plugins;
 
   /**
@@ -153,10 +171,9 @@ public class DefaultModuleTypeDetector implements ModuleTypeDetector {
           String.format("Unable to detect module type at '%s'. Tried plugins: [%s]. "
                   + "Module might be corrupted or of an unsupported type.", fileAccess.getRootPath(),
               triedPlugins));
+    } catch (ModuleDetectionException e) {
+      throw e;
     } catch (Exception e) {
-      if (e instanceof ModuleDetectionException) {
-        throw e;
-      }
       throw new ModuleDetectionException(
           String.format("Error detecting module type at '%s': %s", fileAccess.getRootPath(),
               e.getMessage()), e);

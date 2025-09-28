@@ -50,6 +50,7 @@ public class ADLObjective implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "objectiveID")
   @JsonProperty("objectiveID")
   private String objectiveID;
+
   /**
    * List of mappings for this objective, defining connections to global objectives or other
    * objectives within the LMS.
@@ -59,6 +60,7 @@ public class ADLObjective implements Serializable {
   private List<MapInfo> mapInfoList;
 
   public ADLObjective() {
+    // no-op
   }
 
   public String getObjectiveID() {

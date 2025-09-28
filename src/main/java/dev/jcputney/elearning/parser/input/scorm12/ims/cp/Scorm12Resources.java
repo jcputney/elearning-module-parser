@@ -57,6 +57,7 @@ public class Scorm12Resources implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "base", namespace = "http://www.w3.org/XML/1998/namespace")
   @JsonProperty("base")
   private String base;
+  
   /**
    * A list of all {@code <resources>} elements defined within the {@code <resources>} element.
    * <p>
@@ -69,6 +70,7 @@ public class Scorm12Resources implements Serializable {
   private List<Scorm12Resource> resourceList;
 
   public Scorm12Resources() {
+    // no-op
   }
 
   /**

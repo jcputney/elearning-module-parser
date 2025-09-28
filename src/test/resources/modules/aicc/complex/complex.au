@@ -1,0 +1,4 @@
+"system_id","type","command_line","Max_Time_Allowed","time_limit_action","file_name","max_score","mastery_score","system_vendor","core_vendor","web_launch","au_password"
+"A1","lesson","intro.html","00:20:00","C,N","intro.html",100,80,"","Example Corp","",""
+"A2","lesson","scenario.html","00:30:00","E,N","scenario.html",100,,"","Example Corp","",""
+"A3","test","assessment.html","00:45:00","E,E","assessment.html",100,75,"","Example Corp","",""

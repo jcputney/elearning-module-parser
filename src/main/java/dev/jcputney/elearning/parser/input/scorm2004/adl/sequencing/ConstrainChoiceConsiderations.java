@@ -46,6 +46,7 @@ public class ConstrainChoiceConsiderations implements Serializable {
   @JacksonXmlProperty(localName = "preventActivation", isAttribute = true)
   @JsonProperty("preventActivation")
   private boolean preventActivation = false;
+
   /**
    * Constrains choice when true. Default is false.
    */
@@ -54,6 +55,7 @@ public class ConstrainChoiceConsiderations implements Serializable {
   private boolean constrainChoice = false;
 
   public ConstrainChoiceConsiderations() {
+    // no-op
   }
 
   public boolean isPreventActivation() {

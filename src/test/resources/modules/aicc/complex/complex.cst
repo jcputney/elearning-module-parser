@@ -1,0 +1,4 @@
+"block","member","prerequisites","attributes"
+"ROOT","A1","",""
+"A1","A2","A1","CA=A1;CL=completed;CR=passed;MT=00:25:00;MANDATORY=Y"
+"A1","A3","A1 AND *A2","CA=A2;CL=passed;CR=completed;MT=00:45:00;OPTIONAL=true;UR=A2;TL=E,E"

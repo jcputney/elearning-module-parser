@@ -42,7 +42,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * @param <T> the type of the value, which can be an enumeration or a string
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class SourceValuePair<T> implements Serializable {
+public class SourceValuePair<T extends Serializable> implements Serializable {
 
   /**
    * The source of the value, typically a reference to a controlled vocabulary or schema.
@@ -54,6 +54,7 @@ public class SourceValuePair<T> implements Serializable {
    */
   @JsonProperty("source")
   private String source;
+
   /**
    * The value associated with the source, representing the specific term or definition.
    * <p>
@@ -66,6 +67,7 @@ public class SourceValuePair<T> implements Serializable {
   private T value;
 
   public SourceValuePair() {
+    // no-op
   }
 
   public String getSource() {

@@ -60,6 +60,7 @@ public class AuxiliaryResources implements Serializable {
   private List<AuxiliaryResource> auxiliaryResourceList;
 
   public AuxiliaryResources() {
+    // no-op
   }
 
   public List<AuxiliaryResource> getAuxiliaryResourceList() {

@@ -70,17 +70,20 @@ public class Scorm12Metadata implements LoadableMetadata {
    */
   @JacksonXmlProperty(localName = "schema", namespace = Scorm12Manifest.NAMESPACE_URI)
   private String schema;
+
   /**
    * The version of the schema used, such as "1.2". This element is optional.
    */
   @JacksonXmlProperty(localName = "schemaversion", namespace = Scorm12Manifest.NAMESPACE_URI)
   private String schemaVersion;
+
   /**
    * Inline metadata in the form of a Learning Object Metadata (LOM) element. This element is
    * optional.
    */
   @JacksonXmlProperty(localName = "lom", namespace = LOM.NAMESPACE_URI)
   private LOM lom;
+
   /**
    * A reference to an external metadata file, provided as a URI. This element is optional.
    */
@@ -88,6 +91,7 @@ public class Scorm12Metadata implements LoadableMetadata {
   private String location;
 
   public Scorm12Metadata() {
+    // no-op
   }
 
   public String getSchema() {

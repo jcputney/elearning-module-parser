@@ -59,6 +59,7 @@ public class LangString implements Serializable {
   @JsonProperty("language")
   @JsonAlias("lang")
   private String language;
+
   /**
    * The actual string value.
    */
@@ -76,6 +77,7 @@ public class LangString implements Serializable {
   }
 
   public LangString() {
+    // no-op
   }
 
   public String getLanguage() {

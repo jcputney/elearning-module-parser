@@ -38,7 +38,7 @@ public final class StreamingUtils {
   /**
    * Default progress update interval in bytes (1MB).
    */
-  public static final long DEFAULT_PROGRESS_INTERVAL = 1024 * 1024;
+  public static final long DEFAULT_PROGRESS_INTERVAL = 1024 * 1024L;
 
   private StreamingUtils() {
     throw new AssertionError("Utility class should not be instantiated");
@@ -132,10 +132,45 @@ public final class StreamingUtils {
   @SuppressWarnings("NullableProblems")
   private static class ProgressTrackingInputStream extends FilterInputStream {
 
+    /**
+     * The total size of the data to be read from the input stream. Used for tracking progress and
+     * notifying the listener of completion and updates.
+     */
     private final long totalSize;
+
+    /**
+     * Listener to track the progress of data being read from the input stream. The listener is
+     * periodically notified of the progress through the
+     * {@link StreamingProgressListener#onProgress(long, long)} method. It is also notified upon
+     * completion of the streaming operation through the
+     * {@link StreamingProgressListener#onComplete(long)} method. Uses the
+     * {@link StreamingProgressListener} interface to handle progress updates and completion
+     * events.
+     */
     private final StreamingProgressListener listener;
+
+    /**
+     * Specifies the interval, in bytes, at which progress updates are triggered. This value
+     * determines the frequency with which the associated {@link StreamingProgressListener} will be
+     * notified of the progress while reading data from the input stream. A higher value reduces the
+     * frequency of updates, while a lower value increases it. Used to control the performance
+     * impact of frequent notifications during streaming.
+     */
     private final long progressInterval;
+
+    /**
+     * Tracks the total number of bytes read from the input stream. This variable is incremented
+     * every time bytes are successfully read or skipped, and is used to provide progress updates to
+     * the associated listener. It is initialized to 0 and updated atomically to ensure thread
+     * safety in concurrent access scenarios.
+     */
     private final AtomicLong bytesRead = new AtomicLong(0);
+
+    /**
+     * Tracks the timestamp of the most recent progress update. This value is measured in
+     * milliseconds since the epoch. It is used to determine when to trigger the next progress
+     * update based on the configured progress interval.
+     */
     private long lastProgressUpdate = 0;
 
     protected ProgressTrackingInputStream(
@@ -149,6 +184,13 @@ public final class StreamingUtils {
       this.progressInterval = progressInterval;
     }
 
+    /**
+     * Reads the next byte of data from the input stream. Updates the progress based on the number
+     * of bytes read.
+     *
+     * @return the next byte of data, or -1 if the end of the stream is reached
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     public int read() throws IOException {
       int b = super.read();
@@ -158,15 +200,34 @@ public final class StreamingUtils {
       return b;
     }
 
+    /**
+     * Reads up to a specified number of bytes from the input stream into an array of bytes,
+     * starting at the specified offset. Updates the progress based on the number of bytes read.
+     *
+     * @param b the byte array into which data is read
+     * @param off the start offset in the array at which to write data
+     * @param len the maximum number of bytes to read
+     * @return the total number of bytes read into the buffer, or -1 if there is no more data
+     * because the end of the stream has been reached
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
-      int bytesRead = super.read(b, off, len);
-      if (bytesRead > 0) {
-        updateProgress(bytesRead);
+      int readBytes = super.read(b, off, len);
+      if (readBytes > 0) {
+        updateProgress(readBytes);
       }
-      return bytesRead;
+      return readBytes;
     }
 
+    /**
+     * Skips over and discards a specified number of bytes from this input stream while updating the
+     * progress based on the number of bytes skipped.
+     *
+     * @param n the number of bytes to skip
+     * @return the actual number of bytes skipped
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     public long skip(long n) throws IOException {
       long skipped = super.skip(n);
@@ -176,6 +237,19 @@ public final class StreamingUtils {
       return skipped;
     }
 
+    /**
+     * Closes the input stream, ensuring any necessary cleanup is performed and notifying the
+     * progress listener of the completion of the stream processing.
+     * <p>
+     * If the total number of bytes read is greater than 0, the progress listener will be updated
+     * with the current progress and notified of the completion event.
+     * <p>
+     * Any exceptions thrown while notifying the progress listener are caught and ignored to ensure
+     * the stream is closed properly. The parent class's close method is invoked in a `finally`
+     * block to ensure resource cleanup even in the case of errors.
+     *
+     * @throws IOException if an I/O error occurs during closing
+     */
     @Override
     public void close() throws IOException {
       try {
@@ -192,6 +266,13 @@ public final class StreamingUtils {
       }
     }
 
+    /**
+     * Updates the progress of the input stream based on the number of bytes processed. If the
+     * accumulated bytes since the last progress update exceeds the specified interval, this method
+     * notifies the progress listener with the current progress.
+     *
+     * @param bytes the number of bytes processed since the last method invocation
+     */
     private void updateProgress(long bytes) {
       long total = bytesRead.addAndGet(bytes);
 

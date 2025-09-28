@@ -50,21 +50,25 @@ public class HeuristicSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "isCompletionTracked")
   private YesNoType isCompletionTracked;
+
   /**
    * Indicates whether satisfaction is tracked.
    */
   @JacksonXmlProperty(localName = "isSatisfactionTracked")
   private YesNoType isSatisfactionTracked;
+
   /**
    * Indicates whether the score is tracked.
    */
   @JacksonXmlProperty(localName = "isScoreTracked")
   private YesNoType isScoreTracked;
+
   /**
    * Indicates whether an incomplete score is meaningful.
    */
   @JacksonXmlProperty(localName = "isIncompleteScoreMeaningful")
   private YesNoType isIncompleteScoreMeaningful;
+
   /**
    * Indicates whether incomplete satisfaction is meaningful.
    */
@@ -82,6 +86,7 @@ public class HeuristicSpec implements Serializable {
   }
 
   public HeuristicSpec() {
+    // no-op
   }
 
   public YesNoType getIsCompletionTracked() {

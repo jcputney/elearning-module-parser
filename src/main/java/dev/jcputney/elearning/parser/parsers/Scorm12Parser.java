@@ -273,7 +273,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
       for (Scorm12File file : files) {
         if (file.getHref() != null) {
           Boolean exists = existenceMap.get(file.getHref());
-          file.setExists(exists != null ? exists : false);
+          file.setExists(exists != null && exists);
         }
       }
     }

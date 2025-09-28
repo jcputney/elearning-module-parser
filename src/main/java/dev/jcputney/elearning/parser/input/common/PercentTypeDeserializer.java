@@ -32,7 +32,7 @@ public class PercentTypeDeserializer extends JsonDeserializer<PercentType> {
    * Default constructor for the PercentTypeDeserializer class.
    */
   public PercentTypeDeserializer() {
-    // Default constructor
+    // no-op
   }
 
   /**

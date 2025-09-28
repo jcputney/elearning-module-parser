@@ -45,6 +45,7 @@ public class NavigationInterface implements Serializable {
   private List<HideLMSUI> hideLMSUI;
 
   public NavigationInterface() {
+    // no-op
   }
 
   public List<HideLMSUI> getHideLMSUI() {

@@ -308,6 +308,15 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
     accumulator.publish();
   }
 
+  /**
+   * Records the delivery controls for a specific SCORM item based on its ID and sequencing
+   * configuration. This method resolves effective delivery controls, applies them to the activity,
+   * and tracks overrides if applicable.
+   *
+   * @param itemId The unique identifier for the SCORM item. Must not be null or empty.
+   * @param sequencing The sequencing configuration associated with the SCORM item. Used to resolve
+   * delivery controls.
+   */
   private void recordDeliveryControls(String itemId, Sequencing sequencing) {
     if (itemId == null || itemId.isEmpty()) {
       return;
@@ -320,6 +329,16 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
     }
   }
 
+  /**
+   * Constructs an effective set of delivery controls by merging the provided resolved delivery
+   * controls with defaults. If the resolved controls are null, a new instance of DeliveryControls
+   * is returned with default values.
+   *
+   * @param resolved The resolved DeliveryControls object containing pre-configured settings. If
+   * null, defaults will be used.
+   * @return A DeliveryControls object representing the effective configuration, either merged with
+   * the resolved settings or defaults if resolved is null.
+   */
   private DeliveryControls buildEffectiveDeliveryControls(DeliveryControls resolved) {
     DeliveryControls effective = new DeliveryControls();
     if (resolved != null) {
@@ -330,6 +349,15 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
     return effective;
   }
 
+  /**
+   * Finds the delivery controls for the given sequencing instance. If delivery controls are not set
+   * in the provided sequencing object, it attempts to resolve delivery controls using the
+   * sequencing's ID reference and the associated manifest's sequencing collection.
+   *
+   * @param sequencing The sequencing object containing or referring to delivery controls. If null,
+   * the method immediately returns null.
+   * @return The resolved DeliveryControls object, or null if it cannot be found or resolved.
+   */
   private DeliveryControls findDeliveryControls(Sequencing sequencing) {
     if (sequencing == null) {
       return null;
@@ -344,6 +372,17 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
     return deliveryControls;
   }
 
+  /**
+   * Collects and retrieves a set of global objective IDs from the SCORM 2004 manifest. A global
+   * objective ID is derived from the targetObjectiveID values present in the mapInfo elements
+   * associated with objectives for each item in the manifest.
+   * <p>
+   * The method processes the manifest by: 1. Retrieving all organizations and their item
+   * structures. 2. Extracting objectives and their mapping information. 3. Filtering and collecting
+   * non-null, non-empty targetObjectiveIDs.
+   *
+   * @return A LinkedHashSet of global objective IDs, ensuring uniqueness while maintaining order.
+   */
   private Set<String> collectGlobalObjectiveIds() {
     return manifest
         .getOrganizations()
@@ -357,19 +396,164 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
         .collect(Collectors.toCollection(LinkedHashSet::new));
   }
 
+  /**
+   * An internal utility class for accumulating and managing metadata related to SCORM 2004 items.
+   * This class gathers, processes, and publishes metadata for inclusion in a SCORM context, such as
+   * completion thresholds, time limit actions, data from LMS, hidden UI elements, and control
+   * modes.
+   * <p>
+   * The role of this class is to traverse a hierarchical structure of SCORM 2004 items, collect
+   * relevant metadata, and provide methods to propagate the aggregated data to the owning
+   * {@code Scorm2004Metadata} instance.
+   */
   private static final class ItemMetadataAccumulator {
 
+    /**
+     * Represents the owner of the metadata collected by the {@code ItemMetadataAccumulator}.
+     * <p>
+     * This field is a reference to a {@code Scorm2004Metadata} instance associated with the
+     * accumulator, serving as the recipient of aggregated metadata. The collected metadata,
+     * including completion thresholds, time limit actions, data from LMS, hidden LMS UI settings,
+     * and control modes, is published to this owner.
+     * <p>
+     * The {@code owner} is intended to be immutable and is initialized at the time of the
+     * accumulator's creation.
+     */
     private final Scorm2004Metadata owner;
+
+    /**
+     * A map used to store completion threshold configurations for SCORM 2004 items.
+     * <p>
+     * The outer map uses string keys to represent unique identifiers or names for specific items or
+     * categories. Each entry in the outer map contains another map as its value, which is used to
+     * store specific completion threshold settings for the corresponding item or category.
+     * <p>
+     * The inner map uses string keys to represent the names of individual completion threshold
+     * settings. The associated values in the inner map can be of varying types, allowing for
+     * flexibility in representing different types of completion threshold data.
+     * <p>
+     * This variable plays a key role in aggregating and managing completion threshold
+     * configurations during the processing of SCORM 2004 items, facilitating their use in
+     * publishing and applying metadata configurations.
+     */
     private final Map<String, Map<String, Object>> completionThresholds = new LinkedHashMap<>();
+
+    /**
+     * A map that holds key-value pairs representing time limit actions associated with SCORM
+     * metadata. The keys in the map are strings identifying specific time limit action types, and
+     * the values are strings describing the corresponding actions or settings.
+     * <p>
+     * This map is used to store and manage time-related behavior configurations for SCORM items,
+     * enabling actions or settings to be associated with specific time thresholds or limits.
+     * <p>
+     * The entries in this map are maintained in insertion order.
+     */
     private final Map<String, String> timeLimitActions = new LinkedHashMap<>();
+
+    /**
+     * Stores a map of key-value pairs representing data retrieved from the LMS (Learning Management
+     * System). This collection is used to persist metadata associated with individual SCORM 2004
+     * items and is part of the aggregation process for managing SCORM metadata.
+     * <p>
+     * The keys in the map correspond to specific metadata identifiers or names, while the values
+     * represent their respective data or configuration values provided by the LMS.
+     * <p>
+     * This map ensures the preservation of LMS-provided metadata for subsequent processing and
+     * publishing within the lifecycle of the SCORM item metadata aggregation.
+     */
     private final Map<String, String> dataFromLms = new LinkedHashMap<>();
+
+    /**
+     * A map that holds information about UI components of an LMS (Learning Management System) that
+     * should be hidden. The keys in the map represent specific UI element identifiers, while the
+     * values are lists of strings detailing the conditions or contexts under which these UI
+     * elements should be hidden.
+     * <p>
+     * This data is typically aggregated and used during the metadata accumulation process to
+     * provide configuration details regarding the visibility of LMS UI elements for specific SCORM
+     * 2004 items.
+     */
     private final Map<String, List<String>> hideLmsUi = new LinkedHashMap<>();
+
+    /**
+     * Represents a collection of control modes for SCORM 2004 items, organized as a nested mapping
+     * structure. The outer map holds string keys representing item identifiers, and each inner map
+     * contains string keys representing control mode settings and their corresponding boolean
+     * values indicating whether specific control modes are enabled or disabled for the item.
+     * <p>
+     * This field is used to aggregate and store control mode information during the processing of
+     * SCORM 2004 items, with the data eventually being published or merged into the owning entity's
+     * metadata structure.
+     * <p>
+     * The order of entries in the map is maintained as insertion order due to the use of a
+     * LinkedHashMap.
+     */
     private final Map<String, Map<String, Boolean>> controlModes = new LinkedHashMap<>();
 
     private ItemMetadataAccumulator(Scorm2004Metadata owner) {
       this.owner = owner;
     }
 
+    /**
+     * Constructs a map of string keys and boolean values based on the control mode configuration of
+     * the specified Scorm2004Item instance.
+     *
+     * @param item the Scorm2004Item instance from which the control mode values are extracted
+     * @return a map containing boolean values for various control mode settings, where the keys are
+     * the names of the settings and the values indicate their states
+     */
+    private static Map<String, Boolean> getStringBooleanMap(Scorm2004Item item) {
+      var mode = item
+          .getSequencing()
+          .getControlMode();
+      Map<String, Boolean> values = new LinkedHashMap<>();
+      values.put("choice", mode.isChoice());
+      values.put("choiceExit", mode.isChoiceExit());
+      values.put("flow", mode.isFlow());
+      values.put("forwardOnly", mode.isForwardOnly());
+      values.put("useCurrentAttemptObjectiveInfo", mode.isUseCurrentAttemptObjectiveInfo());
+      values.put("useCurrentAttemptProgressInfo", mode.isUseCurrentAttemptProgressInfo());
+      return values;
+    }
+
+    /**
+     * Constructs a map of string keys and object values based on the completion threshold
+     * configuration of the specified Scorm2004Item instance.
+     *
+     * @param item the Scorm2004Item instance from which the completion threshold values are
+     * extracted
+     * @return a map containing object values for various completion threshold settings, where the
+     * keys are the names of the settings and the values are their associated data
+     */
+    private static Map<String, Object> getStringObjectMap(Scorm2004Item item) {
+      var threshold = item.getCompletionThreshold();
+      Map<String, Object> values = new LinkedHashMap<>();
+      if (threshold.getMinProgressMeasure() != null && threshold
+          .getMinProgressMeasure()
+          .getValue() != null) {
+        values.put("minProgressMeasure", threshold
+            .getMinProgressMeasure()
+            .getValue());
+      }
+      if (threshold.getProgressWeight() != null && threshold
+          .getProgressWeight()
+          .value() != null) {
+        values.put("progressWeight", threshold
+            .getProgressWeight()
+            .value());
+      }
+      if (threshold.getCompletedByMeasure() != null) {
+        values.put("completedByMeasure", threshold.getCompletedByMeasure());
+      }
+      return values;
+    }
+
+    /**
+     * Traverses a hierarchical structure of Scorm2004Item objects and processes each item.
+     *
+     * @param rootItems a list of root Scorm2004Item objects to initiate the traversal; if null or
+     * empty, the method exits without performing any operations
+     */
     void collect(List<Scorm2004Item> rootItems) {
       if (rootItems == null || rootItems.isEmpty()) {
         return;
@@ -389,6 +573,16 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
       }
     }
 
+    /**
+     * Publishes the collected metadata from the accumulator to the associated owner instance.
+     * <p>
+     * This method updates the owner's internal data structures with the values aggregated in the
+     * accumulator, merging the following metadata collections: - Completion thresholds - Time limit
+     * actions - Data from LMS - Hide LMS UI configurations - Control modes
+     * <p>
+     * The operation overwrites existing entries in the owner's maps that have the same keys as
+     * those in the accumulator.
+     */
     void publish() {
       owner.completionThresholds.putAll(completionThresholds);
       owner.timeLimitActions.putAll(timeLimitActions);
@@ -397,6 +591,13 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
       owner.controlModes.putAll(controlModes);
     }
 
+    /**
+     * Processes a single SCORM 2004 item, extracting and recording metadata such as completion
+     * thresholds, time limit actions, data from LMS, hidden LMS UI elements, and control modes into
+     * their respective collections.
+     *
+     * @param item the Scorm2004Item to be processed; if null, the method exits without processing
+     */
     private void processItem(Scorm2004Item item) {
       if (item == null) {
         return;
@@ -408,25 +609,7 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
       }
 
       if (item.getCompletionThreshold() != null) {
-        var threshold = item.getCompletionThreshold();
-        Map<String, Object> values = new LinkedHashMap<>();
-        if (threshold.getMinProgressMeasure() != null && threshold
-            .getMinProgressMeasure()
-            .getValue() != null) {
-          values.put("minProgressMeasure", threshold
-              .getMinProgressMeasure()
-              .getValue());
-        }
-        if (threshold.getProgressWeight() != null && threshold
-            .getProgressWeight()
-            .value() != null) {
-          values.put("progressWeight", threshold
-              .getProgressWeight()
-              .value());
-        }
-        if (threshold.getCompletedByMeasure() != null) {
-          values.put("completedByMeasure", threshold.getCompletedByMeasure());
-        }
+        Map<String, Object> values = getStringObjectMap(item);
         if (!values.isEmpty()) {
           completionThresholds.put(itemId, values);
         }
@@ -460,23 +643,14 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
             .getHideLMSUI()
             .stream()
             .map(Enum::name)
-            .collect(Collectors.toList());
+            .toList();
         hideLmsUi.put(itemId, hidden);
       }
 
       if (item.getSequencing() != null && item
           .getSequencing()
           .getControlMode() != null) {
-        var mode = item
-            .getSequencing()
-            .getControlMode();
-        Map<String, Boolean> values = new LinkedHashMap<>();
-        values.put("choice", mode.isChoice());
-        values.put("choiceExit", mode.isChoiceExit());
-        values.put("flow", mode.isFlow());
-        values.put("forwardOnly", mode.isForwardOnly());
-        values.put("useCurrentAttemptObjectiveInfo", mode.isUseCurrentAttemptObjectiveInfo());
-        values.put("useCurrentAttemptProgressInfo", mode.isUseCurrentAttemptProgressInfo());
+        Map<String, Boolean> values = getStringBooleanMap(item);
         controlModes.put(itemId, values);
       }
     }

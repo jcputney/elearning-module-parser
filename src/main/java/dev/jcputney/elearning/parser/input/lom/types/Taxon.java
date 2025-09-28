@@ -58,6 +58,7 @@ public class Taxon implements Serializable {
    */
   @JacksonXmlProperty(localName = "id")
   private String id;
+
   /**
    * The entry providing a description or label for the taxon, often represented as a multilingual
    * string.
@@ -71,6 +72,7 @@ public class Taxon implements Serializable {
    */
   @JacksonXmlProperty(localName = "entry")
   private SingleLangString entry;
+
   /**
    * Any custom elements or extensions defined within the taxon, allowing for schema extensibility.
    * <p>
@@ -84,6 +86,7 @@ public class Taxon implements Serializable {
   private List<Object> customElements;
 
   public Taxon() {
+    // no-op
   }
 
   public String getId() {

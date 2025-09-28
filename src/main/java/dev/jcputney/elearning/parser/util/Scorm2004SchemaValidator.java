@@ -35,23 +35,64 @@ import org.xml.sax.SAXParseException;
 /**
  * Utility for validating SCORM 2004 imsmanifest.xml against local XSDs.
  * <p>
- * Validation is optional and disabled by default. Enable it by setting the
- * system property {@code elearning.parser.scorm2004.validateXsd=true} or the
- * environment variable {@code ELEARNING_SCORM2004_VALIDATE_XSD=true}.
+ * Validation is optional and disabled by default. Enable it by setting the system property
+ * {@code elearning.parser.scorm2004.validateXsd=true} or the environment variable
+ * {@code ELEARNING_SCORM2004_VALIDATE_XSD=true}.
  * </p>
  */
 public final class Scorm2004SchemaValidator {
 
+  /**
+   * System property key used to determine whether SCORM 2004 XSD validation should be enabled.
+   * <p>
+   * This property is checked by the Scorm2004SchemaValidator class to decide if validation against
+   * SCORM 2004 XML schemas is required. The value of this property, if set, typically needs to be
+   * "true" (case-insensitive) to enable validation. If not set or set to any other value,
+   * validation may be disabled by default.
+   */
   private static final String VALIDATE_SYSPROP = "elearning.parser.scorm2004.validateXsd";
+
+  /**
+   * Environment variable key used to enable SCORM 2004 XSD validation.
+   * <p>
+   * This variable specifies whether the SCORM 2004 manifest validation against its corresponding
+   * XSDs is enabled. When set, it indicates that validation should be performed during SCORM
+   * manifest processing.
+   * <p>
+   * Typically, this environment variable is used in combination with related system properties to
+   * configure validation behavior dynamically.
+   */
   private static final String VALIDATE_ENV = "ELEARNING_SCORM2004_VALIDATE_XSD";
 
-  // Classpath locations for minimal SCORM 2004 XSDs (IMS CP only is sufficient for structure)
-  private static final String[] SCHEMA_RESOURCE_PATHS = new String[] {
+  /**
+   * Array of resource paths to SCORM 2004 schema definition (XSD) files.
+   * <p>
+   * This variable holds the paths to the XSD schema resources required for validating SCORM 2004
+   * manifests. The main schema file included is the IMS Content Packaging 1.1 schema
+   * (imscp_v1p1.xsd), which serves as the root schema.
+   * <p>
+   * The referenced schema files facilitate the XML validation process, ensuring conformance to
+   * SCORM 2004 standards. The `imscp_v1p1.xsd` schema further includes dependencies such as
+   * `xml.xsd`, which may reference additional resources like `XMLSchema.dtd`.
+   * <p>
+   * This constant is intended for internal use within validation logic and should not be modified
+   * to preserve the integrity of the validation process.
+   */
+  private static final String[] SCHEMA_RESOURCE_PATHS = new String[]{
       // IMS Content Packaging 1.1 (root CP schema)
       "schemas/scorm2004/imscp_v1p1.xsd"
       // Note: imscp_v1p1 includes xml.xsd which in turn references XMLSchema.dtd.
   };
 
+  /**
+   * Private constructor to prevent instantiation of the utility class.
+   * <p>
+   * The Scorm2004SchemaValidator class is designed to provide static methods for validating SCORM
+   * 2004 manifests and checking if validation is enabled. It should not be instantiated, as its
+   * functionality is only accessible through the static methods provided.
+   * <p>
+   * Attempting to instantiate this class will result in an {@link AssertionError}.
+   */
   private Scorm2004SchemaValidator() {
     throw new AssertionError("Utility class should not be instantiated");
   }
@@ -65,7 +106,7 @@ public final class Scorm2004SchemaValidator {
       return Boolean.parseBoolean(fromSysProp);
     }
     String fromEnv = System.getenv(VALIDATE_ENV);
-    return fromEnv != null && Boolean.parseBoolean(fromEnv);
+    return Boolean.parseBoolean(fromEnv);
   }
 
   /**
@@ -76,7 +117,8 @@ public final class Scorm2004SchemaValidator {
    * @throws IOException when reading schema resources fails
    */
   public static void validate(byte[] manifestXml) throws SAXException, IOException {
-    SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+    SchemaFactory factory = SchemaFactory
+        .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
     // Harden resolver settings while allowing local classpath URLs (file/jar)
     try {
@@ -91,7 +133,9 @@ public final class Scorm2004SchemaValidator {
 
     // Load schemas from classpath with proper systemId so relative includes resolve
     List<Source> sources = new ArrayList<>();
-    ClassLoader cl = Thread.currentThread().getContextClassLoader();
+    ClassLoader cl = Thread
+        .currentThread()
+        .getContextClassLoader();
     for (String path : SCHEMA_RESOURCE_PATHS) {
       URL url = cl.getResource(path);
       if (url == null) {
@@ -114,18 +158,24 @@ public final class Scorm2004SchemaValidator {
     if (!errors.isEmpty()) {
       StringBuilder sb = new StringBuilder("XSD validation failed (SCORM 2004):\n");
       for (String err : errors) {
-        sb.append(" - ").append(err).append('\n');
+        sb
+            .append(" - ")
+            .append(err)
+            .append('\n');
       }
       throw new SAXException(sb.toString());
     }
   }
 
-  private static final class CollectingErrorHandler implements ErrorHandler {
-    private final List<String> errors;
-
-    private CollectingErrorHandler(List<String> errors) {
-      this.errors = errors;
-    }
+  /**
+   * An implementation of the {@link ErrorHandler} interface that collects error and fatal error
+   * messages encountered during XML processing.
+   * <p>
+   * This handler ignores warnings and formats error messages into a standardized string
+   * representation, including system ID, line number, column number, and error message. All
+   * collected error messages are stored in the provided list.
+   */
+  private record CollectingErrorHandler(List<String> errors) implements ErrorHandler {
 
     @Override
     public void warning(SAXParseException exception) {
@@ -142,9 +192,17 @@ public final class Scorm2004SchemaValidator {
       errors.add(format(exception));
     }
 
+    /**
+     * Formats the details of a {@link SAXParseException} into a standardized string representation.
+     * The formatted string includes the system ID, line number, column number, and error message.
+     *
+     * @param e the {@link SAXParseException} containing details of the XML processing error
+     * @return a formatted string representing the details of the given exception
+     */
     private String format(SAXParseException e) {
       String sysId = e.getSystemId() != null ? e.getSystemId() : "<unknown>";
-      return String.format("%s:%d:%d: %s", sysId, e.getLineNumber(), e.getColumnNumber(), e.getMessage());
+      return String.format("%s:%d:%d: %s", sysId, e.getLineNumber(), e.getColumnNumber(),
+          e.getMessage());
     }
   }
 }

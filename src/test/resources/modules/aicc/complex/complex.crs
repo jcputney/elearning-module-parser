@@ -1,0 +1,18 @@
+[Course]
+Course_Creator=Example Corp
+Course_ID=complex-course
+Course_System=HTML
+Course_Title=Complex AICC Course
+Level=3
+Max_Fields_CST=9
+Total_AUs=3
+Total_Blocks=2
+Version=1.0
+Mastery_Score=70
+[Course_Behavior]
+Max_Normal=3
+Mastery_Score=65
+Max_Time_Allowed=01:45:00
+Time_Limit_Action=C,N
+[Course_Description]
+Complex course for parsing tests

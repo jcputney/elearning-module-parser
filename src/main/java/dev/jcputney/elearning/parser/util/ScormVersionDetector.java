@@ -107,8 +107,10 @@ public class ScormVersionDetector {
     }
 
     // Check for SCORM 2004-specific namespaces (adlcp v1p3 for 3rd/4th, v1p2 for 2nd)
-    String adlcpNs = document.getDocumentElement().getAttribute("xmlns:adlcp");
-    if (adlcpNs != null && (adlcpNs.contains("adlcp_v1p3") || adlcpNs.contains("adlcp_v1p2"))) {
+    String adlcpNs = document
+        .getDocumentElement()
+        .getAttribute("xmlns:adlcp");
+    if (adlcpNs.contains("adlcp_v1p3") || adlcpNs.contains("adlcp_v1p2")) {
       return SCORM_2004;
     }
 
@@ -116,12 +118,32 @@ public class ScormVersionDetector {
     return SCORM_12;
   }
 
+  /**
+   * Reads the bytes of the SCORM manifest file (imsmanifest.xml) using the provided
+   * {@link FileAccess} implementation.
+   *
+   * @param fileAccess the FileAccess implementation used to retrieve the manifest file contents
+   * @return a byte array containing the contents of the manifest file
+   * @throws IOException if an I/O error occurs while reading the manifest file
+   */
   private static byte[] readManifestBytes(FileAccess fileAccess) throws IOException {
     try (InputStream inputStream = fileAccess.getFileContents(MANIFEST_FILE)) {
       return inputStream.readAllBytes();
     }
   }
 
+  /**
+   * Parses the SCORM manifest file from the provided byte array using the given
+   * DocumentBuilderFactory. If the default parsing fails and the error cause is related to
+   * character encoding, this method attempts to parse using predefined fallback character sets.
+   *
+   * @param factory the DocumentBuilderFactory instance used for creating DocumentBuilder objects
+   * @param manifestBytes the byte array containing the manifest file contents
+   * @return a Document object representing the parsed SCORM manifest
+   * @throws ParserConfigurationException if an error occurs while configuring the DocumentBuilder
+   * @throws IOException if an I/O error occurs during the parsing process
+   * @throws SAXException if a parsing error occurs or if all parsing attempts fail
+   */
   private static Document parseManifest(DocumentBuilderFactory factory, byte[] manifestBytes)
       throws ParserConfigurationException, IOException, SAXException {
     try {
@@ -147,6 +169,17 @@ public class ScormVersionDetector {
     throw new SAXException("Unable to parse manifest contents with available encodings");
   }
 
+  /**
+   * Parses an XML document from the provided byte array using the specified DocumentBuilderFactory.
+   * This method defaults to using the standard parse mechanism for creating a Document object.
+   *
+   * @param factory the DocumentBuilderFactory instance used to create DocumentBuilder objects
+   * @param manifestBytes the byte array containing the contents of the XML document to be parsed
+   * @return a Document object representing the parsed XML document
+   * @throws ParserConfigurationException if an error occurs while configuring the DocumentBuilder
+   * @throws IOException if an I/O error occurs during the parsing process
+   * @throws SAXException if a parsing error occurs while processing the XML document
+   */
   private static Document parseWithDefault(DocumentBuilderFactory factory, byte[] manifestBytes)
       throws ParserConfigurationException, IOException, SAXException {
     DocumentBuilder builder = createDocumentBuilder(factory);
@@ -155,6 +188,18 @@ public class ScormVersionDetector {
     }
   }
 
+  /**
+   * Parses an XML document from the provided byte array using the specified DocumentBuilderFactory
+   * and a given character set. This method allows parsing to account for the specified encoding.
+   *
+   * @param factory the DocumentBuilderFactory instance used to create DocumentBuilder objects
+   * @param manifestBytes the byte array containing the contents of the XML document to be parsed
+   * @param charset the character set to be used for decoding the byte array into a string
+   * @return a Document object representing the parsed XML document
+   * @throws ParserConfigurationException if an error occurs while configuring the DocumentBuilder
+   * @throws IOException if an I/O error occurs during the parsing process
+   * @throws SAXException if a parsing error occurs while processing the XML document
+   */
   private static Document parseWithCharset(DocumentBuilderFactory factory, byte[] manifestBytes,
       Charset charset)
       throws ParserConfigurationException, IOException, SAXException {
@@ -165,6 +210,15 @@ public class ScormVersionDetector {
     return builder.parse(source);
   }
 
+  /**
+   * Creates a new instance of a {@link DocumentBuilder} using the specified
+   * {@link DocumentBuilderFactory}. The created builder utilizes a silent error handler to suppress
+   * warnings during XML parsing.
+   *
+   * @param factory the {@link DocumentBuilderFactory} used to create the {@link DocumentBuilder}
+   * @return a configured {@link DocumentBuilder} instance
+   * @throws ParserConfigurationException if a {@link DocumentBuilder} cannot be created
+   */
   private static DocumentBuilder createDocumentBuilder(DocumentBuilderFactory factory)
       throws ParserConfigurationException {
     DocumentBuilder builder = factory.newDocumentBuilder();
@@ -172,6 +226,15 @@ public class ScormVersionDetector {
     return builder;
   }
 
+  /**
+   * Checks if the given {@link Throwable} or any of its causes is an instance of
+   * {@link CharConversionException}.
+   *
+   * @param throwable the throwable to check for the presence of a {@link CharConversionException}
+   * as the cause or within its causal chain
+   * @return {@code true} if the throwable or any cause in its chain is an instance of
+   * {@link CharConversionException}, {@code false} otherwise
+   */
   private static boolean hasCharConversionCause(Throwable throwable) {
     Throwable current = throwable;
     while (current != null) {
@@ -183,12 +246,35 @@ public class ScormVersionDetector {
     return false;
   }
 
+  /**
+   * Provides a list of fallback character sets to be used for decoding when the default character
+   * set is unsupported or results in errors.
+   *
+   * @return a list of fallback {@link Charset} objects, including ISO-8859-1 and Windows-1252, in
+   * the order of preference.
+   */
   private static List<Charset> fallbackCharsets() {
     return List.of(StandardCharsets.ISO_8859_1, Charset.forName("windows-1252"));
   }
 
-  private enum SilentErrorHandler implements ErrorHandler {
-    INSTANCE;
+  /**
+   * SilentErrorHandler is a private singleton implementation of the {@link ErrorHandler} interface.
+   * It is designed to handle XML parsing errors in a silent or controlled manner.
+   * <p>
+   * This error handler ignores warnings, but propagates errors and fatal errors by throwing the
+   * corresponding {@link SAXParseException}. It is used in scenarios where suppressing warnings and
+   * handling critical errors explicitly is desired, such as XML parsing during SCORM version
+   * detection.
+   * <p>
+   * This class enforces the singleton pattern to ensure a single shared instance is used.
+   */
+  private static class SilentErrorHandler implements ErrorHandler {
+
+    private static final SilentErrorHandler INSTANCE = new SilentErrorHandler();
+
+    private SilentErrorHandler() {
+      // singleton
+    }
 
     @Override
     public void warning(SAXParseException exception) {

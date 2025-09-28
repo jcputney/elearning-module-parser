@@ -47,6 +47,7 @@ public class ExitActionsSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "intermediateSco")
   private ScoExitActionSpec intermediateSco;
+
   /**
    * The exit action for the final SCO.
    */
@@ -54,6 +55,7 @@ public class ExitActionsSpec implements Serializable {
   private ScoExitActionSpec finalSco;
 
   public ExitActionsSpec() {
+    // no-op
   }
 
   public ScoExitActionSpec getIntermediateSco() {

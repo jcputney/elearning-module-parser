@@ -55,46 +55,55 @@ public class DebugSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "controlAudit")
   private YesNoType controlAudit;
+
   /**
    * The detailed level for control.
    */
   @JacksonXmlProperty(localName = "controlDetailed")
   private YesNoType controlDetailed;
+
   /**
    * The audit level for runtime.
    */
   @JacksonXmlProperty(localName = "runtimeAudit")
   private YesNoType runtimeAudit;
+
   /**
    * The detailed level for runtime.
    */
   @JacksonXmlProperty(localName = "runtimeDetailed")
   private YesNoType runtimeDetailed;
+
   /**
    * The audit level for sequencing.
    */
   @JacksonXmlProperty(localName = "sequencingAudit")
   private YesNoType sequencingAudit;
+
   /**
    * The detailed level for sequencing.
    */
   @JacksonXmlProperty(localName = "sequencingDetailed")
   private YesNoType sequencingDetailed;
+
   /**
    * The simple level for sequencing.
    */
   @JacksonXmlProperty(localName = "sequencingSimple")
   private YesNoType sequencingSimple;
+
   /**
    * The audit level for lookahead.
    */
   @JacksonXmlProperty(localName = "lookaheadAudit")
   private YesNoType lookaheadAudit;
+
   /**
    * The detailed level for lookahead.
    */
   @JacksonXmlProperty(localName = "lookaheadDetailed")
   private YesNoType lookaheadDetailed;
+
   /**
    * Indicates whether to include timestamps.
    */
@@ -102,6 +111,7 @@ public class DebugSpec implements Serializable {
   private YesNoType includeTimestamps;
 
   public DebugSpec() {
+    // no-op
   }
 
   public YesNoType getControlAudit() {

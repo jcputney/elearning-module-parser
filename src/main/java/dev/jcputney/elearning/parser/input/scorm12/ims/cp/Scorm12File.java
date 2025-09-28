@@ -63,12 +63,14 @@ public class Scorm12File implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "href")
   @JsonProperty(value = "href", required = true)
   private String href;
+
   /**
    * Metadata providing additional descriptive information about the file. This element is
    * optional.
    */
   @JacksonXmlProperty(localName = "metadata", namespace = Scorm12Manifest.NAMESPACE_URI)
   private Scorm12Metadata metadata;
+
   /**
    * Specifies whether the file exists in the content package. This is not parsed from the manifest
    * but is set during processing.
@@ -76,6 +78,7 @@ public class Scorm12File implements Serializable {
   private boolean exists = false;
 
   public Scorm12File() {
+    // no-op
   }
 
   public String getHref() {

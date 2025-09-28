@@ -46,6 +46,7 @@ public class Identifier implements Serializable {
    */
   @JacksonXmlProperty(localName = "catalog")
   private String catalog;
+
   /**
    * The entry for the identifier.
    */
@@ -53,6 +54,7 @@ public class Identifier implements Serializable {
   private String entry;
 
   public Identifier() {
+    // no-op
   }
 
   /**

@@ -79,6 +79,7 @@ public class Scorm12Item implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty(value = "identifier", required = true)
   private String identifier;
+
   /**
    * References to a resource within the manifest that this item represents. This is an optional
    * attribute.
@@ -86,12 +87,14 @@ public class Scorm12Item implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "identifierref")
   @JsonProperty(value = "identifierref")
   private String identifierRef;
+
   /**
    * Specifies whether this item is visible in the navigation tree. Defaults to <code>true</code>.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "isvisible")
   @JsonProperty(value = "isvisible")
   private Boolean isVisible;
+
   /**
    * Querystring parameters that should be passed to an associated SCO or Asset on launch. Useful
    * for varying the behavior of shared resources based on the item from which they are referenced.
@@ -99,6 +102,7 @@ public class Scorm12Item implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty(value = "parameters")
   private String parameters;
+
   /**
    * The maximum amount of time allowed for this resource to be completed.
    */
@@ -106,18 +110,21 @@ public class Scorm12Item implements Serializable {
   @JsonDeserialize(using = DurationHHMMSSDeserializer.class)
   @JsonProperty("maxtimeallowed")
   private Duration maxTimeAllowed;
+
   /**
    * Represents the masteryScore element, defined as a decimal with a minimum of 0 and a maximum of
    * 100.
    */
   @JacksonXmlProperty(localName = "masteryScore", namespace = Scorm12ADLCP.NAMESPACE_URI)
   private Double masteryScore;
+
   /**
    * Represents the prerequisites attribute, which is a list of identifiers that must be completed
    * before this item can be accessed. The list can be separated by "AND" or "OR" operators.
    */
   @JacksonXmlProperty(localName = "prerequisites", namespace = Scorm12ADLCP.NAMESPACE_URI)
   private Scorm12Prerequisites prerequisites;
+
   /**
    * Represents the timeLimitAction element with enumerated values: "exit,message", "exit,no
    * message", "continue,message", "continue,no message".
@@ -136,23 +143,27 @@ public class Scorm12Item implements Serializable {
    */
   @JacksonXmlProperty(localName = "timeLimitAction", namespace = Scorm12ADLCP.NAMESPACE_URI)
   private TimeLimitAction timeLimitAction;
+
   /**
    * Represents the dataFromLMS element, defined as a string with no restrictions. This value should
    * be passed to the LMS when the item is launched, in the `cmi.launch_data` parameter.
    */
   @JacksonXmlProperty(localName = "dataFromLMS", namespace = Scorm12ADLCP.NAMESPACE_URI)
   private String dataFromLMS;
+
   /**
    * The title of the item, describing its content or purpose.
    */
   @JacksonXmlProperty(localName = "title", namespace = Scorm12Manifest.NAMESPACE_URI)
   private String title;
+
   /**
    * Metadata providing additional descriptive information about the item. This element is
    * optional.
    */
   @JacksonXmlProperty(localName = "metadata", namespace = Scorm12Manifest.NAMESPACE_URI)
   private Scorm12Metadata metadata;
+
   /**
    * Child items of this item, allowing for a hierarchical structure. This is an optional element.
    */
@@ -179,6 +190,7 @@ public class Scorm12Item implements Serializable {
   }
 
   public Scorm12Item() {
+    // no-op
   }
 
   public String getIdentifier() {

@@ -40,14 +40,17 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
    * The package manifest for the module.
    */
   protected M manifest;
+
   /**
    * The type of the module (for example, SCORM, AICC, cmi5).
    */
   protected ModuleType moduleType;
+
   /**
    * The specific edition type of the module, including SCORM 2004 edition information.
    */
   protected ModuleEditionType moduleEditionType;
+
   /**
    * Indicates whether xAPI is enabled for the module.
    */

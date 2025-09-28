@@ -45,21 +45,98 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CachedFileAccess implements FileAccess {
 
+  /**
+   * The {@code delegate} field is the primary {@link FileAccess} implementation that this
+   * {@link CachedFileAccess} instance wraps. The delegate is responsible for performing actual file
+   * access operations such as reading or writing to the filesystem.
+   * <p>
+   * This field serves as the backend file access provider, with caching layers and optional event
+   * listeners applied in the {@link CachedFileAccess} implementation to optimize and enhance the
+   * file access process.
+   * <p>
+   * The {@code delegate} must not be {@code null}, and it is initialized via the constructor to
+   * ensure valid file access delegation.
+   */
   private final FileAccess delegate;
 
+  /**
+   * An optional {@link ParsingEventListener} used to monitor or respond to caching-related events
+   * occurring in the {@link CachedFileAccess} class. This listener is primarily intended for
+   * providing diagnostic or logging capabilities without requiring a specific logging framework,
+   * enabling greater flexibility for applications.
+   * <p>
+   * When present, the {@code eventListener} receives notifications about internal events related to
+   * caching behavior, such as parsing progress, metadata loading, or detection processes. When
+   * {@code null}, no events are received or processed.
+   * <p>
+   * The {@link ParsingEventListener} interface includes a default no-operation implementation,
+   * meaning its methods can be selectively overridden as needed. This makes it adaptable for simple
+   * logging, progress tracking, or debugging scenarios.
+   * <p>
+   * This field is immutable, ensuring thread-safe usage.
+   */
   private final ParsingEventListener eventListener;
 
-  // Cache for file existence checks
+  /**
+   * A thread-safe cache that maps file paths to their existence status. Used to improve performance
+   * by avoiding repeated checks with the underlying {@link FileAccess} implementation.
+   * <p>
+   * The cache stores the paths as keys and a boolean indicating whether the file exists (`true` if
+   * the file exists, `false` otherwise) as values. This helps in reducing redundant file existence
+   * checks and optimizes operations that query file presence frequently.
+   * <p>
+   * The cache is maintained per path and is automatically used during relevant operations in the
+   * containing class. It typically aids in minimizing filesystem access by leveraging previously
+   * computed results.
+   */
   private final Map<String, Boolean> fileExistsCache = new ConcurrentHashMap<>();
 
-  // Cache for file listings
+  /**
+   * A cache for storing the results of directory file listings.
+   * <p>
+   * This map associates directory paths (as keys) with lists of file paths (as values). It is used
+   * to cache the results of file listing operations performed by the {@link CachedFileAccess}
+   * class, reducing the need to repeatedly access the underlying {@link FileAccess}
+   * implementation.
+   * <p>
+   * The use of a {@link ConcurrentHashMap} ensures thread-safety, allowing multiple threads to
+   * access and update the cache concurrently.
+   */
   private final Map<String, List<String>> listFilesCache = new ConcurrentHashMap<>();
 
-  // Cache for file contents
+  /**
+   * A cache for storing file contents, mapped by their paths. This is used to avoid redundant file
+   * reads by caching the full content of each accessed file as a byte array. The cache is
+   * thread-safe and backed by a {@link ConcurrentHashMap}.
+   * <p>
+   * Keys represent file paths as strings, and values are byte arrays containing the corresponding
+   * file contents.
+   * <p>
+   * The cache is utilized by methods that retrieve file contents to speed up subsequent file access
+   * and reduce I/O overhead. Cached contents are updated as needed when the underlying file system
+   * changes, depending on the cache management logic in the enclosing class.
+   */
   private final Map<String, byte[]> fileContentsCache = new ConcurrentHashMap<>();
 
-  // Cache statistics for monitoring
+  /**
+   * Tracks the number of successful cache hits for file-related operations in the
+   * {@link CachedFileAccess} class.
+   * <p>
+   * A cache hit occurs when a file's metadata or contents are successfully retrieved from the
+   * cache, rather than fetching it anew from the underlying file system or delegate
+   * {@link FileAccess} implementation.
+   * <p>
+   * This metric can be used to monitor cache performance and efficiency.
+   */
   private long cacheHits = 0;
+
+  /**
+   * Tracks the number of cache misses encountered during operations that utilize caching.
+   * <p>
+   * A cache miss occurs when a requested item is not found in the cache, requiring the system to
+   * retrieve it from the underlying data source. This variable is incremented each time such an
+   * event occurs.
+   */
   private long cacheMisses = 0;
 
   /**

@@ -1,6 +1,7 @@
 package dev.jcputney.elearning.parser.parsers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.impl.LocalFileAccess;
@@ -53,5 +54,14 @@ class AiccParserPreOrtTest {
     Map<String, List<String>> byAu = metadata.getObjectivesByAu();
     assertEquals(List.of("OBJ1"), byAu.get("A1"));
     assertEquals(List.of("OBJ1"), byAu.get("A2"));
+
+    assertTrue(metadata.requiresLevel2());
+    assertTrue(metadata.requiresLevel3());
+    assertFalse(metadata.requiresLevel4());
+    assertTrue(metadata.getParsedPrerequisites().isEmpty());
+
+    var objectiveMetadata = metadata.getObjectiveMetadata();
+    assertEquals(1, objectiveMetadata.size());
+    assertEquals(List.of("A1", "A2"), objectiveMetadata.get(0).getAssociatedAuIds());
   }
 }

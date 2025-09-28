@@ -39,6 +39,7 @@ public record PercentType(BigDecimal value) implements Serializable {
    * The minimum and maximum values for the percentage.
    */
   private static final BigDecimal MIN_VALUE = BigDecimal.ZERO;
+
   /**
    * The maximum value for the percentage.
    */
@@ -47,7 +48,6 @@ public record PercentType(BigDecimal value) implements Serializable {
   /**
    * Default constructor for the PercentType class.
    */
-  @SuppressWarnings("unused")
   public PercentType() {
     this(MIN_VALUE);
   }
@@ -90,11 +90,6 @@ public record PercentType(BigDecimal value) implements Serializable {
   @Override
   public String toString() {
     return value.toPlainString();
-  }
-
-  @Override
-  public BigDecimal value() {
-    return value;
   }
 
   @Override

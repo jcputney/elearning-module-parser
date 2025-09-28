@@ -1,0 +1,4 @@
+"objective_id","objective_description","au_system_id","satisfied_by_measure","min_normalized_measure","progress_measure_weight","status_map"
+"OBJ-INTRO","Intro objective","A1","yes","80","0.5","passed=completed;failed=incomplete"
+"OBJ-INTRO","Intro objective","A2","","","",""
+"OBJ-FINAL","Final objective","A3","true","85%","1.0","passed=passed;failed=failed"

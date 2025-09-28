@@ -61,6 +61,7 @@ public class Scorm12Dependency implements Serializable {
 
 
   public Scorm12Dependency() {
+    // no-op
   }
 
   public String getIdentifierRef() {

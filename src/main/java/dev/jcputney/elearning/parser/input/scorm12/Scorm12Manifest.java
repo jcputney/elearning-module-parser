@@ -357,8 +357,17 @@ public class Scorm12Manifest implements PackageManifest {
   private Scorm12Resources resources;
 
   public Scorm12Manifest() {
+    // no-op
   }
 
+  /**
+   * Retrieves the title of the SCORM 1.2 manifest. The title is determined based on the following
+   * logic: 1. If the default organization's title is available and non-empty, it is returned. 2.
+   * Otherwise, the title from the metadata (LOM structure) is returned if present. 3. If neither is
+   * available, the method returns null.
+   *
+   * @return The title of the SCORM 1.2 manifest, or null if no title is found.
+   */
   @Override
   @JsonIgnore
   public String getTitle() {
@@ -378,6 +387,12 @@ public class Scorm12Manifest implements PackageManifest {
         .orElse(null);
   }
 
+  /**
+   * Retrieves the description from the SCORM 1.2 metadata LOM structure if available. If the
+   * metadata or the LOM description is not present, returns null.
+   *
+   * @return The description text from the SCORM 1.2 metadata, or null if no description is found.
+   */
   @Override
   @JsonIgnore
   public String getDescription() {
@@ -388,10 +403,19 @@ public class Scorm12Manifest implements PackageManifest {
         .orElse(null);
   }
 
+  /**
+   * Retrieves the launch URL of the SCORM 1.2 resource. The method attempts to identify the first
+   * non-empty launchable resource by finding items with a non-null `identifierRef` in the
+   * organization hierarchy, then resolving it to a resource URL using the resource collection.
+   *
+   * @return The launch URL as a string if a valid resource is found, or null if no launchable
+   * resource exists.
+   */
   @Override
   @JsonIgnore
   public String getLaunchUrl() {
     // Find all items with non-null identifierRef at any level
+    //noinspection DuplicatedCode
     List<String> resourceIds = Optional
         .ofNullable(organizations)
         .map(Scorm12Organizations::getDefault)

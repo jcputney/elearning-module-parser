@@ -58,10 +58,9 @@ public class LocalFileAccess implements FileAccess {
     this.rootPath = rootPath;
     Path path = Paths.get(rootPath);
     if (!Files.isDirectory(path)) {
-      String context = Files.exists(path) ?
-          (Files.isRegularFile(path) ? "path points to a file"
-              : "path exists but is not a directory") :
-          "path does not exist";
+      String fileStatusMessage = Files.isRegularFile(path) ? "path points to a file"
+          : "path exists but is not a directory";
+      String context = Files.exists(path) ? fileStatusMessage : "path does not exist";
       throw new IllegalArgumentException(
           "Invalid root directory for LocalFileAccess: '" + rootPath + "' (" + context + ")");
     }
@@ -159,13 +158,14 @@ public class LocalFileAccess implements FileAccess {
               + details + " in root '" + getRootPath() + "'");
     }
 
-    InputStream inputStream = Files.newInputStream(filePath, StandardOpenOption.READ);
+    try (InputStream inputStream = Files.newInputStream(filePath, StandardOpenOption.READ)) {
 
-    // Get file size for progress tracking
-    long fileSize = Files.size(filePath);
+      // Get file size for progress tracking
+      long fileSize = Files.size(filePath);
 
-    // Apply streaming enhancements
-    return StreamingUtils.createEnhancedStream(inputStream, fileSize, progressListener);
+      // Apply streaming enhancements
+      return StreamingUtils.createEnhancedStream(inputStream, fileSize, progressListener);
+    }
   }
 
   /**

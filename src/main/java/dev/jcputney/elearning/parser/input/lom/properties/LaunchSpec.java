@@ -48,11 +48,13 @@ public class LaunchSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "sco")
   private LaunchType sco;
+
   /**
    * The player launch type.
    */
   @JacksonXmlProperty(localName = "player")
   private LaunchType player;
+
   /**
    * Indicates whether to wrap the SCO window with API.
    */
@@ -66,6 +68,7 @@ public class LaunchSpec implements Serializable {
   }
 
   public LaunchSpec() {
+    // no-op
   }
 
   public LaunchType getSco() {

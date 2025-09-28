@@ -68,6 +68,7 @@ public class Classification implements Serializable {
   @JacksonXmlElementWrapper(localName = "purpose", useWrapping = false)
   @JacksonXmlProperty(localName = "purpose")
   private SourceValuePair<Purpose> purpose;
+
   /**
    * The taxonomy paths associated with this classification, allowing for hierarchical
    * categorization.
@@ -87,6 +88,7 @@ public class Classification implements Serializable {
   @JacksonXmlElementWrapper(localName = "taxonPath", useWrapping = false)
   @JacksonXmlProperty(localName = "taxonPath")
   private List<TaxonPath> taxonPaths;
+
   /**
    * A description of this classification, represented as a language-specific string.
    *
@@ -103,6 +105,7 @@ public class Classification implements Serializable {
    */
   @JacksonXmlProperty(localName = "description")
   private UnboundLangString description;
+
   /**
    * Keywords associated with this classification, represented as a list of language-specific
    * strings.
@@ -122,6 +125,7 @@ public class Classification implements Serializable {
   private UnboundLangString keywords;
 
   public Classification() {
+    // no-op
   }
 
   public SourceValuePair<Purpose> getPurpose() {

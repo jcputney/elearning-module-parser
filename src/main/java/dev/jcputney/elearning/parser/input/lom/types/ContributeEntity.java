@@ -66,6 +66,7 @@ public class ContributeEntity implements Serializable {
   private String vCard;
 
   public ContributeEntity() {
+    // no-op
   }
 
   public String getVCard() {

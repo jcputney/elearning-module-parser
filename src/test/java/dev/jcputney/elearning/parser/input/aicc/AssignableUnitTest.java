@@ -22,8 +22,15 @@
 package dev.jcputney.elearning.parser.input.aicc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dev.jcputney.elearning.parser.input.aicc.prereq.AiccPrerequisiteParser;
+import dev.jcputney.elearning.parser.util.DurationHHMMSSDeserializer;
+import java.time.Duration;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -50,6 +57,20 @@ public class AssignableUnitTest {
     assignableUnit.setSystemVendor("System Vendor");
     assignableUnit.setWebLaunch("http://example.com/test.html");
     assignableUnit.setAuPassword("password");
+    assignableUnit.setPrerequisitesExpression("A1");
+    assignableUnit.setPrerequisiteModel(AiccPrerequisiteParser
+        .parse("A1")
+        .orElse(null));
+    AiccCompletionCriteria criteria = new AiccCompletionCriteria();
+    criteria.setCompletionAction("A1");
+    criteria.setCompletionLessonStatus("completed");
+    criteria.setCompletionResultStatus("passed");
+    assignableUnit.setCompletionCriteria(criteria);
+    assignableUnit.setMasteryScoreNormalized(0.8);
+    Duration normalizedDuration = DurationHHMMSSDeserializer.parseDuration("01:00:00");
+    assignableUnit.setMaxTimeAllowedNormalized(normalizedDuration);
+    assignableUnit.setTimeLimitActionNormalized(List.of("C", "N"));
+    assignableUnit.setPrerequisitesMandatoryOverride(Boolean.TRUE);
 
     // Verify the getters
     assertEquals("A1", assignableUnit.getSystemId());
@@ -64,6 +85,17 @@ public class AssignableUnitTest {
     assertEquals("System Vendor", assignableUnit.getSystemVendor());
     assertEquals("http://example.com/test.html", assignableUnit.getWebLaunch());
     assertEquals("password", assignableUnit.getAuPassword());
+    assertEquals("A1", assignableUnit.getPrerequisitesExpression());
+    assertNotNull(assignableUnit.getPrerequisiteModel());
+    assertEquals(List.of("A1"), assignableUnit.getPrerequisiteReferencedAuIds());
+    assertTrue(assignableUnit
+        .getPrerequisiteOptionalAuIds()
+        .isEmpty());
+    assertEquals(criteria, assignableUnit.getCompletionCriteria());
+    assertEquals(0.8, assignableUnit.getMasteryScoreNormalized());
+    assertEquals(normalizedDuration, assignableUnit.getMaxTimeAllowedNormalized());
+    assertEquals(List.of("C", "N"), assignableUnit.getTimeLimitActionNormalized());
+    assertTrue(assignableUnit.isPrerequisitesMandatory());
     assertNull(assignableUnit.getDescriptor());
   }
 
@@ -115,5 +147,15 @@ public class AssignableUnitTest {
     assertNull(assignableUnit.getWebLaunch());
     assertNull(assignableUnit.getAuPassword());
     assertNull(assignableUnit.getDescriptor());
+    assertNull(assignableUnit.getPrerequisitesExpression());
+    assertNull(assignableUnit.getPrerequisiteModel());
+    assertNull(assignableUnit.getCompletionCriteria());
+    assertNull(assignableUnit.getMasteryScoreNormalized());
+    assertNull(assignableUnit.getMaxTimeAllowedNormalized());
+    assertTrue(assignableUnit
+        .getTimeLimitActionNormalized()
+        .isEmpty());
+    assertNull(assignableUnit.getPrerequisitesMandatoryOverride());
+    assertFalse(assignableUnit.isPrerequisitesMandatory());
   }
 }

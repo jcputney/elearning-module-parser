@@ -99,13 +99,7 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
 
       Scorm2004Metadata metadata = Scorm2004Metadata.create(manifest, checkForXapi());
 
-      // Calculate and set the module size
-      try {
-        long totalSize = moduleFileProvider.getTotalSize();
-        metadata.setSizeOnDisk(totalSize);
-      } catch (IOException e) {
-        // Size remains -1 as default
-      }
+      calculateAndSetModuleSize(metadata);
 
       return metadata;
     } catch (IOException | XMLStreamException e) {
@@ -133,16 +127,12 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
       byte[] bytes = manifestStream.readAllBytes();
 
       if (Scorm2004SchemaValidator.isEnabled()) {
-        try {
-          Scorm2004SchemaValidator.validate(bytes);
-          eventListener.onParsingProgress("SCORM 2004 XSD validation passed", 25);
-        } catch (SAXException e) {
-          throw new ModuleParsingException("SCORM 2004 XSD validation failed: " + e.getMessage(), e);
-        }
+        validateSchema(bytes);
       }
 
       Scorm2004Manifest manifest = XmlParsingUtils
-          .parseXmlToObject(new java.io.ByteArrayInputStream(bytes), getManifestClass(), manifestPath);
+          .parseXmlToObject(new java.io.ByteArrayInputStream(bytes), getManifestClass(),
+              manifestPath);
       loadExternalMetadata(manifest);
       return manifest;
     } catch (IOException e) {
@@ -150,7 +140,8 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
           String.format("Failed to read manifest file '%s': %s", manifestPath, e.getMessage()), e);
     } catch (XMLStreamException e) {
       throw new ModuleParsingException(
-          String.format("Failed to parse manifest XML at '%s': %s", manifestPath, e.getMessage()), e);
+          String.format("Failed to parse manifest XML at '%s': %s", manifestPath, e.getMessage()),
+          e);
     }
   }
 
@@ -173,6 +164,40 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
     loadOrganizationsMetadata(manifest
         .getOrganizations()
         .getOrganizationList());
+  }
+
+  /**
+   * Calculates the total size of the SCORM module and sets it in the provided metadata object. If
+   * an error occurs while calculating the size, the size remains unset (-1 by default).
+   *
+   * @param metadata The metadata object where the module size will be set.
+   */
+  private void calculateAndSetModuleSize(Scorm2004Metadata metadata) {
+    // Calculate and set the module size
+    try {
+      long totalSize = moduleFileProvider.getTotalSize();
+      metadata.setSizeOnDisk(totalSize);
+    } catch (IOException e) {
+      // Size remains -1 as default
+    }
+  }
+
+  /**
+   * Validates the provided schema data against the SCORM 2004 XSD standards. If the schema
+   * validation fails, an exception is thrown. This method also reports validation progress through
+   * the event listener.
+   *
+   * @param bytes The byte array representation of the SCORM schema to validate.
+   * @throws IOException If an I/O error occurs during validation.
+   * @throws ModuleParsingException If the schema fails validation or other parsing errors occur.
+   */
+  private void validateSchema(byte[] bytes) throws IOException, ModuleParsingException {
+    try {
+      Scorm2004SchemaValidator.validate(bytes);
+      eventListener.onParsingProgress("SCORM 2004 XSD validation passed", 25);
+    } catch (SAXException e) {
+      throw new ModuleParsingException("SCORM 2004 XSD validation failed: " + e.getMessage(), e);
+    }
   }
 
   /**

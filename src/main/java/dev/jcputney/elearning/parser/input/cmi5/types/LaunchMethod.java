@@ -41,10 +41,12 @@ public enum LaunchMethod {
   /**
    * The activity can be launched in any window.
    */
-  @JsonProperty("AnyWindow") ANY_WINDOW,
+  @JsonProperty("AnyWindow")
+  ANY_WINDOW,
 
   /**
    * The activity must be launched in a new window.
    */
-  @JsonProperty("OwnWindow") OWN_WINDOW
+  @JsonProperty("OwnWindow")
+  OWN_WINDOW
 }

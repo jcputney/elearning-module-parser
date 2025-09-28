@@ -72,22 +72,26 @@ public class Scorm12Organization implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty(value = "identifier", required = true)
   private String identifier;
+
   /**
    * The structure of the organization. Common values include hierarchical or flat.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "structure")
   @JsonProperty(value = "structure")
   private String structure = "hierarchical";
+
   /**
    * The title of the organization, providing a descriptive label.
    */
   @JacksonXmlProperty(localName = "title", namespace = Scorm12Manifest.NAMESPACE_URI)
   private String title;
+
   /**
    * The metadata associated with this organization.
    */
   @JacksonXmlProperty(localName = "metadata", namespace = Scorm12Manifest.NAMESPACE_URI)
   private Scorm12Metadata metadata;
+
   /**
    * A list of items that belong to this organization, defining the hierarchical structure.
    */
@@ -105,6 +109,7 @@ public class Scorm12Organization implements Serializable {
   }
 
   public Scorm12Organization() {
+    // no-op
   }
 
   public String getIdentifier() {

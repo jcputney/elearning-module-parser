@@ -45,6 +45,7 @@ public class Scorm2004Resources implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "base", namespace = "http://www.w3.org/XML/1998/namespace")
   @JsonProperty("base")
   private String base;
+
   /**
    * A list of resources in the content package, each representing a specific learning object or
    * asset.
@@ -54,6 +55,7 @@ public class Scorm2004Resources implements Serializable {
   private List<Scorm2004Resource> resourceList;
 
   public Scorm2004Resources() {
+    // no-op
   }
 
   public String getBase() {

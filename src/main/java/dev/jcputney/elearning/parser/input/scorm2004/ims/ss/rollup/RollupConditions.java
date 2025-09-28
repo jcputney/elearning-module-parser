@@ -45,6 +45,7 @@ public class RollupConditions implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "rollupCondition", namespace = IMSSS.NAMESPACE_URI)
   private List<RollupCondition> rollupConditionList;
+
   /**
    * The logic used to combine the conditions in {@code rollupConditionList}. Possible values are:
    * <ul>
@@ -58,6 +59,7 @@ public class RollupConditions implements Serializable {
   private String conditionCombination = "any";
 
   public RollupConditions() {
+    // no-op
   }
 
   public List<RollupCondition> getRollupConditionList() {

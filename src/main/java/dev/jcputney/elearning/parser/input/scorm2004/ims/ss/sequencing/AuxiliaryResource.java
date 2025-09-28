@@ -46,6 +46,7 @@ public class AuxiliaryResource implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("auxiliaryResourceID")
   private String auxiliaryResourceID;
+
   /**
    * Describes the purpose of the auxiliary resource. This attribute provides context for how the
    * resource is intended to support the learning activity, such as "reference material," "practice
@@ -59,6 +60,7 @@ public class AuxiliaryResource implements Serializable {
   private String purpose;
 
   public AuxiliaryResource() {
+    // no-op
   }
 
   public String getAuxiliaryResourceID() {

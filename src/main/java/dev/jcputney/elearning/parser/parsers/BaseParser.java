@@ -49,10 +49,12 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
    * The name of the xAPI JavaScript file.
    */
   public static final String XAPI_JS_FILE = "xAPI.js";
+
   /**
    * The name of the sendStatement JavaScript file.
    */
   public static final String XAPI_SEND_STATEMENT_FILE = "sendStatement.js";
+
   /**
    * The ModuleFileProvider instance used for reading files in the module package.
    */

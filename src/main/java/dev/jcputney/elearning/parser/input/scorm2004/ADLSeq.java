@@ -106,7 +106,6 @@ public class ADLSeq implements Serializable {
   /**
    * Default constructor for the ADLSeq class.
    */
-  @SuppressWarnings("unused")
   private ADLSeq() {
     // Default constructor
   }

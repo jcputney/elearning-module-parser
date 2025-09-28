@@ -49,6 +49,7 @@ public class AppearanceSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "displayStage")
   private DisplayStageSpec displayStage;
+
   /**
    * The course structure width element of the appearance specification. Per XSD, this is
    * xs:nonNegativeInteger, so we map it to BigInteger.
@@ -57,6 +58,7 @@ public class AppearanceSpec implements Serializable {
   private BigInteger courseStructureWidth;
 
   public AppearanceSpec() {
+    // no-op
   }
 
   public DisplayStageSpec getDisplayStage() {

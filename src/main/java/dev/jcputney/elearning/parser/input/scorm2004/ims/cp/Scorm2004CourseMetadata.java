@@ -54,6 +54,7 @@ public class Scorm2004CourseMetadata implements LoadableMetadata {
    */
   @JacksonXmlProperty(localName = "schema", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private String schema;
+
   /**
    * The version of the schema used. This helps LMS systems interpret the specific content structure
    * and requirements.
@@ -63,6 +64,7 @@ public class Scorm2004CourseMetadata implements LoadableMetadata {
    */
   @JacksonXmlProperty(localName = "schemaversion", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private String schemaVersion;
+
   /**
    * The location of the external metadata file, referenced using the <code>adlcp:location</code>
    * element. This allows the manifest to link to a separate file that contains detailed metadata
@@ -73,6 +75,7 @@ public class Scorm2004CourseMetadata implements LoadableMetadata {
    */
   @JacksonXmlProperty(localName = "location", namespace = ADLCP.NAMESPACE_URI)
   private String location;
+
   /**
    * Inline metadata represented as a LOM element. This provides detailed information about the
    * course, such as the title, description, and other relevant details.
@@ -81,6 +84,7 @@ public class Scorm2004CourseMetadata implements LoadableMetadata {
   private LOM lom;
 
   public Scorm2004CourseMetadata() {
+    // no-op
   }
 
   public String getSchema() {

@@ -62,6 +62,7 @@ public class Resource implements Serializable {
   @JacksonXmlElementWrapper(localName = "identifier", useWrapping = false)
   @JacksonXmlProperty(localName = "identifier")
   private List<Identifier> identifiers;
+
   /**
    * A list of descriptions providing language-specific information about the related resource.
    * <p>
@@ -78,6 +79,7 @@ public class Resource implements Serializable {
    */
   @JacksonXmlProperty(localName = "description")
   private UnboundLangString descriptions;
+
   /**
    * A list of catalog entries for the resource.
    *
@@ -89,6 +91,7 @@ public class Resource implements Serializable {
   @JacksonXmlElementWrapper(localName = "catalogentry", useWrapping = false)
   @JacksonXmlProperty(localName = "catalogentry")
   private List<CatalogEntry> catalogEntries;
+
   /**
    * A placeholder for custom elements that extend the resource information. This allows for
    * additional metadata to be included that is not part of the standard schema.
@@ -107,6 +110,7 @@ public class Resource implements Serializable {
   private List<Object> customElements;
 
   public Resource() {
+    // no-op
   }
 
   public List<Identifier> getIdentifiers() {

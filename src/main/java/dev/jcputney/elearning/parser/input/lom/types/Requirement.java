@@ -57,6 +57,7 @@ public class Requirement extends OrComposite {
   private List<OrComposite> orCompositeList;
 
   public Requirement() {
+    // no-op
   }
 
   public List<OrComposite> getOrCompositeList() {

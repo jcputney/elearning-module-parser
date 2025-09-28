@@ -99,6 +99,7 @@ public class AU implements Serializable {
    */
   @JacksonXmlProperty(localName = "title")
   private TextType title;
+
   /**
    * The description of the Assignable Unit (AU).
    *
@@ -108,6 +109,7 @@ public class AU implements Serializable {
    */
   @JacksonXmlProperty(localName = "description")
   private TextType description;
+
   /**
    * Objectives referenced by the Assignable Unit.
    *
@@ -117,6 +119,7 @@ public class AU implements Serializable {
    */
   @JacksonXmlProperty(localName = "objectives")
   private ReferencesObjectives objectives;
+
   /**
    * The URL for launching the Assignable Unit.
    *
@@ -131,6 +134,7 @@ public class AU implements Serializable {
    */
   @JacksonXmlProperty(localName = "url")
   private String url;
+
   /**
    * Optional launch parameters for the AU.
    *
@@ -140,6 +144,7 @@ public class AU implements Serializable {
    */
   @JacksonXmlProperty(localName = "launchParameters")
   private String launchParameters;
+
   /**
    * Optional entitlement key for the AU.
    *
@@ -149,6 +154,7 @@ public class AU implements Serializable {
    */
   @JacksonXmlProperty(localName = "entitlementKey")
   private String entitlementKey;
+
   /**
    * The ID of the Assignable Unit, represented as an anyURI.
    *
@@ -159,6 +165,7 @@ public class AU implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("id")
   private String id;
+
   /**
    * Specifies the condition required to move on from the AU. Default is "NotApplicable".
    *
@@ -178,6 +185,7 @@ public class AU implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("moveOn")
   private MoveOn moveOn;
+
   /**
    * The mastery score required for the AU, represented as a decimal between 0 and 1.
    *
@@ -195,6 +203,7 @@ public class AU implements Serializable {
   @JsonDeserialize(using = PercentTypeDeserializer.class)
   @JsonProperty("masteryScore")
   private PercentType masteryScore;
+
   /**
    * Specifies the launch method for the AU, defaulting to "AnyWindow".
    *
@@ -211,6 +220,7 @@ public class AU implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("launchMethod")
   private LaunchMethod launchMethod;
+
   /**
    * Specifies the type of activity represented by the AU.
    *
@@ -239,6 +249,7 @@ public class AU implements Serializable {
   }
 
   public AU() {
+    // no-op
   }
 
   public TextType getTitle() {

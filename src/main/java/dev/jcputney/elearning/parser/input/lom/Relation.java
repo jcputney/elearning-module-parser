@@ -65,6 +65,7 @@ public class Relation implements Serializable {
    */
   @JacksonXmlProperty(localName = "kind")
   private SourceValuePair<Kind> kind;
+
   /**
    * The resource information that describes the target of the relationship. A resource can include
    * identifiers and descriptions for the related learning object.
@@ -86,6 +87,7 @@ public class Relation implements Serializable {
   private List<Resource> resource;
 
   public Relation() {
+    // no-op
   }
 
   public SourceValuePair<Kind> getKind() {

@@ -58,24 +58,28 @@ public class Scorm12Resource implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty(value = "identifier", required = true)
   private String identifier;
+
   /**
    * The base URL for this resource. This URL is used to resolve relative paths for resources.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "base", namespace = "http://www.w3.org/XML/1998/namespace")
   @JsonProperty("base")
   private String base;
+
   /**
    * The URL or path to the main entry point file for this resource.
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty(value = "href")
   private String href;
+
   /**
    * Specifies the type of resource, such as "webcontent".
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty(value = "type", required = true)
   private String type;
+
   /**
    * The SCORM type of the resource.
    * <p>
@@ -85,12 +89,14 @@ public class Scorm12Resource implements Serializable {
   @JacksonXmlProperty(isAttribute = true, namespace = Scorm12ADLCP.NAMESPACE_URI, localName = "scormType")
   @JsonProperty("scormType")
   private ScormType scormType;
+
   /**
    * The unique identifier for this resource, used to distinguish it from other resources within the
    * same manifest.
    */
   @JacksonXmlProperty(localName = "metadata", namespace = Scorm12Manifest.NAMESPACE_URI)
   private Scorm12Metadata metadata;
+
   /**
    * A list of files associated with this resource, representing the physical files that are part of
    * the learning object.
@@ -98,6 +104,7 @@ public class Scorm12Resource implements Serializable {
   @JacksonXmlElementWrapper(localName = "file", useWrapping = false)
   @JacksonXmlProperty(localName = "file", namespace = Scorm12Manifest.NAMESPACE_URI)
   private List<Scorm12File> files;
+
   /**
    * A list of dependencies that this resource requires. Dependencies define other resources that
    * must be available for this resource to function correctly.
@@ -107,6 +114,7 @@ public class Scorm12Resource implements Serializable {
   private List<Scorm12Dependency> dependencies;
 
   public Scorm12Resource() {
+    // no-op
   }
 
   public String getIdentifier() {

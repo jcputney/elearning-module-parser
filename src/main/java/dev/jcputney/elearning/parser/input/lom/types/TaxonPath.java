@@ -59,6 +59,7 @@ public class TaxonPath implements Serializable {
    */
   @JacksonXmlProperty(localName = "source")
   private SingleLangString source;
+
   /**
    * A list of taxon elements representing nodes or concepts in the hierarchical classification.
    * Each taxon specifies a unique concept within the taxonomy.
@@ -73,6 +74,7 @@ public class TaxonPath implements Serializable {
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "taxon")
   private List<Taxon> taxons;
+
   /**
    * Any custom elements or extensions defined within the taxon path, allowing for schema
    * extensibility.
@@ -93,6 +95,7 @@ public class TaxonPath implements Serializable {
   }
 
   public TaxonPath() {
+    // no-op
   }
 
   public SingleLangString getSource() {

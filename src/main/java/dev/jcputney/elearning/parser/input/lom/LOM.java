@@ -63,6 +63,7 @@ public class LOM implements Serializable {
    * The namespace URI for the LOM schema.
    */
   public static final String NAMESPACE_URI = "http://ltsc.ieee.org/xsd/LOM";
+
   /**
    * The general information about the learning object.
    *
@@ -83,6 +84,7 @@ public class LOM implements Serializable {
    */
   @JacksonXmlProperty(localName = "general", namespace = NAMESPACE_URI)
   private General general;
+
   /**
    * The lifecycle information about the learning object.
    *
@@ -98,6 +100,7 @@ public class LOM implements Serializable {
    */
   @JacksonXmlProperty(localName = "lifeCycle", namespace = NAMESPACE_URI)
   private LifeCycle lifecycle;
+
   /**
    * The meta-metadata information about the learning object.
    *
@@ -114,6 +117,7 @@ public class LOM implements Serializable {
    */
   @JacksonXmlProperty(localName = "metaMetadata", namespace = NAMESPACE_URI)
   private MetaMetadata metaMetadata;
+
   /**
    * The technical information about the learning object.
    *
@@ -133,6 +137,7 @@ public class LOM implements Serializable {
    */
   @JacksonXmlProperty(localName = "technical", namespace = NAMESPACE_URI)
   private Technical technical;
+
   /**
    * The educational information about the learning object.
    *
@@ -156,6 +161,7 @@ public class LOM implements Serializable {
    */
   @JacksonXmlProperty(localName = "educational", namespace = NAMESPACE_URI)
   private Educational educational;
+
   /**
    * Represents the rights information about the learning object.
    * <pre>{@code
@@ -171,6 +177,7 @@ public class LOM implements Serializable {
    */
   @JacksonXmlProperty(localName = "rights", namespace = NAMESPACE_URI)
   private Rights rights;
+
   /**
    * Represents a related resource in the context of a relation.
    * <pre>{@code
@@ -186,6 +193,7 @@ public class LOM implements Serializable {
   @JacksonXmlElementWrapper(localName = "relation", useWrapping = false, namespace = NAMESPACE_URI)
   @JacksonXmlProperty(localName = "relation")
   private List<Relation> relations;
+
   /**
    * Represents an annotation about the learning object.
    * <pre>{@code
@@ -202,6 +210,7 @@ public class LOM implements Serializable {
   @JacksonXmlElementWrapper(localName = "annotation", useWrapping = false, namespace = NAMESPACE_URI)
   @JacksonXmlProperty(localName = "annotation")
   private List<Annotation> annotations;
+
   /**
    * Represents a classification of the learning object.
    * <pre>{@code
@@ -221,6 +230,7 @@ public class LOM implements Serializable {
   private List<Classification> classifications;
 
   public LOM() {
+    // no-op
   }
 
   /**

@@ -37,9 +37,40 @@ import java.util.zip.ZipFile;
  */
 public class ZipFileAccess implements FileAccess, AutoCloseable {
 
+  /**
+   * The root path inside the ZIP archive.
+   * <p>
+   * This variable stores the common root directory of all files within the ZIP file, determined
+   * during initialization. If the files in the ZIP are located at the top level without a shared
+   * parent directory, this value will be an empty string. Otherwise, it holds the name of the
+   * directory representing the root.
+   * <p>
+   * This value is used internally to resolve file paths within the archive.
+   */
   private final String rootPath;
 
+  /**
+   * Represents the ZIP file being accessed and processed by the {@code ZipFileAccess} class. This
+   * field is initialized during the construction of the {@code ZipFileAccess} instance and used for
+   * various file operations within the ZIP archive, such as checking the existence of files,
+   * listing directory contents, retrieving file contents, and determining the total size of files
+   * in the archive.
+   * <p>
+   * The {@code zipFile} field holds a reference to an instance of {@link ZipFile}, which allows for
+   * reading entries and extracting files within the archive.
+   * <p>
+   * This field is immutable and ensures that operations on the associated ZIP file are performed in
+   * a consistent and thread-safe manner.
+   */
   private final ZipFile zipFile;
+
+  /**
+   * The path to the ZIP file being accessed.
+   * <p>
+   * This variable holds the absolute or relative file system path to the ZIP archive that is being
+   * read or manipulated by the containing class. It is initialized during the construction of the
+   * {@code ZipFileAccess} instance and remains constant throughout the lifecycle of the object.
+   */
   private final String zipFilePath;
 
   /**
@@ -202,21 +233,7 @@ public class ZipFileAccess implements FileAccess, AutoCloseable {
 
       // Split on '/', the first part is the top-level "directory"
       // unless the file is directly in the root and has no slash.
-      int slashIndex = entryName.indexOf('/');
-
-      if (slashIndex > 0) {
-        // The substring up to the first slash is the top-level directory
-        String topLevel = entryName.substring(0, slashIndex);
-        topLevelDirs.add(topLevel);
-
-        // If more than one distinct name, break early
-        if (topLevelDirs.size() > 1) {
-          return "";
-        }
-      } else {
-        // If slashIndex == -1, means no slash in name, for example, "file.txt",
-        // so there's a file right at the root.
-        // That means it isn't a single-dir.
+      if (checkForRootPath(topLevelDirs, entryName)) {
         return "";
       }
     }

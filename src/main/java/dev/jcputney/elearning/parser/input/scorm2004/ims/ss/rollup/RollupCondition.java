@@ -44,6 +44,7 @@ public class RollupCondition implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("operator")
   private ConditionOperatorType operator = ConditionOperatorType.NO_OP;
+
   /**
    * Specifies the specific condition being evaluated in this rollup condition. The condition may
    * include criteria related to the learner's progress or completion status of activities.
@@ -53,6 +54,7 @@ public class RollupCondition implements Serializable {
   private RollupRuleConditionType condition;
 
   public RollupCondition() {
+    // no-op
   }
 
   public ConditionOperatorType getOperator() {

@@ -58,6 +58,7 @@ public class Scorm2004SubMetadata implements LoadableMetadata {
    */
   @JacksonXmlProperty(localName = "location", namespace = ADLCP.NAMESPACE_URI)
   private String location;
+
   /**
    * Inline metadata represented as a LOM element.
    */
@@ -65,6 +66,7 @@ public class Scorm2004SubMetadata implements LoadableMetadata {
   private LOM lom;
 
   public Scorm2004SubMetadata() {
+    // no-op
   }
 
   public String getLocation() {

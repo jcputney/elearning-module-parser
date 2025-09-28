@@ -69,6 +69,7 @@ public class Cmi5Manifest implements PackageManifest {
    */
   @JacksonXmlProperty(localName = "course")
   private Course course;
+
   /**
    * The 'objectives' element, representing the objectives of the course.
    *
@@ -78,6 +79,7 @@ public class Cmi5Manifest implements PackageManifest {
    */
   @JacksonXmlProperty(localName = "objectives")
   private ObjectivesList objectives;
+
   /**
    * A list of blocks within the course structure. Each block can contain nested blocks or
    * assignable units (AUs).
@@ -89,6 +91,7 @@ public class Cmi5Manifest implements PackageManifest {
   @JacksonXmlElementWrapper(localName = "block", useWrapping = false)
   @JacksonXmlProperty(localName = "block")
   private List<Block> blocks;
+
   /**
    * A list of assignable units (AUs) within the course structure.
    *
@@ -109,6 +112,7 @@ public class Cmi5Manifest implements PackageManifest {
   }
 
   public Cmi5Manifest() {
+    // no-op
   }
 
   /**

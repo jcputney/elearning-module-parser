@@ -44,6 +44,7 @@ public class Scorm2004ObjectiveMapping implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("targetObjectiveID")
   private String targetObjectiveID;
+
   /**
    * Specifies whether this local objective should read the satisfaction status of the target global
    * objective.
@@ -55,6 +56,7 @@ public class Scorm2004ObjectiveMapping implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("readSatisfiedStatus")
   private boolean readSatisfiedStatus = true;
+
   /**
    * Specifies whether this local objective should read the normalized measure (performance level)
    * of the target global objective.
@@ -66,6 +68,7 @@ public class Scorm2004ObjectiveMapping implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("readNormalizedMeasure")
   private boolean readNormalizedMeasure = true;
+
   /**
    * Specifies whether this local objective should write its satisfaction status to the target
    * global objective.
@@ -78,6 +81,7 @@ public class Scorm2004ObjectiveMapping implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("writeSatisfiedStatus")
   private boolean writeSatisfiedStatus = false;
+
   /**
    * Specifies whether this local objective should write its normalized measure (performance level)
    * to the target global objective.
@@ -133,6 +137,7 @@ public class Scorm2004ObjectiveMapping implements Serializable {
   }
 
   public Scorm2004ObjectiveMapping() {
+    // no-op
   }
 
   public String getTargetObjectiveID() {

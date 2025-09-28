@@ -64,6 +64,7 @@ public class DeliveryControls implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("tracked")
   private boolean tracked = true;
+
   /**
    * Indicates whether the content should set the activity's completion status. When set to
    * <code>true</code>, the content is responsible for determining when the activity is marked as
@@ -78,6 +79,7 @@ public class DeliveryControls implements Serializable {
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("completionSetByContent")
   private boolean completionSetByContent = false;
+
   /**
    * Specifies whether the content should set the objective satisfaction status for this activity.
    * When set to <code>true</code>, the content determines whether objectives are satisfied based on
@@ -94,6 +96,7 @@ public class DeliveryControls implements Serializable {
   private boolean objectiveSetByContent = false;
 
   public DeliveryControls() {
+    // no-op
   }
 
   public boolean isTracked() {

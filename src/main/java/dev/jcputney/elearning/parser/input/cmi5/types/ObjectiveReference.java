@@ -42,6 +42,7 @@ public class ObjectiveReference implements Serializable {
   private String idref;
 
   public ObjectiveReference() {
+    // no-op
   }
 
   public String getIdref() {

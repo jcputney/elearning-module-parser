@@ -52,27 +52,32 @@ public class PackageProperties implements Serializable {
    * The namespace URI for the ScormEnginePackageProperties XML.
    */
   public static final String NAMESPACE_URI = "http://www.scorm.com/xsd/ScormEnginePackageProperties";
+
   /**
    * The "controls" specification.
    */
   @JacksonXmlProperty(localName = "controls", namespace = NAMESPACE_URI)
   private ControlsSpec controls;
+
   /**
    * Single field handling both "appearance" and the misspelled "appearence".
    */
   @JacksonXmlProperty(localName = "appearance", namespace = NAMESPACE_URI)
   @JsonAlias("appearence") // Handle the misspelled "appearence" element
   private AppearanceSpec appearance;
+
   /**
    * The behavior specification.
    */
   @JacksonXmlProperty(localName = "behavior", namespace = NAMESPACE_URI)
   private BehaviorSpec behavior;
+
   /**
    * The RSOP (Run-Time State of the Package) specification.
    */
   @JacksonXmlProperty(localName = "rsop", namespace = NAMESPACE_URI)
   private RsopSpec rsop;
+
   /**
    * The "heuristics" specification.
    */
@@ -89,6 +94,7 @@ public class PackageProperties implements Serializable {
   }
 
   public PackageProperties() {
+    // no-op
   }
 
   public ControlsSpec getControls() {
