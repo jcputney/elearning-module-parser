@@ -161,50 +161,109 @@ public class MetaMetadata implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the list of identifiers associated with this object.
+   *
+   * @return a list of {@link Identifier} objects representing the identifiers
+   */
   public List<Identifier> getIdentifier() {
     return this.identifier;
   }
 
+  /**
+   * Sets the list of identifiers associated with this object.
+   */
   public void setIdentifier(List<Identifier> identifier) {
     this.identifier = identifier;
   }
 
+  /**
+   * Retrieves the list of catalog entries associated with this object.
+   *
+   * @return a list of {@link CatalogEntry} objects representing the catalog entries
+   */
   public List<CatalogEntry> getCatalogEntries() {
     return this.catalogEntries;
   }
 
+  /**
+   * Sets the list of catalog entries associated with this object.
+   *
+   * @param catalogEntries the list of {@link CatalogEntry} objects to set
+   */
   public void setCatalogEntries(List<CatalogEntry> catalogEntries) {
     this.catalogEntries = catalogEntries;
   }
 
+  /**
+   * Retrieves the list of contribution metadata associated with this object.
+   *
+   * @return a list of {@link ContributeMeta} objects representing the contribution metadata
+   */
   public List<ContributeMeta> getContribute() {
     return this.contribute;
   }
 
+  /**
+   * Sets the list of contribution metadata associated with this object.
+   *
+   * @param contribute the list of {@link ContributeMeta} objects to set
+   */
   public void setContribute(List<ContributeMeta> contribute) {
     this.contribute = contribute;
   }
 
+  /**
+   * Retrieves the metadata schema associated with this object.
+   *
+   * @return a list of strings representing the metadata schema
+   */
   public List<String> getMetadataSchema() {
     return this.metadataSchema;
   }
 
+  /**
+   * Sets the metadata schema associated with this object.
+   *
+   * @param metadataSchema the list of strings representing the metadata schema to set
+   */
   public void setMetadataSchema(List<String> metadataSchema) {
     this.metadataSchema = metadataSchema;
   }
 
+  /**
+   * Retrieves the language associated with this object.
+   *
+   * @return a string representing the language.
+   */
   public String getLanguage() {
     return this.language;
   }
 
+  /**
+   * Sets the language associated with this object.
+   *
+   * @param language the language to set, represented as a string
+   */
   public void setLanguage(String language) {
     this.language = language;
   }
 
+  /**
+   * Retrieves the list of custom elements associated with this object.
+   *
+   * @return a list of {@link Object} representing the custom elements
+   */
   public List<Object> getCustomElements() {
     return this.customElements;
   }
 
+  /**
+   * Sets the list of custom elements associated with this object.
+   *
+   * @param customElements the list of {@link Object} instances representing the custom elements to
+   * set
+   */
   public void setCustomElements(List<Object> customElements) {
     this.customElements = customElements;
   }

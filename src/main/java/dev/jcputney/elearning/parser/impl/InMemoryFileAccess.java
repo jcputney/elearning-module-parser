@@ -51,9 +51,40 @@ import java.util.zip.ZipInputStream;
  */
 public class InMemoryFileAccess implements FileAccess, AutoCloseable {
 
+  /**
+   * Represents the root path of the detected directory structure within the ZIP data.
+   * <p>
+   * The root path is determined by analyzing the file entries from the input ZIP data. If all files
+   * are contained within a single top-level directory, the root path will be set to that
+   * directory's name. If the files are distributed across multiple directories or at the root of
+   * the ZIP, the root path will be an empty string.
+   * <p>
+   * This variable is final and is initialized during the loading process of the in-memory file
+   * system.
+   */
   private final String rootPath;
+
+  /**
+   * A list of file entries representing the in-memory files loaded from a ZIP file. Each entry
+   * corresponds to a file within the in-memory file system, encapsulating its path, content, and
+   * size.
+   */
   private final List<FileEntry> fileEntries;
+
+  /**
+   * A set containing the unique directory paths detected in the in-memory file system.
+   * <p>
+   * This set ensures that no duplicate directory paths are stored and is used internally for
+   * operations that require knowledge of the directory structure, such as detecting parent
+   * directories or listing directory contents.
+   */
   private final Set<String> directories;
+
+  /**
+   * Represents the total size of all files stored in the in-memory file system. This value is
+   * calculated during the loading of ZIP data and reflects the combined size of all files,
+   * excluding additional metadata or directory structures.
+   */
   private final long totalSize;
 
   /**
@@ -102,6 +133,13 @@ public class InMemoryFileAccess implements FileAccess, AutoCloseable {
     this.rootPath = detectRootPath();
   }
 
+  /**
+   * Retrieves the root path for the in-memory file system. The root path is typically determined
+   * during the initialization of the instance and provides the base directory for all file
+   * operations within the system.
+   *
+   * @return The root path as a string.
+   */
   @Override
   public String getRootPath() {
     return rootPath;
@@ -206,6 +244,12 @@ public class InMemoryFileAccess implements FileAccess, AutoCloseable {
         .toList();
   }
 
+  /**
+   * Retrieves the total size of all files stored in the in-memory file system.
+   *
+   * @return The total size of all files in bytes.
+   * @throws IOException If an error occurs while calculating the total size.
+   */
   @Override
   public long getTotalSize() throws IOException {
     return totalSize;
@@ -384,8 +428,22 @@ public class InMemoryFileAccess implements FileAccess, AutoCloseable {
    */
   private static class FileEntry {
 
+    /**
+     * The file path associated with this file entry, representing the location or identifier of the
+     * file within an in-memory file system.
+     */
     private final String path;
+
+    /**
+     * Holds the content of the file represented by this file entry. This is a byte array that
+     * stores the raw data of the file in memory.
+     */
     private final byte[] content;
+
+    /**
+     * Represents the size of the file in bytes. This value is derived from the length of the
+     * content array and indicates the total amount of data stored in this file entry.
+     */
     private final long size;
 
     FileEntry(String path, byte[] content) {
@@ -394,14 +452,29 @@ public class InMemoryFileAccess implements FileAccess, AutoCloseable {
       this.size = content.length;
     }
 
+    /**
+     * Retrieves the file path associated with this file entry.
+     *
+     * @return the file path as a string
+     */
     String getPath() {
       return path;
     }
 
+    /**
+     * Retrieves the content of the file represented by this file entry.
+     *
+     * @return a byte array containing the raw data of the file
+     */
     byte[] getContent() {
       return content;
     }
 
+    /**
+     * Retrieves the size of the file in bytes.
+     *
+     * @return the file size as a long value
+     */
     long getSize() {
       return size;
     }

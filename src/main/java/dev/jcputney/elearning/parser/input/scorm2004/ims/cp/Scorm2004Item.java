@@ -164,122 +164,286 @@ public class Scorm2004Item implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the identifier of the current SCORM 2004 item.
+   *
+   * @return the identifier of this SCORM 2004 item as a {@code String}
+   */
   public String getIdentifier() {
     return this.identifier;
   }
 
+  /**
+   * Sets the identifier for this SCORM 2004 item.
+   *
+   * @param identifier the unique identifier to be set for this item
+   */
   public void setIdentifier(String identifier) {
     this.identifier = identifier;
   }
 
+  /**
+   * Retrieves the identifier reference for this SCORM 2004 item.
+   *
+   * @return the identifier reference as a {@code String}
+   */
   public String getIdentifierRef() {
     return this.identifierRef;
   }
 
+  /**
+   * Sets the identifier reference for this SCORM 2004 item.
+   *
+   * @param identifierRef the identifier reference to be set for this item
+   */
   public void setIdentifierRef(String identifierRef) {
     this.identifierRef = identifierRef;
   }
 
+  /**
+   * Determines the visibility status of this SCORM 2004 item.
+   *
+   * @return true if the item is visible, false otherwise
+   */
   public boolean isVisible() {
     return this.isVisible;
   }
 
+  /**
+   * Sets the visibility status for this SCORM 2004 item.
+   *
+   * @param visible a boolean value where {@code true} makes the item visible, and {@code false}
+   * makes it invisible
+   */
   public void setVisible(boolean visible) {
     isVisible = visible;
   }
 
+  /**
+   * Retrieves the parameters associated with this SCORM 2004 item.
+   *
+   * @return the parameters of this SCORM 2004 item as a {@code String}
+   */
   public String getParameters() {
     return this.parameters;
   }
 
+  /**
+   * Sets the parameters associated with this SCORM 2004 item.
+   *
+   * @param parameters the parameters to be set as a {@code String}
+   */
   public void setParameters(String parameters) {
     this.parameters = parameters;
   }
 
+  /**
+   * Retrieves the title of the SCORM 2004 item.
+   *
+   * @return the title of this SCORM 2004 item as a {@code String}
+   */
   public String getTitle() {
     return this.title;
   }
 
+  /**
+   * Sets the title for this SCORM 2004 item.
+   *
+   * @param title the title of the SCORM 2004 item
+   */
   public void setTitle(String title) {
     this.title = title;
   }
 
+  /**
+   * Retrieves the list of child items associated with this SCORM 2004 item.
+   *
+   * @return a {@code List} of {@code Scorm2004Item} objects representing the child items
+   */
   public List<Scorm2004Item> getItems() {
     return this.items;
   }
 
+  /**
+   * Sets the list of child items associated with this SCORM 2004 item.
+   *
+   * @param items a {@code List} of {@code Scorm2004Item} objects representing the child items
+   */
   public void setItems(List<Scorm2004Item> items) {
     this.items = items;
   }
 
+  /**
+   * Retrieves the ADLData associated with this SCORM 2004 item.
+   *
+   * @return the ADLData object containing the data map elements and configurations
+   */
   public ADLData getData() {
     return this.data;
   }
 
+  /**
+   * Sets the ADLData object associated with this SCORM 2004 item.
+   *
+   * @param data the ADLData object containing data map elements and configurations
+   */
   public void setData(ADLData data) {
     this.data = data;
   }
 
+  /**
+   * Retrieves the completion threshold for this SCORM 2004 item.
+   *
+   * @return the {@code CompletionThreshold} object containing the completion threshold settings for
+   * this item
+   */
   public CompletionThreshold getCompletionThreshold() {
     return this.completionThreshold;
   }
 
+  /**
+   * Sets the completion threshold for this SCORM 2004 item.
+   *
+   * @param completionThreshold the {@code CompletionThreshold} object containing the completion
+   * threshold settings to be applied to this item
+   */
   public void setCompletionThreshold(CompletionThreshold completionThreshold) {
     this.completionThreshold = completionThreshold;
   }
 
+  /**
+   * Retrieves the sequencing settings associated with this SCORM 2004 item.
+   *
+   * @return the {@code Sequencing} object defining the sequencing rules and behaviors for this item
+   */
   public Sequencing getSequencing() {
     return this.sequencing;
   }
 
+  /**
+   * Sets the sequencing settings for this SCORM 2004 item.
+   *
+   * @param sequencing the {@code Sequencing} object containing the sequencing rules and behaviors
+   * to be applied to this item
+   */
   public void setSequencing(Sequencing sequencing) {
     this.sequencing = sequencing;
   }
 
+  /**
+   * Retrieves the metadata associated with this SCORM 2004 item.
+   *
+   * @return the {@code Scorm2004SubMetadata} object that encapsulates the metadata for this SCORM
+   * 2004 item, which may include inline metadata or an external reference to a metadata file.
+   */
   public Scorm2004SubMetadata getMetadata() {
     return this.metadata;
   }
 
+  /**
+   * Sets the metadata associated with this SCORM 2004 item.
+   *
+   * @param metadata the {@code Scorm2004SubMetadata} object containing the metadata for this SCORM
+   * 2004 item, which may include inline metadata or an external reference to a metadata file
+   */
   public void setMetadata(Scorm2004SubMetadata metadata) {
     this.metadata = metadata;
   }
 
+  /**
+   * Retrieves the presentation settings associated with this SCORM 2004 item.
+   *
+   * @return the {@code Presentation} object containing the navigation control settings, or null if
+   * no presentation settings are defined
+   */
   public Presentation getPresentation() {
     return this.presentation;
   }
 
+  /**
+   * Sets the presentation settings associated with this SCORM 2004 item.
+   *
+   * @param presentation the {@code Presentation} object containing the navigation control settings
+   * for this item
+   */
   public void setPresentation(Presentation presentation) {
     this.presentation = presentation;
   }
 
+  /**
+   * Retrieves the mastery score for this SCORM 2004 item.
+   *
+   * @return the mastery score as a {@code Double}, or null if no mastery score is defined
+   */
   public Double getMasteryScore() {
     return this.masteryScore;
   }
 
+  /**
+   * Sets the mastery score for this SCORM 2004 item.
+   *
+   * @param masteryScore the mastery score to be set as a {@code Double}
+   */
   public void setMasteryScore(Double masteryScore) {
     this.masteryScore = masteryScore;
   }
 
+  /**
+   * Retrieves the prerequisites for this SCORM 2004 item.
+   *
+   * @return the prerequisites as a {@code String}
+   */
   public String getPrerequisites() {
     return this.prerequisites;
   }
 
+  /**
+   * Sets the prerequisites for this SCORM 2004 item.
+   *
+   * @param prerequisites the prerequisites to be set, represented as a {@code String}
+   */
   public void setPrerequisites(String prerequisites) {
     this.prerequisites = prerequisites;
   }
 
+  /**
+   * Retrieves the time limit action associated with this SCORM 2004 item. The
+   * {@code TimeLimitAction} specifies how the system should behave when a time limit is exceeded,
+   * such as exiting or continuing the activity with or without a message.
+   *
+   * @return the {@code TimeLimitAction} associated with this SCORM 2004 item, or
+   * {@code TimeLimitAction.UNKNOWN} if no action is defined.
+   */
   public TimeLimitAction getTimeLimitAction() {
     return this.timeLimitAction;
   }
 
+  /**
+   * Sets the time limit action for this SCORM 2004 item. The {@code TimeLimitAction} specifies how
+   * the system should behave when the time limit is exceeded, such as exiting or continuing the
+   * activity with or without a message.
+   *
+   * @param timeLimitAction the {@code TimeLimitAction} to be set for this SCORM 2004 item, which
+   * defines the system's behavior on exceeding the time limit
+   */
   public void setTimeLimitAction(TimeLimitAction timeLimitAction) {
     this.timeLimitAction = timeLimitAction;
   }
 
+  /**
+   * Retrieves data associated with this SCORM 2004 item from the LMS.
+   *
+   * @return the data from the LMS as a {@code String}
+   */
   public String getDataFromLMS() {
     return this.dataFromLMS;
   }
 
+  /**
+   * Sets the data associated with this SCORM 2004 item from the LMS.
+   *
+   * @param dataFromLMS the data from the LMS to be set as a {@code String}
+   */
   public void setDataFromLMS(String dataFromLMS) {
     this.dataFromLMS = dataFromLMS;
   }

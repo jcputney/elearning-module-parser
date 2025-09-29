@@ -60,6 +60,13 @@ public class Requirement extends OrComposite {
     // no-op
   }
 
+  /**
+   * Retrieves the list of OR-composite elements, which represent a set of alternative conditions
+   * that must be met to use the associated learning object.
+   *
+   * @return a list of {@link OrComposite} instances, where each represents a platform or software
+   * requirement for the learning object.
+   */
   public List<OrComposite> getOrCompositeList() {
     return this.orCompositeList;
   }

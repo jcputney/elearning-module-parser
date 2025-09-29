@@ -167,6 +167,12 @@ public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
     return manifest;
   }
 
+  /**
+   * Loads external metadata from the provided AICC manifest. This method is a no-op as there is no
+   * external metadata to load for AICC.
+   *
+   * @param manifest The {@code AiccManifest} instance containing metadata to be loaded.
+   */
   @Override
   void loadExternalMetadata(AiccManifest manifest) {
     // No external metadata to load for AICC

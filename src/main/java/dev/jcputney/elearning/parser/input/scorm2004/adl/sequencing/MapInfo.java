@@ -139,90 +139,213 @@ public class MapInfo implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the target objective ID associated with this instance.
+   *
+   * @return the target objective ID, represented as a string.
+   */
   public String getTargetObjectiveID() {
     return this.targetObjectiveID;
   }
 
+  /**
+   * Sets the target objective ID for this instance.
+   *
+   * @param targetObjectiveID the target objective ID to be set, represented as a string
+   */
   public void setTargetObjectiveID(String targetObjectiveID) {
     this.targetObjectiveID = targetObjectiveID;
   }
 
+  /**
+   * Determines whether the raw score data is set to be read.
+   *
+   * @return true if the raw score data is configured to be read, false otherwise.
+   */
   public boolean isReadRawScore() {
     return this.readRawScore;
   }
 
+  /**
+   * Sets whether the raw score data is to be read.
+   *
+   * @param readRawScore a boolean value indicating whether the raw score data should be read. If
+   * true, the raw score data will be read; otherwise, it will not be read.
+   */
   public void setReadRawScore(boolean readRawScore) {
     this.readRawScore = readRawScore;
   }
 
+  /**
+   * Determines whether the minimum score data is set to be read.
+   *
+   * @return true if the minimum score data is configured to be read, false otherwise.
+   */
   public boolean isReadMinScore() {
     return this.readMinScore;
   }
 
+  /**
+   * Sets whether the minimum score data is to be read.
+   *
+   * @param readMinScore a boolean value indicating whether the minimum score data should be read.
+   * If true, the minimum score data will be read; otherwise, it will not be read.
+   */
   public void setReadMinScore(boolean readMinScore) {
     this.readMinScore = readMinScore;
   }
 
+  /**
+   * Determines whether the maximum score data is set to be read.
+   *
+   * @return true if the maximum score data is configured to be read, false otherwise.
+   */
   public boolean isReadMaxScore() {
     return this.readMaxScore;
   }
 
+  /**
+   * Sets whether the maximum score data is to be read.
+   *
+   * @param readMaxScore a boolean value indicating whether the maximum score data should be read.
+   * If true, the maximum score data will be read; otherwise, it will not be read.
+   */
   public void setReadMaxScore(boolean readMaxScore) {
     this.readMaxScore = readMaxScore;
   }
 
+  /**
+   * Determines whether the completion status data is set to be read.
+   *
+   * @return true if the completion status data is configured to be read, false otherwise.
+   */
   public boolean isReadCompletionStatus() {
     return this.readCompletionStatus;
   }
 
+  /**
+   * Sets whether the completion status data is to be read.
+   *
+   * @param readCompletionStatus a boolean value indicating whether the completion status data
+   * should be read. If true, the completion status data will be read; otherwise, it will not be
+   * read.
+   */
   public void setReadCompletionStatus(boolean readCompletionStatus) {
     this.readCompletionStatus = readCompletionStatus;
   }
 
+  /**
+   * Determines whether the progress measure data is set to be read.
+   *
+   * @return true if the progress measure data is configured to be read, false otherwise.
+   */
   public boolean isReadProgressMeasure() {
     return this.readProgressMeasure;
   }
 
+  /**
+   * Sets whether the progress measure data is to be read.
+   *
+   * @param readProgressMeasure a boolean value indicating whether the progress measure data should
+   * be read. If true, the progress measure data will be read; otherwise, it will not be read.
+   */
   public void setReadProgressMeasure(boolean readProgressMeasure) {
     this.readProgressMeasure = readProgressMeasure;
   }
 
+  /**
+   * Determines whether the raw score data is set to be written.
+   *
+   * @return true if the raw score data is configured to be written, false otherwise.
+   */
   public boolean isWriteRawScore() {
     return this.writeRawScore;
   }
 
+  /**
+   * Sets whether the raw score data is to be written.
+   *
+   * @param writeRawScore a boolean value indicating whether the raw score data should be written.
+   * If true, the raw score data will be written; otherwise, it will not be written.
+   */
   public void setWriteRawScore(boolean writeRawScore) {
     this.writeRawScore = writeRawScore;
   }
 
+  /**
+   * Determines whether the minimum score data is set to be written.
+   *
+   * @return true if the minimum score data is configured to be written, false otherwise.
+   */
   public boolean isWriteMinScore() {
     return this.writeMinScore;
   }
 
+  /**
+   * Sets whether the minimum score data is to be written.
+   *
+   * @param writeMinScore a boolean value indicating whether the minimum score data should be
+   * written. If true, the minimum score data will be written; otherwise, it will not be written.
+   */
   public void setWriteMinScore(boolean writeMinScore) {
     this.writeMinScore = writeMinScore;
   }
 
+  /**
+   * Determines whether the maximum score data is set to be written.
+   *
+   * @return true if the maximum score data is configured to be written, false otherwise.
+   */
   public boolean isWriteMaxScore() {
     return this.writeMaxScore;
   }
 
+  /**
+   * Sets whether the maximum score data is to be written.
+   *
+   * @param writeMaxScore a boolean value indicating whether the maximum score data should be
+   * written. If true, the maximum score data will be written; otherwise, it will not be written.
+   */
   public void setWriteMaxScore(boolean writeMaxScore) {
     this.writeMaxScore = writeMaxScore;
   }
 
+  /**
+   * Determines whether the completion status data is set to be written.
+   *
+   * @return true if the completion status data is configured to be written, false otherwise.
+   */
   public boolean isWriteCompletionStatus() {
     return this.writeCompletionStatus;
   }
 
+  /**
+   * Sets whether the completion status data is to be written.
+   *
+   * @param writeCompletionStatus a boolean value indicating whether the completion status data
+   * should be written. If true, the completion status data will be written; otherwise, it will not
+   * be written.
+   */
   public void setWriteCompletionStatus(boolean writeCompletionStatus) {
     this.writeCompletionStatus = writeCompletionStatus;
   }
 
+  /**
+   * Determines whether the progress measure data is set to be written.
+   *
+   * @return true if the progress measure data is configured to be written, false otherwise.
+   */
   public boolean isWriteProgressMeasure() {
     return this.writeProgressMeasure;
   }
 
+  /**
+   * Sets whether the progress measure data is to be written.
+   *
+   * @param writeProgressMeasure a boolean value indicating whether the progress measure data should
+   * be written. If true, the progress measure data will be written; otherwise, it will not be
+   * written.
+   */
   public void setWriteProgressMeasure(boolean writeProgressMeasure) {
     this.writeProgressMeasure = writeProgressMeasure;
   }

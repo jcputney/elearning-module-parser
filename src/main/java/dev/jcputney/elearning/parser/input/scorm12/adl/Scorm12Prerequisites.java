@@ -50,18 +50,39 @@ public class Scorm12Prerequisites implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the string value of the prerequisites element.
+   *
+   * @return The string content of the "prerequisites" element.
+   */
   public String getValue() {
     return this.value;
   }
 
+  /**
+   * Sets the string value of the prerequisites element.
+   *
+   * @param value The string content to set for the "prerequisites" element.
+   */
   public void setValue(String value) {
     this.value = value;
   }
 
+  /**
+   * Retrieves the type attribute of the "prerequisites" element.
+   *
+   * @return The type attribute of the "prerequisites" element, or null if not specified.
+   */
   public String getType() {
     return this.type;
   }
 
+  /**
+   * Sets the type attribute of the "prerequisites" element.
+   *
+   * @param type The type attribute to set for the "prerequisites" element. This value may represent
+   * a specification-dependent string, such as "aicc_script".
+   */
   public void setType(String type) {
     this.type = type;
   }

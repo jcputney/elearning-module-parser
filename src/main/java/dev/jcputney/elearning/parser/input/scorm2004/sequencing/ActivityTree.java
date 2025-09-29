@@ -55,9 +55,6 @@ public class ActivityTree implements Serializable {
    */
   private Map<String, ActivityNode> nodeMap = new HashMap<>();
 
-  public ActivityTree() {
-  }
-
   /**
    * Creates an ActivityTree with the specified root node.
    *
@@ -129,14 +126,30 @@ public class ActivityTree implements Serializable {
     return root;
   }
 
+  /**
+   * Sets the root node of the activity tree.
+   *
+   * @param root The new root node to be set for the activity tree
+   */
   public void setRoot(ActivityNode root) {
     this.root = root;
   }
 
+  /**
+   * Retrieves the mapping of node identifiers to their corresponding activity nodes.
+   *
+   * @return A map where the keys are node identifiers and the values are ActivityNode objects.
+   */
   public Map<String, ActivityNode> getNodeMap() {
     return this.nodeMap;
   }
 
+  /**
+   * Sets the mapping of node identifiers to their corresponding activity nodes.
+   *
+   * @param nodeMap The map where the keys are node identifiers (as Strings) and the values are the
+   * corresponding ActivityNode objects.
+   */
   public void setNodeMap(Map<String, ActivityNode> nodeMap) {
     this.nodeMap = nodeMap;
   }

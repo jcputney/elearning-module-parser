@@ -58,18 +58,38 @@ public class ConstrainChoiceConsiderations implements Serializable {
     // no-op
   }
 
+  /**
+   * Indicates whether activation is prevented.
+   *
+   * @return true if activation is prevented, false otherwise.
+   */
   public boolean isPreventActivation() {
     return this.preventActivation;
   }
 
+  /**
+   * Sets whether to prevent activation.
+   *
+   * @param preventActivation true to prevent activation, false otherwise.
+   */
   public void setPreventActivation(boolean preventActivation) {
     this.preventActivation = preventActivation;
   }
 
+  /**
+   * Checks whether choice is constrained based on the current state of the object.
+   *
+   * @return true if choice is constrained, false otherwise.
+   */
   public boolean isConstrainChoice() {
     return this.constrainChoice;
   }
 
+  /**
+   * Sets whether the choice should be constrained.
+   *
+   * @param constrainChoice true if the choice is to be constrained, false otherwise.
+   */
   public void setConstrainChoice(boolean constrainChoice) {
     this.constrainChoice = constrainChoice;
   }

@@ -103,27 +103,68 @@ public class ContributeMeta implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the role information represented as a source-value pair. The role specifies the
+   * contribution type of an entity to the resource, such as "creator" or "validator".
+   *
+   * @return a {@code SourceValuePair<RoleMeta>} object representing the role, where the source
+   * provides the origin of the value and the value specifies the detailed role of the
+   * contribution.
+   */
   public SourceValuePair<RoleMeta> getRole() {
     return this.role;
   }
 
+  /**
+   * Sets the role information for the contribution, represented as a source-value pair. The role
+   * specifies the type of contribution by the entity to the resource, such as "creator" or
+   * "validator".
+   *
+   * @param role a {@code SourceValuePair<RoleMeta>} object representing
+   */
   public void setRole(
       SourceValuePair<RoleMeta> role) {
     this.role = role;
   }
 
+  /**
+   * Retrieves a list of entities associated with the contribution metadata. The entities typically
+   * represent individuals or organizations contributing to the resource.
+   *
+   * @return a {@code List<String>} containing the entities associated with the contribution
+   * metadata
+   */
   public List<String> getEntities() {
     return this.entities;
   }
 
+  /**
+   * Sets the list of entities associated with the contribution metadata. The entities typically
+   * represent individuals or organizations contributing to the resource.
+   *
+   * @param entities a {@code List<String>} containing the entities to associate with the
+   * contribution metadata
+   */
   public void setEntities(List<String> entities) {
     this.entities = entities;
   }
 
+  /**
+   * Retrieves the date associated with the contribution metadata. The date may represent the time
+   * of contribution or other relevant temporal information.
+   *
+   * @return a {@code Date} object representing the associated contribution date
+   */
   public Date getDate() {
     return this.date;
   }
 
+  /**
+   * Sets the date associated with the contribution metadata. The date may represent the time of
+   * contribution or other relevant temporal information.
+   *
+   * @param date a {@code Date} object representing the contribution date
+   */
   public void setDate(Date date) {
     this.date = date;
   }

@@ -1029,56 +1029,126 @@ public class AiccMetadata extends BaseModuleMetadata<AiccManifest> {
         .toHashCode();
   }
 
+  /**
+   * Retrieves a list of assignable unit IDs.
+   *
+   * @return an immutable list of assignable unit IDs.
+   */
   public List<String> getAssignableUnitIds() {
     return List.copyOf(assignableUnitIds);
   }
 
+  /**
+   * Retrieves a list of unit names that can be assigned.
+   *
+   * @return an unmodifiable list of assignable unit names
+   */
   public List<String> getAssignableUnitNames() {
     return List.copyOf(assignableUnitNames);
   }
 
+  /**
+   * Retrieves the count of prerequisite edges.
+   *
+   * @return the number of prerequisite edges as an Integer
+   */
   public Integer getPrerequisitesEdgeCount() {
     return prerequisitesEdgeCount;
   }
 
+  /**
+   * Retrieves a map representing the prerequisites graph of courses or tasks. Each key in the map
+   * corresponds to a course or task, and its associated value is a list of prerequisites required
+   * to complete the key task or course.
+   *
+   * @return an unmodifiable map where keys are strings representing individual items (e.g., courses
+   * or tasks) and values are lists of strings representing the prerequisites for each item.
+   */
   public Map<String, List<String>> getPrerequisitesGraph() {
     return Map.copyOf(prerequisitesGraph);
   }
 
+  /**
+   * Retrieves the count of objectives relations.
+   *
+   * @return the number of objectives relations as an Integer
+   */
   public Integer getObjectivesRelationCount() {
     return objectivesRelationCount;
   }
 
+  /**
+   * Retrieves the list of objective IDs.
+   *
+   * @return a list containing the objective IDs as immutable strings
+   */
   public List<String> getObjectiveIds() {
     return List.copyOf(objectiveIds);
   }
 
+  /**
+   * Retrieves a map containing objectives categorized by assessment units.
+   *
+   * @return an unmodifiable map where the keys are assessment unit identifiers and the values are
+   * lists of objectives associated with each assessment unit.
+   */
   public Map<String, List<String>> getObjectivesByAu() {
     return Map.copyOf(objectivesByAu);
   }
 
+  /**
+   * Retrieves a map representing the assignable unit children.
+   *
+   * @return an unmodifiable map where the keys are strings representing the parent units and the
+   * values are lists of strings representing their respective child units.
+   */
   public Map<String, List<String>> getAssignableUnitChildren() {
     return Map.copyOf(assignableUnitChildren);
   }
 
+  /**
+   * Retrieves a list of parsed prerequisites.
+   *
+   * @return an unmodifiable list containing the parsed prerequisites.
+   */
   public List<AiccPrerequisite> getParsedPrerequisites() {
     return List.copyOf(parsedPrerequisites);
   }
 
+  /**
+   * Retrieves a list of AiccObjectiveMetadata objects representing the objective metadata.
+   *
+   * @return an immutable list of AiccObjectiveMetadata objects
+   */
   public List<AiccObjectiveMetadata> getObjectiveMetadata() {
     return List.copyOf(objectiveMetadata);
   }
 
+  /**
+   * Determines if the level 2 requirement is needed.
+   *
+   * @return true if level 2 is required, false otherwise.
+   */
   @JsonProperty("requiresLevel2")
   public boolean requiresLevel2() {
     return requiresLevel2;
   }
 
+  /**
+   * Determines whether level 3 access is required.
+   *
+   * @return true if level 3 access is required, false otherwise.
+   */
   @JsonProperty("requiresLevel3")
   public boolean requiresLevel3() {
     return requiresLevel3;
   }
 
+  /**
+   * Indicates whether level 4 access or requirements are necessary.
+   *
+   * @return true if level 4 is required, otherwise false
+   */
   @JsonProperty("requiresLevel4")
   public boolean requiresLevel4() {
     return requiresLevel4;
@@ -1106,10 +1176,22 @@ public class AiccMetadata extends BaseModuleMetadata<AiccManifest> {
       this.id = id;
     }
 
+    /**
+     * Updates the description of the objective after trimming the input value. If the provided
+     * value is null, the description will be set to null.
+     *
+     * @param value the new description of the objective, may be null
+     */
     void updateDescription(String value) {
       this.description = trimOrNull(value);
     }
 
+    /**
+     * Adds a list of associated assignable units (AUs) to the current set of associated AUs. If the
+     * provided list is null or empty, no changes will be made.
+     *
+     * @param aus the list of associated assignable units to add, may be null or empty
+     */
     void addAssociatedAus(List<String> aus) {
       if (aus == null || aus.isEmpty()) {
         return;
@@ -1117,18 +1199,43 @@ public class AiccMetadata extends BaseModuleMetadata<AiccManifest> {
       associatedAus.addAll(aus);
     }
 
+    /**
+     * Updates the satisfaction state of the objective based on the given measure. If the provided
+     * value is null, satisfaction will be set to null.
+     *
+     * @param value the new satisfaction state of the objective, may be null
+     */
     void updateSatisfiedByMeasure(Boolean value) {
       this.satisfiedByMeasure = value;
     }
 
+    /**
+     * Updates the minimum normalized measure of the objective. If the provided value is null, the
+     * minimum normalized measure will be set to null.
+     *
+     * @param value the new minimum normalized measure, may be null
+     */
     void updateMinNormalizedMeasure(Double value) {
       this.minNormalizedMeasure = value;
     }
 
+    /**
+     * Updates the progress measure weight for the objective. If the provided value is null, the
+     * progress measure weight will be set to null.
+     *
+     * @param value the new progress measure weight, may be null
+     */
     void updateProgressMeasureWeight(Double value) {
       this.progressMeasureWeight = value;
     }
 
+    /**
+     * Merges the provided status mappings into the existing status map of the objective
+     * accumulator. If the input map is null or empty, no operation is performed.
+     *
+     * @param statuses a map containing status keys and their corresponding values to be merged with
+     * the existing status map; may be null or empty
+     */
     void mergeStatus(Map<String, String> statuses) {
       if (statuses != null && !statuses.isEmpty()) {
         statusMap.putAll(statuses);

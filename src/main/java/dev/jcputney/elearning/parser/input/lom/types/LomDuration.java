@@ -87,18 +87,41 @@ public class LomDuration implements Serializable {
     this.duration = duration;
   }
 
+  /**
+   * Retrieves the duration of the resource. The duration is typically specified in ISO 8601 format
+   * (e.g., "PT10M" for 10 minutes).
+   *
+   * @return the duration of the resource as a {@link Duration} object
+   */
   public Duration getDuration() {
     return this.duration;
   }
 
+  /**
+   * Sets the duration of the resource. The duration is typically specified in ISO 8601 format
+   * (e.g., "PT10M" for 10 minutes).
+   *
+   * @param duration the duration of the resource as a {@link Duration} object
+   */
   public void setDuration(Duration duration) {
     this.duration = duration;
   }
 
+  /**
+   * Retrieves the description associated with this instance.
+   *
+   * @return the description as a SingleLangString
+   */
   public SingleLangString getDescription() {
     return this.description;
   }
 
+  /**
+   * Sets the description associated with this instance. The description is typically a
+   * language-specific string represented as a {@link SingleLangString}.
+   *
+   * @param description the description to set, represented as a {@link SingleLangString} object
+   */
   public void setDescription(SingleLangString description) {
     this.description = description;
   }

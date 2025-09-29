@@ -54,18 +54,42 @@ public class Date implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the date-time value associated with this instance.
+   *
+   * @return the date-time value as a String
+   */
   public String getDateTime() {
     return this.dateTime;
   }
 
+  /**
+   * Sets the date-time value for this instance.
+   *
+   * @param dateTime the date-time value to be set as a String, representing a specific date and
+   * time
+   */
   public void setDateTime(String dateTime) {
     this.dateTime = dateTime;
   }
 
+  /**
+   * Retrieves the description of the date. The description typically contains language-specific
+   * string values and is represented as an UnboundLangString.
+   *
+   * @return the description of the date as an UnboundLangString
+   */
   public UnboundLangString getDescription() {
     return this.description;
   }
 
+  /**
+   * Sets the description of the date element. The description is typically a language-aware string
+   * represented as an {@code UnboundLangString}.
+   *
+   * @param description the description to set, which contains one or more language-specific string
+   * values
+   */
   public void setDescription(UnboundLangString description) {
     this.description = description;
   }

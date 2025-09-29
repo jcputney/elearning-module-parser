@@ -54,10 +54,22 @@ public class RuleAction implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the action to be performed if the conditions specified in the rule are met.
+   *
+   * @return the action associated with the rule, such as "skip", "disabled", "hiddenFromChoice", or
+   * "stopForwardTraversal"
+   */
   public String getAction() {
     return this.action;
   }
 
+  /**
+   * Sets the action to be performed if the conditions specified in the sequencing rule are met.
+   *
+   * @param action the action to set. Possible values include "skip", "disabled",
+   * "hiddenFromChoice", or "stopForwardTraversal", which determine the behavior of the rule.
+   */
   public void setAction(String action) {
     this.action = action;
   }

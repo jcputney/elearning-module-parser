@@ -90,18 +90,41 @@ public class Relation implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the kind of relationship represented as a source-value pair, which specifies the type
+   * of connection between the current learning object and another resource.
+   *
+   * @return a {@code SourceValuePair<Kind>} object representing the kind of relationship.
+   */
   public SourceValuePair<Kind> getKind() {
     return this.kind;
   }
 
+  /**
+   * Sets the kind of relationship, represented as a source-value pair, that specifies the type of
+   * connection between the current learning object and another resource.
+   *
+   * @param kind a {@code SourceValuePair<Kind>} object representing the type of relationship
+   * between the learning object and the related resource.
+   */
   public void setKind(SourceValuePair<Kind> kind) {
     this.kind = kind;
   }
 
+  /**
+   * Retrieves the list of related resources associated with the relationship.
+   *
+   * @return a {@code List<Resource>} containing the related resources.
+   */
   public List<Resource> getResource() {
     return this.resource;
   }
 
+  /**
+   * Sets the list of related resources associated with the relationship.
+   *
+   * @param resource a {@code List<Resource>} representing the related resources to be set
+   */
   public void setResource(List<Resource> resource) {
     this.resource = resource;
   }

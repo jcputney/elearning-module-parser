@@ -66,26 +66,59 @@ public class StageSpec implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the width associated with the current stage specification.
+   *
+   * @return the width as a {@code BigInteger}, representing a non-negative integer.
+   */
   public BigInteger getWidth() {
     return this.width;
   }
 
+  /**
+   * Sets the width for the current stage specification.
+   *
+   * @param width the width to be set as a {@code BigInteger}, representing a non-negative integer.
+   */
   public void setWidth(BigInteger width) {
     this.width = width;
   }
 
+  /**
+   * Retrieves the height associated with the current stage specification.
+   *
+   * @return the height as a {@code BigInteger}, representing a non-negative integer.
+   */
   public BigInteger getHeight() {
     return this.height;
   }
 
+  /**
+   * Sets the height for the current stage specification.
+   *
+   * @param height the height to be set as a {@code BigInteger}, representing a non-negative
+   * integer.
+   */
   public void setHeight(BigInteger height) {
     this.height = height;
   }
 
+  /**
+   * Retrieves the fullscreen setting associated with the current stage specification.
+   *
+   * @return the fullscreen setting as a {@code YesNoType}, which can represent values like "yes",
+   * "no", "true", or "false".
+   */
   public YesNoType getFullscreen() {
     return this.fullscreen;
   }
 
+  /**
+   * Updates the fullscreen setting for the current stage specification.
+   *
+   * @param fullscreen the fullscreen setting to be applied, represented as a {@code YesNoType}.
+   * Possible values include "yes", "no", "true", or "false".
+   */
   public void setFullscreen(YesNoType fullscreen) {
     this.fullscreen = fullscreen;
   }

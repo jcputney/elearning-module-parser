@@ -171,58 +171,146 @@ public class LimitConditions implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the maximum number of attempts allowed.
+   *
+   * @return the maximum number of attempts as an Integer, or null if not set.
+   */
   public Integer getAttemptLimit() {
     return this.attemptLimit;
   }
 
+  /**
+   * Sets the maximum number of attempts allowed.
+   *
+   * @param attemptLimit the maximum number of attempts as an Integer, or null to indicate no
+   * limit.
+   */
   public void setAttemptLimit(Integer attemptLimit) {
     this.attemptLimit = attemptLimit;
   }
 
+  /**
+   * Retrieves the absolute duration limit for an attempt.
+   *
+   * @return the absolute duration limit for an attempt as a {@link Duration}, or null if not set.
+   */
   public Duration getAttemptAbsoluteDurationLimit() {
     return this.attemptAbsoluteDurationLimit;
   }
 
+  /**
+   * Sets the absolute duration limit for a single attempt in the activity or process.
+   *
+   * @param attemptAbsoluteDurationLimit the absolute duration limit for an attempt as a
+   * {@link Duration}, or null to indicate no limit is set.
+   */
   public void setAttemptAbsoluteDurationLimit(Duration attemptAbsoluteDurationLimit) {
     this.attemptAbsoluteDurationLimit = attemptAbsoluteDurationLimit;
   }
 
+  /**
+   * Retrieves the experienced duration limit for an attempt. This represents the maximum time
+   * allowed for an attempt that has been experienced or in progress.
+   *
+   * @return the experienced duration limit of an attempt as a {@link Duration}, or null if not set.
+   */
   public Duration getAttemptExperiencedDurationLimit() {
     return this.attemptExperiencedDurationLimit;
   }
 
+  /**
+   * Sets the experienced duration limit for an attempt. This represents the maximum time the
+   * attempt can actively be worked on, as perceived by the user, before being considered over the
+   * limit.
+   *
+   * @param attemptExperiencedDurationLimit the experienced duration limit for an attempt as a
+   * {@link Duration}, or null to indicate that no such limit is set.
+   */
   public void setAttemptExperiencedDurationLimit(Duration attemptExperiencedDurationLimit) {
     this.attemptExperiencedDurationLimit = attemptExperiencedDurationLimit;
   }
 
+  /**
+   * Retrieves the absolute duration limit for the activity. This duration represents the maximum
+   * amount of time that the activity can remain active before exceeding the defined limit.
+   *
+   * @return the absolute duration limit for the activity as a {@link Duration}, or null if no limit
+   * is set.
+   */
   public Duration getActivityAbsoluteDurationLimit() {
     return this.activityAbsoluteDurationLimit;
   }
 
+  /**
+   * Sets the absolute duration limit for the activity. This duration represents the maximum amount
+   * of time that the activity can remain active before exceeding the defined limit.
+   *
+   * @param activityAbsoluteDurationLimit the absolute duration limit for the activity as a
+   * {@link Duration}, or null to indicate no limit is set.
+   */
   public void setActivityAbsoluteDurationLimit(Duration activityAbsoluteDurationLimit) {
     this.activityAbsoluteDurationLimit = activityAbsoluteDurationLimit;
   }
 
+  /**
+   * Retrieves the experienced duration limit for the activity. This duration represents the maximum
+   * allowable active time for the activity, as perceived by the user, before it exceeds the defined
+   * limit.
+   *
+   * @return the experienced duration limit for the activity as a {@link Duration}, or null if no
+   * limit is set.
+   */
   public Duration getActivityExperiencedDurationLimit() {
     return this.activityExperiencedDurationLimit;
   }
 
+  /**
+   * Sets the experienced duration limit for the activity. This represents the maximum allowable
+   * active time for the activity, as perceived by the user, before it exceeds the defined limit.
+   *
+   * @param activityExperiencedDurationLimit the experienced duration limit for the activity as a
+   * {@link Duration}, or null to indicate no such limit is set.
+   */
   public void setActivityExperiencedDurationLimit(Duration activityExperiencedDurationLimit) {
     this.activityExperiencedDurationLimit = activityExperiencedDurationLimit;
   }
 
+  /**
+   * Retrieves the starting time limit for an activity or process.
+   *
+   * @return the begin time limit as an {@link Instant}, or null if no limit is set.
+   */
   public Instant getBeginTimeLimit() {
     return this.beginTimeLimit;
   }
 
+  /**
+   * Sets the starting time limit for an activity or process. This specifies the earliest point in
+   * time when the activity or process is allowed to begin.
+   *
+   * @param beginTimeLimit the starting time limit as an {@link Instant}, or null to indicate no
+   * limit.
+   */
   public void setBeginTimeLimit(Instant beginTimeLimit) {
     this.beginTimeLimit = beginTimeLimit;
   }
 
+  /**
+   * Retrieves the ending time limit for an activity or process.
+   *
+   * @return the end time limit as an {@link Instant}, or null if no limit is set.
+   */
   public Instant getEndTimeLimit() {
     return this.endTimeLimit;
   }
 
+  /**
+   * Sets the ending time limit for an activity or process. This specifies the latest point in time
+   * by which the activity or process must be completed.
+   *
+   * @param endTimeLimit the ending time limit as an {@link Instant}, or null to indicate no limit.
+   */
   public void setEndTimeLimit(Instant endTimeLimit) {
     this.endTimeLimit = endTimeLimit;
   }

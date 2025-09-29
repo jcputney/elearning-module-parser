@@ -128,108 +128,257 @@ public class Sequencing implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the identifier associated with the sequencing object.
+   *
+   * @return the identifier as a {@code String}
+   */
   public String getId() {
     return this.id;
   }
 
+  /**
+   * Sets the identifier for the sequencing object.
+   *
+   * @param id the identifier to set as a String
+   */
   public void setId(String id) {
     this.id = id;
   }
 
+  /**
+   * Retrieves the reference identifier associated with the sequencing object.
+   *
+   * @return the reference identifier as a {@code String}
+   */
   public String getIdRef() {
     return this.idRef;
   }
 
+  /**
+   * Sets the reference identifier associated with the sequencing object.
+   *
+   * @param idRef the reference identifier to set as a String
+   */
   public void setIdRef(String idRef) {
     this.idRef = idRef;
   }
 
+  /**
+   * Retrieves the control mode associated with the sequencing object.
+   *
+   * @return the control mode as a {@code ControlMode} object
+   */
   public ControlMode getControlMode() {
     return this.controlMode;
   }
 
+  /**
+   * Sets the control mode for the sequencing object.
+   *
+   * @param controlMode the control mode to set as a {@code ControlMode} object
+   */
   public void setControlMode(ControlMode controlMode) {
     this.controlMode = controlMode;
   }
 
+  /**
+   * Retrieves the sequencing rules associated with this sequencing object.
+   *
+   * @return the sequencing rules as a {@code SequencingRules} object
+   */
   public SequencingRules getSequencingRules() {
     return this.sequencingRules;
   }
 
+  /**
+   * Sets the sequencing rules for the sequencing object.
+   *
+   * @param sequencingRules the {@code SequencingRules} object containing the set of rules that
+   * define the behavior and flow of activities, including pre-condition, exit-condition, and
+   * post-condition rules.
+   */
   public void setSequencingRules(SequencingRules sequencingRules) {
     this.sequencingRules = sequencingRules;
   }
 
+  /**
+   * Retrieves the limit conditions associated with the sequencing object.
+   *
+   * @return the limit conditions as a {@code LimitConditions} object
+   */
   public LimitConditions getLimitConditions() {
     return this.limitConditions;
   }
 
+  /**
+   * Sets the limit conditions for the sequencing object.
+   *
+   * @param limitConditions the {@code LimitConditions} object that defines the constraints on
+   * activity attempts, including maximum limits and other restrictions.
+   */
   public void setLimitConditions(LimitConditions limitConditions) {
     this.limitConditions = limitConditions;
   }
 
+  /**
+   * Retrieves the auxiliary resources associated with this sequencing object.
+   *
+   * @return the {@code AuxiliaryResources} object representing a collection of supplementary
+   * resources that support and enhance the primary learning activity.
+   */
   public AuxiliaryResources getAuxiliaryResources() {
     return this.auxiliaryResources;
   }
 
+  /**
+   * Sets the auxiliary resources for the sequencing object.
+   *
+   * @param auxiliaryResources the {@code AuxiliaryResources} object representing a collection of
+   * supplementary resources that provide additional support and enhance the primary learning
+   * activity
+   */
   public void setAuxiliaryResources(AuxiliaryResources auxiliaryResources) {
     this.auxiliaryResources = auxiliaryResources;
   }
 
+  /**
+   * Retrieves the rollup rules associated with this sequencing object.
+   *
+   * @return the rollup rules as a {@code RollupRules} object
+   */
   public RollupRules getRollupRules() {
     return this.rollupRules;
   }
 
+  /**
+   * Sets the rollup rules for the sequencing object.
+   *
+   * @param rollupRules the {@code RollupRules} object that defines the logical conditions and
+   * behaviors used to evaluate the status and progress of activities within a sequencing context.
+   */
   public void setRollupRules(RollupRules rollupRules) {
     this.rollupRules = rollupRules;
   }
 
+  /**
+   * Retrieves the SCORM 2004 objectives associated with this sequencing object.
+   *
+   * @return the objectives as a {@code Scorm2004Objectives} object
+   */
   public Scorm2004Objectives getObjectives() {
     return this.objectives;
   }
 
+  /**
+   * Sets the SCORM 2004 objectives for the sequencing object.
+   *
+   * @param objectives the {@code Scorm2004Objectives} object representing the set of objectives
+   * used to evaluate the progress and performance within the SCORM 2004 sequencing model.
+   */
   public void setObjectives(Scorm2004Objectives objectives) {
     this.objectives = objectives;
   }
 
+  /**
+   * Retrieves the ADL-specific objectives associated with this sequencing object.
+   *
+   * @return the ADL objectives as a {@code Scorm2004Objectives} object
+   */
   @JsonProperty("adlObjectives")
   public Scorm2004Objectives getAdlObjectives() {
     return this.adlObjectives;
   }
 
+  /**
+   * Sets the ADL-specific objectives for the sequencing object.
+   *
+   * @param adlObjectives the {@code Scorm2004Objectives} object representing the set of ADL
+   * objectives used to assess and track progress and performance within the SCORM 2004 sequencing
+   * model.
+   */
   @JsonProperty("adlObjectives")
   public void setAdlObjectives(Scorm2004Objectives adlObjectives) {
     this.adlObjectives = adlObjectives;
   }
 
+  /**
+   * Retrieves the randomization controls associated with the sequencing object.
+   *
+   * @return the randomization controls as a {@code RandomizationControls} object
+   */
   public RandomizationControls getRandomizationControls() {
     return this.randomizationControls;
   }
 
+  /**
+   * Sets the randomization controls for the sequencing object. Randomization controls define how
+   * activities are shuffled or ordered during selection to introduce variability or randomness in
+   * the delivery sequence.
+   *
+   * @param randomizationControls the {@code RandomizationControls} object that specifies the
+   * configuration parameters for randomizing activities within the sequencing context.
+   */
   public void setRandomizationControls(RandomizationControls randomizationControls) {
     this.randomizationControls = randomizationControls;
   }
 
+  /**
+   * Retrieves the delivery controls associated with the sequencing object.
+   *
+   * @return the delivery controls as a {@code DeliveryControls} object
+   */
   public DeliveryControls getDeliveryControls() {
     return this.deliveryControls;
   }
 
+  /**
+   * Sets the delivery controls for the sequencing object. Delivery controls define how content is
+   * delivered and accessed during the learning process in accordance with SCORM 2004 sequencing
+   * standards.
+   *
+   * @param deliveryControls the {@code DeliveryControls} object specifying the configuration
+   * parameters for controlling the delivery of the associated learning activities.
+   */
   public void setDeliveryControls(DeliveryControls deliveryControls) {
     this.deliveryControls = deliveryControls;
   }
 
+  /**
+   * Retrieves the rollup considerations associated with this sequencing object.
+   *
+   * @return the rollup considerations as a {@code RollupConsiderations} object
+   */
   public RollupConsiderations getRollupConsiderations() {
     return this.rollupConsiderations;
   }
 
+  /**
+   * Sets the rollup considerations for the sequencing object.
+   *
+   * @param rollupConsiderations the {@code RollupConsiderations} object that defines configuration
+   * parameters for evaluating and reporting the progress or status of activities within the
+   * sequencing context.
+   */
   public void setRollupConsiderations(RollupConsiderations rollupConsiderations) {
     this.rollupConsiderations = rollupConsiderations;
   }
 
+  /**
+   * Retrieves the constrain choice considerations associated with the sequencing object.
+   *
+   * @return the constrain choice considerations as a {@code ConstrainChoiceConsiderations} object
+   */
   public ConstrainChoiceConsiderations getConstrainChoiceConsiderations() {
     return this.constrainChoiceConsiderations;
   }
 
+  /**
+   * Sets the constraint choice considerations.
+   *
+   * @param constrainChoiceConsiderations the ConstrainChoiceConsiderations object to set, which
+   * holds the constraints and considerations for choice-related logic.
+   */
   public void setConstrainChoiceConsiderations(
       ConstrainChoiceConsiderations constrainChoiceConsiderations) {
     this.constrainChoiceConsiderations = constrainChoiceConsiderations;

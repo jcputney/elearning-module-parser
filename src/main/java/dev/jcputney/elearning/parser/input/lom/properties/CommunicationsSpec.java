@@ -58,18 +58,39 @@ public class CommunicationsSpec implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the maximum number of failed submissions allowed.
+   *
+   * @return the maximum number of failed submissions, or null if not specified.
+   */
   public Integer getMaxFailedSubmissions() {
     return this.maxFailedSubmissions;
   }
 
+  /**
+   * Sets the maximum number of failed submissions allowed.
+   *
+   * @param maxFailedSubmissions the maximum number of failed submissions, or null to indicate no
+   * limit.
+   */
   public void setMaxFailedSubmissions(Integer maxFailedSubmissions) {
     this.maxFailedSubmissions = maxFailedSubmissions;
   }
 
+  /**
+   * Retrieves the commit frequency for the current instance.
+   *
+   * @return the frequency of commits, or null if not specified.
+   */
   public Integer getCommitFrequency() {
     return this.commitFrequency;
   }
 
+  /**
+   * Sets the commit frequency for the current instance.
+   *
+   * @param commitFrequency the frequency of commits, or null to indicate no specific frequency.
+   */
   public void setCommitFrequency(Integer commitFrequency) {
     this.commitFrequency = commitFrequency;
   }

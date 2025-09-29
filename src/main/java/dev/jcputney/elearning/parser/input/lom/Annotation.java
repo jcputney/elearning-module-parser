@@ -101,26 +101,56 @@ public class Annotation implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the value of the entity associated with this object.
+   *
+   * @return the entity as a String
+   */
   public String getEntity() {
     return this.entity;
   }
 
+  /**
+   * Sets the entity associated with this object.
+   *
+   * @param entity the entity to be set, represented as a String
+   */
   public void setEntity(String entity) {
     this.entity = entity;
   }
 
+  /**
+   * Retrieves the date associated with this object.
+   *
+   * @return the date as a Date object
+   */
   public Date getDate() {
     return this.date;
   }
 
+  /**
+   * Sets the date associated with this object.
+   *
+   * @param date the date to be set, represented as a Date object
+   */
   public void setDate(Date date) {
     this.date = date;
   }
 
+  /**
+   * Retrieves the description associated with this annotation.
+   *
+   * @return the description as a SingleLangString object
+   */
   public SingleLangString getDescription() {
     return this.description;
   }
 
+  /**
+   * Sets the description associated with this annotation.
+   *
+   * @param description the description to be set, represented as a SingleLangString object
+   */
   public void setDescription(SingleLangString description) {
     this.description = description;
   }

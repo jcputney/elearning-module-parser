@@ -177,16 +177,36 @@ public final class Scorm2004SchemaValidator {
    */
   private record CollectingErrorHandler(List<String> errors) implements ErrorHandler {
 
+    /**
+     * Handles warning-level SAX parse exceptions encountered during XML processing. Warnings are
+     * treated as informational messages and are not collected.
+     *
+     * @param exception the {@link SAXParseException} containing details of the warning
+     */
     @Override
     public void warning(SAXParseException exception) {
       // treat warnings as info; do not collect
     }
 
+    /**
+     * Handles error-level SAX parse exceptions encountered during XML processing. Errors are
+     * collected and formatted into a standardized string representation before being added to the
+     * internal list.
+     *
+     * @param exception the {@link SAXParseException} containing details of the error
+     */
     @Override
     public void error(SAXParseException exception) {
       errors.add(format(exception));
     }
 
+    /**
+     * Handles fatal error-level SAX parse exceptions encountered during XML processing. Fatal
+     * errors are collected and formatted into a standardized string representation before being
+     * added to the internal list.
+     *
+     * @param exception the {@link SAXParseException} containing details of the fatal error
+     */
     @Override
     public void fatalError(SAXParseException exception) {
       errors.add(format(exception));

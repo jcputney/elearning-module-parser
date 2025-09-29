@@ -60,18 +60,51 @@ public class RuleConditions implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the list of rule conditions associated with this instance. Each rule condition
+   * defines a specific criterion that must be evaluated or met within the context of a sequencing
+   * rule.
+   *
+   * @return a list of {@code RuleCondition} objects representing the individual conditions for this
+   * set of rules, or an empty list if no conditions are defined
+   */
   public List<RuleCondition> getRuleConditionList() {
     return this.ruleConditionList;
   }
 
+  /**
+   * Sets the list of rule conditions associated with this instance. Each rule condition specifies a
+   * criterion that must be evaluated or met as part of the sequencing rule.
+   *
+   * @param ruleConditionList a list of {@code RuleCondition} objects representing the individual
+   * conditions for the sequencing rule. If set to {@code null}, this clears the current list of
+   * rule conditions.
+   */
   public void setRuleConditionList(List<RuleCondition> ruleConditionList) {
     this.ruleConditionList = ruleConditionList;
   }
 
+  /**
+   * Retrieves the condition combination type associated with this set of rule conditions. The
+   * condition combination determines whether all conditions must be satisfied, any one condition
+   * needs to be satisfied, or if the type is unknown.
+   *
+   * @return the condition combination type, represented as a {@code ConditionCombinationType} enum,
+   * which could be {@code ALL}, {@code ANY}, or {@code UNKNOWN}.
+   */
   public ConditionCombinationType getConditionCombination() {
     return this.conditionCombination;
   }
 
+  /**
+   * Sets the condition combination type for the current instance. The condition combination
+   * determines how multiple conditions in a sequencing rule are evaluated, such as requiring all
+   * conditions to be met or allowing any one condition to be sufficient.
+   *
+   * @param conditionCombination the condition combination type to set, represented as a
+   * {@code ConditionCombinationType} enum. Possible values include {@code ALL}, {@code ANY}, and
+   * {@code UNKNOWN}.
+   */
   public void setConditionCombination(ConditionCombinationType conditionCombination) {
     this.conditionCombination = conditionCombination;
   }

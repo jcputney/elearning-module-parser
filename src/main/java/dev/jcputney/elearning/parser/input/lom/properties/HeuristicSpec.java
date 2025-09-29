@@ -89,43 +89,100 @@ public class HeuristicSpec implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the value indicating whether completion tracking is enabled.
+   *
+   * @return an instance of {@link YesNoType} representing if completion is tracked.
+   */
   public YesNoType getIsCompletionTracked() {
     return this.isCompletionTracked;
   }
 
+  /**
+   * Sets whether completion tracking is enabled or disabled.
+   *
+   * @param isCompletionTracked an instance of {@link YesNoType} representing whether completion
+   * tracking is enabled
+   */
   public void setIsCompletionTracked(YesNoType isCompletionTracked) {
     this.isCompletionTracked = isCompletionTracked;
   }
 
+  /**
+   * Retrieves the value indicating whether satisfaction tracking is enabled.
+   *
+   * @return an instance of {@link YesNoType} representing if satisfaction is tracked.
+   */
   public YesNoType getIsSatisfactionTracked() {
     return this.isSatisfactionTracked;
   }
 
+  /**
+   * Sets whether satisfaction tracking is enabled or disabled.
+   *
+   * @param isSatisfactionTracked an instance of {@link YesNoType} representing whether satisfaction
+   * tracking is enabled
+   */
   public void setIsSatisfactionTracked(YesNoType isSatisfactionTracked) {
     this.isSatisfactionTracked = isSatisfactionTracked;
   }
 
+  /**
+   * Retrieves the value indicating whether score tracking is enabled.
+   *
+   * @return an instance of {@link YesNoType} representing whether score tracking is enabled.
+   */
   public YesNoType getIsScoreTracked() {
     return this.isScoreTracked;
   }
 
+  /**
+   * Sets whether score tracking is enabled or disabled.
+   *
+   * @param isScoreTracked an instance of {@link YesNoType} representing whether score tracking is
+   * enabled
+   */
   public void setIsScoreTracked(YesNoType isScoreTracked) {
     this.isScoreTracked = isScoreTracked;
   }
 
+  /**
+   * Retrieves the value indicating whether an incomplete score is meaningful.
+   *
+   * @return an instance of {@link YesNoType} representing whether an incomplete score is considered
+   * meaningful.
+   */
   public YesNoType getIsIncompleteScoreMeaningful() {
     return this.isIncompleteScoreMeaningful;
   }
 
+  /**
+   * Sets whether an incomplete score is considered meaningful.
+   *
+   * @param isIncompleteScoreMeaningful an instance of {@link YesNoType} representing if an
+   * incomplete score is meaningful
+   */
   public void setIsIncompleteScoreMeaningful(
       YesNoType isIncompleteScoreMeaningful) {
     this.isIncompleteScoreMeaningful = isIncompleteScoreMeaningful;
   }
 
+  /**
+   * Retrieves the value indicating whether an incomplete satisfaction is considered meaningful.
+   *
+   * @return an instance of {@link YesNoType} representing whether incomplete satisfaction is
+   * meaningful.
+   */
   public YesNoType getIsIncompleteSatisfactionMeaningful() {
     return this.isIncompleteSatisfactionMeaningful;
   }
 
+  /**
+   * Sets whether incomplete satisfaction is considered meaningful.
+   *
+   * @param isIncompleteSatisfactionMeaningful an instance of {@link YesNoType} representing whether
+   * incomplete satisfaction is meaningful
+   */
   public void setIsIncompleteSatisfactionMeaningful(
       YesNoType isIncompleteSatisfactionMeaningful) {
     this.isIncompleteSatisfactionMeaningful = isIncompleteSatisfactionMeaningful;

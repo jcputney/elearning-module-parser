@@ -594,52 +594,113 @@ public class Scorm2004Manifest implements PackageManifest {
         .getIndicators();
   }
 
+  /**
+   * Retrieves the identifier of this SCORM 2004 manifest.
+   *
+   * @return the identifier of the manifest as a String
+   */
   @Override
   public String getIdentifier() {
     return this.identifier;
   }
 
+  /**
+   * Sets the identifier for the SCORM 2004 manifest.
+   *
+   * @param identifier the unique identifier to be assigned to the manifest
+   */
   public void setIdentifier(String identifier) {
     this.identifier = identifier;
   }
 
+  /**
+   * Retrieves the version of the SCORM 2004 manifest.
+   *
+   * @return the version as a String
+   */
   @Override
   public String getVersion() {
     return this.version;
   }
 
+  /**
+   * Sets the version of the SCORM 2004 manifest.
+   *
+   * @param version the version to be assigned to the manifest
+   */
   public void setVersion(String version) {
     this.version = version;
   }
 
+  /**
+   * Retrieves the metadata associated with the SCORM 2004 course manifest.
+   *
+   * @return the metadata of the SCORM 2004 course as an instance of Scorm2004CourseMetadata
+   */
   public Scorm2004CourseMetadata getMetadata() {
     return this.metadata;
   }
 
+  /**
+   * Sets the metadata for the SCORM 2004 course manifest.
+   *
+   * @param metadata the metadata to be associated with the SCORM 2004 course
+   */
   public void setMetadata(Scorm2004CourseMetadata metadata) {
     this.metadata = metadata;
   }
 
+  /**
+   * Retrieves the organizations defined in the SCORM 2004 manifest.
+   *
+   * @return an instance of Scorm2004Organizations representing the organizations in the manifest
+   */
   public Scorm2004Organizations getOrganizations() {
     return this.organizations;
   }
 
+  /**
+   * Sets the organizations information for the SCORM 2004 manifest.
+   *
+   * @param organizations an instance of Scorm2004Organizations representing the organizations to be
+   * defined in the manifest
+   */
   public void setOrganizations(Scorm2004Organizations organizations) {
     this.organizations = organizations;
   }
 
+  /**
+   * Retrieves the SCORM 2004 resources.
+   *
+   * @return the Scorm2004Resources object containing the resources.
+   */
   public Scorm2004Resources getResources() {
     return this.resources;
   }
 
+  /**
+   * Sets the SCORM 2004 resources.
+   *
+   * @param resources the SCORM 2004 resources to be set
+   */
   public void setResources(Scorm2004Resources resources) {
     this.resources = resources;
   }
 
+  /**
+   * Retrieves the sequencing collection instance associated with this object.
+   *
+   * @return the SequencingCollection instance maintained by this object
+   */
   public SequencingCollection getSequencingCollection() {
     return this.sequencingCollection;
   }
 
+  /**
+   * Sets the sequencingCollection with the provided SequencingCollection object.
+   *
+   * @param sequencingCollection the SequencingCollection to be assigned
+   */
   public void setSequencingCollection(SequencingCollection sequencingCollection) {
     this.sequencingCollection = sequencingCollection;
   }
@@ -673,6 +734,11 @@ public class Scorm2004Manifest implements PackageManifest {
     return this.adlseqNamespaceUri;
   }
 
+  /**
+   * Sets the namespace URI for ADL sequencing.
+   *
+   * @param adlseqNamespaceUri the namespace URI to be set for ADL sequencing
+   */
   public void setAdlseqNamespaceUri(String adlseqNamespaceUri) {
     this.adlseqNamespaceUri = adlseqNamespaceUri;
   }
@@ -684,6 +750,11 @@ public class Scorm2004Manifest implements PackageManifest {
     return this.adlnavNamespaceUri;
   }
 
+  /**
+   * Sets the ADL Navigation namespace URI.
+   *
+   * @param adlnavNamespaceUri the namespace URI to set for ADL Navigation
+   */
   public void setAdlnavNamespaceUri(String adlnavNamespaceUri) {
     this.adlnavNamespaceUri = adlnavNamespaceUri;
   }
@@ -695,6 +766,12 @@ public class Scorm2004Manifest implements PackageManifest {
     return this.schemaLocation;
   }
 
+  /**
+   * Sets the schema location for the current instance.
+   *
+   * @param schemaLocation the schema location to be set, typically a URI or path that specifies the
+   * location of the schema.
+   */
   public void setSchemaLocation(String schemaLocation) {
     this.schemaLocation = schemaLocation;
   }

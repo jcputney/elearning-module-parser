@@ -120,34 +120,78 @@ public class OrComposite implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the type associated with the current object.
+   *
+   * @return a {@link SourceValuePair} containing the source and value of the type, where the value
+   * is an enumeration of {@link Type}.
+   */
   public SourceValuePair<Type> getType() {
     return this.type;
   }
 
+  /**
+   * Sets the type associated with the current object.
+   *
+   * @param type a {@link SourceValuePair} containing the source and value of the type, where the
+   * value is an enumeration of {@link Type}.
+   */
   public void setType(SourceValuePair<Type> type) {
     this.type = type;
   }
 
+  /**
+   * Retrieves the name associated with the current object.
+   *
+   * @return a {@link SourceValuePair} containing the source and value of the name, where the value
+   * is an enumeration of {@link Name}.
+   */
   public SourceValuePair<Name> getName() {
     return this.name;
   }
 
+  /**
+   * Sets the name associated with the current object.
+   *
+   * @param name a {@link SourceValuePair} containing the source and value of the name, where the
+   * value is an enumeration of {@link Name}.
+   */
   public void setName(SourceValuePair<Name> name) {
     this.name = name;
   }
 
+  /**
+   * Retrieves the minimum version associated with the current object.
+   *
+   * @return the minimum version as a String
+   */
   public String getMinimumVersion() {
     return this.minimumVersion;
   }
 
+  /**
+   * Sets the minimum version associated with the current object.
+   *
+   * @param minimumVersion the minimum version to set, represented as a String
+   */
   public void setMinimumVersion(String minimumVersion) {
     this.minimumVersion = minimumVersion;
   }
 
+  /**
+   * Retrieves the maximum version associated with the current object.
+   *
+   * @return the maximum version as a String
+   */
   public String getMaximumVersion() {
     return this.maximumVersion;
   }
 
+  /**
+   * Sets the maximum version associated with the current object.
+   *
+   * @param maximumVersion the maximum version to set, represented as a String
+   */
   public void setMaximumVersion(String maximumVersion) {
     this.maximumVersion = maximumVersion;
   }

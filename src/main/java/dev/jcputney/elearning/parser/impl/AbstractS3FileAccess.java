@@ -100,8 +100,8 @@ public abstract class AbstractS3FileAccess implements FileAccess {
    * A thread-safe cache storing the list of all file paths within the module.
    * <p>
    * This cache is intended to improve performance for file-related operations by storing the result
-   * of a full scan of the S3 bucket or prefix. The cache is stored in an {@link AtomicReference}
-   * to ensure safe publication across threads once populated.
+   * of a full scan of the S3 bucket or prefix. The cache is stored in an {@link AtomicReference} to
+   * ensure safe publication across threads once populated.
    * <p>
    * Modifications to this cache should be controlled to maintain data consistency across the class,
    * particularly when the underlying S3 bucket contents change.
@@ -445,6 +445,12 @@ public abstract class AbstractS3FileAccess implements FileAccess {
     return rootPath + "/" + path;
   }
 
+  /**
+   * Retrieves the root path of the current instance.
+   *
+   * @return the root path as a String
+   */
+  @Override
   public String getRootPath() {
     return this.rootPath;
   }
@@ -507,6 +513,13 @@ public abstract class AbstractS3FileAccess implements FileAccess {
     }
   }
 
+  /**
+   * Wraps the provided input stream with additional processing or functionality.
+   *
+   * @param stream the original input stream to be wrapped
+   * @param fileSize the size of the file associated with the input stream, in bytes
+   * @return an InputStream instance which provides a wrapped version of the original input stream
+   */
   protected abstract InputStream getInputStreamWrapper(InputStream stream, long fileSize);
 
   /**

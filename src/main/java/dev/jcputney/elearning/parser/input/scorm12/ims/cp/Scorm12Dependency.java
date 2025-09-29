@@ -64,10 +64,22 @@ public class Scorm12Dependency implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the identifier reference of the required resource. This value serves as an IDREF
+   * pointing to another resource within the same manifest file.
+   *
+   * @return the identifier reference of the required resource
+   */
   public String getIdentifierRef() {
     return this.identifierRef;
   }
 
+  /**
+   * Sets the identifier reference of the required resource. This value serves as an IDREF pointing
+   * to another resource within the same manifest file.
+   *
+   * @param identifierRef the identifier reference of the required resource
+   */
   public void setIdentifierRef(String identifierRef) {
     this.identifierRef = identifierRef;
   }

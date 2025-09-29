@@ -92,42 +92,114 @@ public class RollupRule implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the rollup conditions associated with this instance. Rollup conditions define
+   * criteria that determine if specific rollup logic should be applied based on the status of child
+   * activities.
+   *
+   * @return the {@link RollupConditions} object representing the criteria for applying the rollup
+   * rule.
+   */
   public RollupConditions getRollupConditions() {
     return this.rollupConditions;
   }
 
+  /**
+   * Sets the rollup conditions for this instance. Rollup conditions define the specific criteria
+   * that determine if rollup logic should be applied based on the status of child activities.
+   *
+   * @param rollupConditions the {@link RollupConditions} object containing the criteria for rollup
+   * processing
+   */
   public void setRollupConditions(RollupConditions rollupConditions) {
     this.rollupConditions = rollupConditions;
   }
 
+  /**
+   * Retrieves the rollup action associated with this instance. The rollup action specifies the
+   * operation to perform on the parent activity's status when the conditions defined in the rollup
+   * rule are satisfied.
+   *
+   * @return the {@link RollupAction} object representing the action to be performed if the rollup
+   * conditions are met.
+   */
   public RollupAction getRollupAction() {
     return this.rollupAction;
   }
 
+  /**
+   * Sets the rollup action to be performed when the conditions of the rollup rule are met. The
+   * rollup action specifies the operation to apply to the parent activity's status based on the
+   * statuses of its child activities and the associated rollup criteria.
+   *
+   * @param rollupAction the {@link RollupAction} object defining the specific action to be taken
+   * when the rollup conditions are satisfied
+   */
   public void setRollupAction(RollupAction rollupAction) {
     this.rollupAction = rollupAction;
   }
 
+  /**
+   * Retrieves the child activity set associated with this instance. The child activity set
+   * specifies the subset of child activities to consider while evaluating the rollup rule.
+   *
+   * @return the {@link ChildActivitySet} representing the set of child activities to be used in
+   * rollup rule evaluation.
+   */
   public ChildActivitySet getChildActivitySet() {
     return this.childActivitySet;
   }
 
+  /**
+   * Sets the child activity set for this instance. The child activity set specifies the subset of
+   * child activities to consider during the evaluation of the rollup rule.
+   *
+   * @param childActivitySet the {@link ChildActivitySet} representing the set of child activities
+   * to be used in rollup rule evaluation
+   */
   public void setChildActivitySet(ChildActivitySet childActivitySet) {
     this.childActivitySet = childActivitySet;
   }
 
+  /**
+   * Retrieves the minimum count associated with this instance. The minimum count specifies the
+   * threshold value used in evaluating whether the rollup rule criteria are met.
+   *
+   * @return the minimum count as an integer.
+   */
   public int getMinimumCount() {
     return this.minimumCount;
   }
 
+  /**
+   * Sets the minimum count for this instance. The minimum count represents the threshold value used
+   * in evaluating whether the rollup rule criteria are met.
+   *
+   * @param minimumCount the minimum count as an integer.
+   */
   public void setMinimumCount(int minimumCount) {
     this.minimumCount = minimumCount;
   }
 
+  /**
+   * Retrieves the minimum percentage associated with this instance. The minimum percentage is
+   * represented as a {@link PercentType}, which holds a value constrained between 0 and 1,
+   * inclusive.
+   *
+   * @return the {@link PercentType} object representing the minimum percentage.
+   */
   public PercentType getMinimumPercent() {
     return this.minimumPercent;
   }
 
+  /**
+   * Sets the minimum percentage for this instance. The minimum percentage is represented as a
+   * {@link PercentType}, which holds a value constrained between 0 and 1, inclusive. This
+   * percentage defines the threshold to be used in rollup rule evaluations.
+   *
+   * @param minimumPercent the {@link PercentType} object representing the minimum percentage value
+   * to set.
+   */
   public void setMinimumPercent(PercentType minimumPercent) {
     this.minimumPercent = minimumPercent;
   }

@@ -79,10 +79,22 @@ public class ObjectivesList implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the list of objectives defined within this instance.
+   *
+   * @return a list of {@link Objective} objects representing the defined objectives
+   */
   public List<Objective> getObjectives() {
     return this.objectives;
   }
 
+  /**
+   * Sets the list of objectives for this instance. Each objective represents a specific goal with a
+   * title, description, and unique identifier.
+   *
+   * @param objectives the list of {@link Objective} objects to set, where each object defines a
+   * goal with its associated metadata
+   */
   public void setObjectives(List<Objective> objectives) {
     this.objectives = objectives;
   }

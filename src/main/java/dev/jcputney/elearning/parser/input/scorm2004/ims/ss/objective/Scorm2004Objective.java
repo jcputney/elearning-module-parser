@@ -89,34 +89,86 @@ public class Scorm2004Objective implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the identifier for the objective associated with the instance.
+   *
+   * @return The objective's unique identifier as a String.
+   */
   public String getObjectiveID() {
     return this.objectiveID;
   }
 
+  /**
+   * Sets the unique identifier of the objective associated with the instance.
+   *
+   * @param objectiveID the unique identifier for the objective, represented as a String
+   */
   public void setObjectiveID(String objectiveID) {
     this.objectiveID = objectiveID;
   }
 
+  /**
+   * Retrieves the satisfaction criteria for the objective, indicating whether the objective is
+   * satisfied based on certain measures.
+   *
+   * @return A Boolean indicating if the objective is satisfied based on the measure. Returns true
+   * if satisfied, false otherwise, or null if not defined.
+   */
   public Boolean getSatisfiedByMeasure() {
     return this.satisfiedByMeasure;
   }
 
+  /**
+   * Sets the satisfaction criteria for the objective, which specifies whether the objective is
+   * considered satisfied based on the measure provided.
+   *
+   * @param satisfiedByMeasure a Boolean indicating if the objective is satisfied by measure. True
+   * if it is satisfied, false otherwise, or null if not defined.
+   */
   public void setSatisfiedByMeasure(Boolean satisfiedByMeasure) {
     this.satisfiedByMeasure = satisfiedByMeasure;
   }
 
+  /**
+   * Retrieves the minimum normalized measure required for achieving the objective. The normalized
+   * measure is a value between 0.0 and 1.0 that represents a threshold for meeting the objective's
+   * satisfaction criteria.
+   *
+   * @return A Double representing the minimum normalized measure. Returns null if no threshold is
+   * set.
+   */
   public Double getMinNormalizedMeasure() {
     return this.minNormalizedMeasure;
   }
 
+  /**
+   * Sets the minimum normalized measure required to meet the objective's satisfaction criteria. The
+   * normalized measure is typically a value between 0.0 and 1.0, which represents the threshold for
+   * determining whether the objective is considered achieved.
+   *
+   * @param minNormalizedMeasure a Double representing the minimum normalized measure for the
+   * objective. A null value indicates no threshold is set.
+   */
   public void setMinNormalizedMeasure(Double minNormalizedMeasure) {
     this.minNormalizedMeasure = minNormalizedMeasure;
   }
 
+  /**
+   * Retrieves the list of SCORM 2004 objective mappings associated with this objective.
+   *
+   * @return A List of Scorm2004ObjectiveMapping objects representing the objective-to-mapping
+   * records for this instance. Returns an empty list if no mappings are present.
+   */
   public List<Scorm2004ObjectiveMapping> getMapInfo() {
     return this.mapInfo;
   }
 
+  /**
+   * Sets the list of SCORM 2004 objective mappings associated with this objective.
+   *
+   * @param mapInfo a List of Scorm2004ObjectiveMapping objects representing the
+   * objective-to-mapping records for this instance.
+   */
   public void setMapInfo(
       List<Scorm2004ObjectiveMapping> mapInfo) {
     this.mapInfo = mapInfo;

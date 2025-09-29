@@ -201,6 +201,12 @@ public class LocalFileAccess implements FileAccess {
     }
   }
 
+  /**
+   * Retrieves the root path for file access.
+   *
+   * @return The root path as a String.
+   */
+  @Override
   public String getRootPath() {
     return this.rootPath;
   }

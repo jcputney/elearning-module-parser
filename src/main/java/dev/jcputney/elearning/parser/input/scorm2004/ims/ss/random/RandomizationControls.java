@@ -104,36 +104,83 @@ public class RandomizationControls implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the current randomization timing setting for the instance.
+   *
+   * @return the {@link RandomizationTiming} value representing when randomization should occur.
+   * Possible values include NEVER, ONCE, ON_EACH_NEW_ATTEMPT, or UNKNOWN.
+   */
   public RandomizationTiming getRandomizationTiming() {
     return this.randomizationTiming;
   }
 
+  /**
+   * Sets the randomization timing for the instance, determining when randomization should occur.
+   *
+   * @param randomizationTiming the {@link RandomizationTiming} value specifying the timing for
+   * randomization. Possible values include: - NEVER: randomization never occurs - ONCE:
+   * randomization occurs once - ON_EACH_NEW_ATTEMPT: randomization occurs on each new attempt -
+   * UNKNOWN: default/unrecognized value
+   */
   public void setRandomizationTiming(
       RandomizationTiming randomizationTiming) {
     this.randomizationTiming = randomizationTiming;
   }
 
+  /**
+   * Retrieves the current selection timing setting for the instance.
+   *
+   * @return the {@link RandomizationTiming} value representing when selection should occur.
+   * Possible values include NEVER, ONCE, ON_EACH_NEW_ATTEMPT, or UNKNOWN.
+   */
   public RandomizationTiming getSelectionTiming() {
     return this.selectionTiming;
   }
 
-  public void setSelectionTiming(
-      RandomizationTiming selectionTiming) {
+  /**
+   * Sets the selection timing for the instance, determining when selection should occur.
+   *
+   * @param selectionTiming the {@link RandomizationTiming} value specifying the timing for
+   * selection. Possible values include: - NEVER: selection never occurs - ONCE: selection occurs
+   * once - ON_EACH_NEW_ATTEMPT: selection occurs on each new attempt
+   **/
+  public void setSelectionTiming(RandomizationTiming selectionTiming) {
     this.selectionTiming = selectionTiming;
   }
 
+  /**
+   * Determines whether the children of the relevant element or structure should be reordered.
+   *
+   * @return true if children reordering is enabled; otherwise, false.
+   */
   public boolean isReorderChildren() {
     return this.reorderChildren;
   }
 
+  /**
+   * Specifies whether the children of the relevant element or structure should be reordered.
+   *
+   * @param reorderChildren a boolean value indicating if reordering of children should be enabled.
+   * If true, the children will be reordered; if false, they will remain in their original order.
+   */
   public void setReorderChildren(boolean reorderChildren) {
     this.reorderChildren = reorderChildren;
   }
 
+  /**
+   * Retrieves the current select count for the instance.
+   *
+   * @return the number of selected elements or null if no select count is set.
+   */
   public Integer getSelectCount() {
     return this.selectCount;
   }
 
+  /**
+   * Sets the select count for the instance, specifying the number of elements to be selected.
+   *
+   * @param selectCount the number of elements to be selected, or null if no select count is set.
+   */
   public void setSelectCount(Integer selectCount) {
     this.selectCount = selectCount;
   }

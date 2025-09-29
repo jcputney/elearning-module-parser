@@ -99,26 +99,59 @@ public class DeliveryControls implements Serializable {
     // no-op
   }
 
+  /**
+   * Indicates whether the delivery is tracked.
+   *
+   * @return true if the delivery is tracked, false otherwise.
+   */
   public boolean isTracked() {
     return this.tracked;
   }
 
+  /**
+   * Sets the tracking status of the delivery.
+   *
+   * @param tracked a boolean value indicating whether the delivery should be tracked (true) or not
+   * (false)
+   */
   public void setTracked(boolean tracked) {
     this.tracked = tracked;
   }
 
+  /**
+   * Checks whether the completion status is determined by content.
+   *
+   * @return true if the completion status is set by content, false otherwise.
+   */
   public boolean isCompletionSetByContent() {
     return this.completionSetByContent;
   }
 
+  /**
+   * Sets whether the completion status is determined by content.
+   *
+   * @param completionSetByContent a boolean value indicating if the completion status is set by
+   * content (true) or not (false)
+   */
   public void setCompletionSetByContent(boolean completionSetByContent) {
     this.completionSetByContent = completionSetByContent;
   }
 
+  /**
+   * Checks whether the objective status is determined by content.
+   *
+   * @return true if the objective status is set by content, false otherwise.
+   */
   public boolean isObjectiveSetByContent() {
     return this.objectiveSetByContent;
   }
 
+  /**
+   * Sets whether the objective status is determined by content.
+   *
+   * @param objectiveSetByContent a boolean value indicating if the objective status is set by
+   * content (true) or not (false)
+   */
   public void setObjectiveSetByContent(boolean objectiveSetByContent) {
     this.objectiveSetByContent = objectiveSetByContent;
   }

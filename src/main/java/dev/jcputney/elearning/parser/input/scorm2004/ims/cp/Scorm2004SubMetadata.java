@@ -69,18 +69,41 @@ public class Scorm2004SubMetadata implements LoadableMetadata {
     // no-op
   }
 
+  /**
+   * Retrieves the location of the external metadata file referenced by the
+   * <code>adlcp:location</code> element.
+   *
+   * @return the location of the external metadata file as a string
+   */
   public String getLocation() {
     return this.location;
   }
 
+  /**
+   * Sets the location of the external metadata file. The location is represented by the
+   * <code>adlcp:location</code> element and typically specifies the path or URL to the metadata
+   * file.
+   *
+   * @param location the location of the external metadata file as a string
+   */
   public void setLocation(String location) {
     this.location = location;
   }
 
+  /**
+   * Retrieves the inline metadata represented as a LOM (Learning Object Metadata) element.
+   *
+   * @return the LOM instance containing inline metadata
+   */
   public LOM getLom() {
     return this.lom;
   }
 
+  /**
+   * Sets the inline metadata represented as a LOM (Learning Object Metadata) element.
+   *
+   * @param lom the LOM instance containing inline metadata
+   */
   @JacksonXmlProperty(localName = "lom", namespace = LOM.NAMESPACE_URI)
   public void setLom(LOM lom) {
     this.lom = lom;

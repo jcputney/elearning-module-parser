@@ -87,34 +87,74 @@ public class Scorm2004CourseMetadata implements LoadableMetadata {
     // no-op
   }
 
+  /**
+   * Returns the schema value for the SCORM 2004 course metadata.
+   *
+   * @return the schema as a string
+   */
   public String getSchema() {
     return this.schema;
   }
 
+  /**
+   * Sets the schema value for the SCORM 2004 course metadata.
+   *
+   * @param schema the schema to set, represented as a string
+   */
   public void setSchema(String schema) {
     this.schema = schema;
   }
 
+  /**
+   * Retrieves the schema version of the SCORM 2004 course metadata.
+   *
+   * @return the schema version as a string
+   */
   public String getSchemaVersion() {
     return this.schemaVersion;
   }
 
+  /**
+   * Sets the schema version for the SCORM 2004 course metadata.
+   *
+   * @param schemaVersion the schema version to set, represented as a string
+   */
   public void setSchemaVersion(String schemaVersion) {
     this.schemaVersion = schemaVersion;
   }
 
+  /**
+   * Retrieves the location associated with the SCORM 2004 course metadata.
+   *
+   * @return the location as a string
+   */
   public String getLocation() {
     return this.location;
   }
 
+  /**
+   * Sets the location associated with the SCORM 2004 course metadata.
+   *
+   * @param location the location to set, represented as a string
+   */
   public void setLocation(String location) {
     this.location = location;
   }
 
+  /**
+   * Retrieves the LOM (Learning Object Metadata) associated with the SCORM 2004 course metadata.
+   *
+   * @return the LOM object related to the course metadata
+   */
   public LOM getLom() {
     return this.lom;
   }
 
+  /**
+   * Sets the LOM (Learning Object Metadata) for the SCORM 2004 course metadata.
+   *
+   * @param lom the LOM object to set
+   */
   @JacksonXmlProperty(localName = "lom", namespace = LOM.NAMESPACE_URI)
   public void setLom(LOM lom) {
     this.lom = lom;

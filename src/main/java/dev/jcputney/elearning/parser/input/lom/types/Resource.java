@@ -113,34 +113,78 @@ public class Resource implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the list of identifiers associated with the resource.
+   *
+   * @return a list of {@code Identifier} objects representing the identifiers of the resource
+   */
   public List<Identifier> getIdentifiers() {
     return this.identifiers;
   }
 
+  /**
+   * Sets the list of identifiers associated with the resource.
+   *
+   * @param identifiers the list of {@code Identifier} objects representing the identifiers to be
+   * set
+   */
   public void setIdentifiers(List<Identifier> identifiers) {
     this.identifiers = identifiers;
   }
 
+  /**
+   * Retrieves the descriptions for the resource. The descriptions are represented as an
+   * UnboundLangString, which supports multiple string values with language attributes.
+   *
+   * @return an UnboundLangString containing the descriptions of the resource
+   */
   public UnboundLangString getDescriptions() {
     return this.descriptions;
   }
 
+  /**
+   * Sets the descriptions for the resource. The descriptions are represented as an
+   * UnboundLangString, which supports multiple string values with language attributes.
+   *
+   * @param descriptions the UnboundLangString containing the descriptions to be set
+   */
   public void setDescriptions(UnboundLangString descriptions) {
     this.descriptions = descriptions;
   }
 
+  /**
+   * Retrieves the list of catalog entries associated with the resource.
+   *
+   * @return a list of {@code CatalogEntry} objects representing the catalog entries of the resource
+   */
   public List<CatalogEntry> getCatalogEntries() {
     return this.catalogEntries;
   }
 
+  /**
+   * Sets the list of catalog entries associated with the resource.
+   *
+   * @param catalogEntries the list of {@code CatalogEntry} objects representing the catalog entries
+   * to be set
+   */
   public void setCatalogEntries(List<CatalogEntry> catalogEntries) {
     this.catalogEntries = catalogEntries;
   }
 
+  /**
+   * Retrieves the list of custom elements associated with the resource.
+   *
+   * @return a list of {@code Object} representing the custom elements of the resource
+   */
   public List<Object> getCustomElements() {
     return this.customElements;
   }
 
+  /**
+   * Sets the list of custom elements associated with the resource.
+   *
+   * @param customElements the list of {@code Object} representing the custom elements to be set
+   */
   public void setCustomElements(List<Object> customElements) {
     this.customElements = customElements;
   }

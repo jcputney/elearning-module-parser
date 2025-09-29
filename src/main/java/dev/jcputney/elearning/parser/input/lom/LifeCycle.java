@@ -133,35 +133,81 @@ public class LifeCycle implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the version as an object of type {@code UnboundLangString}.
+   *
+   * @return the {@code UnboundLangString} object representing the version information
+   */
   public UnboundLangString getVersion() {
     return this.version;
   }
 
+  /**
+   * Sets the version information for the lifecycle object.
+   *
+   * @param version the {@code UnboundLangString} object representing the version details to set
+   */
   public void setVersion(UnboundLangString version) {
     this.version = version;
   }
 
+  /**
+   * Retrieves the current status of the lifecycle object as a {@code SourceValuePair<Status>}.
+   *
+   * @return the {@code SourceValuePair<Status>} object representing the status, which includes the
+   * source of the status and its corresponding value.
+   */
   public SourceValuePair<Status> getStatus() {
     return this.status;
   }
 
+  /**
+   * Sets the status information for the lifecycle object.
+   *
+   * @param status the {@code SourceValuePair<Status>} object representing the status information to
+   * be set. This includes the source of the status and its corresponding value, indicating the
+   * state of the learning object (e.g., draft, final, revised, or unavailable).
+   */
   public void setStatus(
       SourceValuePair<Status> status) {
     this.status = status;
   }
 
+  /**
+   * Retrieves the list of contributions associated with the lifecycle object.
+   *
+   * @return a {@code List} of {@code Contribute} objects representing the contributions.
+   */
   public List<Contribute> getContribute() {
     return this.contribute;
   }
 
+  /**
+   * Sets the list of contributions associated with the lifecycle object.
+   *
+   * @param contribute a {@code List} of {@code Contribute} objects representing the contributions
+   * to be associated with the lifecycle object.
+   */
   public void setContribute(List<Contribute> contribute) {
     this.contribute = contribute;
   }
 
+  /**
+   * Retrieves the list of custom elements associated with the lifecycle object.
+   *
+   * @return a {@code List} of {@code Object} elements representing the custom attributes or
+   * extensions.
+   */
   public List<Object> getCustomElements() {
     return this.customElements;
   }
 
+  /**
+   * Sets the list of custom elements associated with the lifecycle object.
+   *
+   * @param customElements a {@code List} of {@code Object} elements representing the custom
+   * attributes or extensions to be associated with the lifecycle object.
+   */
   public void setCustomElements(List<Object> customElements) {
     this.customElements = customElements;
   }

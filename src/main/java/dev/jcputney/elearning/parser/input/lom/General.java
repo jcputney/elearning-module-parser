@@ -173,75 +173,181 @@ public class General implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the list of identifiers associated with the instance.
+   *
+   * @return a list of {@link Identifier} objects representing the identifiers
+   */
   public List<Identifier> getIdentifiers() {
     return this.identifiers;
   }
 
+  /**
+   * Sets the list of identifiers associated with the instance.
+   *
+   * @param identifiers a list of {@link Identifier} objects representing the identifiers to be set
+   */
   public void setIdentifiers(List<Identifier> identifiers) {
     this.identifiers = identifiers;
   }
 
+  /**
+   * Retrieves the title associated with this object.
+   *
+   * @return an {@code UnboundLangString} representing the title, which may include multiple string
+   * values with language attributes
+   */
   public UnboundLangString getTitle() {
     return this.title;
   }
 
+  /**
+   * Sets the title associated with this object.
+   *
+   * @param title an {@code UnboundLangString} representing the title, which may include multiple
+   * string values with language attributes
+   */
   public void setTitle(UnboundLangString title) {
     this.title = title;
   }
 
+  /**
+   * Retrieves the list of catalog entries associated with the instance.
+   *
+   * @return a list of {@code CatalogEntry} objects representing catalog entries
+   */
   public List<CatalogEntry> getCatalogEntries() {
     return this.catalogEntries;
   }
 
+  /**
+   * Sets the list of catalog entries associated with the instance.
+   *
+   * @param catalogEntries a list of {@link CatalogEntry} objects representing the catalog entries
+   * to be set
+   */
   public void setCatalogEntries(List<CatalogEntry> catalogEntries) {
     this.catalogEntries = catalogEntries;
   }
 
+  /**
+   * Retrieves the language associated with this object.
+   *
+   * @return a {@code String} representing the language.
+   */
   public String getLanguage() {
     return this.language;
   }
 
+  /**
+   * Sets the language associated with this object.
+   *
+   * @param language a {@code String} representing the language to be set
+   */
   public void setLanguage(String language) {
     this.language = language;
   }
 
+  /**
+   * Retrieves the description associated with this object.
+   *
+   * @return an {@code UnboundLangString} representing the description, which may include multiple
+   * string values with language attributes
+   */
   public UnboundLangString getDescription() {
     return this.description;
   }
 
+  /**
+   * Sets the description for this object.
+   *
+   * @param description an {@code UnboundLangString} representing the description, which may include
+   * multiple string values with language attributes
+   */
   public void setDescription(UnboundLangString description) {
     this.description = description;
   }
 
+  /**
+   * Retrieves the list of keywords associated with this object.
+   *
+   * @return a list of {@code UnboundLangString} objects representing the keywords, which may
+   * include multiple string values with language attributes
+   */
   public List<UnboundLangString> getKeywords() {
     return this.keywords;
   }
 
+  /**
+   * Sets the list of keywords associated with this object.
+   *
+   * @param keywords a list of {@code UnboundLangString} objects representing the keywords, which
+   * may include multiple string values with language attributes
+   */
   public void setKeywords(List<UnboundLangString> keywords) {
     this.keywords = keywords;
   }
 
+  /**
+   * Retrieves the coverage information associated with this object.
+   *
+   * @return an {@code UnboundLangString} representing the coverage, which may include multiple
+   * string values with language attributes.
+   */
   public UnboundLangString getCoverage() {
     return this.coverage;
   }
 
+  /**
+   * Sets the coverage information associated with this object.
+   *
+   * @param coverage an {@code UnboundLangString} representing the coverage, which may include
+   * multiple string values with language attributes.
+   */
   public void setCoverage(UnboundLangString coverage) {
     this.coverage = coverage;
   }
 
+  /**
+   * Retrieves the structure of the learning object associated with this instance.
+   *
+   * @return a {@code SourceValuePair<Structure>} representing the structure, which indicates the
+   * organizational form of the learning object.
+   */
   public SourceValuePair<Structure> getStructure() {
     return this.structure;
   }
 
+  /**
+   * Sets the structure of the learning object associated with this instance.
+   *
+   * @param structure a {@code SourceValuePair<Structure>} representing the structure to be set.
+   * This indicates the organizational form of the learning object, such as atomic, collection,
+   * networked, hierarchical, or linear.
+   */
   public void setStructure(
       SourceValuePair<Structure> structure) {
     this.structure = structure;
   }
 
+  /**
+   * Retrieves the aggregation level associated with this object.
+   *
+   * @return a {@code SourceValuePair<AggregationLevel>} representing the aggregation level, which
+   * specifies the level of granularity or complexity of the learning object.
+   */
   public SourceValuePair<AggregationLevel> getAggregationLevel() {
     return this.aggregationLevel;
   }
 
+  /**
+   * Sets the aggregation level for the learning object. The aggregation level specifies the level
+   * of granularity or complexity of the learning object.
+   *
+   * @param aggregationLevel a {@code SourceValuePair<AggregationLevel>} representing the
+   * aggregation level to be set. Possible values include LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4, or
+   * UNKNOWN.
+   */
   public void setAggregationLevel(
       SourceValuePair<AggregationLevel> aggregationLevel) {
     this.aggregationLevel = aggregationLevel;

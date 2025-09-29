@@ -45,10 +45,26 @@ public class Presentation implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the navigation interface settings associated with this presentation. The navigation
+   * interface defines controls and options for interacting with the LMS navigation UI, specifying
+   * which components are visible or hidden and how navigation behavior is managed.
+   *
+   * @return the NavigationInterface object containing the navigation controls and settings, or null
+   * if no navigation interface has been defined.
+   */
   public NavigationInterface getNavigationInterface() {
     return this.navigationInterface;
   }
 
+  /**
+   * Sets the navigation interface for the presentation. The navigation interface specifies controls
+   * and options for interacting with the LMS navigation UI, determining the visibility and behavior
+   * of navigation components.
+   *
+   * @param navigationInterface the NavigationInterface object containing the settings and controls
+   * for the LMS navigation user interface
+   */
   public void setNavigationInterface(NavigationInterface navigationInterface) {
     this.navigationInterface = navigationInterface;
   }

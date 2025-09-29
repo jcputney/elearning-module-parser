@@ -155,6 +155,11 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
         .getOrganizationList());
   }
 
+  /**
+   * Returns the class type of the SCORM 1.2 manifest.
+   *
+   * @return The class object representing Scorm12Manifest.
+   */
   @Override
   protected Class<Scorm12Manifest> getManifestClass() {
     return Scorm12Manifest.class;

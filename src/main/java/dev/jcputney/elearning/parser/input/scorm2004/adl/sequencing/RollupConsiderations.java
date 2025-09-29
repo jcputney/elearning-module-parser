@@ -82,42 +82,104 @@ public class RollupConsiderations implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the rollup consideration type required for satisfaction.
+   *
+   * @return the RollupConsiderationType that specifies the condition required for satisfaction.
+   */
   public RollupConsiderationType getRequiredForSatisfied() {
     return this.requiredForSatisfied;
   }
 
+  /**
+   * Sets the rollup consideration type required for marking satisfaction.
+   *
+   * @param requiredForSatisfied the RollupConsiderationType that specifies the condition required
+   * for satisfaction. It determines the criteria under which a rollup satisfaction is considered.
+   */
   public void setRequiredForSatisfied(RollupConsiderationType requiredForSatisfied) {
     this.requiredForSatisfied = requiredForSatisfied;
   }
 
+  /**
+   * Retrieves the rollup consideration type required for non-satisfaction.
+   *
+   * @return the RollupConsiderationType that specifies the condition required for determining
+   * non-satisfaction.
+   */
   public RollupConsiderationType getRequiredForNotSatisfied() {
     return this.requiredForNotSatisfied;
   }
 
+  /**
+   * Sets the rollup consideration type required for marking non-satisfaction.
+   *
+   * @param requiredForNotSatisfied the RollupConsiderationType that specifies the condition
+   * required for determining non-satisfaction. It defines the criteria under which a rollup
+   * non-satisfaction is considered.
+   */
   public void setRequiredForNotSatisfied(RollupConsiderationType requiredForNotSatisfied) {
     this.requiredForNotSatisfied = requiredForNotSatisfied;
   }
 
+  /**
+   * Retrieves the rollup consideration type required for marking completion.
+   *
+   * @return the RollupConsiderationType that specifies the condition required for determining
+   * completion.
+   */
   public RollupConsiderationType getRequiredForCompleted() {
     return this.requiredForCompleted;
   }
 
+  /**
+   * Sets the rollup consideration type required for marking completion.
+   *
+   * @param requiredForCompleted the RollupConsiderationType that specifies the condition required
+   * for determining completion. It defines the criteria under which a rollup completion is
+   * considered.
+   */
   public void setRequiredForCompleted(RollupConsiderationType requiredForCompleted) {
     this.requiredForCompleted = requiredForCompleted;
   }
 
+  /**
+   * Retrieves the rollup consideration type required for marking incompletion.
+   *
+   * @return the RollupConsiderationType that specifies the condition required for determining
+   * incompletion.
+   */
   public RollupConsiderationType getRequiredForIncomplete() {
     return this.requiredForIncomplete;
   }
 
+  /**
+   * Sets the rollup consideration type required for marking incompletion.
+   *
+   * @param requiredForIncomplete the RollupConsiderationType that specifies the condition required
+   * for determining incompletion. It defines the criteria under which a rollup incompletion is
+   * considered.
+   */
   public void setRequiredForIncomplete(RollupConsiderationType requiredForIncomplete) {
     this.requiredForIncomplete = requiredForIncomplete;
   }
 
+  /**
+   * Determines whether satisfaction measurement is enabled when active.
+   *
+   * @return true if satisfaction measurement is enabled when active, false otherwise.
+   */
   public boolean isMeasureSatisfactionIfActive() {
     return this.measureSatisfactionIfActive;
   }
 
+  /**
+   * Sets whether satisfaction measurement is enabled when active.
+   *
+   * @param measureSatisfactionIfActive a boolean value indicating whether satisfaction measurement
+   * should be enabled when active. If true, satisfaction measurement will be active; otherwise, it
+   * will not be measured.
+   */
   public void setMeasureSatisfactionIfActive(boolean measureSatisfactionIfActive) {
     this.measureSatisfactionIfActive = measureSatisfactionIfActive;
   }

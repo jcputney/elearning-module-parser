@@ -89,26 +89,63 @@ public class Taxon implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the unique identifier for the taxon.
+   *
+   * @return the identifier of the taxon as a string, which is typically used to reference the taxon
+   * in a classification system.
+   */
   public String getId() {
     return this.id;
   }
 
+  /**
+   * Sets the unique identifier for the taxon.
+   *
+   * @param id the identifier to be set for the taxon, typically a string used in a classification
+   * or taxonomy system
+   */
   public void setId(String id) {
     this.id = id;
   }
 
+  /**
+   * Retrieves the entry for the taxon.
+   *
+   * @return the entry associated with the taxon, represented as a {@code SingleLangString}, which
+   * typically contains a string value and its corresponding language attribute
+   */
   public SingleLangString getEntry() {
     return this.entry;
   }
 
+  /**
+   * Sets the entry associated with the taxon. The entry is represented as an instance of
+   * {@code SingleLangString}, which typically includes a string value and a language attribute.
+   *
+   * @param entry the {@code SingleLangString} object to be set as the entry for this taxon
+   */
   public void setEntry(SingleLangString entry) {
     this.entry = entry;
   }
 
+  /**
+   * Retrieves the list of custom elements for the taxon. Custom elements are additional elements
+   * associated with the taxon that are not part of the core taxonomy structure.
+   *
+   * @return a list of objects representing the custom elements associated with this taxon
+   */
   public List<Object> getCustomElements() {
     return this.customElements;
   }
 
+  /**
+   * Sets the list of custom elements associated with this taxon. Custom elements represent
+   * additional user-defined data that is not part of the core taxonomy structure.
+   *
+   * @param customElements the list of custom elements to associate with this taxon, where each
+   * element is represented as an Object
+   */
   public void setCustomElements(List<Object> customElements) {
     this.customElements = customElements;
   }

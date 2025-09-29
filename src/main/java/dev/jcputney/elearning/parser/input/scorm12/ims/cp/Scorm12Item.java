@@ -193,98 +193,232 @@ public class Scorm12Item implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the identifier of the SCORM 1.2 item.
+   *
+   * @return A string representing the identifier of the item.
+   */
   public String getIdentifier() {
     return this.identifier;
   }
 
+  /**
+   * Sets the identifier for the SCORM 1.2 item.
+   *
+   * @param identifier A string representing the unique identifier to be assigned to the item.
+   */
   public void setIdentifier(String identifier) {
     this.identifier = identifier;
   }
 
+  /**
+   * Retrieves the identifier reference of the SCORM 1.2 item.
+   *
+   * @return A string representing the identifier reference of the item.
+   */
   public String getIdentifierRef() {
     return this.identifierRef;
   }
 
+  /**
+   * Sets the identifier reference for the SCORM 1.2 item.
+   *
+   * @param identifierRef A string representing the identifier reference to be assigned to the
+   * item.
+   */
   public void setIdentifierRef(String identifierRef) {
     this.identifierRef = identifierRef;
   }
 
+  /**
+   * Retrieves the visibility status of this item.
+   *
+   * @return A Boolean indicating whether the item is visible. Returns true if the item is visible,
+   * otherwise false.
+   */
   public Boolean getIsVisible() {
     return this.isVisible;
   }
 
+  /**
+   * Retrieves the parameters associated with this SCORM 1.2 item.
+   *
+   * @return A string representing the parameters of the item.
+   */
   public String getParameters() {
     return this.parameters;
   }
 
+  /**
+   * Sets the parameters associated with this SCORM 1.2 item.
+   *
+   * @param parameters A string representing the parameters to be set for this item.
+   */
   public void setParameters(String parameters) {
     this.parameters = parameters;
   }
 
+  /**
+   * Retrieves the maximum time allowed for the SCORM 1.2 item.
+   *
+   * @return A Duration object representing the maximum time allowed for this item.
+   */
   public Duration getMaxTimeAllowed() {
     return this.maxTimeAllowed;
   }
 
+  /**
+   * Sets the maximum time allowed for this SCORM 1.2 item.
+   *
+   * @param maxTimeAllowed A Duration object representing the maximum amount of time allowed for the
+   * completion of this item.
+   */
   public void setMaxTimeAllowed(Duration maxTimeAllowed) {
     this.maxTimeAllowed = maxTimeAllowed;
   }
 
+  /**
+   * Retrieves the mastery score of the SCORM 1.2 item.
+   *
+   * @return A Double representing the mastery score of the item.
+   */
   public Double getMasteryScore() {
     return this.masteryScore;
   }
 
+  /**
+   * Sets the mastery score for the SCORM 1.2 item.
+   *
+   * @param masteryScore A Double value representing the mastery score to be assigned to the item.
+   * This indicates the minimum score required to achieve mastery.
+   */
   public void setMasteryScore(Double masteryScore) {
     this.masteryScore = masteryScore;
   }
 
+  /**
+   * Retrieves the prerequisites associated with this SCORM 1.2 item.
+   *
+   * @return A Scorm12Prerequisites object representing the prerequisites for the item.
+   */
   public Scorm12Prerequisites getPrerequisites() {
     return this.prerequisites;
   }
 
+  /**
+   * Sets the prerequisites for the SCORM 1.2 item.
+   *
+   * @param prerequisites An instance of {@code Scorm12Prerequisites} representing the prerequisites
+   * required for this item.
+   */
   public void setPrerequisites(Scorm12Prerequisites prerequisites) {
     this.prerequisites = prerequisites;
   }
 
+  /**
+   * Retrieves the time limit action associated with this SCORM 1.2 item.
+   *
+   * @return A {@code TimeLimitAction} representing the action to be taken when the time limit is
+   * reached.
+   */
   public TimeLimitAction getTimeLimitAction() {
     return this.timeLimitAction;
   }
 
+  /**
+   * Sets the time limit action for this SCORM 1.2 item.
+   *
+   * @param timeLimitAction An instance of {@code TimeLimitAction} representing the action to be
+   * performed when the time limit is reached. Possible values include: {@code EXIT_MESSAGE},
+   * {@code EXIT_NO_MESSAGE}, {@code CONTINUE_MESSAGE}, {@code CONTINUE_NO_MESSAGE}, and
+   * {@code UNKNOWN}.
+   */
   public void setTimeLimitAction(TimeLimitAction timeLimitAction) {
     this.timeLimitAction = timeLimitAction;
   }
 
+  /**
+   * Retrieves the data from the Learning Management System (LMS) associated with this SCORM 1.2
+   * item.
+   *
+   * @return A string representing the data obtained from the LMS for this item.
+   */
   public String getDataFromLMS() {
     return this.dataFromLMS;
   }
 
+  /**
+   * Sets the data from the Learning Management System (LMS) for this SCORM 1.2 item.
+   *
+   * @param dataFromLMS A string containing the data retrieved from the LMS to be associated with
+   * this item.
+   */
   public void setDataFromLMS(String dataFromLMS) {
     this.dataFromLMS = dataFromLMS;
   }
 
+  /**
+   * Retrieves the title of the SCORM 1.2 item.
+   *
+   * @return A string representing the title of the item.
+   */
   public String getTitle() {
     return this.title;
   }
 
+  /**
+   * Sets the title for the SCORM 1.2 item.
+   *
+   * @param title A string representing the title to be assigned to the item.
+   */
   public void setTitle(String title) {
     this.title = title;
   }
 
+  /**
+   * Retrieves the metadata associated with this SCORM 1.2 item.
+   *
+   * @return A Scorm12Metadata object representing the metadata of the item.
+   */
   public Scorm12Metadata getMetadata() {
     return this.metadata;
   }
 
+  /**
+   * Sets the metadata associated with this SCORM 1.2 item.
+   *
+   * @param metadata An instance of {@code Scorm12Metadata} representing the metadata to be assigned
+   * to the item.
+   */
   public void setMetadata(Scorm12Metadata metadata) {
     this.metadata = metadata;
   }
 
+  /**
+   * Retrieves the list of child SCORM 1.2 items associated with the current item.
+   *
+   * @return A list of {@code Scorm12Item} representing the child items.
+   */
   public List<Scorm12Item> getItems() {
     return this.items;
   }
 
+  /**
+   * Sets the list of child SCORM 1.2 items associated with this item.
+   *
+   * @param items A list of {@code Scorm12Item} objects representing the child items to be
+   * associated with this item.
+   */
   public void setItems(List<Scorm12Item> items) {
     this.items = items;
   }
 
+  /**
+   * Sets the visibility state for the SCORM 1.2 item.
+   *
+   * @param visible A Boolean value indicating the visibility state to be set for this item. If
+   * true, the item is marked as visible; if false, it is marked as hidden.
+   */
   public void setVisible(Boolean visible) {
     isVisible = visible;
   }

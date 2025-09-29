@@ -79,30 +79,65 @@ public final class AiccObjectiveMetadata implements Serializable {
     this.statusMap = statusMap == null ? Map.of() : Map.copyOf(statusMap);
   }
 
+  /**
+   * Retrieves the unique identifier of the object.
+   *
+   * @return the unique identifier as a String
+   */
   public String getId() {
     return this.id;
   }
 
+  /**
+   * Retrieves the description of the objective metadata.
+   *
+   * @return the description as a String
+   */
   public String getDescription() {
     return this.description;
   }
 
+  /**
+   * Retrieves the list of associated AU (Assignable Unit) IDs for the objective metadata.
+   *
+   * @return a list of strings representing the associated AU IDs
+   */
   public List<String> getAssociatedAuIds() {
     return this.associatedAuIds;
   }
 
+  /**
+   * Indicates whether the objective is satisfied by measure.
+   *
+   * @return true if the objective is satisfied by measure; false otherwise
+   */
   public Boolean getSatisfiedByMeasure() {
     return this.satisfiedByMeasure;
   }
 
+  /**
+   * Retrieves the minimum normalized measure associated with the objective metadata.
+   *
+   * @return the minimum normalized measure as a Double
+   */
   public Double getMinNormalizedMeasure() {
     return this.minNormalizedMeasure;
   }
 
+  /**
+   * Retrieves the progress measure weight associated with the objective metadata.
+   *
+   * @return the progress measure weight as a Double
+   */
   public Double getProgressMeasureWeight() {
     return this.progressMeasureWeight;
   }
 
+  /**
+   * Retrieves the status mapping associated with the objective metadata.
+   *
+   * @return a map where the keys and values are strings representing the status information
+   */
   public Map<String, String> getStatusMap() {
     return this.statusMap;
   }

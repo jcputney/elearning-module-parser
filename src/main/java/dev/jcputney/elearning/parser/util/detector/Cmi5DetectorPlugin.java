@@ -49,11 +49,21 @@ public class Cmi5DetectorPlugin implements ModuleTypeDetectorPlugin {
     // No initialization required
   }
 
+  /**
+   * Retrieves the priority of this detector plugin.
+   *
+   * @return the priority value as an integer, where a higher value indicates a higher priority.
+   */
   @Override
   public int getPriority() {
     return PRIORITY;
   }
 
+  /**
+   * Retrieves the name of this detector plugin.
+   *
+   * @return the name of the detector plugin as a String.
+   */
   @Override
   public String getName() {
     return NAME;

@@ -35,11 +35,7 @@ public class Cmi5TypesTest {
   @Test
   void testLangString() {
     // Create a LangString instance
-    LangString langString = LangString
-        .builder()
-        .value("Test Value")
-        .lang(EN_US)
-        .build();
+    LangString langString = new LangString("Test Value", EN_US);
 
     // Verify the properties
     assertNotNull(langString);
@@ -55,16 +51,8 @@ public class Cmi5TypesTest {
   void testTextType() {
     // Create a list of LangString instances
     List<LangString> strings = new ArrayList<>();
-    strings.add(LangString
-        .builder()
-        .value("Test Value 1")
-        .lang(EN_US)
-        .build());
-    strings.add(LangString
-        .builder()
-        .value("Test Value 2")
-        .lang("fr-FR")
-        .build());
+    strings.add(new LangString("Test Value 1", EN_US));
+    strings.add(new LangString("Test Value 2", "fr-FR"));
 
     // Create a TextType instance
     TextType textType = new TextType(strings);
@@ -151,20 +139,12 @@ public class Cmi5TypesTest {
   void testObjective() {
     // Create a TextType for title
     List<LangString> titleStrings = new ArrayList<>();
-    titleStrings.add(LangString
-        .builder()
-        .value("Objective Title")
-        .lang(EN_US)
-        .build());
+    titleStrings.add(new LangString("Objective Title", EN_US));
     TextType title = new TextType(titleStrings);
 
     // Create a TextType for description
     List<LangString> descriptionStrings = new ArrayList<>();
-    descriptionStrings.add(LangString
-        .builder()
-        .value("Objective Description")
-        .lang(EN_US)
-        .build());
+    descriptionStrings.add(new LangString("Objective Description", EN_US));
     TextType description = new TextType(descriptionStrings);
 
     // Create an Objective instance

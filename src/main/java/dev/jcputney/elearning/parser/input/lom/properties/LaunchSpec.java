@@ -71,26 +71,64 @@ public class LaunchSpec implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the SCO (Sharable Content Object) launch type.
+   *
+   * @return an instance of {@code LaunchType} representing the SCO launch type, or {@code null} if
+   * not set.
+   */
   public LaunchType getSco() {
     return this.sco;
   }
 
+  /**
+   * Sets the SCO (Sharable Content Object) launch type.
+   *
+   * @param sco the SCO launch type to be set; an instance of {@code LaunchType} representing how
+   * the SCO should be launched
+   */
   public void setSco(LaunchType sco) {
     this.sco = sco;
   }
 
+  /**
+   * Retrieves the player launch type.
+   *
+   * @return an instance of {@code LaunchType} representing the player launch type, or {@code null}
+   * if not set.
+   */
   public LaunchType getPlayer() {
     return this.player;
   }
 
+  /**
+   * Sets the player launch type.
+   *
+   * @param player the player launch type to be set; an instance of {@code LaunchType} representing
+   * how the player should be launched
+   */
   public void setPlayer(LaunchType player) {
     this.player = player;
   }
 
+  /**
+   * Retrieves the value that indicates whether the SCO window should be wrapped with an API.
+   *
+   * @return an instance of {@code YesNoType} representing the configuration for wrapping the SCO
+   * window with an API.
+   */
   public YesNoType getWrapScoWindowWithApi() {
     return this.wrapScoWindowWithApi;
   }
 
+  /**
+   * Sets the value that specifies whether the SCO (Sharable Content Object) window should be
+   * wrapped with an API.
+   *
+   * @param wrapScoWindowWithApi an instance of {@code YesNoType} that determines whether the SCO
+   * window should be wrapped with an API. Acceptable values are {@code YES}, {@code NO},
+   * {@code TRUE}, or {@code FALSE}.
+   */
   public void setWrapScoWindowWithApi(YesNoType wrapScoWindowWithApi) {
     this.wrapScoWindowWithApi = wrapScoWindowWithApi;
   }

@@ -200,9 +200,9 @@ public class Cmi5Manifest implements PackageManifest {
   }
 
   /**
-   * Returns null, as the CMI5 manifest does not include a version number.
+   * Returns the version of the course. If the version is not available, it returns null.
    *
-   * @return null
+   * @return the version of the course, or null if not available
    */
   @Override
   @JsonIgnore
@@ -210,40 +210,90 @@ public class Cmi5Manifest implements PackageManifest {
     return null;
   }
 
+  /**
+   * Returns the duration of the course. The default duration is represented as zero if not
+   * explicitly defined.
+   *
+   * @return the duration of the course, represented as a {@link Duration} object
+   */
   @Override
   @JsonIgnore
   public Duration getDuration() {
     return Duration.ZERO;
   }
 
+  /**
+   * Retrieves the course associated with this manifest.
+   *
+   * @return the {@code Course} object associated with this manifest, or null if no course is set
+   */
   public Course getCourse() {
     return this.course;
   }
 
+  /**
+   * Sets the course associated with the manifest.
+   *
+   * @param course the {@code Course} object to associate with this manifest
+   */
   public void setCourse(Course course) {
     this.course = course;
   }
 
+  /**
+   * Retrieves the list of objectives associated with this manifest.
+   *
+   * @return an {@code ObjectivesList} containing the course objectives, or null if no objectives
+   * are defined
+   */
   public ObjectivesList getObjectives() {
     return this.objectives;
   }
 
+  /**
+   * Sets the list of objectives for this manifest.
+   *
+   * @param objectives the {@code ObjectivesList} containing the objectives to associate with this
+   * manifest
+   */
   public void setObjectives(ObjectivesList objectives) {
     this.objectives = objectives;
   }
 
+  /**
+   * Retrieves the list of blocks associated with this manifest.
+   *
+   * @return a {@code List} of {@code Block} objects representing the blocks in the manifest, or an
+   * empty list if no blocks are defined
+   */
   public List<Block> getBlocks() {
     return this.blocks;
   }
 
+  /**
+   * Sets the list of blocks for the Cmi5 manifest.
+   *
+   * @param blocks the {@code List} of {@code Block} objects to associate with this manifest
+   */
   public void setBlocks(List<Block> blocks) {
     this.blocks = blocks;
   }
 
+  /**
+   * Retrieves the list of assignable units associated with this manifest.
+   *
+   * @return a {@code List} of {@code AU} objects representing the assignable units, or an empty
+   * list if no assignable units are defined
+   */
   public List<AU> getAssignableUnits() {
     return this.assignableUnits;
   }
 
+  /**
+   * Sets the list of assignable units for the Cmi5 manifest.
+   *
+   * @param assignableUnits the list of {@code AU} objects to be associated with this manifest
+   */
   public void setAssignableUnits(List<AU> assignableUnits) {
     this.assignableUnits = assignableUnits;
   }

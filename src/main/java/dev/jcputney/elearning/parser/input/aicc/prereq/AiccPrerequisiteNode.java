@@ -100,14 +100,34 @@ public final class AiccPrerequisiteNode implements Serializable {
     return new AiccPrerequisiteNode(AiccPrerequisiteNodeType.IDENTIFIER, value, List.of());
   }
 
+  /**
+   * Retrieves the type of this AICC prerequisite node. The type defines the role or behavior of the
+   * node within the prerequisite expression tree, such as whether it represents a logical operation
+   * (e.g., AND, OR, NOT) or an identifier.
+   *
+   * @return the {@link AiccPrerequisiteNodeType} representing the type of this prerequisite node
+   */
   public AiccPrerequisiteNodeType getType() {
     return this.type;
   }
 
+  /**
+   * Retrieves the value of this AICC prerequisite node. The value typically represents an
+   * identifier or specific piece of data associated with the node.
+   *
+   * @return the value of this node as a non-null string, or null if no value is assigned.
+   */
   public String getValue() {
     return this.value;
   }
 
+  /**
+   * Retrieves the list of child nodes associated with this AICC prerequisite node. The child nodes
+   * represent the subordinate elements in the prerequisite expression hierarchy.
+   *
+   * @return a list of {@code AiccPrerequisiteNode} objects representing the child nodes, or an
+   * empty list if this node has no children.
+   */
   public List<AiccPrerequisiteNode> getChildren() {
     return this.children;
   }

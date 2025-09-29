@@ -205,38 +205,83 @@ public class ActivityNode implements Serializable {
     return resourceIdentifier;
   }
 
+  /**
+   * Sets the resource identifier associated with this activity node.
+   *
+   * @param resourceIdentifier The identifier of the associated resource
+   */
   public void setResourceIdentifier(String resourceIdentifier) {
     this.resourceIdentifier = resourceIdentifier;
   }
 
+  /**
+   * Retrieves the identifier of the activity node.
+   *
+   * @return The identifier of the activity node as a String.
+   */
   public String getIdentifier() {
     return this.identifier;
   }
 
+  /**
+   * Sets the identifier for this activity node.
+   *
+   * @param identifier The unique identifier to set for this activity node.
+   */
   public void setIdentifier(String identifier) {
     this.identifier = identifier;
   }
 
+  /**
+   * Retrieves the title of the activity node.
+   *
+   * @return The title of the activity node as a String.
+   */
   public String getTitle() {
     return this.title;
   }
 
+  /**
+   * Sets the title of this activity node.
+   *
+   * @param title The title to set for the activity node.
+   */
   public void setTitle(String title) {
     this.title = title;
   }
 
+  /**
+   * Determines if this activity node is a leaf node.
+   *
+   * @return true if the node is a leaf node, false otherwise
+   */
   public boolean isLeaf() {
     return this.isLeaf;
   }
 
+  /**
+   * Sets whether this node is a leaf node.
+   *
+   * @param leaf true if this node is a leaf node, false otherwise
+   */
   public void setLeaf(boolean leaf) {
     isLeaf = leaf;
   }
 
+  /**
+   * Determines if this activity node is visible.
+   *
+   * @return true if the activity node is visible, false otherwise
+   */
   public boolean isVisible() {
     return this.isVisible;
   }
 
+  /**
+   * Sets the visibility of this activity node.
+   *
+   * @param visible true to make the activity node visible, false to make it invisible
+   */
   public void setVisible(boolean visible) {
     isVisible = visible;
   }

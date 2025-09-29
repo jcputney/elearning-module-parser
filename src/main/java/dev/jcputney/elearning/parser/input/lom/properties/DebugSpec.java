@@ -114,82 +114,190 @@ public class DebugSpec implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the control audit setting for the debug specification.
+   *
+   * @return the current value of controlAudit, which is of type {@link YesNoType}.
+   */
   public YesNoType getControlAudit() {
     return this.controlAudit;
   }
 
+  /**
+   * Sets the control audit setting for the debug specification.
+   *
+   * @param controlAudit the control audit setting to be set, which is of type {@link YesNoType}
+   */
   public void setControlAudit(YesNoType controlAudit) {
     this.controlAudit = controlAudit;
   }
 
+  /**
+   * Retrieves the control detailed setting for the debug specification.
+   *
+   * @return the current value of the controlDetailed field, which is of type {@link YesNoType}.
+   */
   public YesNoType getControlDetailed() {
     return this.controlDetailed;
   }
 
+  /**
+   * Sets the control detailed setting for the debug specification.
+   *
+   * @param controlDetailed the control detailed setting to be set, which is of type
+   * {@link YesNoType}
+   */
   public void setControlDetailed(YesNoType controlDetailed) {
     this.controlDetailed = controlDetailed;
   }
 
+  /**
+   * Retrieves the runtime audit setting for the debug specification.
+   *
+   * @return the current value of the runtimeAudit field, which is of type {@link YesNoType}.
+   */
   public YesNoType getRuntimeAudit() {
     return this.runtimeAudit;
   }
 
+  /**
+   * Sets the runtime audit setting for the debug specification.
+   *
+   * @param runtimeAudit the runtime audit setting to be set, which is of type {@link YesNoType}
+   */
   public void setRuntimeAudit(YesNoType runtimeAudit) {
     this.runtimeAudit = runtimeAudit;
   }
 
+  /**
+   * Retrieves the runtime detailed setting for the debug specification.
+   *
+   * @return the current value of the runtimeDetailed field, which is of type {@link YesNoType}.
+   */
   public YesNoType getRuntimeDetailed() {
     return this.runtimeDetailed;
   }
 
+  /**
+   * Sets the runtime detailed setting for the debug specification.
+   *
+   * @param runtimeDetailed the runtime detailed setting to be set, which is of type
+   * {@link YesNoType}
+   */
   public void setRuntimeDetailed(YesNoType runtimeDetailed) {
     this.runtimeDetailed = runtimeDetailed;
   }
 
+  /**
+   * Retrieves the sequencing audit setting for the debug specification.
+   *
+   * @return the current value of the sequencingAudit field, which is of type {@link YesNoType}.
+   */
   public YesNoType getSequencingAudit() {
     return this.sequencingAudit;
   }
 
+  /**
+   * Sets the sequencing audit setting for the debug specification.
+   *
+   * @param sequencingAudit the sequencing audit setting to be set, which is of type
+   * {@link YesNoType}
+   */
   public void setSequencingAudit(YesNoType sequencingAudit) {
     this.sequencingAudit = sequencingAudit;
   }
 
+  /**
+   * Retrieves the sequencing detailed setting for the debug specification.
+   *
+   * @return the current value of the sequencingDetailed field, which is of type {@link YesNoType}.
+   */
   public YesNoType getSequencingDetailed() {
     return this.sequencingDetailed;
   }
 
+  /**
+   * Sets the sequencing detailed setting for the debug specification.
+   *
+   * @param sequencingDetailed the sequencing detailed setting to be set, which is of type
+   * {@link YesNoType}
+   */
   public void setSequencingDetailed(YesNoType sequencingDetailed) {
     this.sequencingDetailed = sequencingDetailed;
   }
 
+  /**
+   * Retrieves the sequencing simple setting for the debug specification.
+   *
+   * @return the current value of the sequencingSimple field, which is of type {@link YesNoType}.
+   */
   public YesNoType getSequencingSimple() {
     return this.sequencingSimple;
   }
 
+  /**
+   * Sets the sequencing simple setting for the debug specification.
+   *
+   * @param sequencingSimple the sequencing simple setting to be set, which is of type
+   * {@link YesNoType}
+   */
   public void setSequencingSimple(YesNoType sequencingSimple) {
     this.sequencingSimple = sequencingSimple;
   }
 
+  /**
+   * Retrieves the lookahead audit setting for the debug specification.
+   *
+   * @return the current value of the lookaheadAudit field, which is of type {@link YesNoType}.
+   */
   public YesNoType getLookaheadAudit() {
     return this.lookaheadAudit;
   }
 
+  /**
+   * Sets the lookahead audit setting for the debug specification.
+   *
+   * @param lookaheadAudit the lookahead audit setting to be set, which is of type
+   * {@link YesNoType}
+   */
   public void setLookaheadAudit(YesNoType lookaheadAudit) {
     this.lookaheadAudit = lookaheadAudit;
   }
 
+  /**
+   * Retrieves the lookahead detailed setting for the debug specification.
+   *
+   * @return the current value of the lookaheadDetailed field, which is of type {@link YesNoType}.
+   */
   public YesNoType getLookaheadDetailed() {
     return this.lookaheadDetailed;
   }
 
+  /**
+   * Sets the lookahead detailed setting for the debug specification.
+   *
+   * @param lookaheadDetailed the lookahead detailed setting to be set, which is of type
+   * {@link YesNoType}
+   */
   public void setLookaheadDetailed(YesNoType lookaheadDetailed) {
     this.lookaheadDetailed = lookaheadDetailed;
   }
 
+  /**
+   * Retrieves the include timestamps setting for the debug specification.
+   *
+   * @return the current value of the includeTimestamps field, which is of type {@link YesNoType}.
+   */
   public YesNoType getIncludeTimestamps() {
     return this.includeTimestamps;
   }
 
+  /**
+   * Sets the include timestamps setting for the debug specification.
+   *
+   * @param includeTimestamps the include timestamps setting to be set, which is of type
+   * {@link YesNoType}
+   */
   public void setIncludeTimestamps(YesNoType includeTimestamps) {
     this.includeTimestamps = includeTimestamps;
   }

@@ -140,38 +140,88 @@ public final class AiccPrerequisite implements Serializable {
         .toList();
   }
 
+  /**
+   * Retrieves the unique identifier for the assignable unit.
+   *
+   * @return the unique identifier of the assignable unit as a String.
+   */
   public String getAssignableUnitId() {
     return this.assignableUnitId;
   }
 
+  /**
+   * Retrieves the raw expression associated with the prerequisite.
+   *
+   * @return the raw expression as a String.
+   */
   public String getRawExpression() {
     return this.rawExpression;
   }
 
+  /**
+   * Determines whether the prerequisite is mandatory.
+   *
+   * @return {@code true} if the prerequisite is mandatory; {@code false} otherwise.
+   */
   public boolean isMandatory() {
     return this.mandatory;
   }
 
+  /**
+   * Retrieves the list of referenced assignable unit (AU) IDs associated with the prerequisite.
+   *
+   * @return a list of Strings representing the referenced AU IDs. The returned list may be empty if
+   * no referenced AU IDs are specified.
+   */
   public List<String> getReferencedAuIds() {
     return this.referencedAuIds;
   }
 
+  /**
+   * Retrieves the list of optional assignable unit (AU) IDs associated with the prerequisite.
+   *
+   * @return a list of Strings representing the optional AU IDs. The returned list may be empty if
+   * no optional AU IDs are specified.
+   */
   public List<String> getOptionalAuIds() {
     return this.optionalAuIds;
   }
 
+  /**
+   * Retrieves the list of tokens associated with the prerequisite.
+   *
+   * @return a list of strings representing the tokens. The returned list may be empty if no tokens
+   * are specified.
+   */
   public List<String> getTokens() {
     return this.tokens;
   }
 
+  /**
+   * Retrieves the list of postfix tokens associated with the prerequisite.
+   *
+   * @return a list of strings representing the postfix tokens. The returned list may be empty if no
+   * postfix tokens are specified.
+   */
   public List<String> getPostfixTokens() {
     return this.postfixTokens;
   }
 
+  /**
+   * Retrieves the prerequisite expression associated with this instance.
+   *
+   * @return an instance of {@code AiccPrerequisiteExpression} representing the prerequisite
+   * expression.
+   */
   public AiccPrerequisiteExpression getExpression() {
     return this.expression;
   }
 
+  /**
+   * Retrieves the completion criteria associated with the prerequisite.
+   *
+   * @return an instance of {@code AiccCompletionCriteria} representing the completion criteria.
+   */
   public AiccCompletionCriteria getCompletionCriteria() {
     return this.completionCriteria;
   }

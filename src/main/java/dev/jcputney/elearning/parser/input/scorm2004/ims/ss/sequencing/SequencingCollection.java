@@ -50,10 +50,27 @@ public class SequencingCollection implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the list of {@link Sequencing} elements associated with this sequencing collection.
+   * Each sequencing element defines navigation, rollup, and tracking settings for a specific set of
+   * learning activities. The list may be empty if no sequencing elements are defined.
+   *
+   * @return a {@code List} of {@link Sequencing} objects representing the sequencing definitions
+   * within the collection; may return {@code null} if the sequencing list is uninitialized.
+   */
   public List<Sequencing> getSequencingList() {
     return this.sequencingList;
   }
 
+  /**
+   * Sets the list of {@link Sequencing} elements for the sequencing collection. Each
+   * {@link Sequencing} element defines navigation, rollup, and tracking settings for a specific set
+   * of learning activities. This method replaces any existing list of sequencing elements with the
+   * provided one.
+   *
+   * @param sequencingList the new {@code List} of {@link Sequencing} objects to associate with this
+   * sequencing collection. May be empty or {@code null} if no sequencing elements are defined.
+   */
   public void setSequencingList(List<Sequencing> sequencingList) {
     this.sequencingList = sequencingList;
   }

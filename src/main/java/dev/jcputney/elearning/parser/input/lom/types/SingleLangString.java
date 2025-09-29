@@ -50,10 +50,21 @@ public class SingleLangString implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the {@code LangString} object associated with this instance.
+   *
+   * @return the {@code LangString} representing a single string value with a language attribute
+   */
   public LangString getLangString() {
     return this.langString;
   }
 
+  /**
+   * Sets the {@code LangString} value for this instance.
+   *
+   * @param langString the {@code LangString} object to set, representing a string value with an
+   * associated language attribute
+   */
   @JsonAlias("langstring")
   @JacksonXmlProperty(localName = "string")
   public void setLangString(LangString langString) {

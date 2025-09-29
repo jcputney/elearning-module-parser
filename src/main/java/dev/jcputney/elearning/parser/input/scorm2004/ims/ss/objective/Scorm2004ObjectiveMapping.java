@@ -140,58 +140,138 @@ public class Scorm2004ObjectiveMapping implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the target objective identifier associated with this object.
+   *
+   * @return the target objective identifier as a String
+   */
   public String getTargetObjectiveID() {
     return this.targetObjectiveID;
   }
 
+  /**
+   * Sets the target objective identifier for this object.
+   *
+   * @param targetObjectiveID the target objective identifier to be set
+   */
   public void setTargetObjectiveID(String targetObjectiveID) {
     this.targetObjectiveID = targetObjectiveID;
   }
 
+  /**
+   * Indicates whether the read operation for the satisfied status is allowed.
+   *
+   * @return true if the read operation for the satisfied status is enabled; false otherwise.
+   */
   public boolean isReadSatisfiedStatus() {
     return this.readSatisfiedStatus;
   }
 
+  /**
+   * Sets the read satisfied status for this Scorm2004ObjectiveMapping object.
+   *
+   * @param readSatisfiedStatus a boolean value indicating whether the satisfied status can be read
+   */
   public void setReadSatisfiedStatus(boolean readSatisfiedStatus) {
     this.readSatisfiedStatus = readSatisfiedStatus;
   }
 
+  /**
+   * Checks if the read operation for the normalized measure is allowed.
+   *
+   * @return true if the read operation for the normalized measure is enabled; false otherwise.
+   */
   public boolean isReadNormalizedMeasure() {
     return this.readNormalizedMeasure;
   }
 
+  /**
+   * Sets the read capability for the normalized measure associated with this
+   * Scorm2004ObjectiveMapping object.
+   *
+   * @param readNormalizedMeasure a boolean indicating whether the normalized measure can be read
+   * (true) or not (false)
+   */
   public void setReadNormalizedMeasure(boolean readNormalizedMeasure) {
     this.readNormalizedMeasure = readNormalizedMeasure;
   }
 
+  /**
+   * Determines whether the write operation for the satisfied status is allowed.
+   *
+   * @return true if the write operation for the satisfied status is enabled; false otherwise.
+   */
   public boolean isWriteSatisfiedStatus() {
     return this.writeSatisfiedStatus;
   }
 
+  /**
+   * Sets the write capability for the satisfied status associated with this
+   * Scorm2004ObjectiveMapping object.
+   *
+   * @param writeSatisfiedStatus a boolean indicating whether the satisfied status can be written
+   * (true) or not (false)
+   */
   public void setWriteSatisfiedStatus(boolean writeSatisfiedStatus) {
     this.writeSatisfiedStatus = writeSatisfiedStatus;
   }
 
+  /**
+   * Checks whether the write operation for the normalized measure is enabled.
+   *
+   * @return true if the write operation for the normalized measure is enabled; false otherwise.
+   */
   public boolean isWriteNormalizedMeasure() {
     return this.writeNormalizedMeasure;
   }
 
+  /**
+   * Sets the write capability for the normalized measure associated with this
+   * Scorm2004ObjectiveMapping object.
+   *
+   * @param writeNormalizedMeasure a boolean indicating whether the normalized measure can be
+   * written (true) or not (false)
+   */
   public void setWriteNormalizedMeasure(boolean writeNormalizedMeasure) {
     this.writeNormalizedMeasure = writeNormalizedMeasure;
   }
 
+  /**
+   * Determines whether the read operation for the completion status is allowed.
+   *
+   * @return true if the read operation for the completion status is enabled; false otherwise.
+   */
   public boolean isReadCompletionStatus() {
     return this.readCompletionStatus;
   }
 
+  /**
+   * Sets the read capability for the completion status associated with this
+   * Scorm2004ObjectiveMapping object.
+   *
+   * @param readCompletionStatus a boolean indicating whether the completion status can be read
+   * (true) or not (false)
+   */
   public void setReadCompletionStatus(boolean readCompletionStatus) {
     this.readCompletionStatus = readCompletionStatus;
   }
 
+  /**
+   * Determines whether the write operation for the completion status is allowed.
+   *
+   * @return true if the write operation for the completion status is enabled; false otherwise.
+   */
   public boolean isWriteCompletionStatus() {
     return this.writeCompletionStatus;
   }
 
+  /**
+   * Sets the write capability for the completion status associated with this
+   * Scorm2004ObjectiveMapping object.
+   *
+   * @param writeCompletionStatus a boolean indicating whether the completion status can be written
+   * (true) or not (false)
+   */
   public void setWriteCompletionStatus(boolean writeCompletionStatus) {
     this.writeCompletionStatus = writeCompletionStatus;
   }

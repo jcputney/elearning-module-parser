@@ -439,6 +439,14 @@ public class Scorm12Manifest implements PackageManifest {
     return null;
   }
 
+  /**
+   * Retrieves the duration of the SCORM 1.2 resource. The method resolves the duration by
+   * navigating through the metadata hierarchy. If the metadata, LOM, technical details, or duration
+   * fields are not present, it defaults to {@link Duration#ZERO}.
+   *
+   * @return A {@link Duration} object representing the duration of the resource, or
+   * {@link Duration#ZERO} if not available.
+   */
   @Override
   @JsonIgnore
   public Duration getDuration() {
@@ -458,52 +466,133 @@ public class Scorm12Manifest implements PackageManifest {
         .orElse(Duration.ZERO);
   }
 
+  /**
+   * Retrieves the identifier of the SCORM 1.2 manifest. The identifier is a unique string that
+   * represents this specific manifest.
+   *
+   * @return the identifier of the SCORM 1.2 manifest
+   */
   @Override
   public String getIdentifier() {
     return this.identifier;
   }
 
+  /**
+   * Sets the identifier for the SCORM 1.2 manifest. The identifier is a unique string used to
+   * represent this specific manifest.
+   *
+   * @param identifier the unique identifier for the SCORM 1.2 manifest
+   */
   public void setIdentifier(String identifier) {
     this.identifier = identifier;
   }
 
+  /**
+   * Retrieves the version of the SCORM 1.2 manifest. The version is a string representing the
+   * specific version information associated with this manifest.
+   *
+   * @return the version of the SCORM 1.2 manifest
+   */
   @Override
   public String getVersion() {
     return this.version;
   }
 
+  /**
+   * Sets the version of the SCORM 1.2 manifest. The version represents a string that indicates the
+   * specific version of this manifest.
+   *
+   * @param version the version string to set for the SCORM 1.2 manifest
+   */
   public void setVersion(String version) {
     this.version = version;
   }
 
+  /**
+   * Retrieves the base URL or path specified in the SCORM 1.2 manifest. The base value is typically
+   * used for resolving relative paths within the manifest.
+   *
+   * @return the base value of the SCORM 1.2 manifest, or null if not set
+   */
   public String getBase() {
     return this.base;
   }
 
+  /**
+   * Sets the base URL or path for the SCORM 1.2 manifest. The base value is used to resolve
+   * relative paths within the manifest.
+   *
+   * @param base the base URL or path to set for the SCORM 1.2 manifest
+   */
   public void setBase(String base) {
     this.base = base;
   }
 
+  /**
+   * Retrieves the metadata of the SCORM 1.2 manifest. The metadata contains information such as
+   * title, description, and other relevant details defined within the SCORM 1.2 specification.
+   *
+   * @return The {@code Scorm12Metadata} object representing the metadata of the SCORM 1.2 manifest.
+   */
   public Scorm12Metadata getMetadata() {
     return this.metadata;
   }
 
+  /**
+   * Sets the metadata for the SCORM 1.2 manifest. The metadata includes information such as title,
+   * description, and other relevant details defined within the SCORM 1.2 specification.
+   *
+   * @param metadata the {@link Scorm12Metadata} object representing the metadata to be assigned to
+   * the SCORM 1.2 manifest
+   */
   public void setMetadata(Scorm12Metadata metadata) {
     this.metadata = metadata;
   }
 
+  /**
+   * Retrieves the organizations defined within the SCORM 1.2 manifest. The organizations represent
+   * the hierarchical structure of the learning resources, such as courses, lessons, or modules, as
+   * specified in the SCORM 1.2 manifest.
+   *
+   * @return A {@code Scorm12Organizations} object representing the organizations within the SCORM
+   * 1.2 manifest.
+   */
   public Scorm12Organizations getOrganizations() {
     return this.organizations;
   }
 
+  /**
+   * Sets the organizations for the SCORM 1.2 manifest. The organizations define the hierarchical
+   * structure of learning resources, which may include courses, lessons, or modules as specified in
+   * the SCORM 1.2 manifest.
+   *
+   * @param organizations the {@link Scorm12Organizations} object representing the organizational
+   * hierarchy to be assigned to the SCORM 1.2 manifest
+   */
   public void setOrganizations(Scorm12Organizations organizations) {
     this.organizations = organizations;
   }
 
+  /**
+   * Retrieves the resources defined in the SCORM 1.2 manifest. The resources typically consist of
+   * the content and assets associated with the SCORM package, such as files, dependencies, or other
+   * resources required for the learning experience.
+   *
+   * @return A {@code Scorm12Resources} object representing the resources within the SCORM 1.2
+   * manifest.
+   */
   public Scorm12Resources getResources() {
     return this.resources;
   }
 
+  /**
+   * Sets the resources for the SCORM 1.2 manifest. The resources represent the content and
+   * associated assets required for the SCORM package, such as files, dependencies, or other
+   * structures.
+   *
+   * @param resources the {@link Scorm12Resources} object representing the resources to be assigned
+   * to the SCORM 1.2 manifest
+   */
   public void setResources(Scorm12Resources resources) {
     this.resources = resources;
   }

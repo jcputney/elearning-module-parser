@@ -62,18 +62,48 @@ public class RollupConditions implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the list of rollup conditions associated with this instance. Each rollup condition
+   * defines a specific criterion, such as completion or satisfaction status, that determines
+   * whether a rollup rule should be applied.
+   *
+   * @return a list of {@link RollupCondition} objects representing the rollup conditions.
+   */
   public List<RollupCondition> getRollupConditionList() {
     return this.rollupConditionList;
   }
 
+  /**
+   * Sets the list of rollup conditions for this instance. The provided list contains individual
+   * conditions that define specific criteria, such as completion or satisfaction status, which
+   * determine whether the rollup logic should be applied.
+   *
+   * @param rollupConditionList the list of {@link RollupCondition} objects to set, representing the
+   * criteria for applying the rollup rule.
+   */
   public void setRollupConditionList(List<RollupCondition> rollupConditionList) {
     this.rollupConditionList = rollupConditionList;
   }
 
+  /**
+   * Retrieves the logical combination of conditions associated with this instance. The combination
+   * specifies how the individual rollup conditions within the list are evaluated together to
+   * determine the overall rule's application.
+   *
+   * @return a string representing the logical combination of rollup conditions.
+   */
   public String getConditionCombination() {
     return this.conditionCombination;
   }
 
+  /**
+   * Sets the logical combination of rollup conditions for this instance. The combination defines
+   * how individual rollup conditions are evaluated together to determine the overall application's
+   * rule logic.
+   *
+   * @param conditionCombination the logical combination of rollup conditions, specified as a string
+   * representation (e.g., "ALL", "ANY", etc.).
+   */
   public void setConditionCombination(String conditionCombination) {
     this.conditionCombination = conditionCombination;
   }

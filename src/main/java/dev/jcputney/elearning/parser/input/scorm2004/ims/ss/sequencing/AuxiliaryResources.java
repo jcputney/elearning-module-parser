@@ -63,10 +63,26 @@ public class AuxiliaryResources implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the list of auxiliary resources associated with the learning activity. Each auxiliary
+   * resource provides additional, optional content for the learner and is represented by an
+   * instance of {@link AuxiliaryResource}.
+   *
+   * @return a list of {@link AuxiliaryResource} objects representing the auxiliary resources
+   * associated with the learning activity, or an empty list if no auxiliary resources are defined
+   */
   public List<AuxiliaryResource> getAuxiliaryResourceList() {
     return this.auxiliaryResourceList;
   }
 
+  /**
+   * Sets the list of auxiliary resources associated with the learning activity. Each auxiliary
+   * resource provides additional, optional content for the learner and is represented by an
+   * instance of {@link AuxiliaryResource}.
+   *
+   * @param auxiliaryResourceList a list of {@link AuxiliaryResource} objects representing the
+   * auxiliary resources to associate with the learning activity
+   */
   public void setAuxiliaryResourceList(
       List<AuxiliaryResource> auxiliaryResourceList) {
     this.auxiliaryResourceList = auxiliaryResourceList;

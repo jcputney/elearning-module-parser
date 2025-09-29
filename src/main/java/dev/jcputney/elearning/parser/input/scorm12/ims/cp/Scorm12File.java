@@ -81,26 +81,61 @@ public class Scorm12File implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the relative path or URI of the file within the SCORM package.
+   *
+   * @return A string representing the file's relative path or URI.
+   */
   public String getHref() {
     return this.href;
   }
 
+  /**
+   * Sets the relative path or URI of the file within the SCORM package.
+   *
+   * @param href A string representing the file's relative path or URI. This typically has to
+   * conform to a valid URI format and specifies the location of the file in the context of the
+   * SCORM resource.
+   */
   public void setHref(String href) {
     this.href = href;
   }
 
+  /**
+   * Retrieves the SCORM 1.2 metadata associated with this file.
+   *
+   * @return An instance of {@code Scorm12Metadata} representing the metadata of the file.
+   */
   public Scorm12Metadata getMetadata() {
     return this.metadata;
   }
 
+  /**
+   * Assigns the SCORM 1.2 metadata to the file.
+   *
+   * @param metadata An instance of {@code Scorm12Metadata} representing the metadata to be
+   * associated with this file.
+   */
   public void setMetadata(Scorm12Metadata metadata) {
     this.metadata = metadata;
   }
 
+  /**
+   * Checks whether the file exists within the context of the SCORM package.
+   *
+   * @return A boolean value indicating whether the file exists. Returns true if the file exists,
+   * otherwise false.
+   */
   public boolean isExists() {
     return this.exists;
   }
 
+  /**
+   * Sets the existence status of the file within the context of the SCORM 1.2 package.
+   *
+   * @param exists A boolean value indicating whether the file exists. Set to true if the file
+   * exists, otherwise false.
+   */
   public void setExists(boolean exists) {
     this.exists = exists;
   }

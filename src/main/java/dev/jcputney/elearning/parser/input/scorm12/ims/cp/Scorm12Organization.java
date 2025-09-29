@@ -112,42 +112,97 @@ public class Scorm12Organization implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the identifier associated with the SCORM 1.2 organization.
+   *
+   * @return A string representing the unique identifier of the organization.
+   */
   public String getIdentifier() {
     return this.identifier;
   }
 
+  /**
+   * Assigns a unique identifier to the SCORM 1.2 organization.
+   *
+   * @param identifier A string representing the unique identifier for the organization. The
+   * identifier should match the required format or expectations of the SCORM 1.2 specification.
+   */
   public void setIdentifier(String identifier) {
     this.identifier = identifier;
   }
 
+  /**
+   * Retrieves the structure of the SCORM 1.2 organization.
+   *
+   * @return A string representing the structure of the organization.
+   */
   public String getStructure() {
     return this.structure;
   }
 
+  /**
+   * Sets the structure associated with the SCORM 1.2 organization.
+   *
+   * @param structure A string representing the structure of the organization. This parameter should
+   * adhere to the expected format as defined by the SCORM 1.2 specification.
+   */
   public void setStructure(String structure) {
     this.structure = structure;
   }
 
+  /**
+   * Retrieves the title associated with the SCORM 1.2 organization.
+   *
+   * @return A string representing the title of the organization.
+   */
   public String getTitle() {
     return this.title;
   }
 
+  /**
+   * Sets the title associated with the SCORM 1.2 organization.
+   *
+   * @param title A string representing the title of the organization. This value should provide a
+   * human-readable description or label for the organization.
+   */
   public void setTitle(String title) {
     this.title = title;
   }
 
+  /**
+   * Retrieves the metadata associated with the SCORM 1.2 organization.
+   *
+   * @return A Scorm12Metadata object representing the metadata of the organization.
+   */
   public Scorm12Metadata getMetadata() {
     return this.metadata;
   }
 
+  /**
+   * Sets the metadata associated with the SCORM 1.2 organization.
+   *
+   * @param metadata A Scorm12Metadata object representing the metadata of the organization. This
+   * metadata provides descriptive information conforming to the SCORM 1.2 specification.
+   */
   public void setMetadata(Scorm12Metadata metadata) {
     this.metadata = metadata;
   }
 
+  /**
+   * Retrieves the list of SCORM 1.2 items associated with the organization.
+   *
+   * @return A list of Scorm12Item objects representing the items defined within the organization.
+   */
   public List<Scorm12Item> getItems() {
     return this.items;
   }
 
+  /**
+   * Sets the list of SCORM 1.2 items associated with the organization.
+   *
+   * @param items A list of Scorm12Item objects representing the items to be defined within the
+   * organization. Each item should comply with the SCORM 1.2 specification.
+   */
   public void setItems(List<Scorm12Item> items) {
     this.items = items;
   }

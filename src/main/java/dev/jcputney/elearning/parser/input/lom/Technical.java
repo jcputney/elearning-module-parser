@@ -232,75 +232,173 @@ public class Technical implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the list of formats associated with this instance.
+   *
+   * @return a List of Strings representing the formats.
+   */
   public List<String> getFormat() {
     return this.format;
   }
 
+  /**
+   * Sets the list of formats associated with this instance.
+   *
+   * @param format a List of Strings representing the formats to be set
+   */
   public void setFormat(List<String> format) {
     this.format = format;
   }
 
+  /**
+   * Retrieves the size associated with this instance.
+   *
+   * @return an Integer representing the size.
+   */
   public Integer getSize() {
     return this.size;
   }
 
+  /**
+   * Sets the size associated with this instance.
+   *
+   * @param size the size to be set, represented as an Integer
+   */
   public void setSize(Integer size) {
     this.size = size;
   }
 
+  /**
+   * Retrieves the list of locations associated with this instance.
+   *
+   * @return a List of Strings representing the locations.
+   */
   public List<String> getLocation() {
     return this.location;
   }
 
+  /**
+   * Sets the list of location identifiers for this instance.
+   *
+   * @param location a List of Strings representing the locations to be set
+   */
   public void setLocation(List<String> location) {
     this.location = location;
   }
 
+  /**
+   * Retrieves the list of requirements associated with this instance.
+   *
+   * @return a List of {@link Requirement} objects representing the requirements.
+   */
   public List<Requirement> getRequirements() {
     return this.requirements;
   }
 
+  /**
+   * Sets the list of requirements associated with this instance.
+   *
+   * @param requirements a List of {@link Requirement} objects representing the requirements to be
+   * set
+   */
   public void setRequirements(List<Requirement> requirements) {
     this.requirements = requirements;
   }
 
+  /**
+   * Retrieves the installation remarks associated with this instance.
+   *
+   * @return a {@link SingleLangString} representing the installation remarks.
+   */
   public SingleLangString getInstallationRemarks() {
     return this.installationRemarks;
   }
 
+  /**
+   * Sets the installation remarks associated with this instance.
+   *
+   * @param installationRemarks a {@link SingleLangString} object representing the installation
+   * remarks to be set
+   */
   public void setInstallationRemarks(SingleLangString installationRemarks) {
     this.installationRemarks = installationRemarks;
   }
 
+  /**
+   * Retrieves the other platform requirements associated with this instance.
+   *
+   * @return a {@link SingleLangString} object representing the other platform requirements.
+   */
   public SingleLangString getOtherPlatformRequirements() {
     return this.otherPlatformRequirements;
   }
 
+  /**
+   * Sets the other platform requirements associated with this instance.
+   *
+   * @param otherPlatformRequirements a {@link SingleLangString} object representing the other
+   * platform requirements to be set
+   */
   public void setOtherPlatformRequirements(
       SingleLangString otherPlatformRequirements) {
     this.otherPlatformRequirements = otherPlatformRequirements;
   }
 
+  /**
+   * Retrieves the duration metadata associated with this instance.
+   *
+   * @return a {@link LomDuration} object representing the duration metadata, including its value in
+   * ISO 8601 format and an optional description.
+   */
   public LomDuration getDuration() {
     return this.duration;
   }
 
+  /**
+   * Sets the duration metadata for this instance. The duration is typically represented in ISO 8601
+   * format (e.g., "PT10M" for 10 minutes) and may include an optional description for additional
+   * context.
+   *
+   * @param duration a {@link LomDuration} object representing the duration metadata, including its
+   * value in ISO 8601 format and an optional description
+   */
   public void setDuration(LomDuration duration) {
     this.duration = duration;
   }
 
+  /**
+   * Retrieves the package properties associated with this instance.
+   *
+   * @return a {@link PackageProperties} object representing the package properties.
+   */
   public PackageProperties getPackageProperties() {
     return this.packageProperties;
   }
 
+  /**
+   * Sets the package properties associated with this instance.
+   *
+   * @param packageProperties a {@link PackageProperties} object representing the package properties
+   * to be set
+   */
   public void setPackageProperties(PackageProperties packageProperties) {
     this.packageProperties = packageProperties;
   }
 
+  /**
+   * Retrieves the list of custom elements associated with this instance.
+   *
+   * @return a List of Objects representing the custom elements.
+   */
   public List<Object> getCustomElements() {
     return this.customElements;
   }
 
+  /**
+   * Sets the list of custom elements for this instance.
+   *
+   * @param customElements a List of Objects representing the custom elements to be set
+   */
   public void setCustomElements(List<Object> customElements) {
     this.customElements = customElements;
   }

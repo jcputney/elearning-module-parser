@@ -152,35 +152,81 @@ public class Contribute implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the role associated with the current
+   */
   public SourceValuePair<Role> getRole() {
     return this.role;
   }
 
+  /**
+   * Sets the role associated with the current contribution.
+   *
+   * @param role the source-value pair representing the role of the entity contributing to the
+   * resource. The value should be one of the predefined roles in the {@link Role} enumeration, such
+   * as "author", "editor", "publisher", etc.
+   */
   public void setRole(
       SourceValuePair<Role> role) {
     this.role = role;
   }
 
+  /**
+   * Retrieves the list of entities associated with the current contribution.
+   *
+   * @return a list of strings representing the names or identifiers of the entities.
+   */
   public List<String> getEntities() {
     return this.entities;
   }
 
+  /**
+   * Sets the list of entities associated with the current contribution.
+   *
+   * @param entities a list of strings representing the names or identifiers of the entities to be
+   * associated with the current contribution
+   */
   public void setEntities(List<String> entities) {
     this.entities = entities;
   }
 
+  /**
+   * Retrieves the list of ContributeEntity objects associated with the current contribution.
+   *
+   * @return a list of ContributeEntity objects representing entities such as individuals,
+   * organizations, or systems that contribute to the lifecycle of the resource.
+   */
   public List<ContributeEntity> getCEntities() {
     return this.cEntities;
   }
 
+  /**
+   * Sets the list of ContributeEntity objects associated with the current contribution.
+   *
+   * @param cEntities a list of ContributeEntity objects representing entities such as individuals,
+   * organizations, or systems that contribute to the lifecycle of the resource
+   */
   public void setCEntities(List<ContributeEntity> cEntities) {
     this.cEntities = cEntities;
   }
 
+  /**
+   * Retrieves the date associated with the current contribution.
+   *
+   * @return the date object representing the associated date. This may include the actual date-time
+   * value and an optional description.
+   */
   public Date getDate() {
     return this.date;
   }
 
+  /**
+   * Sets the date associated with the current contribution.
+   *
+   * @param date the {@code Date} object representing the specific date associated with the
+   * contribution. It may include a date-time value and an optional description providing additional
+   * context about the date.
+   */
   public void setDate(Date date) {
     this.date = date;
   }

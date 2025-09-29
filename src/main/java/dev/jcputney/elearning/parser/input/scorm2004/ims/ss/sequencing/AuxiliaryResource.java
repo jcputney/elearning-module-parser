@@ -63,18 +63,42 @@ public class AuxiliaryResource implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the unique identifier for the auxiliary resource.
+   *
+   * @return the auxiliary resource identifier as a URI string
+   */
   public String getAuxiliaryResourceID() {
     return this.auxiliaryResourceID;
   }
 
+  /**
+   * Sets the unique identifier for the auxiliary resource.
+   *
+   * @param auxiliaryResourceID the auxiliary resource identifier, represented as a URI string
+   */
   public void setAuxiliaryResourceID(String auxiliaryResourceID) {
     this.auxiliaryResourceID = auxiliaryResourceID;
   }
 
+  /**
+   * Retrieves the purpose of the auxiliary resource. The purpose provides context on how the
+   * resource is intended to support the learning activity, such as "reference material," "practice
+   * tool," or "additional reading."
+   *
+   * @return the purpose of the auxiliary resource as a string
+   */
   public String getPurpose() {
     return this.purpose;
   }
 
+  /**
+   * Sets the purpose of the auxiliary resource. The purpose provides context for how the auxiliary
+   * resource is intended to support activities, such as "reference material" or "additional
+   * reading."
+   *
+   * @param purpose the purpose of the auxiliary resource as a string
+   */
   public void setPurpose(String purpose) {
     this.purpose = purpose;
   }

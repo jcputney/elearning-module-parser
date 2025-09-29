@@ -80,34 +80,74 @@ public class ExitTypesSpec implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the exit action type associated with a normal exit.
+   *
+   * @return the exit action type for normal exit, or null if not defined
+   */
   public ExitActionType getNormal() {
     return this.normal;
   }
 
+  /**
+   * Sets the exit action type associated with a normal exit.
+   *
+   * @param normal the exit action type for normal exit
+   */
   public void setNormal(ExitActionType normal) {
     this.normal = normal;
   }
 
+  /**
+   * Retrieves the exit action type associated with the suspend operation.
+   *
+   * @return the exit action type for suspend operation, or null if not defined
+   */
   public ExitActionType getSuspend() {
     return this.suspend;
   }
 
+  /**
+   * Sets the exit action type associated with the suspend operation.
+   *
+   * @param suspend the exit action type for suspend operation
+   */
   public void setSuspend(ExitActionType suspend) {
     this.suspend = suspend;
   }
 
+  /**
+   * Retrieves the exit action type associated with the timeout operation.
+   *
+   * @return the exit action type for timeout operation, or null if not defined
+   */
   public ExitActionType getTimeout() {
     return this.timeout;
   }
 
+  /**
+   * Sets the exit action type associated with the timeout operation.
+   *
+   * @param timeout the exit action type for timeout operation
+   */
   public void setTimeout(ExitActionType timeout) {
     this.timeout = timeout;
   }
 
+  /**
+   * Retrieves the exit action type associated with the logout operation.
+   *
+   * @return the exit action type for logout operation, or null if not defined
+   */
   public ExitActionType getLogout() {
     return this.logout;
   }
 
+  /**
+   * Sets the exit action type associated with the logout operation.
+   *
+   * @param logout the exit action type for the logout operation
+   */
   public void setLogout(ExitActionType logout) {
     this.logout = logout;
   }

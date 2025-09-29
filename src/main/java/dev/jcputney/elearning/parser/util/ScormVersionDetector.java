@@ -272,20 +272,47 @@ public class ScormVersionDetector {
 
     private static final SilentErrorHandler INSTANCE = new SilentErrorHandler();
 
+    /**
+     * Private constructor for the SilentErrorHandler singleton class. This constructor ensures that
+     * the class cannot be instantiated externally. SilentErrorHandler is a singleton implementation
+     * of the {@link ErrorHandler} interface, used for handling XML parsing errors in a controlled
+     * and silent manner.
+     */
     private SilentErrorHandler() {
       // singleton
     }
 
+    /**
+     * Handles XML parsing warnings during detection attempts. This method ignores all warnings,
+     * allowing detection processes to proceed without interruption.
+     *
+     * @param exception the {@link SAXParseException} instance representing the XML parse warning.
+     */
     @Override
     public void warning(SAXParseException exception) {
       // ignore warnings during detection attempts
     }
 
+    /**
+     * Handles XML parsing errors that occur during detection attempts. This method propagates the
+     * error by throwing the provided {@link SAXParseException}.
+     *
+     * @param exception the {@link SAXParseException} instance representing the XML parse error.
+     * @throws SAXException if an XML parse error occurs.
+     */
     @Override
     public void error(SAXParseException exception) throws SAXException {
       throw exception;
     }
 
+    /**
+     * Handles XML parsing fatal errors that occur during detection attempts. This method propagates
+     * the fatal error by throwing the provided {@link SAXParseException}.
+     *
+     * @param exception the {@link SAXParseException} instance representing the XML parse fatal
+     * error.
+     * @throws SAXException if a fatal XML parsing error occurs.
+     */
     @Override
     public void fatalError(SAXParseException exception) throws SAXException {
       throw exception;

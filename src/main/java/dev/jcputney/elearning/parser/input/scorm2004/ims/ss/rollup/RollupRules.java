@@ -108,35 +108,77 @@ public class RollupRules implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the list of rollup rules associated with this instance.
+   *
+   * @return a list of RollupRule objects representing the rollup rules.
+   */
   public List<RollupRule> getRollupRuleList() {
     return this.rollupRuleList;
   }
 
+  /**
+   * Sets the list of rollup rules for this instance.
+   *
+   * @param rollupRuleList a list of RollupRule objects to be associated with this instance
+   */
   public void setRollupRuleList(
       List<RollupRule> rollupRuleList) {
     this.rollupRuleList = rollupRuleList;
   }
 
+  /**
+   * Determines whether the rollup objective is satisfied for this instance.
+   *
+   * @return true if the rollup objective is satisfied, false otherwise.
+   */
   public boolean isRollupObjectiveSatisfied() {
     return this.rollupObjectiveSatisfied;
   }
 
+  /**
+   * Sets the status of whether the rollup objective is satisfied for this instance.
+   *
+   * @param rollupObjectiveSatisfied a boolean value indicating whether the rollup objective is
+   * satisfied
+   */
   public void setRollupObjectiveSatisfied(boolean rollupObjectiveSatisfied) {
     this.rollupObjectiveSatisfied = rollupObjectiveSatisfied;
   }
 
+  /**
+   * Determines whether the rollup progress completion condition is met for this instance.
+   *
+   * @return true if the rollup progress completion is satisfied, false otherwise.
+   */
   public boolean isRollupProgressCompletion() {
     return this.rollupProgressCompletion;
   }
 
+  /**
+   * Sets the status of whether the rollup progress completion condition is met for this instance.
+   *
+   * @param rollupProgressCompletion a boolean value indicating whether the rollup progress
+   * completion condition is satisfied
+   */
   public void setRollupProgressCompletion(boolean rollupProgressCompletion) {
     this.rollupProgressCompletion = rollupProgressCompletion;
   }
 
+  /**
+   * Retrieves the weight of the objective measure associated with this instance.
+   *
+   * @return a double value representing the weight of the objective measure.
+   */
   public double getObjectiveMeasureWeight() {
     return this.objectiveMeasureWeight;
   }
 
+  /**
+   * Sets the weight of the objective measure for this instance.
+   *
+   * @param objectiveMeasureWeight a double value representing the weight of the objective measure
+   */
   public void setObjectiveMeasureWeight(double objectiveMeasureWeight) {
     this.objectiveMeasureWeight = objectiveMeasureWeight;
   }

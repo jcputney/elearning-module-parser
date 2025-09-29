@@ -58,18 +58,42 @@ public class ExitActionsSpec implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the exit action specification for the intermediate SCO.
+   *
+   * @return the {@code ScoExitActionSpec} representing the exit action for the intermediate SCO, or
+   * {@code null} if no action has been specified.
+   */
   public ScoExitActionSpec getIntermediateSco() {
     return this.intermediateSco;
   }
 
+  /**
+   * Sets the exit action specification for the intermediate SCO.
+   *
+   * @param intermediateSco the {@code ScoExitActionSpec} instance defining the exit action for the
+   * intermediate SCO
+   */
   public void setIntermediateSco(ScoExitActionSpec intermediateSco) {
     this.intermediateSco = intermediateSco;
   }
 
+  /**
+   * Retrieves the exit action specification for the final SCO.
+   *
+   * @return the {@code ScoExitActionSpec} representing the exit action for the final SCO, or
+   * {@code null} if no action has been specified.
+   */
   public ScoExitActionSpec getFinalSco() {
     return this.finalSco;
   }
 
+  /**
+   * Sets the exit action specification for the final SCO.
+   *
+   * @param finalSco the {@code ScoExitActionSpec} instance defining the exit action for the final
+   * SCO
+   */
   public void setFinalSco(ScoExitActionSpec finalSco) {
     this.finalSco = finalSco;
   }

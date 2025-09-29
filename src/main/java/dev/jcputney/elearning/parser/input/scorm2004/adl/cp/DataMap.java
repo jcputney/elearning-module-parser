@@ -57,26 +57,58 @@ public class DataMap implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the target ID URI for shared data mapping.
+   *
+   * @return the target ID as a String
+   */
   public String getTargetID() {
     return this.targetID;
   }
 
+  /**
+   * Sets the target ID URI for shared data mapping.
+   *
+   * @param targetID the target ID as a String to be assigned
+   */
   public void setTargetID(String targetID) {
     this.targetID = targetID;
   }
 
+  /**
+   * Determines whether shared data is readable.
+   *
+   * @return true if shared data is readable, otherwise false
+   */
   public boolean isReadSharedData() {
     return this.readSharedData;
   }
 
+  /**
+   * Sets the read access configuration for shared data.
+   *
+   * @param readSharedData a boolean value where {@code true} enables read access to shared data,
+   * and {@code false} disables it
+   */
   public void setReadSharedData(boolean readSharedData) {
     this.readSharedData = readSharedData;
   }
 
+  /**
+   * Determines whether shared data is writable.
+   *
+   * @return true if shared data is writable, otherwise false
+   */
   public boolean isWriteSharedData() {
     return this.writeSharedData;
   }
 
+  /**
+   * Configures the write access for shared data.
+   *
+   * @param writeSharedData a boolean value where {@code true} enables write access to shared data,
+   * and {@code false} disables it
+   */
   public void setWriteSharedData(boolean writeSharedData) {
     this.writeSharedData = writeSharedData;
   }

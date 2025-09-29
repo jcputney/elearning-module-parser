@@ -79,38 +79,75 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
   }
 
   protected ModuleMetadata() {
+    // no-op
   }
 
+  /**
+   * Retrieves the title of the module. This method delegates to the underlying manifest to obtain
+   * the human-readable name of the package.
+   *
+   * @return the title of the module as a String
+   */
   @Override
   @JsonIgnore
   public String getTitle() {
     return manifest.getTitle();
   }
 
+  /**
+   * Retrieves the description of the module. This method delegates to the underlying manifest to
+   * obtain additional information about the module in the form of a description.
+   *
+   * @return the description of the module as a String
+   */
   @Override
   @JsonIgnore
   public String getDescription() {
     return manifest.getDescription();
   }
 
+  /**
+   * Retrieves the launch URL for the module. This method delegates to the underlying manifest to
+   * obtain the URL used to start or launch the module.
+   *
+   * @return the launch URL of the module as a String
+   */
   @Override
   @JsonIgnore
   public String getLaunchUrl() {
     return manifest.getLaunchUrl();
   }
 
+  /**
+   * Retrieves the unique identifier of the module. This method delegates to the underlying manifest
+   * to obtain the identifier.
+   *
+   * @return the unique identifier of the module as a String
+   */
   @Override
   @JsonIgnore
   public String getIdentifier() {
     return manifest.getIdentifier();
   }
 
+  /**
+   * Retrieves the version of the module. This method delegates to the underlying manifest to obtain
+   * the version of the package.
+   *
+   * @return the version of the module as a String
+   */
   @Override
   @JsonIgnore
   public String getVersion() {
     return manifest.getVersion();
   }
 
+  /**
+   * Retrieves the duration of the module. This method delegates to the underlying manifest to
+   * obtain the duration, indicating the expected time to complete the module.
+   *
+   * @return the duration of the module as a {@link Duration}
+   */
   @Override
   @JsonIgnore
   public Duration getDuration() {
@@ -126,6 +163,11 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
     return sizeOnDisk;
   }
 
+  /**
+   * Sets the total size of all files in the module on disk.
+   *
+   * @param sizeOnDisk The total size of the module's files in bytes.
+   */
   public void setSizeOnDisk(long sizeOnDisk) {
     this.sizeOnDisk = sizeOnDisk;
   }
@@ -162,18 +204,38 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
         .toHashCode();
   }
 
+  /**
+   * Retrieves the manifest associated with this module metadata.
+   *
+   * @return the manifest of the module as an instance of type M
+   */
   public M getManifest() {
     return this.manifest;
   }
 
+  /**
+   * Retrieves the type of the module.
+   *
+   * @return the module type as an instance of {@link ModuleType}
+   */
   public ModuleType getModuleType() {
     return this.moduleType;
   }
 
+  /**
+   * Retrieves the edition type of the module.
+   *
+   * @return the module edition type as an instance of {@link ModuleEditionType}
+   */
   public ModuleEditionType getModuleEditionType() {
     return this.moduleEditionType;
   }
 
+  /**
+   * Checks whether xAPI is enabled for the module.
+   *
+   * @return true if xAPI is enabled, false otherwise
+   */
   public boolean isXapiEnabled() {
     return this.xapiEnabled;
   }

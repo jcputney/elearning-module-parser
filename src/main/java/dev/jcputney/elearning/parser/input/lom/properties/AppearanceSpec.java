@@ -61,18 +61,42 @@ public class AppearanceSpec implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the display stage specification for the appearance configuration.
+   *
+   * @return the display stage specification represented by an instance of {@code DisplayStageSpec},
+   * or {@code null} if not set.
+   */
   public DisplayStageSpec getDisplayStage() {
     return this.displayStage;
   }
 
+  /**
+   * Sets the display stage specification for the appearance configuration.
+   *
+   * @param displayStage the new display stage specification to set, represented by an instance of
+   * {@code DisplayStageSpec}
+   */
   public void setDisplayStage(DisplayStageSpec displayStage) {
     this.displayStage = displayStage;
   }
 
+  /**
+   * Retrieves the course structure width for the appearance configuration.
+   *
+   * @return the course structure width represented as a {@code BigInteger}, or {@code null} if not
+   * set.
+   */
   public BigInteger getCourseStructureWidth() {
     return this.courseStructureWidth;
   }
 
+  /**
+   * Sets the course structure width for the appearance configuration.
+   *
+   * @param courseStructureWidth the new course structure width to set, represented as a
+   * {@code BigInteger}
+   */
   public void setCourseStructureWidth(BigInteger courseStructureWidth) {
     this.courseStructureWidth = courseStructureWidth;
   }

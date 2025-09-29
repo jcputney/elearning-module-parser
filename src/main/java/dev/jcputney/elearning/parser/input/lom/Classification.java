@@ -128,35 +128,88 @@ public class Classification implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the purpose of the classification. The purpose is encapsulated as a source-value
+   * pair, where the source indicates the context or origin of the value, and the value specifies
+   * the actual purpose.
+   *
+   * @return a SourceValuePair containing the source and value representing the purpose
+   */
   public SourceValuePair<Purpose> getPurpose() {
     return this.purpose;
   }
 
+  /**
+   * Sets the purpose of the classification. The purpose is encapsulated as a source-value pair,
+   * where the source indicates the context or origin of the value, and the value specifies the
+   * actual purpose.
+   *
+   * @param purpose a SourceValuePair containing the source and value representing the purpose
+   */
   public void setPurpose(
       SourceValuePair<Purpose> purpose) {
     this.purpose = purpose;
   }
 
+  /**
+   * Retrieves the list of taxon paths associated with this classification. A taxon path represents
+   * a hierarchical classification or categorization.
+   *
+   * @return a list of {@code TaxonPath} objects associated with the classification.
+   */
   public List<TaxonPath> getTaxonPaths() {
     return this.taxonPaths;
   }
 
+  /**
+   * Sets the list of taxon paths associated with this classification. A taxon path represents a
+   * hierarchical classification or categorization.
+   *
+   * @param taxonPaths a list of {@code TaxonPath} objects to associate with the classification
+   */
   public void setTaxonPaths(List<TaxonPath> taxonPaths) {
     this.taxonPaths = taxonPaths;
   }
 
+  /**
+   * Retrieves the description of the classification. The description is represented as a list of
+   * language strings, allowing for multilingual support.
+   *
+   * @return an UnboundLangString object containing the multilingual description of the
+   * classification.
+   */
   public UnboundLangString getDescription() {
     return this.description;
   }
 
+  /**
+   * Sets the description of the classification. The description is represented as an
+   * UnboundLangString, allowing for multilingual support.
+   *
+   * @param description an UnboundLangString object containing the multilingual description of the
+   * classification
+   */
   public void setDescription(UnboundLangString description) {
     this.description = description;
   }
 
+  /**
+   * Retrieves the keywords associated with the classification. The keywords are represented as an
+   * UnboundLangString object, which supports multilingual strings.
+   *
+   * @return an UnboundLangString object containing the keywords of the classification.
+   */
   public UnboundLangString getKeywords() {
     return this.keywords;
   }
 
+  /**
+   * Sets the keywords associated with the classification. The keywords are represented as an
+   * UnboundLangString, allowing for multilingual support.
+   *
+   * @param keywords an UnboundLangString object containing the keywords to associate with the
+   * classification
+   */
   public void setKeywords(UnboundLangString keywords) {
     this.keywords = keywords;
   }

@@ -69,10 +69,21 @@ public class ReferencesObjectives implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the list of objectives referenced by this instance.
+   *
+   * @return a list of {@link ObjectiveReference} objects representing the objectives.
+   */
   public List<ObjectiveReference> getObjectives() {
     return this.objectives;
   }
 
+  /**
+   * Sets the list of objectives for this instance.
+   *
+   * @param objectives a list of {@link ObjectiveReference} objects representing the objectives to
+   * be associated with this instance.
+   */
   public void setObjectives(List<ObjectiveReference> objectives) {
     this.objectives = objectives;
   }

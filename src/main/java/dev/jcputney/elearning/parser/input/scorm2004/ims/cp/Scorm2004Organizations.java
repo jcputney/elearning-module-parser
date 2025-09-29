@@ -136,18 +136,40 @@ public class Scorm2004Organizations implements Serializable {
     return result;
   }
 
+  /**
+   * Retrieves the default organization identifier for the content package.
+   *
+   * @return a String representing the default organization's unique identifier, or null if no
+   * default organization is configured
+   */
   public String getDefaultOrganization() {
     return this.defaultOrganization;
   }
 
+  /**
+   * Sets the default organization identifier for the content package.
+   *
+   * @param defaultOrganization the identifier of the default organization to be set
+   */
   public void setDefaultOrganization(String defaultOrganization) {
     this.defaultOrganization = defaultOrganization;
   }
 
+  /**
+   * Retrieves the list of SCORM 2004 organizations associated with this content package.
+   *
+   * @return a List of Scorm2004Organization objects representing the organizations defined in the
+   * content package.
+   */
   public List<Scorm2004Organization> getOrganizationList() {
     return this.organizationList;
   }
 
+  /**
+   * Sets the list of SCORM 2004 organizations associated with this content package.
+   *
+   * @param organizationList the list of Scorm2004Organization objects to be set
+   */
   public void setOrganizationList(List<Scorm2004Organization> organizationList) {
     this.organizationList = organizationList;
   }

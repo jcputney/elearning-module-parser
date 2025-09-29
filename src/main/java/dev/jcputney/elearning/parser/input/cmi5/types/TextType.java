@@ -79,10 +79,22 @@ public class TextType implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the list of localized strings associated with this object.
+   *
+   * @return a list of {@link LangString} instances, each representing a localized string with an
+   * optional language attribute
+   */
   public List<LangString> getStrings() {
     return this.strings;
   }
 
+  /**
+   * Sets the list of localized strings for this object.
+   *
+   * @param strings a list of {@link LangString} instances, each representing a localized string
+   * with its associated language
+   */
   public void setStrings(List<LangString> strings) {
     this.strings = strings;
   }

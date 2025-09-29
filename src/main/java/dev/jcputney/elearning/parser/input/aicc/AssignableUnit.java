@@ -161,150 +161,340 @@ public class AssignableUnit implements Serializable {
    */
   private Boolean prerequisitesMandatoryOverride;
 
+  /**
+   * Retrieves the system identifier associated with the assignable unit.
+   *
+   * @return the system identifier as a {@code String}
+   */
   public String getSystemId() {
     return this.systemId;
   }
 
+  /**
+   * Sets the system identifier for the assignable unit.
+   *
+   * @param systemId the system identifier to set as a String
+   */
   public void setSystemId(String systemId) {
     this.systemId = systemId;
   }
 
+  /**
+   * Retrieves the command line associated with this assignable unit.
+   *
+   * @return the command line as a String
+   */
   public String getCommandLine() {
     return this.commandLine;
   }
 
+  /**
+   * Sets the command line associated with this assignable unit.
+   *
+   * @param commandLine the command line to set as a String
+   */
   public void setCommandLine(String commandLine) {
     this.commandLine = commandLine;
   }
 
+  /**
+   * Retrieves the file name associated with this assignable unit.
+   *
+   * @return the file name as a String
+   */
   public String getFileName() {
     return this.fileName;
   }
 
+  /**
+   * Sets the file name for the assignable unit.
+   *
+   * @param fileName the file name to set as a String
+   */
   public void setFileName(String fileName) {
     this.fileName = fileName;
   }
 
+  /**
+   * Retrieves the core vendor associated with this assignable unit.
+   *
+   * @return the core vendor as a String
+   */
   public String getCoreVendor() {
     return this.coreVendor;
   }
 
+  /**
+   * Sets the core vendor associated with this assignable unit.
+   *
+   * @param coreVendor the core vendor to set as a String
+   */
   public void setCoreVendor(String coreVendor) {
     this.coreVendor = coreVendor;
   }
 
+  /**
+   * Retrieves the type associated with this assignable unit.
+   *
+   * @return the type as a String
+   */
   public String getType() {
     return this.type;
   }
 
+  /**
+   * Sets the type associated with this assignable unit.
+   *
+   * @param type the type to set as a String
+   */
   public void setType(String type) {
     this.type = type;
   }
 
+  /**
+   * Retrieves the maximum score associated with this assignable unit.
+   *
+   * @return the maximum score as a String
+   */
   public String getMaxScore() {
     return this.maxScore;
   }
 
+  /**
+   * Sets the maximum score for the assignable unit.
+   *
+   * @param maxScore the maximum score to set as a String
+   */
   public void setMaxScore(String maxScore) {
     this.maxScore = maxScore;
   }
 
+  /**
+   * Retrieves the mastery score associated with this assignable unit.
+   *
+   * @return the mastery score as a String
+   */
   public String getMasteryScore() {
     return this.masteryScore;
   }
 
+  /**
+   * Sets the mastery score for the assignable unit.
+   *
+   * @param masteryScore the mastery score to set as a String
+   */
   public void setMasteryScore(String masteryScore) {
     this.masteryScore = masteryScore;
   }
 
+  /**
+   * Retrieves the maximum time allowed for this assignable unit.
+   *
+   * @return the maximum time allowed as a String
+   */
   public String getMaxTimeAllowed() {
     return this.maxTimeAllowed;
   }
 
+  /**
+   * Sets the maximum time allowed for this assignable unit.
+   *
+   * @param maxTimeAllowed the maximum time allowed to set as a String
+   */
   public void setMaxTimeAllowed(String maxTimeAllowed) {
     this.maxTimeAllowed = maxTimeAllowed;
   }
 
+  /**
+   * Retrieves the time limit action associated with this assignable unit.
+   *
+   * @return the time limit action as a String
+   */
   public String getTimeLimitAction() {
     return this.timeLimitAction;
   }
 
+  /**
+   * Sets the time limit action for the assignable unit.
+   *
+   * @param timeLimitAction the time limit action to set as a String
+   */
   public void setTimeLimitAction(String timeLimitAction) {
     this.timeLimitAction = timeLimitAction;
   }
 
+  /**
+   * Retrieves the system vendor associated with this assignable unit.
+   *
+   * @return the system vendor as a String
+   */
   public String getSystemVendor() {
     return this.systemVendor;
   }
 
+  /**
+   * Sets the system vendor for the assignable unit.
+   *
+   * @param systemVendor the system vendor to set as a String
+   */
   public void setSystemVendor(String systemVendor) {
     this.systemVendor = systemVendor;
   }
 
+  /**
+   * Retrieves the web launch configuration associated with the assignable unit.
+   *
+   * @return the web launch configuration as a String
+   */
   public String getWebLaunch() {
     return this.webLaunch;
   }
 
+  /**
+   * Sets the web launch configuration associated with the assignable unit.
+   *
+   * @param webLaunch the web launch configuration to set as a String
+   */
   public void setWebLaunch(String webLaunch) {
     this.webLaunch = webLaunch;
   }
 
+  /**
+   * Retrieves the AU password associated with this assignable unit.
+   *
+   * @return the AU password as a String
+   */
   public String getAuPassword() {
     return this.auPassword;
   }
 
+  /**
+   * Sets the AU (Assignable Unit) password for this object.
+   *
+   * @param auPassword the AU password to set as a String
+   */
   public void setAuPassword(String auPassword) {
     this.auPassword = auPassword;
   }
 
+  /**
+   * Retrieves the descriptor associated with the assignable unit.
+   *
+   * @return the descriptor as a Descriptor object
+   */
   public Descriptor getDescriptor() {
     return this.descriptor;
   }
 
+  /**
+   * Sets the descriptor associated with this assignable unit.
+   *
+   * @param descriptor the descriptor to set as a {@code Descriptor} object
+   */
   public void setDescriptor(Descriptor descriptor) {
     this.descriptor = descriptor;
   }
 
+  /**
+   * Retrieves the prerequisites expression associated with this assignable unit.
+   *
+   * @return the prerequisites expression as a String
+   */
   public String getPrerequisitesExpression() {
     return this.prerequisitesExpression;
   }
 
+  /**
+   * Sets the prerequisites expression for the assignable unit.
+   *
+   * @param prerequisitesExpression the prerequisites expression to set as a String
+   */
   public void setPrerequisitesExpression(String prerequisitesExpression) {
     this.prerequisitesExpression = prerequisitesExpression;
   }
 
+  /**
+   * Retrieves the prerequisite model associated with this assignable unit.
+   *
+   * @return the prerequisite model as an {@code AiccPrerequisiteExpression}
+   */
   public AiccPrerequisiteExpression getPrerequisiteModel() {
     return this.prerequisiteModel;
   }
 
+  /**
+   * Sets the prerequisite model for the current object with the provided AiccPrerequisiteExpression
+   * instance.
+   *
+   * @param prerequisiteModel an instance of AiccPrerequisiteExpression that defines the
+   * prerequisite model to be set.
+   */
   public void setPrerequisiteModel(AiccPrerequisiteExpression prerequisiteModel) {
     this.prerequisiteModel = prerequisiteModel;
   }
 
+  /**
+   * Retrieves the AICC completion criteria for the current context or object.
+   *
+   * @return the completion criteria of type AiccCompletionCriteria associated with this instance
+   */
   public AiccCompletionCriteria getCompletionCriteria() {
     return this.completionCriteria;
   }
 
+  /**
+   * Sets the completion criteria for the current object.
+   *
+   * @param completionCriteria the AICC completion criteria to be set
+   */
   public void setCompletionCriteria(AiccCompletionCriteria completionCriteria) {
     this.completionCriteria = completionCriteria;
   }
 
+  /**
+   * Retrieves the normalized mastery score.
+   *
+   * @return the normalized mastery score as a Double, or null if it is not set.
+   */
   public Double getMasteryScoreNormalized() {
     return this.masteryScoreNormalized;
   }
 
+  /**
+   * Sets the normalized mastery score for a learning object or module. The normalized score is
+   * typically a value between 0 and 1 that indicates the mastery threshold.
+   *
+   * @param masteryScoreNormalized the normalized mastery score to set. Should be a Double
+   * representing a value between 0.0 and 1.0.
+   */
   public void setMasteryScoreNormalized(Double masteryScoreNormalized) {
     this.masteryScoreNormalized = masteryScoreNormalized;
   }
 
+  /**
+   * Retrieves the maximum time allowed normalized as a Duration object.
+   *
+   * @return the maximum normalized time allowed
+   */
   public Duration getMaxTimeAllowedNormalized() {
     return this.maxTimeAllowedNormalized;
   }
 
+  /**
+   * Sets the maximum allowed time in a normalized format.
+   *
+   * @param maxTimeAllowedNormalized the maximum duration allowed, represented as a
+   * {@link Duration}
+   */
   public void setMaxTimeAllowedNormalized(Duration maxTimeAllowedNormalized) {
     this.maxTimeAllowedNormalized = maxTimeAllowedNormalized;
   }
 
+  /**
+   * Retrieves the list of time limit actions in a normalized format.
+   *
+   * @return a list of strings representing the normalized time limit actions
+   */
   public List<String> getTimeLimitActionNormalized() {
     return this.timeLimitActionNormalized;
   }
@@ -323,10 +513,22 @@ public class AssignableUnit implements Serializable {
         : List.copyOf(timeLimitActionNormalized);
   }
 
+  /**
+   * Retrieves the value indicating whether the prerequisites mandatory override is enabled.
+   *
+   * @return a Boolean indicating if the prerequisites mandatory override is set. Returns true if
+   * enabled, false if disabled, or null if not set.
+   */
   public Boolean getPrerequisitesMandatoryOverride() {
     return this.prerequisitesMandatoryOverride;
   }
 
+  /**
+   * Sets the prerequisites mandatory override flag.
+   *
+   * @param prerequisitesMandatoryOverride the value to set for indicating whether prerequisites are
+   * mandatory to override
+   */
   public void setPrerequisitesMandatoryOverride(Boolean prerequisitesMandatoryOverride) {
     this.prerequisitesMandatoryOverride = prerequisitesMandatoryOverride;
   }

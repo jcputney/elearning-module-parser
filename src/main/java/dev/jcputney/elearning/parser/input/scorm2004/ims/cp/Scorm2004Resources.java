@@ -58,18 +58,41 @@ public class Scorm2004Resources implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the base URL for all resources in the content package. This URL is used to resolve
+   * relative paths for resources.
+   *
+   * @return the base URL as a String
+   */
   public String getBase() {
     return this.base;
   }
 
+  /**
+   * Sets the base URL for all resources in the content package. The base URL is used to resolve
+   * relative paths for the resources.
+   *
+   * @param base the base URL as a string to be used for resolving resource paths
+   */
   public void setBase(String base) {
     this.base = base;
   }
 
+  /**
+   * Retrieves the list of SCORM 2004 resources contained in the content package.
+   *
+   * @return a list of Scorm2004Resource objects representing the resources in the content package
+   */
   public List<Scorm2004Resource> getResourceList() {
     return this.resourceList;
   }
 
+  /**
+   * Sets the list of SCORM 2004 resources contained in the content package.
+   *
+   * @param resourceList the list of Scorm2004Resource objects to be set as the resources in the
+   * content package
+   */
   public void setResourceList(List<Scorm2004Resource> resourceList) {
     this.resourceList = resourceList;
   }

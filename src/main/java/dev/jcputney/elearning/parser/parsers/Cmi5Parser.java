@@ -82,11 +82,23 @@ public class Cmi5Parser extends BaseParser<Cmi5Metadata, Cmi5Manifest> {
     }
   }
 
+  /**
+   * Loads external metadata for the given Cmi5Manifest. This method is overridden in the context of
+   * cmi5 but does not perform any operations because cmi5 does not require external metadata
+   * loading.
+   *
+   * @param manifest The Cmi5Manifest object containing data for the cmi5 module.
+   */
   @Override
   void loadExternalMetadata(Cmi5Manifest manifest) {
     // No external metadata loading is required for cmi5
   }
 
+  /**
+   * Returns the class type of the Cmi5 manifest used by this parser.
+   *
+   * @return The {@code Class} object representing the {@code Cmi5Manifest} type.
+   */
   @Override
   protected Class<Cmi5Manifest> getManifestClass() {
     return Cmi5Manifest.class;

@@ -150,22 +150,52 @@ public class CourseStructure implements Serializable {
         .toUpperCase(Locale.ROOT);
   }
 
+  /**
+   * Retrieves the block associated with the course structure.
+   *
+   * @return the block for the course structure as a string. The returned value may be null if the
+   * block has not been set.
+   */
   public String getBlock() {
     return this.block;
   }
 
+  /**
+   * Sets the block associated with the course structure.
+   *
+   * @param block the block to set for the course structure. Can be null. Represents a specific
+   * aspect or grouping within the course structure.
+   */
   public void setBlock(String block) {
     this.block = block;
   }
 
+  /**
+   * Retrieves the member associated with the course structure.
+   *
+   * @return the member for the course structure as a string. The returned value may be null if the
+   * member has not been set.
+   */
   public String getMember() {
     return this.member;
   }
 
+  /**
+   * Sets the member associated with the course structure.
+   *
+   * @param member the member to set for the course structure. Can be null. Represents a specific
+   * member or entity within the course structure.
+   */
   public void setMember(String member) {
     this.member = member;
   }
 
+  /**
+   * Retrieves the prerequisites associated with the course structure.
+   *
+   * @return the prerequisites for the course structure as a string. The returned value may be null
+   * if the prerequisites have not been set.
+   */
   public String getPrerequisites() {
     return this.prerequisites;
   }
@@ -181,6 +211,12 @@ public class CourseStructure implements Serializable {
     this.prerequisites = StringUtils.defaultIfBlank(prerequisites, null);
   }
 
+  /**
+   * Retrieves the raw attributes string associated with the course structure.
+   *
+   * @return the raw attributes as a string. The returned value may be null if the raw attributes
+   * have not been set or initialized.
+   */
   public String getAttributesRaw() {
     return this.attributesRaw;
   }

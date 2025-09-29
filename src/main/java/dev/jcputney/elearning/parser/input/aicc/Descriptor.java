@@ -70,34 +70,74 @@ public class Descriptor implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the system ID of the descriptor element.
+   *
+   * @return the system ID as a String
+   */
   public String getSystemId() {
     return this.systemId;
   }
 
+  /**
+   * Sets the system ID of the descriptor element.
+   *
+   * @param systemId the system ID to be assigned
+   */
   public void setSystemId(String systemId) {
     this.systemId = systemId;
   }
 
+  /**
+   * Retrieves the developer ID of the descriptor element.
+   *
+   * @return the developer ID as a String
+   */
   public String getDeveloperId() {
     return this.developerId;
   }
 
+  /**
+   * Sets the developer ID of the descriptor element.
+   *
+   * @param developerId the developer ID to be assigned
+   */
   public void setDeveloperId(String developerId) {
     this.developerId = developerId;
   }
 
+  /**
+   * Retrieves the title of the descriptor element.
+   *
+   * @return the title as a String
+   */
   public String getTitle() {
     return this.title;
   }
 
+  /**
+   * Sets the title of the descriptor element.
+   *
+   * @param title the title to be assigned
+   */
   public void setTitle(String title) {
     this.title = title;
   }
 
+  /**
+   * Retrieves the description of the descriptor element.
+   *
+   * @return the description as a String
+   */
   public String getDescription() {
     return this.description;
   }
 
+  /**
+   * Sets the description of the descriptor element.
+   *
+   * @param description the description to be assigned
+   */
   public void setDescription(String description) {
     this.description = description;
   }

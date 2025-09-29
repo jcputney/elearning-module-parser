@@ -69,10 +69,21 @@ public class ContributeEntity implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the VCARD representation of the entity.
+   *
+   * @return a String containing the VCARD representation of the entity.
+   */
   public String getVCard() {
     return this.vCard;
   }
 
+  /**
+   * Sets the VCARD representation of the entity contributing to the lifecycle of the learning
+   * object.
+   *
+   * @param vCard a String containing the VCARD representation of the entity.
+   */
   public void setVCard(String vCard) {
     this.vCard = vCard;
   }

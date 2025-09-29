@@ -269,74 +269,173 @@ public class LOM implements Serializable {
         .orElse(null);
   }
 
+  /**
+   * Retrieves the general information of the learning object.
+   *
+   * @return the general information of the learning object
+   */
   public General getGeneral() {
     return this.general;
   }
 
+  /**
+   * Sets the general information for the learning object.
+   *
+   * @param general the general information to set
+   */
   public void setGeneral(General general) {
     this.general = general;
   }
 
+  /**
+   * Retrieves the lifecycle information of the learning object.
+   *
+   * @return the lifecycle information associated with the learning object
+   */
   public LifeCycle getLifecycle() {
     return this.lifecycle;
   }
 
+  /**
+   * Sets the lifecycle information for the learning object.
+   *
+   * @param lifecycle the lifecycle information to set
+   */
   public void setLifecycle(LifeCycle lifecycle) {
     this.lifecycle = lifecycle;
   }
 
+  /**
+   * Retrieves the meta-metadata information of the learning object.
+   *
+   * @return the meta-metadata information associated with the learning object
+   */
   public MetaMetadata getMetaMetadata() {
     return this.metaMetadata;
   }
 
+  /**
+   * Sets the meta-metadata information for the learning object.
+   *
+   * @param metaMetadata the meta-metadata information to set
+   */
   public void setMetaMetadata(MetaMetadata metaMetadata) {
     this.metaMetadata = metaMetadata;
   }
 
+  /**
+   * Retrieves the technical information of the learning object.
+   *
+   * @return the technical information associated with the learning object
+   */
   public Technical getTechnical() {
     return this.technical;
   }
 
+  /**
+   * Sets the technical information for the learning object.
+   *
+   * @param technical the technical information to set
+   */
   public void setTechnical(Technical technical) {
     this.technical = technical;
   }
 
+  /**
+   * Retrieves the educational information of the learning object.
+   *
+   * @return the educational information associated with the learning object
+   */
   public Educational getEducational() {
     return this.educational;
   }
 
+  /**
+   * Sets the educational information for the learning object.
+   *
+   * @param educational the educational information to set
+   */
   public void setEducational(Educational educational) {
     this.educational = educational;
   }
 
+  /**
+   * Retrieves the rights information of the learning object.
+   *
+   * @return the rights information associated with the learning object
+   */
   public Rights getRights() {
     return this.rights;
   }
 
+  /**
+   * Sets the rights information for the learning object.
+   *
+   * @param rights the rights information to set
+   */
   public void setRights(Rights rights) {
     this.rights = rights;
   }
 
+  /**
+   * Retrieves the list of relations associated with the learning object. Relations provide
+   * information about connections between the current learning object and other resources.
+   *
+   * @return a list of {@code Relation} objects representing the relationships of the learning
+   * object
+   */
   public List<Relation> getRelations() {
     return this.relations;
   }
 
+  /**
+   * Sets the list of relations associated with the learning object. Relations provide information
+   * about connections between the current learning object and other resources.
+   *
+   * @param relations a list of {@code Relation} objects representing the relationships of the
+   * learning object
+   */
   public void setRelations(List<Relation> relations) {
     this.relations = relations;
   }
 
+  /**
+   * Retrieves the list of annotations associated with the learning object. Annotations provide
+   * additional comments, instructions, or explanations related to the learning object.
+   *
+   * @return a list of {@code Annotation} objects representing the associated annotations
+   */
   public List<Annotation> getAnnotations() {
     return this.annotations;
   }
 
+  /**
+   * Sets the list of annotations associated with the learning object. Annotations provide
+   * additional comments, instructions, or explanations related to the learning object.
+   *
+   * @param annotations a list of {@code Annotation} objects representing the annotations to
+   * associate with the learning object
+   */
   public void setAnnotations(List<Annotation> annotations) {
     this.annotations = annotations;
   }
 
+  /**
+   * Retrieves the classifications associated with the learning object.
+   *
+   * @return a list of {@code Classification} objects representing the classifications of the
+   * learning object
+   */
   public List<Classification> getClassifications() {
     return this.classifications;
   }
 
+  /**
+   * Sets the classifications associated with the learning object.
+   *
+   * @param classifications a list of {@code Classification} objects representing the
+   * classifications to associate with the learning object
+   */
   public void setClassifications(List<Classification> classifications) {
     this.classifications = classifications;
   }

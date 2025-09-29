@@ -97,42 +97,100 @@ public class PackageProperties implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the control specifications associated with this package.
+   *
+   * @return the {@code ControlsSpec} instance containing control-related configurations.
+   */
   public ControlsSpec getControls() {
     return this.controls;
   }
 
+  /**
+   * Updates the control specifications for the current package configuration.
+   *
+   * @param controls the {@code ControlsSpec} instance providing the control-related configurations
+   * to set
+   */
   public void setControls(ControlsSpec controls) {
     this.controls = controls;
   }
 
+  /**
+   * Retrieves the appearance specifications associated with this package.
+   *
+   * @return the {@code AppearanceSpec} instance containing appearance-related configurations.
+   */
   public AppearanceSpec getAppearance() {
     return this.appearance;
   }
 
+  /**
+   * Updates the appearance configuration for the current package.
+   *
+   * @param appearance the {@code AppearanceSpec} instance providing the appearance-related
+   * configurations to set
+   */
   public void setAppearance(AppearanceSpec appearance) {
     this.appearance = appearance;
   }
 
+  /**
+   * Retrieves the behavior specifications associated with this package.
+   *
+   * @return the {@code BehaviorSpec} instance containing behavior-related configurations.
+   */
   public BehaviorSpec getBehavior() {
     return this.behavior;
   }
 
+  /**
+   * Updates the behavior configuration for the current package.
+   *
+   * @param behavior the {@code BehaviorSpec} instance containing behavior-related configurations to
+   * set
+   */
   public void setBehavior(BehaviorSpec behavior) {
     this.behavior = behavior;
   }
 
+  /**
+   * Retrieves the RSOP (Resource Synchronization Operational Policy) specification associated with
+   * this package.
+   *
+   * @return the {@code RsopSpec} instance containing resource synchronization policy
+   * configurations.
+   */
   public RsopSpec getRsop() {
     return this.rsop;
   }
 
+  /**
+   * Updates the RSOP (Resource Synchronization Operational Policy) configuration for the current
+   * package.
+   *
+   * @param rsop the {@code RsopSpec} instance containing the resource synchronization policy
+   * configurations to set
+   */
   public void setRsop(RsopSpec rsop) {
     this.rsop = rsop;
   }
 
+  /**
+   * Retrieves the heuristic specifications associated with this package.
+   *
+   * @return the {@code HeuristicSpec} instance containing heuristic-related configurations.
+   */
   public HeuristicSpec getHeuristics() {
     return this.heuristics;
   }
 
+  /**
+   * Updates the heuristic configuration for the current package.
+   *
+   * @param heuristics the {@code HeuristicSpec} instance containing heuristic-related
+   * configurations to set
+   */
   public void setHeuristics(HeuristicSpec heuristics) {
     this.heuristics = heuristics;
   }

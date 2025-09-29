@@ -133,50 +133,112 @@ public class Block implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the title of the block.
+   *
+   * @return the title of the block as a {@link TextType} object
+   */
   public TextType getTitle() {
     return this.title;
   }
 
+  /**
+   * Sets the title of the block.
+   *
+   * @param title the title to set, represented as a {@link TextType} object
+   */
   public void setTitle(TextType title) {
     this.title = title;
   }
 
+  /**
+   * Retrieves the description of the block.
+   *
+   * @return the description of the block as a {@link TextType} object
+   */
   public TextType getDescription() {
     return this.description;
   }
 
+  /**
+   * Sets the description of the block.
+   *
+   * @param description the description to set, represented as a {@link TextType} object
+   */
   public void setDescription(TextType description) {
     this.description = description;
   }
 
+  /**
+   * Retrieves the objectives associated with the block.
+   *
+   * @return the objectives of the block as a {@link ReferencesObjectives} object
+   */
   public ReferencesObjectives getObjectives() {
     return this.objectives;
   }
 
+  /**
+   * Sets the objectives associated with the block.
+   *
+   * @param objectives the objectives to set, represented as a {@link ReferencesObjectives} object
+   */
   public void setObjectives(ReferencesObjectives objectives) {
     this.objectives = objectives;
   }
 
+  /**
+   * Retrieves a list of assignable units associated with the block.
+   *
+   * @return a list of assignable units as a {@link List} of {@code AU} objects
+   */
   public List<AU> getAssignableUnits() {
     return this.assignableUnits;
   }
 
+  /**
+   * Sets the list of assignable units associated with the block.
+   *
+   * @param assignableUnits the list of assignable units to set, represented as a {@link List} of
+   * {@code AU} objects
+   */
   public void setAssignableUnits(List<AU> assignableUnits) {
     this.assignableUnits = assignableUnits;
   }
 
+  /**
+   * Retrieves the nested blocks associated with this block.
+   *
+   * @return a list of nested blocks as a {@link List} of {@code Block} objects
+   */
   public List<Block> getNestedBlocks() {
     return this.nestedBlocks;
   }
 
+  /**
+   * Sets the list of nested blocks associated with this block.
+   *
+   * @param nestedBlocks the list of nested blocks to set, represented as a {@link List} of
+   * {@code Block} objects
+   */
   public void setNestedBlocks(List<Block> nestedBlocks) {
     this.nestedBlocks = nestedBlocks;
   }
 
+  /**
+   * Retrieves the unique identifier of the block.
+   *
+   * @return the unique identifier of the block as a {@code String}
+   */
   public String getId() {
     return this.id;
   }
 
+  /**
+   * Sets the unique identifier of the block.
+   *
+   * @param id the unique identifier to set, represented as a String
+   */
   public void setId(String id) {
     this.id = id;
   }

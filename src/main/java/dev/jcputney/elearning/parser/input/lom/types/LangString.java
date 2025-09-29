@@ -80,10 +80,21 @@ public class LangString implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the language associated with this instance.
+   *
+   * @return the language as a String
+   */
   public String getLanguage() {
     return this.language;
   }
 
+  /**
+   * Sets the language attribute of this instance.
+   *
+   * @param language the language code to set, typically represented as an ISO 639-1 or ISO 639-3
+   * code
+   */
   @JsonAlias("lang")
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("language")
@@ -91,10 +102,21 @@ public class LangString implements Serializable {
     this.language = language;
   }
 
+  /**
+   * Retrieves the value of the string associated with this instance.
+   *
+   * @return the value as a String
+   */
   public String getValue() {
     return this.value;
   }
 
+  /**
+   * Sets the value of this instance.
+   *
+   * @param value the string value to set; trimmed of leading whitespaces while preserving
+   * indentation
+   */
   @JsonDeserialize(using = TrimAndPreserveIndentationDeserializer.class)
   @JacksonXmlText
   public void setValue(String value) {

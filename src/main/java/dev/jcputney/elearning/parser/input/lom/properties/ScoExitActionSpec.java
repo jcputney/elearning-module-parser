@@ -47,7 +47,7 @@ public class ScoExitActionSpec implements Serializable {
    */
   @JacksonXmlProperty(localName = "satisfied")
   private ExitTypesSpec satisfied;
-  
+
   /**
    * The action to take when the SCO is not satisfied.
    */
@@ -63,18 +63,40 @@ public class ScoExitActionSpec implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the action to take when the SCO is satisfied.
+   *
+   * @return the {@code ExitTypesSpec} representing the satisfied action, or null if not defined
+   */
   public ExitTypesSpec getSatisfied() {
     return this.satisfied;
   }
 
+  /**
+   * Updates the action to take when the SCO is satisfied.
+   *
+   * @param satisfied an {@code ExitTypesSpec} object representing the set of exit actions to be
+   * taken when the SCO is satisfied
+   */
   public void setSatisfied(ExitTypesSpec satisfied) {
     this.satisfied = satisfied;
   }
 
+  /**
+   * Retrieves the action to take when the SCO is not satisfied.
+   *
+   * @return the {@code ExitTypesSpec} representing the not satisfied action, or null if not defined
+   */
   public ExitTypesSpec getNotSatisfied() {
     return this.notSatisfied;
   }
 
+  /**
+   * Sets the action to take when the SCO is not satisfied.
+   *
+   * @param notSatisfied an {@code ExitTypesSpec} object representing the set of exit actions to be
+   * taken when the SCO is not satisfied
+   */
   public void setNotSatisfied(ExitTypesSpec notSatisfied) {
     this.notSatisfied = notSatisfied;
   }

@@ -94,35 +94,78 @@ public class Scorm12Metadata implements LoadableMetadata {
     // no-op
   }
 
+  /**
+   * Retrieves the schema associated with the SCORM 1.2 metadata.
+   *
+   * @return A string representing the schema of the SCORM 1.2 metadata.
+   */
   public String getSchema() {
     return this.schema;
   }
 
+  /**
+   * Sets the schema for the SCORM 1.2 metadata.
+   *
+   * @param schema A string representing the schema to be associated with the SCORM 1.2 metadata.
+   */
   public void setSchema(String schema) {
     this.schema = schema;
   }
 
+  /**
+   * Retrieves the schema version associated with the SCORM 1.2 metadata.
+   *
+   * @return A string representing the schema version of the SCORM 1.2 metadata.
+   */
   public String getSchemaVersion() {
     return this.schemaVersion;
   }
 
+  /**
+   * Sets the schema version for the SCORM 1.2 metadata.
+   *
+   * @param schemaVersion A string representing the schema version to be associated with the SCORM
+   * 1.2 metadata.
+   */
   public void setSchemaVersion(String schemaVersion) {
     this.schemaVersion = schemaVersion;
   }
 
+  /**
+   * Retrieves the LOM (Learning Object Metadata) associated with the SCORM 1.2 metadata.
+   *
+   * @return The LOM object representing the learning object metadata.
+   */
   public LOM getLom() {
     return this.lom;
   }
 
+  /**
+   * Sets the LOM (Learning Object Metadata) for the SCORM 1.2 metadata.
+   *
+   * @param lom The LOM object representing the learning object metadata to be associated with the
+   * SCORM 1.2 metadata.
+   */
   @JacksonXmlProperty(localName = "lom", namespace = LOM.NAMESPACE_URI)
   public void setLom(LOM lom) {
     this.lom = lom;
   }
 
+  /**
+   * Retrieves the location associated with the SCORM 1.2 metadata.
+   *
+   * @return A string representing the location of the SCORM 1.2 metadata.
+   */
   public String getLocation() {
     return this.location;
   }
 
+  /**
+   * Sets the location associated with the SCORM 1.2 metadata.
+   *
+   * @param location A string representing the location to be associated with the SCORM 1.2
+   * metadata.
+   */
   public void setLocation(String location) {
     this.location = location;
   }

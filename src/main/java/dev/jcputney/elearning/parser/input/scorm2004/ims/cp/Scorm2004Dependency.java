@@ -49,10 +49,22 @@ public class Scorm2004Dependency implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the identifier reference for the dependency. This refers to another resource in the
+   * content package that this resource relies upon.
+   *
+   * @return the identifier reference of the dependency.
+   */
   public String getIdentifierRef() {
     return this.identifierRef;
   }
 
+  /**
+   * Sets the identifier reference for the dependency. This reference points to another resource in
+   * the content package that this resource depends on.
+   *
+   * @param identifierRef the identifier reference for the dependency
+   */
   public void setIdentifierRef(String identifierRef) {
     this.identifierRef = identifierRef;
   }

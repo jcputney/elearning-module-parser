@@ -81,16 +81,40 @@ public class LangString implements Serializable {
     // no-op
   }
 
-  public static LangStringBuilder builder() {
-    return new LangStringBuilder();
-  }
-
+  /**
+   * Retrieves the value of the localized string.
+   *
+   * @return the actual text content of the localized string
+   */
   public String getValue() {
     return this.value;
   }
 
+  /**
+   * Sets the value of the localized string.
+   *
+   * @param value the text content to set for the localized string
+   */
+  public void setValue(String value) {
+    this.value = value;
+  }
+
+  /**
+   * Retrieves the language associated with the localized string.
+   *
+   * @return the language of the string as a {@code String}, or {@code null} if not set
+   */
   public String getLang() {
     return this.lang;
+  }
+
+  /**
+   * Sets the language attribute for the localized string.
+   *
+   * @param lang the language to associate with the string, represented as a {@code String}
+   */
+  public void setLang(String lang) {
+    this.lang = lang;
   }
 
   @Override
@@ -115,38 +139,5 @@ public class LangString implements Serializable {
         .append(getValue())
         .append(getLang())
         .toHashCode();
-  }
-
-  @com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder(withPrefix = "")
-  @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-  public static class LangStringBuilder {
-
-    private String value;
-    private String lang;
-
-    LangStringBuilder() {
-    }
-
-    @JsonDeserialize(using = TrimAndPreserveIndentationDeserializer.class)
-    @JacksonXmlText
-    public LangStringBuilder value(String value) {
-      this.value = value;
-      return this;
-    }
-
-    @JacksonXmlProperty(isAttribute = true)
-    @JsonProperty("lang")
-    public LangStringBuilder lang(String lang) {
-      this.lang = lang;
-      return this;
-    }
-
-    public LangString build() {
-      return new LangString(this.value, this.lang);
-    }
-
-    public String toString() {
-      return "LangString.LangStringBuilder(value=" + this.value + ", lang=" + this.lang + ")";
-    }
   }
 }

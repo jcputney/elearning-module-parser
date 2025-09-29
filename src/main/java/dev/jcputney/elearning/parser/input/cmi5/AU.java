@@ -252,90 +252,210 @@ public class AU implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the title of the current instance.
+   *
+   * @return the title as a {@link TextType} representing localized text.
+   */
   public TextType getTitle() {
     return this.title;
   }
 
+  /**
+   * Updates the title for the current instance.
+   *
+   * @param title the new title, represented as a {@link TextType}, which supports multi-language
+   * localized text
+   */
   public void setTitle(TextType title) {
     this.title = title;
   }
 
+  /**
+   * Retrieves the description of the current instance.
+   *
+   * @return the description as a {@link TextType}, which represents localized text.
+   */
   public TextType getDescription() {
     return this.description;
   }
 
+  /**
+   * Updates the description for the current instance.
+   *
+   * @param description the new description, represented as a {@link TextType}, which supports
+   * multi-language localized text
+   */
   public void setDescription(TextType description) {
     this.description = description;
   }
 
+  /**
+   * Retrieves the objectives of the current instance.
+   *
+   * @return a {@link ReferencesObjectives} object representing the objectives associated with the
+   * current instance.
+   */
   public ReferencesObjectives getObjectives() {
     return this.objectives;
   }
 
+  /**
+   * Updates the objectives for the current instance.
+   *
+   * @param objectives the new {@link ReferencesObjectives} object representing the objectives
+   * associated with the current instance.
+   */
   public void setObjectives(ReferencesObjectives objectives) {
     this.objectives = objectives;
   }
 
+  /**
+   * Retrieves the URL associated with the current instance.
+   *
+   * @return the URL as a {@link String}.
+   */
   public String getUrl() {
     return this.url;
   }
 
+  /**
+   * Updates the URL for the current instance.
+   *
+   * @param url the new URL, represented as a String.
+   */
   public void setUrl(String url) {
     this.url = url;
   }
 
+  /**
+   * Retrieves the launch parameters associated with the current instance.
+   *
+   * @return a {@link String} representing the launch parameters.
+   */
   public String getLaunchParameters() {
     return this.launchParameters;
   }
 
+  /**
+   * Updates the launch parameters for the current instance.
+   *
+   * @param launchParameters the new launch parameters, represented as a {@link String}.
+   */
   public void setLaunchParameters(String launchParameters) {
     this.launchParameters = launchParameters;
   }
 
+  /**
+   * Retrieves the entitlement key associated with the current instance.
+   *
+   * @return a {@link String} representing the entitlement key.
+   */
   public String getEntitlementKey() {
     return this.entitlementKey;
   }
 
+  /**
+   * Sets the entitlement key for the current instance.
+   *
+   * @param entitlementKey the new entitlement key, represented as a {@link String}.
+   */
   public void setEntitlementKey(String entitlementKey) {
     this.entitlementKey = entitlementKey;
   }
 
+  /**
+   * Retrieves the unique identifier associated with the current instance.
+   *
+   * @return a {@link String} representing the unique identifier.
+   */
   public String getId() {
     return this.id;
   }
 
+  /**
+   * Updates the unique identifier for the current instance.
+   *
+   * @param id the new unique identifier, represented as a {@link String}.
+   */
   public void setId(String id) {
     this.id = id;
   }
 
+  /**
+   * Retrieves the {@link MoveOn} value associated with the current instance.
+   *
+   * @return the {@link MoveOn} enum value representing the conditions for moving on to the next
+   * activity.
+   */
   public MoveOn getMoveOn() {
     return this.moveOn;
   }
 
+  /**
+   * Updates the {@link MoveOn} value for the current instance.
+   *
+   * @param moveOn the new {@link MoveOn} enum value representing the conditions that must be met to
+   * move on to the next activity.
+   */
   public void setMoveOn(MoveOn moveOn) {
     this.moveOn = moveOn;
   }
 
+  /**
+   * Retrieves the mastery score associated with the current instance.
+   *
+   * @return a {@link PercentType} representing the mastery score, which is defined as a percentage
+   * value constrained between 0 and 1, inclusive.
+   */
   public PercentType getMasteryScore() {
     return this.masteryScore;
   }
 
+  /**
+   * Updates the mastery score for the current instance.
+   *
+   * @param masteryScore the new mastery score, represented as a {@link PercentType}, which is a
+   * percentage value constrained between 0 and 1, inclusive.
+   */
   public void setMasteryScore(PercentType masteryScore) {
     this.masteryScore = masteryScore;
   }
 
+  /**
+   * Retrieves the launch method associated with the current instance.
+   *
+   * @return the {@link LaunchMethod}, an enum representing the method used to launch the activity.
+   */
   public LaunchMethod getLaunchMethod() {
     return this.launchMethod;
   }
 
+  /**
+   * Sets the {@link LaunchMethod} for the current instance.
+   *
+   * @param launchMethod the {@link LaunchMethod} enum value specifying the method used to launch
+   * the activity. It determines whether the activity can launch in any window or must be launched
+   * in its own window.
+   */
   public void setLaunchMethod(LaunchMethod launchMethod) {
     this.launchMethod = launchMethod;
   }
 
+  /**
+   * Retrieves the activity type associated with the current instance.
+   *
+   * @return a {@link String} representing the activity type.
+   */
   public String getActivityType() {
     return this.activityType;
   }
 
+  /**
+   * Updates the activity type for the current instance.
+   *
+   * @param activityType the new activity type, represented as a {@link String}.
+   */
   public void setActivityType(String activityType) {
     this.activityType = activityType;
   }

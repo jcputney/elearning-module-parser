@@ -57,18 +57,46 @@ public class RollupCondition implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the operator used to evaluate the rollup condition.
+   *
+   * @return the {@link ConditionOperatorType} representing the operator for this rollup condition.
+   */
   public ConditionOperatorType getOperator() {
     return this.operator;
   }
 
+  /**
+   * Sets the operator for this rollup condition. The operator determines how the condition is
+   * evaluated during the rollup process.
+   *
+   * @param operator the {@link ConditionOperatorType} to set as the operator for this rollup
+   * condition, which specifies whether to invert the condition (NOT) or apply it as-is (NO_OP).
+   */
   public void setOperator(ConditionOperatorType operator) {
     this.operator = operator;
   }
 
+  /**
+   * Retrieves the condition specified for this rollup condition. The condition determines the
+   * criteria being evaluated, such as completion status, progress, or other activity-related
+   * metrics, which influence the associated rollup rule.
+   *
+   * @return the {@link RollupRuleConditionType} representing the specific condition of this rollup
+   * condition.
+   */
   public RollupRuleConditionType getCondition() {
     return this.condition;
   }
 
+  /**
+   * Sets the specific condition to evaluate within this rollup condition. The provided condition
+   * determines the criteria related to the learner's progress, completion, or activity status that
+   * affect the rollup rule's application.
+   *
+   * @param condition the {@link RollupRuleConditionType} representing the criterion to set for this
+   * rollup condition, such as completion, satisfaction, or other activity-related metrics.
+   */
   public void setCondition(RollupRuleConditionType condition) {
     this.condition = condition;
   }

@@ -58,10 +58,22 @@ public class RollupAction implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the current rollup action type associated with this instance.
+   *
+   * @return the {@link RollupActionType} representing the action to be performed if the rollup
+   * rule's conditions are met.
+   */
   public RollupActionType getAction() {
     return this.action;
   }
 
+  /**
+   * Sets the rollup action to be performed when the rollup rule conditions are met.
+   *
+   * @param action the {@link RollupActionType} defining the specific action to be taken, such as
+   * marking the activity as satisfied, not satisfied, completed, or incomplete.
+   */
   public void setAction(RollupActionType action) {
     this.action = action;
   }

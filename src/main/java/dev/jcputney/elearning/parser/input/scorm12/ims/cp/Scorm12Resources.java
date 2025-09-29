@@ -57,7 +57,7 @@ public class Scorm12Resources implements Serializable {
   @JacksonXmlProperty(isAttribute = true, localName = "base", namespace = "http://www.w3.org/XML/1998/namespace")
   @JsonProperty("base")
   private String base;
-  
+
   /**
    * A list of all {@code <resources>} elements defined within the {@code <resources>} element.
    * <p>
@@ -91,18 +91,41 @@ public class Scorm12Resources implements Serializable {
         .findFirst();
   }
 
+  /**
+   * Retrieves the base URL associated with the resources in the content package. This URL is used
+   * to resolve relative paths for the resources.
+   *
+   * @return The base URL as a {@code String}.
+   */
   public String getBase() {
     return this.base;
   }
 
+  /**
+   * Sets the base URL associated with the resources in the SCORM content package.
+   *
+   * @param base A string representing the base URL. This URL is used to resolve relative paths for
+   * the resources in the content package.
+   */
   public void setBase(String base) {
     this.base = base;
   }
 
+  /**
+   * Retrieves the list of SCORM 1.2 resources.
+   *
+   * @return A list of {@link Scorm12Resource} objects representing the resources.
+   */
   public List<Scorm12Resource> getResourceList() {
     return this.resourceList;
   }
 
+  /**
+   * Sets the list of SCORM 1.2 resources for this content package.
+   *
+   * @param resourceList A list of {@link Scorm12Resource} objects to set. These objects represent
+   * the resources associated with the content package.
+   */
   public void setResourceList(List<Scorm12Resource> resourceList) {
     this.resourceList = resourceList;
   }

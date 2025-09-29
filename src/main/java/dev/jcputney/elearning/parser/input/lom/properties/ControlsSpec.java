@@ -135,71 +135,189 @@ public class ControlsSpec implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the value of the showFinishButton property, which determines whether the "Finish"
+   * button should be displayed or not.
+   *
+   * @return the current value of the showFinishButton property, either as YES, NO, TRUE, or FALSE.
+   */
   public YesNoType getShowFinishButton() {
     return this.showFinishButton;
   }
 
+  /**
+   * Sets the value of the showFinishButton property, which determines whether the "Finish" button
+   * should be displayed or not.
+   *
+   * @param showFinishButton the value to set for the showFinishButton property. Accepts values of
+   * either YES, NO, TRUE, or FALSE, as defined by the YesNoType enum.
+   */
   public void setShowFinishButton(YesNoType showFinishButton) {
     this.showFinishButton = showFinishButton;
   }
 
+  /**
+   * Retrieves the value of the showCloseItem property, which indicates whether the "Close" item
+   * should be displayed or hidden.
+   *
+   * @return the current value of the showCloseItem property, represented as one of the values
+   * defined in the YesNoType enumeration (YES, NO, TRUE, or FALSE).
+   */
   public YesNoType getShowCloseItem() {
     return this.showCloseItem;
   }
 
+  /**
+   * Sets the value of the showCloseItem property, which determines whether the "Close" item should
+   * be displayed or hidden.
+   *
+   * @param showCloseItem the value to set for the showCloseItem property. Accepts values of either
+   * YES, NO, TRUE, or FALSE, as defined by the YesNoType enum.
+   */
   public void setShowCloseItem(YesNoType showCloseItem) {
     this.showCloseItem = showCloseItem;
   }
 
+  /**
+   * Retrieves the value of the showHelp property, which defines whether the help section should be
+   * displayed or not.
+   *
+   * @return the current value of the showHelp property, represented as one of the values in the
+   * YesNoType enumeration (YES, NO, TRUE, or FALSE).
+   */
   public YesNoType getShowHelp() {
     return this.showHelp;
   }
 
+  /**
+   * Sets the value of the showHelp property, determining whether the help section should be
+   * displayed or hidden.
+   *
+   * @param showHelp the value to set for the showHelp property. Accepts values of either YES, NO,
+   * TRUE, or FALSE, as defined by the YesNoType enum.
+   */
   public void setShowHelp(YesNoType showHelp) {
     this.showHelp = showHelp;
   }
 
+  /**
+   * Retrieves the value of the showProgressBar property, which determines whether the progress bar
+   * should be displayed or not.
+   *
+   * @return the current value of the showProgressBar property, represented as one of the values
+   * defined in the YesNoType enumeration (YES, NO, TRUE, or FALSE).
+   */
   public YesNoType getShowProgressBar() {
     return this.showProgressBar;
   }
 
+  /**
+   * Sets the value of the showProgressBar property, which determines whether the progress bar
+   * should be displayed or hidden.
+   *
+   * @param showProgressBar the value to set for the showProgressBar property. Accepts values of
+   * either YES, NO, TRUE, or FALSE, as defined by the YesNoType enum.
+   */
   public void setShowProgressBar(YesNoType showProgressBar) {
     this.showProgressBar = showProgressBar;
   }
 
+  /**
+   * Retrieves the value of the useMeasureProgressBar property, which determines whether the measure
+   * progress bar functionality is enabled or disabled.
+   *
+   * @return the current value of the useMeasureProgressBar property, represented as one of the
+   * values defined in the YesNoType enumeration (YES, NO, TRUE, or FALSE).
+   */
   public YesNoType getUseMeasureProgressBar() {
     return this.useMeasureProgressBar;
   }
 
+  /**
+   * Sets the value of the useMeasureProgressBar property, which determines whether the measure
+   * progress bar functionality is enabled or disabled.
+   *
+   * @param useMeasureProgressBar the value to set for the useMeasureProgressBar property. Accepts
+   * values of either YES, NO, TRUE, or FALSE, as defined by the YesNoType enum.
+   */
   public void setUseMeasureProgressBar(YesNoType useMeasureProgressBar) {
     this.useMeasureProgressBar = useMeasureProgressBar;
   }
 
+  /**
+   * Retrieves the value of the showCourseStructure property, which determines whether the course
+   * structure should be displayed or hidden.
+   *
+   * @return the current value of the showCourseStructure property, represented as one of the values
+   * defined in the YesNoType enumeration (YES, NO, TRUE, or FALSE).
+   */
   public YesNoType getShowCourseStructure() {
     return this.showCourseStructure;
   }
 
+  /**
+   * Sets the value of the showCourseStructure property, which determines whether the course
+   * structure should be displayed or hidden.
+   *
+   * @param showCourseStructure the value to set for the showCourseStructure property. Accepts
+   * values of either YES, NO, TRUE, or FALSE, as defined by the YesNoType enum.
+   */
   public void setShowCourseStructure(YesNoType showCourseStructure) {
     this.showCourseStructure = showCourseStructure;
   }
 
+  /**
+   * Retrieves the value of the courseStructureStartsOpen property, which determines whether the
+   * course structure starts in an open state or not.
+   *
+   * @return the current value of the courseStructureStartsOpen property, represented as one of the
+   * values in the YesNoType enumeration (YES, NO, TRUE, or FALSE).
+   */
   public YesNoType getCourseStructureStartsOpen() {
     return this.courseStructureStartsOpen;
   }
 
+  /**
+   * Sets the value of the courseStructureStartsOpen property, which determines whether the course
+   * structure should start in an open state or not.
+   *
+   * @param courseStructureStartsOpen the value to set for the courseStructureStartsOpen property.
+   * Accepts values of either YES, NO, TRUE, or FALSE, as defined by the YesNoType enum.
+   */
   public void setCourseStructureStartsOpen(
       YesNoType courseStructureStartsOpen) {
     this.courseStructureStartsOpen = courseStructureStartsOpen;
   }
 
+  /**
+   * Retrieves the value of the showNavBar property, which determines whether the navigation bar
+   * should be displayed or not.
+   *
+   * @return the current value of the showNavBar property, represented as one of the values in the
+   * YesNoType enumeration (YES, NO, TRUE, or FALSE).
+   */
   public YesNoType getShowNavBar() {
     return this.showNavBar;
   }
 
+  /**
+   * Sets the value of the showNavBar property, which determines whether the navigation bar should
+   * be displayed or hidden.
+   *
+   * @param showNavBar the value to set for the showNavBar property. Accepts values of either YES,
+   * NO, TRUE, or FALSE, as defined by the YesNoType enum.
+   */
   public void setShowNavBar(YesNoType showNavBar) {
     this.showNavBar = showNavBar;
   }
 
+  /**
+   * Retrieves the value of the showTitleBar property, which determines whether the title bar should
+   * be displayed or not.
+   *
+   * @return the current value of the showTitleBar property, represented as one of the values in the
+   * YesNoType enumeration (YES, NO, TRUE, or FALSE).
+   */
   public YesNoType getShowTitleBar() {
     return this.showTitleBar;
   }
@@ -208,34 +326,77 @@ public class ControlsSpec implements Serializable {
     this.showTitleBar = showTitleBar;
   }
 
+  /**
+   * Retrieves the value of the enableFlowNav property, which indicates whether the flow navigation
+   * functionality is enabled or disabled.
+   *
+   * @return the current value of the enableFlowNav property, represented as one of the values in
+   * the YesNoType enumeration (YES, NO, TRUE, or FALSE).
+   */
   public YesNoType getEnableFlowNav() {
     return this.enableFlowNav;
   }
 
+  /**
+   * Sets the flow navigation enablement status.
+   *
+   * @param enableFlowNav Determines whether flow navigation is enabled or disabled.
+   */
   public void setEnableFlowNav(YesNoType enableFlowNav) {
     this.enableFlowNav = enableFlowNav;
   }
 
+  /**
+   * Retrieves the current state of the enableChoiceNav property.
+   *
+   * @return a YesNoType value representing whether the choice navigation is enabled or not.
+   */
   public YesNoType getEnableChoiceNav() {
     return this.enableChoiceNav;
   }
 
+  /**
+   * Sets the enableChoiceNav property to define whether choice navigation is enabled or not.
+   *
+   * @param enableChoiceNav the YesNoType value indicating if choice navigation should be enabled
+   */
   public void setEnableChoiceNav(YesNoType enableChoiceNav) {
     this.enableChoiceNav = enableChoiceNav;
   }
 
+  /**
+   * Retrieves the current status display type.
+   *
+   * @return the current status display of type StatusDisplayType
+   */
   public StatusDisplayType getStatusDisplay() {
     return this.statusDisplay;
   }
 
+  /**
+   * Updates the status display to the specified type.
+   *
+   * @param statusDisplay the new status display type to set
+   */
   public void setStatusDisplay(StatusDisplayType statusDisplay) {
     this.statusDisplay = statusDisplay;
   }
 
+  /**
+   * Retrieves the current value of the forceDisableRootChoice setting.
+   *
+   * @return the value of forceDisableRootChoice of type YesNoType
+   */
   public YesNoType getForceDisableRootChoice() {
     return this.forceDisableRootChoice;
   }
 
+  /**
+   * Sets the value indicating whether the root choice should be forcibly disabled.
+   *
+   * @param forceDisableRootChoice a value of type YesNoType that determines whether the root choice
+   * is forcibly disabled.
+   */
   public void setForceDisableRootChoice(YesNoType forceDisableRootChoice) {
     this.forceDisableRootChoice = forceDisableRootChoice;
   }

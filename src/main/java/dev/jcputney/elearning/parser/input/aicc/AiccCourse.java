@@ -75,22 +75,52 @@ public class AiccCourse implements Serializable {
         .orElse(null);
   }
 
+  /**
+   * Sets the course description information for the AICC manifest.
+   *
+   * @param courseDescription a map representing course description details, where the key is a
+   * language code and the value is the description in that language
+   */
   public void setCourseDescription(Map<String, String> courseDescription) {
     this.courseDescription = courseDescription;
   }
 
+  /**
+   * Retrieves the course information associated with this instance.
+   *
+   * @return the course object containing details such as course ID, title, creator, system, and
+   * other related fields
+   */
   public Course getCourse() {
     return this.course;
   }
 
+  /**
+   * Updates the course information associated with this instance.
+   *
+   * @param course the course object containing details such as course ID, title, creator, system,
+   * and other related fields
+   */
   public void setCourse(Course course) {
     this.course = course;
   }
 
+  /**
+   * Retrieves the CourseBehavior object associated with this instance.
+   *
+   * @return the CourseBehavior object, which encapsulates the behavior properties such as mastery
+   * score, maximum allowable time, and time limit actions, or null if not assigned.
+   */
   public CourseBehavior getCourseBehavior() {
     return this.courseBehavior;
   }
 
+  /**
+   * Sets the course behavior properties for the AICC course.
+   *
+   * @param courseBehavior the CourseBehavior object encapsulating behavior properties such as
+   * mastery score, maximum allowable time, and time limit actions
+   */
   public void setCourseBehavior(CourseBehavior courseBehavior) {
     this.courseBehavior = courseBehavior;
   }
@@ -122,7 +152,16 @@ public class AiccCourse implements Serializable {
   }
 
   /**
-   * Represents the course information in the AICC manifest.
+   * Represents a course with various properties such as creator, ID, title, system information, and
+   * other specific metadata related to the course. This class is primarily designed for
+   * serialization or deserialization using JSON.
+   *
+   * The class utilizes Jackson annotations to ensure compatibility with JSON processing, such as
+   * case insensitivity and ignoring unknown properties. Implements {@code Serializable} for
+   * possible persistence or transmission scenarios.
+   *
+   * The {@code Course} class provides getters and setters for all of its attributes, enabling
+   * manipulation and retrieval of metadata values associated with a course.
    */
   @JsonIgnoreProperties(ignoreUnknown = true)
   @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
@@ -200,98 +239,218 @@ public class AiccCourse implements Serializable {
     @JsonProperty(value = "Total_Objectives")
     private String totalObjectives;
 
+    /**
+     * Retrieves the creator of the course.
+     *
+     * @return the name of the course creator
+     */
     public String getCourseCreator() {
       return this.courseCreator;
     }
 
+    /**
+     * Sets the creator of the course.
+     *
+     * @param courseCreator the name of the person or entity who created the course
+     */
     public void setCourseCreator(String courseCreator) {
       this.courseCreator = courseCreator;
     }
 
+    /**
+     * Retrieves the course ID.
+     *
+     * @return the unique identifier of the course
+     */
     public String getCourseId() {
       return this.courseId;
     }
 
+    /**
+     * Sets the unique identifier for the course.
+     *
+     * @param courseId the unique identifier to assign to the course
+     */
     public void setCourseId(String courseId) {
       this.courseId = courseId;
     }
 
+    /**
+     * Retrieves the title of the course.
+     *
+     * @return the title of the course
+     */
     public String getCourseTitle() {
       return this.courseTitle;
     }
 
+    /**
+     * Sets the title of the course.
+     *
+     * @param courseTitle the title to assign to the course
+     */
     public void setCourseTitle(String courseTitle) {
       this.courseTitle = courseTitle;
     }
 
+    /**
+     * Retrieves the course system associated with the course.
+     *
+     * @return the system information of the course
+     */
     public String getCourseSystem() {
       return this.courseSystem;
     }
 
+    /**
+     * Sets the course system associated with the course.
+     *
+     * @param courseSystem the system information to assign to the course
+     */
     public void setCourseSystem(String courseSystem) {
       this.courseSystem = courseSystem;
     }
 
+    /**
+     * Retrieves the level of the course.
+     *
+     * @return the current level of the course
+     */
     public String getLevel() {
       return this.level;
     }
 
+    /**
+     * Sets the level of the course.
+     *
+     * @param level the level to assign to the course
+     */
     public void setLevel(String level) {
       this.level = level;
     }
 
+    /**
+     * Retrieves the maximum fields constant for the course.
+     *
+     * @return the maximum fields constant as a String
+     */
     public String getMaxFieldsCst() {
       return this.maxFieldsCst;
     }
 
+    /**
+     * Sets the maximum fields constant for the course.
+     *
+     * @param maxFieldsCst the maximum fields constant to be set
+     */
     public void setMaxFieldsCst(String maxFieldsCst) {
       this.maxFieldsCst = maxFieldsCst;
     }
 
+    /**
+     * Retrieves the maximum fields ort value for the course.
+     *
+     * @return the maximum fields ort as a String
+     */
     public String getMaxFieldsOrt() {
       return this.maxFieldsOrt;
     }
 
+    /**
+     * Sets the maximum fields ort value for the course.
+     *
+     * @param maxFieldsOrt the maximum fields ort value to be set
+     */
     public void setMaxFieldsOrt(String maxFieldsOrt) {
       this.maxFieldsOrt = maxFieldsOrt;
     }
 
+    /**
+     * Retrieves the total "Aus" value associated with the course.
+     *
+     * @return the total "Aus" value as a String
+     */
     public String getTotalAus() {
       return this.totalAus;
     }
 
+    /**
+     * Sets the total "Aus" value for the course.
+     *
+     * @param totalAus the total "Aus" value to be assigned to the course
+     */
     public void setTotalAus(String totalAus) {
       this.totalAus = totalAus;
     }
 
+    /**
+     * Retrieves the total blocks associated with the course.
+     *
+     * @return the total blocks as a String
+     */
     public String getTotalBlocks() {
       return this.totalBlocks;
     }
 
+    /**
+     * Sets the total number of blocks associated with the course.
+     *
+     * @param totalBlocks the total number of blocks to be assigned to the course
+     */
     public void setTotalBlocks(String totalBlocks) {
       this.totalBlocks = totalBlocks;
     }
 
+    /**
+     * Retrieves the version of the course.
+     *
+     * @return the version of the course as a String
+     */
     public String getVersion() {
       return this.version;
     }
 
+    /**
+     * Sets the version of the course.
+     *
+     * @param version the version to assign to the course
+     */
     public void setVersion(String version) {
       this.version = version;
     }
 
+    /**
+     * Retrieves the total complex object value for the course.
+     *
+     * @return the total complex object as a String
+     */
     public String getTotalComplexObj() {
       return this.totalComplexObj;
     }
 
+    /**
+     * Sets the total complex object value for the course.
+     *
+     * @param totalComplexObj the total complex object to assign to the course
+     */
     public void setTotalComplexObj(String totalComplexObj) {
       this.totalComplexObj = totalComplexObj;
     }
 
+    /**
+     * Retrieves the total objectives associated with the course.
+     *
+     * @return the total objectives as a String
+     */
     public String getTotalObjectives() {
       return this.totalObjectives;
     }
 
+    /**
+     * Sets the total number of objectives associated with the course.
+     *
+     * @param totalObjectives the total objectives to assign to the course
+     */
     public void setTotalObjectives(String totalObjectives) {
       this.totalObjectives = totalObjectives;
     }
@@ -399,34 +558,79 @@ public class AiccCourse implements Serializable {
     @JsonProperty(value = "Time_Limit_Action")
     private String timeLimitAction;
 
+    /**
+     * Retrieves the maximum normal value associated with the instance.
+     *
+     * @return the value of the maxNormal field, which represents the maximum normal value.
+     */
     public String getMaxNormal() {
       return this.maxNormal;
     }
 
+    /**
+     * Sets the maximum normal value associated with the instance.
+     *
+     * @param maxNormal the value to set for the maxNormal field, representing the maximum normal
+     * value
+     */
     public void setMaxNormal(String maxNormal) {
       this.maxNormal = maxNormal;
     }
 
+    /**
+     * Retrieves the mastery score associated with this instance.
+     *
+     * @return the value of the masteryScore field, representing the defined mastery score.
+     */
     public String getMasteryScore() {
       return this.masteryScore;
     }
 
+    /**
+     * Sets the mastery score for this instance.
+     *
+     * @param masteryScore the value to set for the masteryScore field, representing the defined
+     * mastery score
+     */
     public void setMasteryScore(String masteryScore) {
       this.masteryScore = masteryScore;
     }
 
+    /**
+     * Retrieves the maximum time allowed associated with this instance.
+     *
+     * @return the value of the maxTimeAllowed field, representing the maximum time allowed.
+     */
     public String getMaxTimeAllowed() {
       return this.maxTimeAllowed;
     }
 
+    /**
+     * Sets the maximum time allowed for the instance.
+     *
+     * @param maxTimeAllowed the value to set for the maxTimeAllowed field, representing the maximum
+     * duration allowed
+     */
     public void setMaxTimeAllowed(String maxTimeAllowed) {
       this.maxTimeAllowed = maxTimeAllowed;
     }
 
+    /**
+     * Retrieves the time limit action associated with this instance.
+     *
+     * @return the value of the timeLimitAction field, representing the action to take when the time
+     * limit is reached.
+     */
     public String getTimeLimitAction() {
       return this.timeLimitAction;
     }
 
+    /**
+     * Sets the action to be taken when the time limit is reached for this instance.
+     *
+     * @param timeLimitAction the value to set for the timeLimitAction field, representing the
+     * action to take when the time limit is reached
+     */
     public void setTimeLimitAction(String timeLimitAction) {
       this.timeLimitAction = timeLimitAction;
     }

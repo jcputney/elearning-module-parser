@@ -58,18 +58,38 @@ public class DisplayStageSpec implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the {@code required} element, which specifies the required display stage.
+   *
+   * @return the {@link StageSpec} instance representing the required stage, or null if not set.
+   */
   public StageSpec getRequired() {
     return this.required;
   }
 
+  /**
+   * Sets the {@code required} element, which specifies the required display stage.
+   *
+   * @param required an instance of {@link StageSpec} representing the required display stage.
+   */
   public void setRequired(StageSpec required) {
     this.required = required;
   }
 
+  /**
+   * Retrieves the {@code desired} element, which specifies the desired display stage.
+   *
+   * @return the {@link StageSpec} instance representing the desired stage, or null if not set.
+   */
   public StageSpec getDesired() {
     return this.desired;
   }
 
+  /**
+   * Sets the {@code desired} element, which specifies the desired display stage.
+   *
+   * @param desired an instance of {@link StageSpec} representing the desired display stage.
+   */
   public void setDesired(StageSpec desired) {
     this.desired = desired;
   }

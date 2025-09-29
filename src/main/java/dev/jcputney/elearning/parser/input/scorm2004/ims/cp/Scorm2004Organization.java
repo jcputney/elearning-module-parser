@@ -108,66 +108,150 @@ public class Scorm2004Organization implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the identifier for the organization.
+   *
+   * @return the identifier as a string
+   */
   public String getIdentifier() {
     return this.identifier;
   }
 
+  /**
+   * Sets the identifier for the SCORM 2004 organization.
+   *
+   * @param identifier the identifier to be set for the organization
+   */
   public void setIdentifier(String identifier) {
     this.identifier = identifier;
   }
 
+  /**
+   * Retrieves the structure of the SCORM 2004 organization.
+   *
+   * @return the structure as a string
+   */
   public String getStructure() {
     return this.structure;
   }
 
+  /**
+   * Sets the structure for the SCORM 2004 organization.
+   *
+   * @param structure the structure to be set for the organization
+   */
   public void setStructure(String structure) {
     this.structure = structure;
   }
 
+  /**
+   * Retrieves the title of the SCORM 2004 organization.
+   *
+   * @return the title as a string
+   */
   public String getTitle() {
     return this.title;
   }
 
+  /**
+   * Sets the title for the SCORM 2004 organization.
+   *
+   * @param title the title to be set for the organization
+   */
   public void setTitle(String title) {
     this.title = title;
   }
 
+  /**
+   * Retrieves the list of SCORM 2004 items associated with the organization.
+   *
+   * @return a list of Scorm2004Item objects representing the items in the organization
+   */
   public List<Scorm2004Item> getItems() {
     return this.items;
   }
 
+  /**
+   * Sets the list of SCORM 2004 items associated with the organization.
+   *
+   * @param items the list of Scorm2004Item objects to be set for the organization
+   */
   public void setItems(List<Scorm2004Item> items) {
     this.items = items;
   }
 
+  /**
+   * Determines whether the objectives in the SCORM 2004 organization are global to the system.
+   *
+   * @return true if the objectives are global to the system, false otherwise
+   */
   public boolean isObjectivesGlobalToSystem() {
     return this.objectivesGlobalToSystem;
   }
 
+  /**
+   * Sets whether the objectives in the SCORM 2004 organization are global to the system.
+   *
+   * @param objectivesGlobalToSystem a boolean value where {@code true} indicates that the
+   * objectives are global to the system, and {@code false} indicates that they are not.
+   */
   public void setObjectivesGlobalToSystem(boolean objectivesGlobalToSystem) {
     this.objectivesGlobalToSystem = objectivesGlobalToSystem;
   }
 
+  /**
+   * Determines whether the shared data within the SCORM 2004 organization is global to the system.
+   *
+   * @return true if the shared data is global to the system, false otherwise
+   */
   public boolean isSharedDataGlobalToSystem() {
     return this.sharedDataGlobalToSystem;
   }
 
+  /**
+   * Sets whether the shared data in the SCORM 2004 organization is global to the system.
+   *
+   * @param sharedDataGlobalToSystem a boolean value where {@code true} indicates that the shared
+   * data is global to the system, and {@code false} indicates that it is not.
+   */
   public void setSharedDataGlobalToSystem(boolean sharedDataGlobalToSystem) {
     this.sharedDataGlobalToSystem = sharedDataGlobalToSystem;
   }
 
+  /**
+   * Retrieves the SCORM 2004 metadata associated with the organization.
+   *
+   * @return an instance of {@link Scorm2004SubMetadata} representing the metadata
+   */
   public Scorm2004SubMetadata getMetadata() {
     return this.metadata;
   }
 
+  /**
+   * Sets the metadata for the SCORM 2004 organization.
+   *
+   * @param metadata an instance of {@link Scorm2004SubMetadata} representing the metadata to be
+   * associated with the organization
+   */
   public void setMetadata(Scorm2004SubMetadata metadata) {
     this.metadata = metadata;
   }
 
+  /**
+   * Retrieves the sequencing associated with the SCORM 2004 organization.
+   *
+   * @return an instance of {@link Sequencing} representing the sequencing configuration
+   */
   public Sequencing getSequencing() {
     return this.sequencing;
   }
 
+  /**
+   * Sets the sequencing configuration for the SCORM 2004 organization.
+   *
+   * @param sequencing an instance of {@link Sequencing} representing the sequencing configuration
+   * to be associated with the organization
+   */
   public void setSequencing(Sequencing sequencing) {
     this.sequencing = sequencing;
   }

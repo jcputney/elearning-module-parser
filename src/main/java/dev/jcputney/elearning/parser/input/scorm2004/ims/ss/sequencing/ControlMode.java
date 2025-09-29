@@ -134,50 +134,127 @@ public class ControlMode implements Serializable {
     // no-op
   }
 
+  /**
+   * Indicates whether the "choice" option is enabled for the current instance of the control mode.
+   *
+   * @return true if the "choice" option is enabled, false otherwise.
+   */
   public boolean isChoice() {
     return this.choice;
   }
 
+  /**
+   * Sets the "choice" option for the current instance of the control mode.
+   *
+   * @param choice a boolean value indicating whether the "choice" option is enabled (true) or
+   * disabled (false)
+   */
   public void setChoice(boolean choice) {
     this.choice = choice;
   }
 
+  /**
+   * Determines whether the "choiceExit" option is enabled for the current instance of the control
+   * mode.
+   *
+   * @return true if the "choiceExit" option is enabled, false otherwise.
+   */
   public boolean isChoiceExit() {
     return this.choiceExit;
   }
 
+  /**
+   * Sets the "choiceExit" option for the current instance of the control mode.
+   *
+   * @param choiceExit a boolean value indicating whether the "choiceExit" option is enabled (true)
+   * or disabled (false)
+   */
   public void setChoiceExit(boolean choiceExit) {
     this.choiceExit = choiceExit;
   }
 
+  /**
+   * Determines whether the "flow" option is enabled for the current instance of the control mode.
+   *
+   * @return true if the "flow" option is enabled, false otherwise.
+   */
   public boolean isFlow() {
     return this.flow;
   }
 
+  /**
+   * Sets the "flow" option for the current instance of the control mode.
+   *
+   * @param flow a boolean value indicating whether the "flow" option is enabled (true) or disabled
+   * (false)
+   */
   public void setFlow(boolean flow) {
     this.flow = flow;
   }
 
+  /**
+   * Determines whether the "forwardOnly" option is enabled for the current instance of the control
+   * mode.
+   *
+   * @return true if the "forwardOnly" option is enabled, false otherwise.
+   */
   public boolean isForwardOnly() {
     return this.forwardOnly;
   }
 
+  /**
+   * Sets the "forwardOnly" option for the current instance, specifying whether navigation through
+   * content is restricted to a forward direction only.
+   *
+   * @param forwardOnly a boolean value indicating whether the "forwardOnly" option is enabled
+   * (true) or disabled (false)
+   */
   public void setForwardOnly(boolean forwardOnly) {
     this.forwardOnly = forwardOnly;
   }
 
+  /**
+   * Determines whether the "useCurrentAttemptObjectiveInfo" option is enabled for the current
+   * instance of the control mode. This option specifies if the objective information for the
+   * current attempt should be considered.
+   *
+   * @return true if the "useCurrentAttemptObjectiveInfo" option is enabled, false otherwise.
+   */
   public boolean isUseCurrentAttemptObjectiveInfo() {
     return this.useCurrentAttemptObjectiveInfo;
   }
 
+  /**
+   * Sets the "useCurrentAttemptObjectiveInfo" option for the current instance of the control mode.
+   * This option determines whether the objective information for the current attempt should be
+   * used.
+   *
+   * @param useCurrentAttemptObjectiveInfo a boolean value indicating whether the
+   * "useCurrentAttemptObjectiveInfo" option should be enabled (true) or disabled (false)
+   */
   public void setUseCurrentAttemptObjectiveInfo(boolean useCurrentAttemptObjectiveInfo) {
     this.useCurrentAttemptObjectiveInfo = useCurrentAttemptObjectiveInfo;
   }
 
+  /**
+   * Determines whether the "useCurrentAttemptProgressInfo" option is enabled for the current
+   * instance of the control mode. This option specifies if the progress information for the current
+   * attempt should be considered.
+   *
+   * @return true if the "useCurrentAttemptProgressInfo" option is enabled, false otherwise.
+   */
   public boolean isUseCurrentAttemptProgressInfo() {
     return this.useCurrentAttemptProgressInfo;
   }
 
+  /**
+   * Sets the "useCurrentAttemptProgressInfo" option for the current instance of the control mode.
+   * This option determines whether the progress information for the current attempt should be
+   * used.
+   *
+   * @param useCurrentAttemptProgressInfo a boolean value indicating whether the
+   * "useCurrentAttemptProgressInfo" option should be enabled (true) or disabled (false)
+   */
   public void setUseCurrentAttemptProgressInfo(boolean useCurrentAttemptProgressInfo) {
     this.useCurrentAttemptProgressInfo = useCurrentAttemptProgressInfo;
   }

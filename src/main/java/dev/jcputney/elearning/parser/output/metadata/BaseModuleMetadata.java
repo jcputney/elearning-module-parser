@@ -85,6 +85,7 @@ public abstract class BaseModuleMetadata<M extends PackageManifest> extends Modu
   }
 
   protected BaseModuleMetadata() {
+    // no-op
   }
 
   @Override

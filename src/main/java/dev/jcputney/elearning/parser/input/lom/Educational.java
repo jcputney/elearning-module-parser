@@ -267,97 +267,242 @@ public class Educational implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the interactivity type of the learning resource. The interactivity type specifies the
+   * degree of interactivity, which can be active, expositive, mixed, or unknown.
+   *
+   * @return a SourceValuePair containing the interactivity type of the learning resource
+   */
   public SourceValuePair<InteractivityType> getInteractivityType() {
     return this.interactivityType;
   }
 
+  /**
+   * Sets the interactivity type for the learning resource. The interactivity type specifies the
+   * degree of interactivity, which can be active, expositive, mixed, or unknown.
+   *
+   * @param interactivityType a SourceValuePair containing the interactivity type of the learning
+   * resource
+   */
   public void setInteractivityType(
       SourceValuePair<InteractivityType> interactivityType) {
     this.interactivityType = interactivityType;
   }
 
+  /**
+   * Retrieves the list of learning resource types associated with this educational resource. A
+   * learning resource type specifies the primary nature or format of the resource, such as
+   * exercise, simulation, lecture, etc.
+   *
+   * @return a list of SourceValuePair objects representing the learning resource types
+   */
   public List<SourceValuePair<LearningResourceType>> getLearningResourceType() {
     return this.learningResourceType;
   }
 
+  /**
+   * Sets the list of learning resource types associated with this educational resource. A learning
+   * resource type specifies the primary nature or format of the resource, such as exercise,
+   * simulation, lecture, etc.
+   *
+   * @param learningResourceType a list of SourceValuePair objects representing the learning
+   * resource types
+   */
   public void setLearningResourceType(
       List<SourceValuePair<LearningResourceType>> learningResourceType) {
     this.learningResourceType = learningResourceType;
   }
 
+  /**
+   * Retrieves the interactivity level of the learning resource. The interactivity level specifies
+   * the degree of interactivity, which can range from very low to very high.
+   *
+   * @return a SourceValuePair containing the interactivity level of the learning resource
+   */
   public SourceValuePair<InteractivityLevel> getInteractivityLevel() {
     return this.interactivityLevel;
   }
 
+  /**
+   * Sets the interactivity level for the learning resource. The interactivity level defines the
+   * degree of interaction that the resource promotes, which can range from very low to very high.
+   *
+   * @param interactivityLevel a SourceValuePair containing the interactivity level of the learning
+   * resource
+   */
   public void setInteractivityLevel(
       SourceValuePair<InteractivityLevel> interactivityLevel) {
     this.interactivityLevel = interactivityLevel;
   }
 
+  /**
+   * Retrieves the semantic density of the learning resource. Semantic density refers to the level
+   * of complexity or information richness in the content of the learning resource.
+   *
+   * @return a SourceValuePair containing the semantic density of the learning resource
+   */
   public SourceValuePair<SemanticDensity> getSemanticDensity() {
     return this.semanticDensity;
   }
 
+  /**
+   * Sets the semantic density for the learning resource. Semantic density refers to the level of
+   * complexity or information richness in the content of the learning resource.
+   *
+   * @param semanticDensity a SourceValuePair containing the semantic density of the learning
+   * resource
+   */
   public void setSemanticDensity(
       SourceValuePair<SemanticDensity> semanticDensity) {
     this.semanticDensity = semanticDensity;
   }
 
+  /**
+   * Retrieves the list of intended end user roles associated with this educational resource. The
+   * intended end user role specifies the role of the individual for whom the resource is designed,
+   * such as teacher, author, learner, or manager.
+   *
+   * @return a list of SourceValuePair objects representing the intended end user roles
+   */
   public List<SourceValuePair<IntendedEndUserRole>> getIntendedEndUserRole() {
     return this.intendedEndUserRole;
   }
 
+  /**
+   * Sets the list of intended end user roles associated with this educational resource. The
+   * intended end user role specifies the role of the individual for whom the resource is designed,
+   * such as teacher, author, learner, or manager.
+   *
+   * @param intendedEndUserRole a list of SourceValuePair objects representing the intended end user
+   * roles
+   */
   public void setIntendedEndUserRole(
       List<SourceValuePair<IntendedEndUserRole>> intendedEndUserRole) {
     this.intendedEndUserRole = intendedEndUserRole;
   }
 
+  /**
+   * Retrieves the list of contexts associated with this educational resource. The context specifies
+   * the environment or setting in which the learning object is intended to be used, such as school,
+   * higher education, training, or other.
+   *
+   * @return a list of SourceValuePair objects representing the contexts of the educational resource
+   */
   public List<SourceValuePair<Context>> getContext() {
     return this.context;
   }
 
+  /**
+   * Sets the context for the learning object. The context specifies the environment or setting for
+   * which the learning object is intended, such as school, higher education, training, or other
+   * contexts.
+   *
+   * @param context a list of SourceValuePair objects representing the contexts applicable to the
+   * learning object
+   */
   public void setContext(
       List<SourceValuePair<Context>> context) {
     this.context = context;
   }
 
+  /**
+   * Retrieves the typical age range associated with the educational resource. The typical age range
+   * specifies the intended age group for which the resource is designed or most suitable.
+   *
+   * @return an UnboundLangString representing the typical age range of the educational resource
+   */
   public UnboundLangString getTypicalAgeRange() {
     return this.typicalAgeRange;
   }
 
+  /**
+   * Sets the typical age range for the educational resource. The typical age range specifies the
+   * intended age group for which the resource is designed or most suitable.
+   *
+   * @param typicalAgeRange an UnboundLangString representing the age range for the educational
+   * resource
+   */
   public void setTypicalAgeRange(UnboundLangString typicalAgeRange) {
     this.typicalAgeRange = typicalAgeRange;
   }
 
+  /**
+   * Retrieves the difficulty level of the learning resource. The difficulty represents the level of
+   * challenge associated with the learning object.
+   *
+   * @return a SourceValuePair containing the difficulty of the learning resource
+   */
   public SourceValuePair<Difficulty> getDifficulty() {
     return this.difficulty;
   }
 
+  /**
+   * Sets the difficulty level of the educational resource. The difficulty represents the level of
+   * challenge associated with the learning object.
+   *
+   * @param difficulty a SourceValuePair containing the difficulty level of the educational
+   * resource
+   */
   public void setDifficulty(
       SourceValuePair<Difficulty> difficulty) {
     this.difficulty = difficulty;
   }
 
+  /**
+   * Retrieves the typical learning time associated with the educational resource. The typical
+   * learning time indicates the amount of time generally required to complete the learning activity
+   * represented by the resource.
+   *
+   * @return the typical learning time as a LomDuration object
+   */
   public LomDuration getTypicalLearningTime() {
     return this.typicalLearningTime;
   }
 
+  /**
+   * Sets the typical learning time for the educational resource. The typical learning time
+   * indicates the approximate amount of time generally required to complete the learning activity
+   * represented by the resource.
+   *
+   * @param typicalLearningTime the typical learning time as a LomDuration object
+   */
   public void setTypicalLearningTime(LomDuration typicalLearningTime) {
     this.typicalLearningTime = typicalLearningTime;
   }
 
+  /**
+   * Retrieves the descriptions of the educational resource. The descriptions provide multilingual
+   * text details that describe the resource.
+   *
+   * @return an UnboundLangString containing the descriptions of the educational resource
+   */
   public UnboundLangString getDescriptions() {
     return this.descriptions;
   }
 
+  /**
+   * Sets the value of descriptions.
+   *
+   * @param descriptions the UnboundLangString object to set as the descriptions
+   */
   public void setDescriptions(UnboundLangString descriptions) {
     this.descriptions = descriptions;
   }
 
+  /**
+   * Retrieves the list of languages.
+   *
+   * @return a list of strings representing the languages
+   */
   public List<String> getLanguages() {
     return this.languages;
   }
 
+  /**
+   * Sets the list of languages.
+   *
+   * @param languages the list of languages to be set
+   */
   public void setLanguages(List<String> languages) {
     this.languages = languages;
   }

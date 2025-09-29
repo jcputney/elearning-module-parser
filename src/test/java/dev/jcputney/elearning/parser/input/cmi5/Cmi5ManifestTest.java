@@ -311,11 +311,7 @@ class Cmi5ManifestTest {
    */
   private TextType createTextType(String value) {
     return new TextType(Collections.singletonList(
-        LangString
-            .builder()
-            .value(value)
-            .lang("en-US")
-            .build()
+        new LangString(value, "en-US")
     ));
   }
 

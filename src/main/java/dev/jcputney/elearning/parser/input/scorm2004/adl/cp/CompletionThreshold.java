@@ -77,10 +77,22 @@ public class CompletionThreshold implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the minimum progress measure for the completion threshold.
+   *
+   * @return the minimum progress measure as a {@code MeasureType} instance.
+   */
   public MeasureType getMinProgressMeasure() {
     return this.minProgressMeasure;
   }
 
+  /**
+   * Sets the minimum progress measure for the completion threshold. If the provided measure is
+   * null, the method does nothing.
+   *
+   * @param minProgressMeasure the minimum progress measure to be set, represented as a
+   * {@code MeasureType}
+   */
   public void setMinProgressMeasure(MeasureType minProgressMeasure) {
     if (minProgressMeasure == null) {
       return;
@@ -88,18 +100,44 @@ public class CompletionThreshold implements Serializable {
     this.minProgressMeasure = minProgressMeasure;
   }
 
+  /**
+   * Retrieves the progress weight associated with the completion threshold.
+   *
+   * @return the progress weight as a {@code PercentType} instance, representing a percentage value
+   * between 0 and 1 inclusive.
+   */
   public PercentType getProgressWeight() {
     return this.progressWeight;
   }
 
+  /**
+   * Sets the progress weight for the completion threshold. The progress weight is represented as a
+   * percentage value between 0 and 1, inclusive.
+   *
+   * @param progressWeight the progress weight to be assigned, represented as a {@code PercentType}.
+   * Must be a value between 0 and 1; otherwise, an exception will be thrown.
+   */
   public void setProgressWeight(PercentType progressWeight) {
     this.progressWeight = progressWeight;
   }
 
+  /**
+   * Retrieves the value indicating whether completion is determined by the measure.
+   *
+   * @return a {@code Boolean} value representing whether completion is based on the measure;
+   * returns {@code true} if completion is determined by the measure, otherwise {@code false}.
+   */
   public Boolean getCompletedByMeasure() {
     return this.completedByMeasure;
   }
 
+  /**
+   * Sets the value indicating whether completion is determined by the measure.
+   *
+   * @param completedByMeasure a {@code Boolean} value that specifies whether completion is based on
+   * the measure. Pass {@code true} if completion should depend on the measure, otherwise
+   * {@code false}.
+   */
   public void setCompletedByMeasure(Boolean completedByMeasure) {
     this.completedByMeasure = completedByMeasure;
   }

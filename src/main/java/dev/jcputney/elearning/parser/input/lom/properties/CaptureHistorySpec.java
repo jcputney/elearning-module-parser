@@ -63,6 +63,11 @@ public class CaptureHistorySpec implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the captureHistory value.
+   *
+   * @return the capture history flag, which indicates whether capture history is enabled or not.
+   */
   public YesNoType getCaptureHistory() {
     return this.captureHistory;
   }
@@ -71,6 +76,12 @@ public class CaptureHistorySpec implements Serializable {
     this.captureHistory = captureHistory;
   }
 
+  /**
+   * Retrieves the detailed capture history flag.
+   *
+   * @return the detailed capture history flag, indicating whether detailed capture history is
+   * enabled or not.
+   */
   public YesNoType getCaptureHistoryDetailed() {
     return this.captureHistoryDetailed;
   }

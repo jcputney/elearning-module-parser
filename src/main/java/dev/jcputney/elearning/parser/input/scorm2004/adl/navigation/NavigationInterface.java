@@ -48,10 +48,26 @@ public class NavigationInterface implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves a list of elements defining which parts of the LMS user interface should be hidden.
+   * Each element in the list corresponds to a specific UI component that is configured to be hidden
+   * based on SCORM navigation requirements.
+   *
+   * @return a list of HideLMSUI elements representing the LMS UI components to be hidden.
+   */
   public List<HideLMSUI> getHideLMSUI() {
     return this.hideLMSUI;
   }
 
+  /**
+   * Sets the list of LMS UI components to be hidden. This method defines which elements of the
+   * Learning Management System's user interface should be made invisible, based on the specified
+   * SCORM navigation requirements.
+   *
+   * @param hideLMSUI a list of {@link HideLMSUI} enums representing the UI components to be hidden.
+   * Each element in the list corresponds to a specific LMS UI feature, such as "exit", "continue",
+   * or "abandon".
+   */
   public void setHideLMSUI(List<HideLMSUI> hideLMSUI) {
     this.hideLMSUI = hideLMSUI;
   }

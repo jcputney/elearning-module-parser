@@ -85,26 +85,73 @@ public class SequencingRules implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the list of pre-condition sequencing rules. Pre-condition rules define the criteria
+   * that must be met before an activity is processed within the sequencing context.
+   *
+   * @return a list of {@code SequencingRule} objects representing the pre-condition rules for
+   * sequencing, or an empty list if no such rules are defined
+   */
   public List<SequencingRule> getPreConditionRules() {
     return this.preConditionRules;
   }
 
+  /**
+   * Sets the list of pre-condition sequencing rules for an activity. Pre-condition rules define the
+   * criteria that must be met before an activity is processed within the sequencing context.
+   *
+   * @param preConditionRules a list of {@code SequencingRule} objects representing the
+   * pre-condition rules for sequencing. Passing {@code null} will clear the current pre-condition
+   * rules.
+   */
   public void setPreConditionRules(List<SequencingRule> preConditionRules) {
     this.preConditionRules = preConditionRules;
   }
 
+  /**
+   * Retrieves the list of exit-condition sequencing rules. Exit-condition rules define the criteria
+   * that cause an activity to exit its processing context during sequencing.
+   *
+   * @return a list of {@code SequencingRule} objects representing the exit-condition rules for
+   * sequencing, or an empty list if no such rules are defined
+   */
   public List<SequencingRule> getExitConditionRules() {
     return this.exitConditionRules;
   }
 
+  /**
+   * Sets the list of exit-condition sequencing rules for an activity. Exit-condition rules define
+   * the criteria that cause an activity to exit its processing context during sequencing.
+   *
+   * @param exitConditionRules a list of {@code SequencingRule} objects representing the
+   * exit-condition rules for sequencing. Passing {@code null} will clear the current exit-condition
+   * rules.
+   */
   public void setExitConditionRules(List<SequencingRule> exitConditionRules) {
     this.exitConditionRules = exitConditionRules;
   }
 
+  /**
+   * Retrieves the list of post-condition sequencing rules. Post-condition rules specify the
+   * criteria and actions to be evaluated after an activity completes processing within the
+   * sequencing context.
+   *
+   * @return a list of {@code SequencingRule} objects representing the post-condition rules for
+   * sequencing, or an empty list if no such rules are defined
+   */
   public List<SequencingRule> getPostConditionRules() {
     return this.postConditionRules;
   }
 
+  /**
+   * Sets the list of post-condition sequencing rules for an activity. Post-condition rules specify
+   * the criteria and actions to be evaluated after an activity completes processing within the
+   * sequencing context.
+   *
+   * @param postConditionRules a list of {@code SequencingRule} objects representing the
+   * post-condition rules for sequencing. Passing {@code null} will clear the current post-condition
+   * rules.
+   */
   public void setPostConditionRules(List<SequencingRule> postConditionRules) {
     this.postConditionRules = postConditionRules;
   }

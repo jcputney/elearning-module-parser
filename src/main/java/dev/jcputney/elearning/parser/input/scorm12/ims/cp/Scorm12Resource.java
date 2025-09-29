@@ -117,66 +117,173 @@ public class Scorm12Resource implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the identifier for this resource.
+   *
+   * @return A string representing the identifier of the resource.
+   */
   public String getIdentifier() {
     return this.identifier;
   }
 
+  /**
+   * Sets the identifier for this resource.
+   *
+   * @param identifier A string representing the identifier to be assigned to the resource.
+   */
   public void setIdentifier(String identifier) {
     this.identifier = identifier;
   }
 
+  /**
+   * Retrieves the base URI or path associated with this resource.
+   *
+   * @return A string representing the base URI or path of the resource.
+   */
   public String getBase() {
     return this.base;
   }
 
+  /**
+   * Sets the base URI or path for this resource.
+   *
+   * @param base A string representing the base URI or path to be assigned to the resource.
+   */
   public void setBase(String base) {
     this.base = base;
   }
 
+  /**
+   * Retrieves the href of this resource, which typically represents a relative path or URI
+   * associated with the resource.
+   *
+   * @return A string representing the href of the resource.
+   */
   public String getHref() {
     return this.href;
   }
 
+  /**
+   * Sets the href value for this resource.
+   *
+   * @param href A string representing the relative path or URI associated with this resource.
+   * Typically, this specifies the target location of the resource within a SCORM content package.
+   */
   public void setHref(String href) {
     this.href = href;
   }
 
+  /**
+   * Retrieves the type of this resource.
+   *
+   * @return A string representing the type of the resource.
+   */
   public String getType() {
     return this.type;
   }
 
+  /**
+   * Sets the type of this resource.
+   *
+   * @param type A string representing the type to be assigned to the resource.
+   */
   public void setType(String type) {
     this.type = type;
   }
 
+  /**
+   * Retrieves the SCORM type associated with this resource.
+   *
+   * The SCORM type indicates whether the resource is a Shareable Content Object (SCO), an asset, or
+   * an unknown type. SCOs contain interactive and trackable learning content, while assets
+   * typically refer to static, non-interactive content.
+   *
+   * @return The SCORM type of this resource as an instance of the {@code ScormType} enum.
+   */
   public ScormType getScormType() {
     return this.scormType;
   }
 
+  /**
+   * Sets the SCORM type for this resource.
+   *
+   * The SCORM type determines whether the resource is a Shareable Content Object (SCO), an asset,
+   * or is of unknown type. This value is used to describe the role of the resource within a SCORM
+   * content package.
+   *
+   * @param scormType The SCORM type to be assigned to the resource, represented as an instance of
+   * the {@code ScormType} enum. Valid values include SCO, asset, or unknown.
+   */
   public void setScormType(ScormType scormType) {
     this.scormType = scormType;
   }
 
+  /**
+   * Retrieves the metadata associated with this resource.
+   *
+   * @return An instance of {@code Scorm12Metadata} containing metadata information for the
+   * resource.
+   */
   public Scorm12Metadata getMetadata() {
     return this.metadata;
   }
 
+  /**
+   * Sets the metadata associated with this resource.
+   *
+   * @param metadata An instance of {@code Scorm12Metadata} representing the metadata to be assigned
+   * to the resource. This typically includes descriptive information to aid in the identification
+   * and management of the resource.
+   */
   public void setMetadata(Scorm12Metadata metadata) {
     this.metadata = metadata;
   }
 
+  /**
+   * Retrieves the list of files associated with this resource.
+   *
+   * @return A list of {@code Scorm12File} objects representing the files included in this resource.
+   * Each file contains information such as its relative path, metadata, and existence status within
+   * the SCORM package.
+   */
   public List<Scorm12File> getFiles() {
     return this.files;
   }
 
+  /**
+   * Sets the list of files associated with this SCORM 1.2 resource.
+   *
+   * @param files A list of {@code Scorm12File} objects representing the files to be associated with
+   * this resource. Each file typically defines its relative path and metadata within the SCORM
+   * content package.
+   */
   public void setFiles(List<Scorm12File> files) {
     this.files = files;
   }
 
+  /**
+   * Retrieves the list of dependencies associated with this SCORM 1.2 resource.
+   *
+   * Dependencies represent other resources required by this resource to function properly, such as
+   * linked scripts, stylesheets, or other assets.
+   *
+   * @return A list of {@code Scorm12Dependency} objects representing the resources that this
+   * resource depends on.
+   */
   public List<Scorm12Dependency> getDependencies() {
     return this.dependencies;
   }
 
+  /**
+   * Sets the list of dependencies for this SCORM 1.2 resource.
+   *
+   * Dependencies represent other resources required by this resource to function correctly. These
+   * can include assets such as images, scripts, or other external files necessary for the proper
+   * functionality of the resource.
+   *
+   * @param dependencies A list of {@code Scorm12Dependency} objects representing the dependencies
+   * to be associated with this resource.
+   */
   public void setDependencies(
       List<Scorm12Dependency> dependencies) {
     this.dependencies = dependencies;

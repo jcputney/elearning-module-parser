@@ -63,18 +63,41 @@ public class ADLObjective implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the unique identifier for this objective.
+   *
+   * @return the objective ID, a string used to identify and track the objective within the LMS.
+   */
   public String getObjectiveID() {
     return this.objectiveID;
   }
 
+  /**
+   * Sets the unique identifier for this objective. The objective ID is used to identify and track
+   * the objective within the learning management system (LMS).
+   *
+   * @param objectiveID the unique identifier for this objective, represented as a string
+   */
   public void setObjectiveID(String objectiveID) {
     this.objectiveID = objectiveID;
   }
 
+  /**
+   * Retrieves the list of map information associated with this objective.
+   *
+   * @return a list of MapInfo objects representing the mappings for this objective, defining
+   * connections to global objectives or other objectives within the LMS.
+   */
   public List<MapInfo> getMapInfoList() {
     return this.mapInfoList;
   }
 
+  /**
+   * Sets the list of map information associated with this objective.
+   *
+   * @param mapInfoList a list of MapInfo objects representing the mappings for this objective,
+   * defining connections to global objectives or other objectives within the LMS
+   */
   public void setMapInfoList(List<MapInfo> mapInfoList) {
     this.mapInfoList = mapInfoList;
   }

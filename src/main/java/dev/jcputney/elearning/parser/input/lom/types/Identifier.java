@@ -67,18 +67,38 @@ public class Identifier implements Serializable {
     this.entry = value;
   }
 
+  /**
+   * Retrieves the catalog associated with this identifier.
+   *
+   * @return the catalog as a String
+   */
   public String getCatalog() {
     return this.catalog;
   }
 
+  /**
+   * Sets the catalog for the identifier.
+   *
+   * @param catalog the catalog value to be set, represented as a String
+   */
   public void setCatalog(String catalog) {
     this.catalog = catalog;
   }
 
+  /**
+   * Retrieves the entry for this identifier.
+   *
+   * @return the entry as a String
+   */
   public String getEntry() {
     return this.entry;
   }
 
+  /**
+   * Sets the entry value for the identifier.
+   *
+   * @param entry the entry value to be set, represented as a String
+   */
   public void setEntry(String entry) {
     this.entry = entry;
   }

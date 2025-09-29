@@ -103,34 +103,74 @@ public class Course implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the title of the course.
+   *
+   * @return a {@link TextType} instance representing the title of the course
+   */
   public TextType getTitle() {
     return this.title;
   }
 
+  /**
+   * Sets the title of the course.
+   *
+   * @param title a {@link TextType} instance representing the title of the course
+   */
   public void setTitle(TextType title) {
     this.title = title;
   }
 
+  /**
+   * Retrieves the description of the course.
+   *
+   * @return a {@link TextType} instance representing the description of the course
+   */
   public TextType getDescription() {
     return this.description;
   }
 
+  /**
+   * Sets the description of the course.
+   *
+   * @param description a {@link TextType} instance representing the description of the course
+   */
   public void setDescription(TextType description) {
     this.description = description;
   }
 
+  /**
+   * Retrieves the custom extensions associated with the course.
+   *
+   * @return a list of objects representing the custom extensions of the course
+   */
   public List<Object> getCustomExtensions() {
     return this.customExtensions;
   }
 
+  /**
+   * Sets the custom extensions associated with the course.
+   *
+   * @param customExtensions a list of objects representing the custom extensions of the course
+   */
   public void setCustomExtensions(List<Object> customExtensions) {
     this.customExtensions = customExtensions;
   }
 
+  /**
+   * Retrieves the identifier of the course.
+   *
+   * @return a string representing the unique identifier of the course
+   */
   public String getId() {
     return this.id;
   }
 
+  /**
+   * Sets the identifier of the course.
+   *
+   * @param id a string representing the unique identifier of the course
+   */
   public void setId(String id) {
     this.id = id;
   }

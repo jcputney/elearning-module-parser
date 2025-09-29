@@ -42,6 +42,20 @@ public class DefaultModuleFileProvider implements ModuleFileProvider {
    * The name of the xAPI send statement file.
    */
   public static final String XAPI_SEND_STATEMENT_FILE = "sendStatement.js";
+
+  /**
+   * A FileAccess instance used to handle file operations within the module package.
+   * <p>
+   * This variable provides an abstraction layer for file-related operations, such as reading,
+   * checking existence, and accessing files in a consistent manner. It is integral to the
+   * functionality provided by the DefaultModuleFileProvider.
+   * <p>
+   * The FileAccess instance ensures that file operations are centralized and can be delegated
+   * appropriately, facilitating modular and testable design.
+   * <p>
+   * This field is immutable and must be initialized during the construction of the
+   * DefaultModuleFileProvider.
+   */
   private final FileAccess fileAccess;
 
   /**

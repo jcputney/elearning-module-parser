@@ -108,6 +108,11 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
     }
   }
 
+  /**
+   * Retrieves the class type of the SCORM 2004 manifest.
+   *
+   * @return The class type of Scorm2004Manifest.
+   */
   @Override
   public Class<Scorm2004Manifest> getManifestClass() {
     return Scorm2004Manifest.class;

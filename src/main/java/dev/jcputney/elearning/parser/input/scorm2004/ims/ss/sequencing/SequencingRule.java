@@ -52,18 +52,51 @@ public class SequencingRule implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the rule conditions associated with this sequencing rule. Rule conditions define the
+   * criteria that must be met for the rule to apply.
+   *
+   * @return the {@code RuleConditions} object representing the conditions that control the
+   * applicability of the rule, or {@code null} if no conditions are set
+   */
   public RuleConditions getRuleConditions() {
     return this.ruleConditions;
   }
 
+  /**
+   * Sets the conditions that define the criteria for the sequencing rule to apply. These conditions
+   * specify the logic and requirements that must be fulfilled for the associated action to be
+   * executed.
+   *
+   * @param ruleConditions the {@code RuleConditions} object containing the set of conditions that
+   * determine the applicability of the rule. Passing {@code null} will clear the current
+   * conditions.
+   */
   public void setRuleConditions(RuleConditions ruleConditions) {
     this.ruleConditions = ruleConditions;
   }
 
+  /**
+   * Retrieves the action to be performed if the conditions specified in the sequencing rule are
+   * met. The action determines the sequencing behavior for the associated activity, such as
+   * enabling, disabling, hiding, skipping, or preventing forward traversal.
+   *
+   * @return the {@code RuleAction} object representing the action specified in the rule, or
+   * {@code null} if no action is set
+   */
   public RuleAction getRuleAction() {
     return this.ruleAction;
   }
 
+  /**
+   * Sets the action to be executed when the conditions specified in the sequencing rule are met.
+   * This method updates the {@code RuleAction} associated with the rule, determining the behavior
+   * that will take place if the rule's conditions are satisfied.
+   *
+   * @param ruleAction the {@code RuleAction} object representing the action to be performed. This
+   * may include actions such as skipping an activity, disabling it, hiding it from choice, or
+   * preventing forward traversal. Passing {@code null} will clear the current action.
+   */
   public void setRuleAction(RuleAction ruleAction) {
     this.ruleAction = ruleAction;
   }

@@ -132,6 +132,12 @@ public class ClasspathFileAccess implements FileAccess {
     return -1;
   }
 
+  /**
+   * Retrieves the root path used for file access.
+   *
+   * @return The root path as a string.
+   */
+  @Override
   public String getRootPath() {
     return this.rootPath;
   }

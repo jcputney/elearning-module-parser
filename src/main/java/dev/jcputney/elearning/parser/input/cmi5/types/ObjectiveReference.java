@@ -45,10 +45,20 @@ public class ObjectiveReference implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the ID reference associated with this objective reference.
+   *
+   * @return the ID reference as a string, represented as an anyURI.
+   */
   public String getIdref() {
     return this.idref;
   }
 
+  /**
+   * Sets the ID reference for this objective reference.
+   *
+   * @param idref the ID reference to set, represented as a string (anyURI).
+   */
   public void setIdref(String idref) {
     this.idref = idref;
   }

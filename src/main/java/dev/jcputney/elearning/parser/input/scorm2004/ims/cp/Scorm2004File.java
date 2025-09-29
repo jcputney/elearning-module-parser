@@ -58,26 +58,59 @@ public class Scorm2004File implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the URL or path to the file within the content package.
+   *
+   * @return the href representing the location of the file in the content package
+   */
   public String getHref() {
     return this.href;
   }
 
+  /**
+   * Sets the URL or path to the file within the content package.
+   *
+   * @param href the href representing the location of the file in the content package
+   */
   public void setHref(String href) {
     this.href = href;
   }
 
+  /**
+   * Retrieves the metadata associated with this file. The metadata provides details such as file
+   * size, creation date, and other descriptive information relevant to the file.
+   *
+   * @return the metadata of type {@code Scorm2004SubMetadata} associated with this file
+   */
   public Scorm2004SubMetadata getMetadata() {
     return this.metadata;
   }
 
+  /**
+   * Sets the metadata associated with this file. The metadata provides details such as file size,
+   * creation date, and other descriptive information relevant to the file.
+   *
+   * @param metadata the metadata object containing detailed information about the file
+   */
   public void setMetadata(Scorm2004SubMetadata metadata) {
     this.metadata = metadata;
   }
 
+  /**
+   * Checks whether the file exists in the content package.
+   *
+   * @return true if the file exists, false otherwise
+   */
   public boolean isExists() {
     return this.exists;
   }
 
+  /**
+   * Sets the existence status of the file.
+   *
+   * @param exists a boolean value where {@code true} indicates that the file exists, and
+   * {@code false} indicates that it does not exist.
+   */
   public void setExists(boolean exists) {
     this.exists = exists;
   }

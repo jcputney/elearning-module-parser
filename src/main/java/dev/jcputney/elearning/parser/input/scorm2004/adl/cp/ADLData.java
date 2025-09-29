@@ -42,12 +42,25 @@ public class ADLData implements Serializable {
   private List<DataMap> mapList;
 
   public ADLData() {
+    // no-op
   }
 
+  /**
+   * Retrieves the list of map elements, where each map specifies a target and shared data access.
+   *
+   * @return a list of DataMap objects representing the target and shared data configuration
+   */
   public List<DataMap> getMapList() {
     return this.mapList;
   }
 
+  /**
+   * Sets the list of map elements, where each map specifies a target ID and shared data access
+   * configuration.
+   *
+   * @param mapList the list of {@code DataMap} objects to be assigned, representing the target and
+   * shared data configuration
+   */
   public void setMapList(List<DataMap> mapList) {
     this.mapList = mapList;
   }

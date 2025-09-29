@@ -596,65 +596,146 @@ public class AiccManifest implements PackageManifest {
         .getVersion();
   }
 
+  /**
+   * Retrieves the duration associated with this instance.
+   *
+   * @return a {@code Duration} object representing the duration, which will always return
+   * {@code Duration.ZERO}.
+   */
   @Override
   @JsonIgnore
   public Duration getDuration() {
     return Duration.ZERO;
   }
 
+  /**
+   * Retrieves the course object associated with this instance.
+   *
+   * @return an AiccCourse object representing the course.
+   */
   public AiccCourse getCourse() {
     return this.course;
   }
 
+  /**
+   * Sets the course for the current instance.
+   *
+   * @param course the AICC course to be set
+   */
   public void setCourse(AiccCourse course) {
     this.course = course;
   }
 
+  /**
+   * Retrieves the list of assignable units.
+   *
+   * @return a list of AssignableUnit objects representing the assignable units.
+   */
   public List<AssignableUnit> getAssignableUnits() {
     return this.assignableUnits;
   }
 
+  /**
+   * Sets the list of assignable units.
+   *
+   * @param assignableUnits the list of {@code AssignableUnit} objects to be assigned
+   */
   public void setAssignableUnits(List<AssignableUnit> assignableUnits) {
     this.assignableUnits = assignableUnits;
   }
 
+  /**
+   * Retrieves the list of descriptors.
+   *
+   * @return a list of Descriptor objects representing the stored descriptors.
+   */
   public List<Descriptor> getDescriptors() {
     return this.descriptors;
   }
 
+  /**
+   * Sets the list of descriptors.
+   *
+   * @param descriptors the list of Descriptor objects to be set
+   */
   public void setDescriptors(List<Descriptor> descriptors) {
     this.descriptors = descriptors;
   }
 
+  /**
+   * Retrieves the list of course structures.
+   *
+   * @return a list of CourseStructure objects representing the course structures.
+   */
   public List<CourseStructure> getCourseStructures() {
     return this.courseStructures;
   }
 
+  /**
+   * Sets the list of course structures.
+   *
+   * @param courseStructures the list of CourseStructure objects to be assigned
+   */
   public void setCourseStructures(List<CourseStructure> courseStructures) {
     this.courseStructures = courseStructures;
   }
 
+  /**
+   * Retrieves the launch URL.
+   *
+   * @return the launch URL as a String
+   */
   @Override
   public String getLaunchUrl() {
     return this.launchUrl;
   }
 
+  /**
+   * Sets the launch URL for this object.
+   *
+   * @param launchUrl the URL to be set as the launch URL
+   */
   public void setLaunchUrl(String launchUrl) {
     this.launchUrl = launchUrl;
   }
 
+  /**
+   * Retrieves the prerequisites table containing a list of maps where each map represents a set of
+   * prerequisite details with key-value pairs.
+   *
+   * @return a list of maps, where each map contains prerequisite details as key-value pairs.
+   */
   public List<Map<String, String>> getPrerequisitesTable() {
     return this.prerequisitesTable;
   }
 
+  /**
+   * Sets the prerequisites table with the provided list of maps containing prerequisite details.
+   *
+   * @param prerequisitesTable the list of maps where each map represents a prerequisite. Each map
+   * should contain key-value pairs with string data related to the prerequisites.
+   */
   public void setPrerequisitesTable(List<Map<String, String>> prerequisitesTable) {
     this.prerequisitesTable = prerequisitesTable;
   }
 
+  /**
+   * Retrieves the objectives relation table.
+   *
+   * @return a list of maps where each map contains key-value pairs representing the objectives
+   * relations.
+   */
   public List<Map<String, String>> getObjectivesRelationTable() {
     return this.objectivesRelationTable;
   }
 
+  /**
+   * Sets the objectives relation table with the provided list of mappings.
+   *
+   * @param objectivesRelationTable a list of maps where each map represents a relationship between
+   * objectives. The keys and values in the map are expected to be string representations of the
+   * relevant data.
+   */
   public void setObjectivesRelationTable(List<Map<String, String>> objectivesRelationTable) {
     this.objectivesRelationTable = objectivesRelationTable;
   }

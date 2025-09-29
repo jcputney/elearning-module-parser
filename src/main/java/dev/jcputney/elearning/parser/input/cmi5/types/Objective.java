@@ -65,26 +65,57 @@ public class Objective implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the title of the objective, represented as a localized text type.
+   *
+   * @return the title of the objective
+   */
   public TextType getTitle() {
     return this.title;
   }
 
+  /**
+   * Sets the title of the objective.
+   *
+   * @param title the new title of the objective, represented as a {@link TextType} object
+   */
   public void setTitle(TextType title) {
     this.title = title;
   }
 
+  /**
+   * Retrieves the description of the objective, represented as a localized text type.
+   *
+   * @return the description of the objective as a {@link TextType}
+   */
   public TextType getDescription() {
     return this.description;
   }
 
+  /**
+   * Sets the description of the objective.
+   *
+   * @param description the new description of the objective, represented as a {@link TextType}
+   * object
+   */
   public void setDescription(TextType description) {
     this.description = description;
   }
 
+  /**
+   * Retrieves the unique identifier for the objective.
+   *
+   * @return the unique identifier of the objective as a string
+   */
   public String getId() {
     return this.id;
   }
 
+  /**
+   * Sets the unique identifier for the objective.
+   *
+   * @param id the new unique identifier for the objective, represented as a string
+   */
   public void setId(String id) {
     this.id = id;
   }

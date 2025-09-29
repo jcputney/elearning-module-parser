@@ -51,10 +51,21 @@ public class RsopSpec implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the offline synchronization mode associated with the current resource.
+   *
+   * @return the offline synchronization mode as an {@code OfflineSynchModeType}.
+   */
   public OfflineSynchModeType getOfflineSynchMode() {
     return this.offlineSynchMode;
   }
 
+  /**
+   * Sets the offline synchronization mode for the resource.
+   *
+   * @param offlineSynchMode the offline synchronization mode to be applied, represented as an
+   * {@code OfflineSynchModeType}.
+   */
   public void setOfflineSynchMode(OfflineSynchModeType offlineSynchMode) {
     this.offlineSynchMode = offlineSynchMode;
   }

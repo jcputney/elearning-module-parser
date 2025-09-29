@@ -282,42 +282,113 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
         .toHashCode();
   }
 
+  /**
+   * Retrieves a list of assignable unit IDs associated with the metadata.
+   *
+   * @return A list of strings representing the IDs of the assignable units.
+   */
   public List<String> getAssignableUnitIds() {
     return List.copyOf(assignableUnitIds);
   }
 
+  /**
+   * Retrieves a list of URLs associated with the assignable units in the metadata.
+   *
+   * @return An unmodifiable list of strings representing the URLs of the assignable units.
+   */
   public List<String> getAssignableUnitUrls() {
     return List.copyOf(assignableUnitUrls);
   }
 
+  /**
+   * Retrieves the details of assignable units (AUs) as a map. Each assignable unit is represented
+   * as a key-value pair, where the key is a unique identifier for the AU, and the value is another
+   * map containing detailed metadata for that AU. The metadata may include information such as
+   * URLs, titles, descriptions, and other relevant attributes.
+   *
+   * @return An unmodifiable map with assignable unit identifiers as keys and their corresponding
+   * metadata as values. Each value is a map containing key-value pairs of the AU's metadata.
+   */
   public Map<String, Map<String, Object>> getAuDetails() {
     return Map.copyOf(auDetails);
   }
 
+  /**
+   * Retrieves the mastery scores associated with the metadata. Each mastery score corresponds to an
+   * assignable unit and is represented as a key-value pair, where the key is the unique identifier
+   * of the assignable unit and the value is the mastery score as a double.
+   *
+   * @return An unmodifiable map containing the mastery scores for the assignable units. The keys
+   * are the assignable unit identifiers, and the values are the respective mastery scores.
+   */
   public Map<String, Double> getMasteryScores() {
     return Map.copyOf(masteryScores);
   }
 
+  /**
+   * Retrieves the move-on criteria associated with the metadata. Each move-on criterion corresponds
+   * to an assignable unit and is represented as a key-value pair, where the key is the unique
+   * identifier of the assignable unit and the value is the move-on criterion as a string.
+   *
+   * @return An unmodifiable map containing the move-on criteria for the assignable units. The keys
+   * are the assignable unit identifiers, and the values are the respective move-on criteria.
+   */
   public Map<String, String> getMoveOnCriteria() {
     return Map.copyOf(moveOnCriteria);
   }
 
+  /**
+   * Retrieves the launch methods associated with the metadata. Each launch method is represented as
+   * a key-value pair, where the key is a unique identifier, and the value is the corresponding
+   * launch method information.
+   *
+   * @return An unmodifiable map containing the launch methods. The keys are unique identifiers, and
+   * the values are the corresponding launch method details.
+   */
   public Map<String, String> getLaunchMethods() {
     return Map.copyOf(launchMethods);
   }
 
+  /**
+   * Retrieves the activity types associated with the metadata. Each activity type is represented as
+   * a key-value pair, where the key is a unique identifier and the value is the corresponding
+   * activity type description.
+   *
+   * @return An unmodifiable map containing the activity types. The keys are unique identifiers, and
+   * the values are the respective activity type descriptions.
+   */
   public Map<String, String> getActivityTypes() {
     return Map.copyOf(activityTypes);
   }
 
+  /**
+   * Retrieves the launch parameters associated with the metadata. Each launch parameter is
+   * represented as a key-value pair, where the key is a unique identifier and the value is the
+   * corresponding launch parameter information.
+   *
+   * @return An unmodifiable map containing the launch parameters. The keys are unique identifiers,
+   * and the values are their corresponding launch parameter details.
+   */
   public Map<String, String> getLaunchParameters() {
     return Map.copyOf(launchParameters);
   }
 
+  /**
+   * Retrieves the block IDs associated with the metadata. Block IDs represent unique identifiers
+   * for the blocks defined within the metadata.
+   *
+   * @return An unmodifiable list of strings representing the block IDs.
+   */
   public List<String> getBlockIds() {
     return List.copyOf(blockIds);
   }
 
+  /**
+   * Retrieves the objective IDs associated with the metadata. Objective IDs represent unique
+   * identifiers for objectives defined within the metadata.
+   *
+   * @return An unmodifiable list of strings representing the objective IDs.
+   */
   public List<String> getObjectiveIds() {
     return List.copyOf(objectiveIds);
   }

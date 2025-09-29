@@ -98,26 +98,66 @@ public class TaxonPath implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the source field of the TaxonPath. The source represents metadata describing the
+   * taxonomy source as a SingleLangString object.
+   *
+   * @return the source as a SingleLangString object
+   */
   public SingleLangString getSource() {
     return this.source;
   }
 
+  /**
+   * Sets the source field for the TaxonPath. The source represents metadata describing the taxonomy
+   * source as a SingleLangString object.
+   *
+   * @param source the SingleLangString representing the metadata of the taxonomy source
+   */
   public void setSource(SingleLangString source) {
     this.source = source;
   }
 
+  /**
+   * Retrieves the list of taxons associated with this TaxonPath. Taxons represent specific concepts
+   * or categories in a classification hierarchy.
+   *
+   * @return a list of {@code Taxon} objects associated with this TaxonPath. Each taxon represents a
+   * concept or category in a taxonomy.
+   */
   public List<Taxon> getTaxons() {
     return this.taxons;
   }
 
+  /**
+   * Sets the list of taxons associated with this TaxonPath. Taxons represent specific concepts or
+   * categories in a classification hierarchy.
+   *
+   * @param taxons the list of {@code Taxon} objects to associate with this TaxonPath. Each taxon
+   * represents a concept or category in a taxonomy hierarchy.
+   */
   public void setTaxons(List<Taxon> taxons) {
     this.taxons = taxons;
   }
 
+  /**
+   * Retrieves the list of custom elements associated with this TaxonPath. Custom elements represent
+   * additional metadata or extensions specific to a particular implementation or use case.
+   *
+   * @return a list of {@code Object} representing the custom elements associated with this
+   * TaxonPath.
+   */
   public List<Object> getCustomElements() {
     return this.customElements;
   }
 
+  /**
+   * Sets the list of custom elements associated with this TaxonPath. Custom elements are additional
+   * metadata or extensions that provide implementation-specific information.
+   *
+   * @param customElements a list of {@code Object} representing the custom elements to associate
+   * with this TaxonPath
+   */
   public void setCustomElements(List<Object> customElements) {
     this.customElements = customElements;
   }

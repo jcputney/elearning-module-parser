@@ -87,34 +87,80 @@ public class RuleCondition implements Serializable {
   public RuleCondition() {
   }
 
+  /**
+   * Retrieves the referenced objective associated with this rule condition.
+   *
+   * @return the identifier of the referenced objective as a string
+   */
   public String getReferencedObjective() {
     return this.referencedObjective;
   }
 
+  /**
+   * Sets the referenced objective associated with this rule condition.
+   *
+   * @param referencedObjective the identifier of the referenced objective to set, represented as a
+   * string
+   */
   public void setReferencedObjective(String referencedObjective) {
     this.referencedObjective = referencedObjective;
   }
 
+  /**
+   * Retrieves the measure threshold associated with this rule condition.
+   *
+   * @return the measure threshold of type MeasureType
+   */
   public MeasureType getMeasureThreshold() {
     return this.measureThreshold;
   }
 
+  /**
+   * Sets the measure threshold associated with this rule condition.
+   *
+   * @param measureThreshold the measure threshold of type MeasureType to set
+   */
   public void setMeasureThreshold(MeasureType measureThreshold) {
     this.measureThreshold = measureThreshold;
   }
 
+  /**
+   * Retrieves the condition operator associated with this rule condition.
+   *
+   * @return the operator of type ConditionOperatorType, which defines how the condition is
+   * evaluated
+   */
   public ConditionOperatorType getOperator() {
     return this.operator;
   }
 
+  /**
+   * Sets the condition operator for this rule condition.
+   *
+   * @param operator the operator of type {@code ConditionOperatorType} to set. This defines how the
+   * condition is evaluated, such as "not" to negate the condition or "noOp" to leave it
+   * unmodified.
+   */
   public void setOperator(ConditionOperatorType operator) {
     this.operator = operator;
   }
 
+  /**
+   * Retrieves the sequencing rule condition associated with this instance.
+   *
+   * @return the condition of type SequencingRuleConditionType
+   */
   public SequencingRuleConditionType getCondition() {
     return this.condition;
   }
 
+  /**
+   * Sets the sequencing rule condition associated with this instance.
+   *
+   * @param condition the condition of type {@code SequencingRuleConditionType} to set. This defines
+   * the criteria that must be met for the rule to apply, such as activity completion status,
+   * attempt count, or objective status.
+   */
   public void setCondition(SequencingRuleConditionType condition) {
     this.condition = condition;
   }

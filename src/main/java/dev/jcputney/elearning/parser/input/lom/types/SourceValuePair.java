@@ -70,18 +70,42 @@ public class SourceValuePair<T extends Serializable> implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the source associated with this instance. The source typically refers to a controlled
+   * vocabulary or schema that defines the context or meaning of the value.
+   *
+   * @return the source as a String
+   */
   public String getSource() {
     return this.source;
   }
 
+  /**
+   * Sets the source for this instance. The source typically refers to a controlled vocabulary or
+   * schema that defines the context or meaning of the associated value.
+   *
+   * @param source the source to set, represented as a String
+   */
   public void setSource(String source) {
     this.source = source;
   }
 
+  /**
+   * Retrieves the value associated with this instance. The value represents the specific term or
+   * definition associated with the source in a source-value pair.
+   *
+   * @return the value associated with this instance, of type T
+   */
   public T getValue() {
     return this.value;
   }
 
+  /**
+   * Sets the value associated with this instance. The value represents the specific term or
+   * definition associated with the source in a source-value pair.
+   *
+   * @param value the value to set, of type T
+   */
   public void setValue(T value) {
     this.value = value;
   }

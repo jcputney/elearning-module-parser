@@ -60,18 +60,40 @@ public class CatalogEntry implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the catalog associated with this catalog entry.
+   *
+   * @return the catalog as a string
+   */
   public String getCatalog() {
     return this.catalog;
   }
 
+  /**
+   * Sets the catalog for this catalog entry.
+   *
+   * @param catalog the name of the catalog to set
+   */
   public void setCatalog(String catalog) {
     this.catalog = catalog;
   }
 
+  /**
+   * Retrieves the entry associated with this catalog entry.
+   *
+   * @return the entry as an UnboundLangString, representing multiple language-specific string
+   * values
+   */
   public UnboundLangString getEntry() {
     return this.entry;
   }
 
+  /**
+   * Sets the entry for this catalog entry.
+   *
+   * @param entry the entry to set, represented as an UnboundLangString containing multiple
+   * language-specific string values
+   */
   public void setEntry(UnboundLangString entry) {
     this.entry = entry;
   }

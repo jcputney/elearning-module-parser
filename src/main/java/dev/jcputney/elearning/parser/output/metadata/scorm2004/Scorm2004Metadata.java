@@ -188,6 +188,13 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
         .hasSequencing();
   }
 
+  /**
+   * Retrieves the set of delivery control overrides. These overrides specify the activities or
+   * conditions for which delivery control defaults are not applicable and are customized or
+   * explicitly defined.
+   *
+   * @return A set of delivery control overrides.
+   */
   public Set<String> getDeliveryControlOverrides() {
     return deliveryControlOverrides;
   }
@@ -203,26 +210,73 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
     return Collections.unmodifiableSet(globalObjectiveIds);
   }
 
+  /**
+   * Retrieves a list of sequencing indicators associated with the SCORM 2004 metadata. Sequencing
+   * indicators are used to specify the sequencing behaviors or rules applied to activities.
+   *
+   * @return An unmodifiable list of strings representing the sequencing indicators.
+   */
   public List<String> getSequencingIndicators() {
     return List.copyOf(sequencingIndicators);
   }
 
+  /**
+   * Retrieves the completion thresholds associated with the SCORM 2004 metadata. Completion
+   * thresholds define the required conditions for an activity to reach a completed state, often
+   * including minimum progress measures and progress weights.
+   *
+   * @return An unmodifiable map where keys represent activity identifiers, and values are maps
+   * containing threshold details, such as minimum progress measures or other completion-related
+   * attributes.
+   */
   public Map<String, Map<String, Object>> getCompletionThresholds() {
     return Map.copyOf(completionThresholds);
   }
 
+  /**
+   * Retrieves the time limit actions associated with the SCORM 2004 metadata. Time limit actions
+   * define specific behaviors or instructions to follow when time constraints are applied to
+   * activities.
+   *
+   * @return An unmodifiable map where the keys represent activity identifiers, and the values
+   * represent corresponding time limit actions.
+   */
   public Map<String, String> getTimeLimitActions() {
     return Map.copyOf(timeLimitActions);
   }
 
+  /**
+   * Retrieves SCORM-based metadata in the form of data from LMS (Learning Management System). This
+   * data is represented as a mapping, where the keys are string identifiers, and the values are
+   * corresponding string entries provided by the LMS.
+   *
+   * @return An unmodifiable map containing key-value pairs of data from the LMS.
+   */
   public Map<String, String> getDataFromLms() {
     return Map.copyOf(dataFromLms);
   }
 
+  /**
+   * Retrieves a mapping of LMS (Learning Management System) UI elements that are hidden. The map
+   * keys represent element identifiers, and the values are lists of specific settings or related
+   * identifiers associated with each UI element.
+   *
+   * @return An unmodifiable map where keys are string identifiers of LMS UI elements, and values
+   * are lists of related settings or parameters associated with those elements.
+   */
   public Map<String, List<String>> getHideLmsUi() {
     return Map.copyOf(hideLmsUi);
   }
 
+  /**
+   * Retrieves the control modes associated with the SCORM 2004 metadata. Control modes define the
+   * allowed behaviors or constraints for activities within the SCORM 2004 content package based on
+   * specific configurations.
+   *
+   * @return An unmodifiable map where the keys represent the identifiers of control mode
+   * configurations, and the values are maps of settings represented as key-value pairs, where keys
+   * are their attributes and values are booleans indicating their state.
+   */
   public Map<String, Map<String, Boolean>> getControlModes() {
     return Map.copyOf(controlModes);
   }
@@ -253,23 +307,52 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
         .toHashCode();
   }
 
+  /**
+   * Checks if sequencing is enabled.
+   *
+   * @return true if sequencing is enabled, false otherwise
+   */
   public boolean isHasSequencing() {
     return this.hasSequencing;
   }
 
+  /**
+   * Retrieves the current sequencing level.
+   *
+   * @return the sequencing level of type SequencingLevel
+   */
   public SequencingLevel getSequencingLevel() {
     return sequencingLevel;
   }
 
+  /**
+   * Retrieves an unmodifiable map containing the delivery controls for activities.
+   *
+   * @return an unmodifiable map where the keys are activity identifiers and the values are the
+   * corresponding delivery controls
+   */
   public Map<String, DeliveryControls> getActivityDeliveryControls() {
     return Collections.unmodifiableMap(activityDeliveryControls);
   }
 
+  /**
+   * Retrieves the set of activities that override the default delivery control settings.
+   *
+   * @return an unmodifiable Set of activity identifiers representing activities that have
+   * customized delivery control defaults.
+   */
   @JsonIgnore
   public Set<String> getActivitiesOverridingDeliveryControlDefaults() {
     return Collections.unmodifiableSet(deliveryControlOverrides);
   }
 
+  /**
+   * Determines if the delivery control defaults are overridden for a given activity.
+   *
+   * @param activityId The identifier of the activity to check.
+   * @return true if the delivery control defaults are overridden for the specified activity, false
+   * otherwise.
+   */
   @JsonIgnore
   public boolean overridesDeliveryControlDefaults(String activityId) {
     return deliveryControlOverrides.contains(activityId);

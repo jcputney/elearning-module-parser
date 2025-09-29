@@ -79,21 +79,44 @@ public class Scorm2004Objectives implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the primary objective associated with the instance.
+   *
+   * @return The primary objective as an instance of Scorm2004Objective. Returns null if no primary
+   * objective is defined.
+   */
   public Scorm2004Objective getPrimaryObjective() {
     return this.primaryObjective;
   }
 
+  /**
+   * Sets the primary objective for the `Scorm2004Objectives` instance.
+   *
+   * @param primaryObjective the primary learning objective to be associated with this instance,
+   * provided as an instance of `Scorm2004Objective`
+   */
   public void setPrimaryObjective(
       Scorm2004Objective primaryObjective) {
     this.primaryObjective = primaryObjective;
   }
 
+  /**
+   * Retrieves the list of SCORM 2004 objectives associated with this instance.
+   *
+   * @return A List of Scorm2004Objective objects representing the objectives. Returns an empty list
+   * if no objectives are defined.
+   */
   public List<Scorm2004Objective> getObjectiveList() {
     return this.objectiveList;
   }
 
-  public void setObjectiveList(
-      List<Scorm2004Objective> objectiveList) {
+  /**
+   * Sets the list of SCORM 2004 objectives associated with this instance.
+   *
+   * @param objectiveList a List of Scorm2004Objective objects to be assigned as the objectives for
+   * this instance.
+   */
+  public void setObjectiveList(List<Scorm2004Objective> objectiveList) {
     this.objectiveList = objectiveList;
   }
 

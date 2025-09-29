@@ -60,10 +60,22 @@ public class UnboundLangString implements Serializable {
     this.langStrings = langStrings;
   }
 
+  /**
+   * Retrieves the list of language strings.
+   *
+   * @return a list of LangString objects representing strings with their associated language
+   * attributes
+   */
   public List<LangString> getLangStrings() {
     return this.langStrings;
   }
 
+  /**
+   * Sets the list of language strings associated with this instance.
+   *
+   * @param langStrings the list of {@code LangString} objects to set, with each object representing
+   * a string value and its associated language attributes
+   */
   public void setLangStrings(List<LangString> langStrings) {
     this.langStrings = langStrings;
   }

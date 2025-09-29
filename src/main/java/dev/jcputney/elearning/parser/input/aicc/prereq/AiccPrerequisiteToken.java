@@ -93,18 +93,39 @@ public final class AiccPrerequisiteToken implements Serializable {
     this.unary = unary;
   }
 
+  /**
+   * Retrieves the token type of this AICC prerequisite token.
+   *
+   * @return the type of the AICC prerequisite token, represented as an
+   * {@code AiccPrerequisiteTokenType}.
+   */
   public AiccPrerequisiteTokenType getType() {
     return this.type;
   }
 
+  /**
+   * Retrieves the value of this object.
+   *
+   * @return a string representing the value of this object, or null if no value is assigned.
+   */
   public String getValue() {
     return this.value;
   }
 
+  /**
+   * Indicates whether this token is optional.
+   *
+   * @return true if the token is optional, false otherwise
+   */
   public boolean isOptional() {
     return this.optional;
   }
 
+  /**
+   * Indicates whether this token is a unary token.
+   *
+   * @return true if the token is unary, false otherwise
+   */
   public boolean isUnary() {
     return this.unary;
   }

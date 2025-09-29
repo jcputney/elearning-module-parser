@@ -114,18 +114,41 @@ public class Scorm12Organizations implements Serializable {
     return organizationList.get(0);
   }
 
+  /**
+   * Retrieves the default organization identifier for the SCORM 1.2 content package.
+   *
+   * @return A string representing the identifier of the default organization, or null if no default
+   * organization is defined.
+   */
   public String getDefaultOrganization() {
     return this.defaultOrganization;
   }
 
+  /**
+   * Sets the default organization identifier for the SCORM 1.2 content package.
+   *
+   * @param defaultOrganization A string representing the identifier of the default organization.
+   */
   public void setDefaultOrganization(String defaultOrganization) {
     this.defaultOrganization = defaultOrganization;
   }
 
+  /**
+   * Retrieves the list of SCORM 1.2 organizations.
+   *
+   * @return A list of {@code Scorm12Organization} objects representing all the organizations
+   * associated with this SCORM 1.2 package. Returns an empty list if no organizations are defined.
+   */
   public List<Scorm12Organization> getOrganizationList() {
     return this.organizationList;
   }
 
+  /**
+   * Sets the list of SCORM 1.2 organizations associated with this object.
+   *
+   * @param organizationList A list of {@code Scorm12Organization} objects representing the
+   * organizations to be associated with this instance.
+   */
   public void setOrganizationList(List<Scorm12Organization> organizationList) {
     this.organizationList = organizationList;
   }

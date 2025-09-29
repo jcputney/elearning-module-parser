@@ -107,28 +107,75 @@ public class Rights implements Serializable {
     // no-op
   }
 
+  /**
+   * Retrieves the cost information associated with the learning object. The cost is represented as
+   * a source-value pair, where the source indicates the origin or reference for the cost
+   * information, and the value specifies whether the learning object has a cost, does not have a
+   * cost, or if the cost is unknown.
+   *
+   * @return a SourceValuePair of type Cost, indicating the source and value of the cost information
+   */
   public SourceValuePair<Cost> getCost() {
     return this.cost;
   }
 
+  /**
+   * Sets the cost information associated with the learning object. The cost is specified as a
+   * source-value pair, where the source indicates the origin of the cost data and the value
+   * specifies whether the object has a cost, does not have a cost, or its cost status is unknown.
+   *
+   * @param cost a SourceValuePair object containing the cost information, where the value is an
+   * enumeration of type Cost indicating the cost status of the learning object
+   */
   public void setCost(
       SourceValuePair<Cost> cost) {
     this.cost = cost;
   }
 
+  /**
+   * Retrieves the copyright and other restrictions information associated with the learning object.
+   * The information is represented as a source-value pair, where the source indicates the origin or
+   * reference for the restriction information, and the value specifies whether the learning object
+   * has restrictions, does not have restrictions, or if the status is unknown.
+   *
+   * @return a SourceValuePair of type CopyrightAndOtherRestrictions, indicating the source and
+   * value of the copyright and other restrictions information
+   */
   public SourceValuePair<CopyrightAndOtherRestrictions> getCopyrightAndOtherRestrictions() {
     return this.copyrightAndOtherRestrictions;
   }
 
+  /**
+   * Sets the copyright and other restrictions information associated with the learning object. The
+   * information is specified as a source-value pair, where the source indicates the origin of the
+   * restriction data and the value specifies whether the object has restrictions, does not have
+   * restrictions, or if the status is unknown.
+   *
+   * @param copyrightAndOtherRestrictions a SourceValuePair of type CopyrightAndOtherRestrictions,
+   * containing the source and value for the restrictions
+   */
   public void setCopyrightAndOtherRestrictions(
       SourceValuePair<CopyrightAndOtherRestrictions> copyrightAndOtherRestrictions) {
     this.copyrightAndOtherRestrictions = copyrightAndOtherRestrictions;
   }
 
+  /**
+   * Retrieves the descriptions associated with the learning object.
+   *
+   * @return an UnboundLangString object representing the descriptions, which may contain multiple
+   * language-specific strings.
+   */
   public UnboundLangString getDescriptions() {
     return this.descriptions;
   }
 
+  /**
+   * Sets the descriptions associated with the learning object. The descriptions are represented as
+   * an UnboundLangString, which may contain multiple language-specific strings.
+   *
+   * @param descriptions an UnboundLangString object representing the descriptions of the learning
+   * object, including multiple localized strings if applicable
+   */
   public void setDescriptions(UnboundLangString descriptions) {
     this.descriptions = descriptions;
   }

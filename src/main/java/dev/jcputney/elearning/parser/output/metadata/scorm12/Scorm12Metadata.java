@@ -97,14 +97,38 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
         .toHashCode();
   }
 
+  /**
+   * Retrieves a map of prerequisites defined in the SCORM 1.2 metadata. The map represents the
+   * relationships between learning modules where the key is the module identifier and the value is
+   * the prerequisite expression.
+   *
+   * @return An unmodifiable map of module prerequisites where keys are module identifiers and
+   * values are associated prerequisite expressions.
+   */
   public Map<String, String> getPrerequisites() {
     return Map.copyOf(prerequisites);
   }
 
+  /**
+   * Retrieves a map of mastery scores defined in the SCORM 1.2 metadata. The map represents the
+   * scores required to achieve mastery for specific modules, where the key is the module identifier
+   * and the value is the mastery score.
+   *
+   * @return An unmodifiable map of module mastery scores where keys are module identifiers and
+   * values are the corresponding mastery scores.
+   */
   public Map<String, Double> getMasteryScores() {
     return Map.copyOf(masteryScores);
   }
 
+  /**
+   * Retrieves a map of custom data defined in the SCORM 1.2 metadata. The map contains key-value
+   * pairs where the key is the identifier of a module or item, and the value represents associated
+   * custom data.
+   *
+   * @return An unmodifiable map of custom data where keys are module identifiers and values are the
+   * corresponding custom data.
+   */
   public Map<String, String> getCustomData() {
     return Map.copyOf(customData);
   }

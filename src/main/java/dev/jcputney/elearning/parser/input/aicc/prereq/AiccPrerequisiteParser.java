@@ -207,11 +207,28 @@ public final class AiccPrerequisiteParser {
     }
   }
 
+  /**
+   * Creates an {@code AiccPrerequisiteToken} object representing an operator token. The operator
+   * can be unary or binary, as indicated by the {@code op} parameter.
+   *
+   * @param op the operator string, such as "NOT", "AND", or "OR"
+   * @return an {@code AiccPrerequisiteToken} with type {@code OPERATOR}, containing the operator
+   * string and flags
+   */
   private static AiccPrerequisiteToken operatorToken(String op) {
     boolean unary = "NOT".equals(op);
     return new AiccPrerequisiteToken(AiccPrerequisiteTokenType.OPERATOR, op, false, unary);
   }
 
+  /**
+   * Strips leading optional markers and enclosing quotes or apostrophes from the given string, and
+   * removes any leading or trailing whitespace from the result.
+   *
+   * @param raw the input string to process, which may include leading optional markers (e.g., '*')
+   * and enclosing quotes (e.g., '\"' or '\'').
+   * @return a cleaned string with leading optional indicators and enclosing quotes removed, along
+   * with any extraneous whitespace trimmed.
+   */
   private static String stripLeadingOptional(String raw) {
     String cleaned = raw.strip();
     if (cleaned.startsWith("*")) {

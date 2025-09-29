@@ -109,6 +109,11 @@ public record MeasureType(BigDecimal value) implements Serializable {
         .toPlainString();
   }
 
+  /**
+   * Retrieves the current decimal value of the measure.
+   *
+   * @return the decimal value of the measure as a BigDecimal.
+   */
   public BigDecimal getValue() {
     return value;
   }

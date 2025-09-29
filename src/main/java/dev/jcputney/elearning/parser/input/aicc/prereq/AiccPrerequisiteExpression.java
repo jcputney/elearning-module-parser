@@ -146,30 +146,75 @@ public final class AiccPrerequisiteExpression implements Serializable {
         List.of(), List.of(), null);
   }
 
+  /**
+   * Retrieves the raw prerequisite expression as provided during the creation of this instance.
+   *
+   * @return the raw prerequisite expression as a string
+   */
   public String getRawExpression() {
     return this.rawExpression;
   }
 
+  /**
+   * Determines whether the prerequisite expression is mandatory.
+   *
+   * @return true if the prerequisite is mandatory, false otherwise
+   */
   public boolean isMandatory() {
     return this.mandatory;
   }
 
+  /**
+   * Retrieves the list of referenced AU (Assignable Unit) IDs that are part of the prerequisite
+   * expression.
+   *
+   * @return a list of strings, each representing a referenced AU ID.
+   */
   public List<String> getReferencedAuIds() {
     return this.referencedAuIds;
   }
 
+  /**
+   * Retrieves the list of optional AU (Assignable Unit) IDs that are part of the prerequisite
+   * expression.
+   *
+   * @return a list of strings, each representing an optional AU ID.
+   */
   public List<String> getOptionalAuIds() {
     return this.optionalAuIds;
   }
 
+  /**
+   * Retrieves the list of tokens that are part of the AICC prerequisite expression.
+   *
+   * @return a list of {@link AiccPrerequisiteToken} objects representing the tokens in the
+   * expression.
+   */
   public List<AiccPrerequisiteToken> getTokens() {
     return this.tokens;
   }
 
+  /**
+   * Retrieves the list of tokens that represent the postfix notation of the AICC prerequisite
+   * expression. Postfix notation is a mathematical notation in which operators follow their
+   * operands. This list represents the parsed expression in a format suitable for evaluation or
+   * further processing.
+   *
+   * @return a list of {@link AiccPrerequisiteToken} objects, each representing a token in the
+   * postfix notation of the prerequisite expression.
+   */
   public List<AiccPrerequisiteToken> getPostfixTokens() {
     return this.postfixTokens;
   }
 
+  /**
+   * Retrieves the abstract syntax tree (AST) representation of the AICC prerequisite expression.
+   * The AST is a hierarchical structure of {@link AiccPrerequisiteNode} objects that defines the
+   * logical composition of the prerequisite expression, including its operators and components.
+   *
+   * @return the root node of the abstract syntax tree, represented as an instance of
+   * {@link AiccPrerequisiteNode}.
+   */
   public AiccPrerequisiteNode getAst() {
     return this.ast;
   }
