@@ -46,7 +46,7 @@
     <version.ascii-table>1.8.0</version.ascii-table>
     <version.assertj>3.27.6</version.assertj>
     <version.aws.sdk.v1>1.12.791</version.aws.sdk.v1>
-    <version.aws.sdk.v2>2.34.5</version.aws.sdk.v2>
+    <version.aws.sdk.v2>2.35.5</version.aws.sdk.v2>
     <version.commons-configuration2>2.12.0</version.commons-configuration2>
     <version.commons.compress>1.28.0</version.commons.compress>
     <version.commons.lang3>3.19.0</version.commons.lang3>
