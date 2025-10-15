@@ -18,9 +18,9 @@ package dev.jcputney.elearning.parser.benchmark;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleParserFactory;
-import dev.jcputney.elearning.parser.impl.ClasspathFileAccess;
-import dev.jcputney.elearning.parser.impl.DefaultModuleParserFactory;
-import dev.jcputney.elearning.parser.impl.ZipFileAccess;
+import dev.jcputney.elearning.parser.impl.access.ClasspathFileAccess;
+import dev.jcputney.elearning.parser.impl.access.ZipFileAccess;
+import dev.jcputney.elearning.parser.impl.factory.DefaultModuleParserFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

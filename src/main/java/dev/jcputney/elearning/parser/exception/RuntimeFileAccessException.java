@@ -21,7 +21,7 @@ package dev.jcputney.elearning.parser.exception;
  * Exception thrown when there's a runtime error related to file access. This exception is a wrapper
  * for other exceptions that may occur during file access operations.
  */
-public class RuntimeFileAccessException extends RuntimeException {
+public final class RuntimeFileAccessException extends RuntimeException {
 
   /**
    * Constructs a new RuntimeFileAccessException with the specified detail message.

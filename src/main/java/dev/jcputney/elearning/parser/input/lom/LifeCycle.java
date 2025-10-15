@@ -51,7 +51,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class LifeCycle implements Serializable {
+public final class LifeCycle implements Serializable {
 
   /**
    * The version information about the learning object. This indicates the current version of the

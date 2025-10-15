@@ -45,7 +45,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm2004Objectives implements Serializable {
+public final class Scorm2004Objectives implements Serializable {
 
   /**
    * The primary objective of the activity. This objective typically contributes to the rollup of

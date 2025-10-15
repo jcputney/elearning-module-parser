@@ -43,7 +43,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Taxon implements Serializable {
+public final class Taxon implements Serializable {
 
   /**
    * The unique identifier for the taxon, typically used to reference the taxon in a classification

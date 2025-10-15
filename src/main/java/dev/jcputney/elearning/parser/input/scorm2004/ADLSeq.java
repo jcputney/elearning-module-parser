@@ -96,7 +96,7 @@ import java.io.Serializable;
  *   </xs:schema>
  * }</pre>
  */
-public class ADLSeq implements Serializable {
+public final class ADLSeq implements Serializable {
 
   /**
    * The namespace URI for the ADLSeq schema.

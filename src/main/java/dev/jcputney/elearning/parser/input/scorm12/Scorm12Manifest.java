@@ -309,7 +309,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm12Manifest implements PackageManifest {
+public final class Scorm12Manifest implements PackageManifest {
 
   /**
    * The namespace URI for the SCORM 1.2 manifest, as defined in the IMS Content Packaging

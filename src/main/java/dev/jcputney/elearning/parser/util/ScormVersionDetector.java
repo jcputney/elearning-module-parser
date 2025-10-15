@@ -52,7 +52,7 @@ import org.xml.sax.SAXParseException;
  *
  * <p>If the version can't be determined with certainty, the class defaults to SCORM 1.2.
  */
-public class ScormVersionDetector {
+public final class ScormVersionDetector {
 
   /**
    * Private constructor to prevent instantiation.

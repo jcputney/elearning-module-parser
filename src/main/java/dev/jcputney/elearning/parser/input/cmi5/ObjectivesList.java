@@ -51,7 +51,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class ObjectivesList implements Serializable {
+public final class ObjectivesList implements Serializable {
 
   /**
    * A list of defined objectives, each represented by an {@link Objective}.

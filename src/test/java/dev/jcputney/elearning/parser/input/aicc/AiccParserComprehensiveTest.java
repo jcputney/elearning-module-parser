@@ -29,16 +29,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
-import dev.jcputney.elearning.parser.impl.LocalFileAccess;
+import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
+import dev.jcputney.elearning.parser.input.common.serialization.DurationHHMMSSDeserializer;
 import dev.jcputney.elearning.parser.output.metadata.aicc.AiccMetadata;
-import dev.jcputney.elearning.parser.util.DurationHHMMSSDeserializer;
 import dev.jcputney.elearning.parser.output.metadata.aicc.AiccObjectiveMetadata;
 import dev.jcputney.elearning.parser.output.metadata.aicc.AiccPrerequisite;
 import dev.jcputney.elearning.parser.parsers.AiccParser;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -681,6 +680,102 @@ public class AiccParserComprehensiveTest {
     assertThrows(ModuleParsingException.class, parser::parse);
   }
 
+  @Test
+  void testParseComplexPrerequisitesAndObjectives() throws ModuleParsingException {
+    String modulePath = BASE_MODULE_PATH + "/complex";
+    AiccParser parser = new AiccParser(new LocalFileAccess(modulePath));
+    AiccMetadata metadata = parser.parse();
+
+    assertNotNull(metadata);
+    assertTrue(metadata.requiresLevel2());
+    assertTrue(metadata.requiresLevel3());
+    assertTrue(metadata.requiresLevel4());
+
+    Map<String, List<String>> children = metadata.getAssignableUnitChildren();
+    assertEquals(List.of("A2", "A3"), children.get("A1"));
+    assertEquals(List.of("A2"), children.get("A3"));
+
+    List<AiccPrerequisite> prerequisites = metadata.getParsedPrerequisites();
+    assertEquals(2, prerequisites.size());
+
+    AiccPrerequisite prerequisiteA2 = prerequisites
+        .stream()
+        .filter(p -> "A2".equals(p.getAssignableUnitId()))
+        .findFirst()
+        .orElseThrow();
+    assertEquals("A1", prerequisiteA2.getRawExpression());
+    assertTrue(prerequisiteA2.isMandatory());
+    assertEquals(List.of("A1"), prerequisiteA2.getReferencedAuIds());
+    assertEquals(List.of("A1"), prerequisiteA2.getTokens());
+    assertEquals(List.of("A1"), prerequisiteA2.getPostfixTokens());
+    assertEquals("A1", prerequisiteA2
+        .getCompletionCriteria()
+        .getCompletionAction());
+
+    AiccPrerequisite prerequisiteA3 = prerequisites
+        .stream()
+        .filter(p -> "A3".equals(p.getAssignableUnitId()))
+        .findFirst()
+        .orElseThrow();
+    assertEquals("A1 AND *A2", prerequisiteA3.getRawExpression());
+    assertFalse(prerequisiteA3.isMandatory());
+    assertEquals(List.of("A1", "A2"), prerequisiteA3.getReferencedAuIds());
+    assertEquals(List.of("A2"), prerequisiteA3.getOptionalAuIds());
+    assertEquals(List.of("A1", "AND", "A2"), prerequisiteA3.getTokens());
+    assertEquals(List.of("A1", "A2", "AND"), prerequisiteA3.getPostfixTokens());
+    assertEquals("A2", prerequisiteA3
+        .getCompletionCriteria()
+        .getCompletionAction());
+
+    Map<String, List<String>> prereqGraph = metadata.getPrerequisitesGraph();
+    assertEquals(List.of("A1"), prereqGraph.get("A2"));
+    assertEquals(List.of("A1", "A2"), prereqGraph.get("A3"));
+
+    List<AssignableUnit> units = metadata
+        .getManifest()
+        .getAssignableUnits();
+    AssignableUnit unitA1 = units
+        .stream()
+        .filter(unit -> "A1".equals(unit.getSystemId()))
+        .findFirst()
+        .orElseThrow();
+    assertEquals(0.8, unitA1.getMasteryScoreNormalized());
+    assertEquals(DurationHHMMSSDeserializer.parseDuration("00:20:00"),
+        unitA1.getMaxTimeAllowedNormalized());
+    assertEquals(List.of("C", "N"), unitA1.getTimeLimitActionNormalized());
+
+    AssignableUnit unitA3 = units
+        .stream()
+        .filter(unit -> "A3".equals(unit.getSystemId()))
+        .findFirst()
+        .orElseThrow();
+    assertEquals(0.75, unitA3.getMasteryScoreNormalized());
+    assertEquals(DurationHHMMSSDeserializer.parseDuration("00:45:00"),
+        unitA3.getMaxTimeAllowedNormalized());
+    assertEquals(List.of("E", "E"), unitA3.getTimeLimitActionNormalized());
+    assertFalse(unitA3.isPrerequisitesMandatory());
+
+    List<AiccObjectiveMetadata> objectives = metadata.getObjectiveMetadata();
+    assertEquals(2, objectives.size());
+    AiccObjectiveMetadata intro = objectives
+        .stream()
+        .filter(obj -> "OBJ-INTRO".equals(obj.getId()))
+        .findFirst()
+        .orElseThrow();
+    assertEquals(List.of("A1", "A2"), intro.getAssociatedAuIds());
+    assertEquals(0.8, intro.getMinNormalizedMeasure());
+    assertEquals(0.5, intro.getProgressMeasureWeight());
+
+    AiccObjectiveMetadata finale = objectives
+        .stream()
+        .filter(obj -> "OBJ-FINAL".equals(obj.getId()))
+        .findFirst()
+        .orElseThrow();
+    assertEquals(List.of("A3"), finale.getAssociatedAuIds());
+    assertEquals(0.85, finale.getMinNormalizedMeasure());
+    assertTrue(finale.getSatisfiedByMeasure());
+  }
+
   /**
    * Helper method to create a minimal AICC package with the specified title and launch URL.
    */
@@ -779,101 +874,5 @@ public class AiccParserComprehensiveTest {
             "A1","DEV-001","Lesson 1","Introduction to the course"
             "A2","DEV-002","Assessment","Final assessment for the course"
             """);
-  }
-
-  @Test
-  void testParseComplexPrerequisitesAndObjectives() throws ModuleParsingException {
-    String modulePath = BASE_MODULE_PATH + "/complex";
-    AiccParser parser = new AiccParser(new LocalFileAccess(modulePath));
-    AiccMetadata metadata = parser.parse();
-
-    assertNotNull(metadata);
-    assertTrue(metadata.requiresLevel2());
-    assertTrue(metadata.requiresLevel3());
-    assertTrue(metadata.requiresLevel4());
-
-    Map<String, List<String>> children = metadata.getAssignableUnitChildren();
-    assertEquals(List.of("A2", "A3"), children.get("A1"));
-    assertEquals(List.of("A2"), children.get("A3"));
-
-    List<AiccPrerequisite> prerequisites = metadata.getParsedPrerequisites();
-    assertEquals(2, prerequisites.size());
-
-    AiccPrerequisite prerequisiteA2 = prerequisites
-        .stream()
-        .filter(p -> "A2".equals(p.getAssignableUnitId()))
-        .findFirst()
-        .orElseThrow();
-    assertEquals("A1", prerequisiteA2.getRawExpression());
-    assertTrue(prerequisiteA2.isMandatory());
-    assertEquals(List.of("A1"), prerequisiteA2.getReferencedAuIds());
-    assertEquals(List.of("A1"), prerequisiteA2.getTokens());
-    assertEquals(List.of("A1"), prerequisiteA2.getPostfixTokens());
-    assertEquals("A1", prerequisiteA2
-        .getCompletionCriteria()
-        .getCompletionAction());
-
-    AiccPrerequisite prerequisiteA3 = prerequisites
-        .stream()
-        .filter(p -> "A3".equals(p.getAssignableUnitId()))
-        .findFirst()
-        .orElseThrow();
-    assertEquals("A1 AND *A2", prerequisiteA3.getRawExpression());
-    assertFalse(prerequisiteA3.isMandatory());
-    assertEquals(List.of("A1", "A2"), prerequisiteA3.getReferencedAuIds());
-    assertEquals(List.of("A2"), prerequisiteA3.getOptionalAuIds());
-    assertEquals(List.of("A1", "AND", "A2"), prerequisiteA3.getTokens());
-    assertEquals(List.of("A1", "A2", "AND"), prerequisiteA3.getPostfixTokens());
-    assertEquals("A2", prerequisiteA3
-        .getCompletionCriteria()
-        .getCompletionAction());
-
-    Map<String, List<String>> prereqGraph = metadata.getPrerequisitesGraph();
-    assertEquals(List.of("A1"), prereqGraph.get("A2"));
-    assertEquals(List.of("A1", "A2"), prereqGraph.get("A3"));
-
-    List<AssignableUnit> units = metadata
-        .getManifest()
-        .getAssignableUnits();
-    AssignableUnit unitA1 = units
-        .stream()
-        .filter(unit -> "A1".equals(unit.getSystemId()))
-        .findFirst()
-        .orElseThrow();
-    assertEquals(0.8, unitA1.getMasteryScoreNormalized());
-    assertEquals(DurationHHMMSSDeserializer.parseDuration("00:20:00"),
-        unitA1.getMaxTimeAllowedNormalized());
-    assertEquals(List.of("C", "N"), unitA1.getTimeLimitActionNormalized());
-
-    AssignableUnit unitA3 = units
-        .stream()
-        .filter(unit -> "A3".equals(unit.getSystemId()))
-        .findFirst()
-        .orElseThrow();
-    assertEquals(0.75, unitA3.getMasteryScoreNormalized());
-    assertEquals(DurationHHMMSSDeserializer.parseDuration("00:45:00"),
-        unitA3.getMaxTimeAllowedNormalized());
-    assertEquals(List.of("E", "E"), unitA3.getTimeLimitActionNormalized());
-    assertFalse(unitA3.isPrerequisitesMandatory());
-
-    List<AiccObjectiveMetadata> objectives = metadata.getObjectiveMetadata();
-    assertEquals(2, objectives.size());
-    AiccObjectiveMetadata intro = objectives
-        .stream()
-        .filter(obj -> "OBJ-INTRO".equals(obj.getId()))
-        .findFirst()
-        .orElseThrow();
-    assertEquals(List.of("A1", "A2"), intro.getAssociatedAuIds());
-    assertEquals(0.8, intro.getMinNormalizedMeasure());
-    assertEquals(0.5, intro.getProgressMeasureWeight());
-
-    AiccObjectiveMetadata finale = objectives
-        .stream()
-        .filter(obj -> "OBJ-FINAL".equals(obj.getId()))
-        .findFirst()
-        .orElseThrow();
-    assertEquals(List.of("A3"), finale.getAssociatedAuIds());
-    assertEquals(0.85, finale.getMinNormalizedMeasure());
-    assertTrue(finale.getSatisfiedByMeasure());
   }
 }

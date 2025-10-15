@@ -44,7 +44,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class TaxonPath implements Serializable {
+public final class TaxonPath implements Serializable {
 
   /**
    * The source describing the classification system or taxonomy from which the taxa are derived.

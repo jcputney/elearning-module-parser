@@ -57,7 +57,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @JacksonXmlRootElement(localName = "lom", namespace = LOM.NAMESPACE_URI)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class LOM implements Serializable {
+public final class LOM implements Serializable {
 
   /**
    * The namespace URI for the LOM schema.

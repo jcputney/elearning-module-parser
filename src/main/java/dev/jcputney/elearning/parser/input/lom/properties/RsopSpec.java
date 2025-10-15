@@ -39,7 +39,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class RsopSpec implements Serializable {
+public final class RsopSpec implements Serializable {
 
   /**
    * The offline synchronization mode for the resource.

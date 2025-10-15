@@ -17,7 +17,6 @@
 
 package dev.jcputney.elearning.parser.api;
 
-import dev.jcputney.elearning.parser.ModuleParser;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;

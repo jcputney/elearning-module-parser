@@ -42,7 +42,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class StageSpec implements Serializable {
+public final class StageSpec implements Serializable {
 
   /**
    * Per XSD, this is xs:nonNegativeInteger, so we use BigInteger.

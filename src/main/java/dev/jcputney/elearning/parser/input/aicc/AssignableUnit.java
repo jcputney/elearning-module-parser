@@ -46,7 +46,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class AssignableUnit implements Serializable {
+public final class AssignableUnit implements Serializable {
 
   /**
    * The identifier of the assignable unit.

@@ -46,7 +46,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Relation implements Serializable {
+public final class Relation implements Serializable {
 
   /**
    * The kind of relationship, represented as a source-value pair, specifying the type of connection

@@ -20,7 +20,7 @@ package dev.jcputney.elearning.parser.input.aicc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.PackageManifest;
-import dev.jcputney.elearning.parser.util.DurationHHMMSSDeserializer;
+import dev.jcputney.elearning.parser.input.common.serialization.DurationHHMMSSDeserializer;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -43,7 +43,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * <p>It also provides methods to retrieve the title, description, launch URL, identifier, version,
  * and duration of the course.</p>
  */
-public class AiccManifest implements PackageManifest {
+public final class AiccManifest implements PackageManifest {
 
   /**
    * A predefined array of strings containing known attribute keys. These keys are used to represent

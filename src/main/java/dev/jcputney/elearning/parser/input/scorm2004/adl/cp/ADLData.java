@@ -32,7 +32,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class ADLData implements Serializable {
+public final class ADLData implements Serializable {
 
   /**
    * List of map elements, where each map specifies a target and shared data access.

@@ -32,7 +32,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Presentation implements Serializable {
+public final class Presentation implements Serializable {
 
   /**
    * Contains settings for the navigation interface within the LMS. This allows the LMS to control

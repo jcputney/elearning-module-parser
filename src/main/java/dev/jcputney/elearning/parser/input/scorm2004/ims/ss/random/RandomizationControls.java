@@ -50,7 +50,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class RandomizationControls implements Serializable {
+public final class RandomizationControls implements Serializable {
 
   /**
    * Specifies when randomization of child activities should occur. Possible values include:

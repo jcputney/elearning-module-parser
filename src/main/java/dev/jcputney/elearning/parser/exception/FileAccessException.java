@@ -39,7 +39,7 @@ import java.util.Map;
  *   <li>"fileAccess" - The type of FileAccess implementation</li>
  * </ul>
  */
-public class FileAccessException extends ModuleException {
+public final class FileAccessException extends ModuleException {
 
   /**
    * Constructs a new FileAccessException with the specified detail message.

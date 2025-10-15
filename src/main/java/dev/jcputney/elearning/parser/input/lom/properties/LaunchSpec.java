@@ -41,7 +41,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class LaunchSpec implements Serializable {
+public final class LaunchSpec implements Serializable {
 
   /**
    * The SCO (Sharable Content Object) launch type.

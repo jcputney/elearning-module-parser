@@ -36,7 +36,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * allowing multiple criteria to be evaluated together.</p>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class RollupConditions implements Serializable {
+public final class RollupConditions implements Serializable {
 
   /**
    * A list of individual rollup conditions. Each condition specifies a criterion, such as

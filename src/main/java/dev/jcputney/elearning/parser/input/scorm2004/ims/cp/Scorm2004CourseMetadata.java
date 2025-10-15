@@ -43,7 +43,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm2004CourseMetadata implements LoadableMetadata {
+public final class Scorm2004CourseMetadata implements LoadableMetadata {
 
   /**
    * The schema used in the metadata description. Defines the structure and versioning information

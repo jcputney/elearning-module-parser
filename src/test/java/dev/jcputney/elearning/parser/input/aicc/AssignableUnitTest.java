@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.input.aicc.prereq.AiccPrerequisiteParser;
-import dev.jcputney.elearning.parser.util.DurationHHMMSSDeserializer;
+import dev.jcputney.elearning.parser.input.common.serialization.DurationHHMMSSDeserializer;
 import java.time.Duration;
 import java.util.List;
 import org.junit.jupiter.api.Test;

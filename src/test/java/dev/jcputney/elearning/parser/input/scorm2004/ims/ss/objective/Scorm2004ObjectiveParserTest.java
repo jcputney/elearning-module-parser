@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
-import dev.jcputney.elearning.parser.impl.LocalFileAccess;
+import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import dev.jcputney.elearning.parser.parsers.Scorm2004Parser;
 import java.io.IOException;
@@ -48,11 +48,17 @@ public class Scorm2004ObjectiveParserTest {
     assertNotNull(manifest);
 
     // Get the post test item and verify its sequencing
-    var postTestItem = manifest.getOrganizations().getDefault().getItems().get(1);
+    var postTestItem = manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems()
+        .get(1);
     assertEquals("posttest_item", postTestItem.getIdentifier());
 
     // Verify the post test's objectives
-    Scorm2004Objectives objectives = postTestItem.getSequencing().getObjectives();
+    Scorm2004Objectives objectives = postTestItem
+        .getSequencing()
+        .getObjectives();
     assertNotNull(objectives);
 
     // Verify the primary objective
@@ -103,11 +109,17 @@ public class Scorm2004ObjectiveParserTest {
     assertNotNull(manifest);
 
     // Get the content wrapper item and verify its sequencing
-    var contentWrapper = manifest.getOrganizations().getDefault().getItems().get(0);
+    var contentWrapper = manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems()
+        .get(0);
     assertEquals("content_wrapper", contentWrapper.getIdentifier());
 
     // Verify the content wrapper's objectives
-    Scorm2004Objectives objectives = contentWrapper.getSequencing().getObjectives();
+    Scorm2004Objectives objectives = contentWrapper
+        .getSequencing()
+        .getObjectives();
     assertNotNull(objectives);
 
     // Verify the primary objective

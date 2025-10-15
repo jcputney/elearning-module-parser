@@ -33,7 +33,8 @@ import java.util.Map;
  *
  * <p>All specific exception types in the library should extend this class or one of its subclasses.
  */
-public class ModuleException extends Exception {
+public sealed class ModuleException extends Exception permits FileAccessException,
+    ManifestParseException, ModuleDetectionException, ModuleParsingException {
 
   /**
    * A map to hold additional context information about the exception. This can be used to store

@@ -45,7 +45,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class ReferencesObjectives implements Serializable {
+public final class ReferencesObjectives implements Serializable {
 
   /**
    * A list of referenced objectives, each represented by an {@link ObjectiveReference}.

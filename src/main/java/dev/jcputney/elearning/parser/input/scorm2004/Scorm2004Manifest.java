@@ -246,7 +246,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm2004Manifest implements PackageManifest {
+public final class Scorm2004Manifest implements PackageManifest {
 
   /**
    * The XML namespace URI for SCORM IMS Content Packaging (imscp_v1p1).
@@ -424,14 +424,14 @@ public class Scorm2004Manifest implements PackageManifest {
    * @return an Optional containing the launch URL for the item, or empty if no URL is available
    */
   @JsonIgnore
-  public Optional<String> getLaunchUrlForItem(String itemId) {
+  public String getLaunchUrlForItem(String itemId) {
     // search all organizations for an item with itemId
     Optional<Scorm2004Item> resourceItemOpt = Optional
         .ofNullable(organizations)
         .map(orgs -> orgs.getItemById(itemId));
 
     if (resourceItemOpt.isEmpty()) {
-      return Optional.empty();
+      return null;
     }
 
     Scorm2004Item resourceItem = resourceItemOpt.get();
@@ -439,27 +439,27 @@ public class Scorm2004Manifest implements PackageManifest {
     // Resolve the resource referenced by this item via identifierref
     String identifierRef = resourceItem.getIdentifierRef();
     if (identifierRef == null || identifierRef.isEmpty()) {
-      return Optional.empty();
+      return null;
     }
 
-    Optional<String> hrefOpt = Optional
+    String href = Optional
         .ofNullable(resources)
         .flatMap(r -> r.getResourceById(identifierRef))
         .map(Scorm2004Resource::getHref)
-        .filter(href -> !href.isEmpty());
+        .filter(x -> !x.isEmpty())
+        .orElse(null);
 
-    if (hrefOpt.isEmpty()) {
-      return Optional.empty();
+    if (href == null) {
+      return null;
     }
 
-    String href = hrefOpt.get();
     String parameters = resourceItem.getParameters();
 
     if (parameters != null && !parameters.isEmpty()) {
-      return Optional.of(parameters.startsWith("?") ? href + parameters : href + "?" + parameters);
+      return parameters.startsWith("?") ? href + parameters : href + "?" + parameters;
     }
 
-    return Optional.of(href);
+    return href;
   }
 
   /**

@@ -45,7 +45,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class MapInfo implements Serializable {
+public final class MapInfo implements Serializable {
 
   /**
    * The unique identifier for the target objective in the LMS that this objective is mapped to.

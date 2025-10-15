@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
-import dev.jcputney.elearning.parser.impl.LocalFileAccess;
+import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.input.scorm2004.SequencingUsageDetector.SequencingLevel;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.ScormType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
@@ -40,7 +40,6 @@ import dev.jcputney.elearning.parser.input.scorm2004.sequencing.ActivityTree;
 import dev.jcputney.elearning.parser.parsers.Scorm2004Parser;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Optional;
 import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 import org.junit.jupiter.api.Test;
@@ -236,11 +235,10 @@ public class Scorm2004ManifestTest {
     Scorm2004Manifest manifest = parser.parseManifest(Scorm2004Parser.MANIFEST_FILE);
 
     // Get the launch URL for a specific item
-    Optional<String> launchUrl = manifest.getLaunchUrlForItem("item_1");
+    String launchUrl = manifest.getLaunchUrlForItem("item_1");
 
     // Verify that the launch URL is correct
-    assertTrue(launchUrl.isPresent(), "Launch URL should be present");
-    assertEquals("shared/launchpage.html", launchUrl.get(),
+    assertEquals("shared/launchpage.html", launchUrl,
         "Launch URL should match the expected value");
   }
 

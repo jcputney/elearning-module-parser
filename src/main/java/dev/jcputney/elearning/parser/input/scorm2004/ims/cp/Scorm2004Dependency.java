@@ -31,7 +31,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm2004Dependency implements Serializable {
+public final class Scorm2004Dependency implements Serializable {
 
   /**
    * The identifier reference for the dependency. This points to another resource in the content

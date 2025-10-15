@@ -46,7 +46,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class AuxiliaryResources implements Serializable {
+public final class AuxiliaryResources implements Serializable {
 
   /**
    * A list of auxiliary resources associated with the learning activity. Each resource provides

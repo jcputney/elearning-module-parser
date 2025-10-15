@@ -67,10 +67,10 @@ Add one of the AWS SDKs to enable S3-backed storage:
 ## Quick Start
 
 ```java
-import dev.jcputney.elearning.parser.ModuleParser;
+import dev.jcputney.elearning.parser.api.ModuleParser;
 import dev.jcputney.elearning.parser.api.ModuleParserFactory;
-import dev.jcputney.elearning.parser.impl.DefaultModuleParserFactory;
-import dev.jcputney.elearning.parser.impl.ZipFileAccess;
+import dev.jcputney.elearning.parser.impl.factory.DefaultModuleParserFactory;
+import dev.jcputney.elearning.parser.impl.access.ZipFileAccess;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 
 try(ZipFileAccess access = new ZipFileAccess("path/to/module.zip")){
@@ -178,31 +178,20 @@ println(scorm12.getMasteryScores());
     }
 ```
 
-### Listen for parsing progress
+### Performance optimization
+
+Use `CachedFileAccess` to cache file reads and improve performance when parsing modules repeatedly:
 
 ```java
-ParsingEventListener listener = new ParsingEventListener() {
-   @Override
-   public void onDetectionStarted() {
-      log.info("Detecting module type");
-   }
+try (ZipFileAccess zip = new ZipFileAccess("module.zip")) {
+    CachedFileAccess cached = new CachedFileAccess(zip);
+    ModuleMetadata<?> metadata = new DefaultModuleParserFactory(cached).parseModule();
 
-   @Override
-   public void onModuleTypeDetected(ModuleType type) {
-      log.info("Detected {}", type);
-   }
-};
-
-ModuleParserFactory factory =
-    new DefaultModuleParserFactory(new CachedFileAccess(new ZipFileAccess("module.zip"), listener));
-ModuleParser<?> parser = factory.getParser();
-parser.
-
-parse();
+    // Subsequent operations will use cached data
+    Map<String, Object> stats = cached.getCacheStatistics();
+    System.out.println("Cache hit ratio: " + stats.get("hitRatio"));
+}
 ```
-
-For long-running transfers, `StreamingProgressListener` surfaces download progress in file-access
-implementations that stream remote content (for example `S3FileAccessV2`).
 
 ### Extend detection and parsing
 

@@ -40,7 +40,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class DisplayStageSpec implements Serializable {
+public final class DisplayStageSpec implements Serializable {
 
   /**
    * The {@code <required>} element, which specifies the required display stage.

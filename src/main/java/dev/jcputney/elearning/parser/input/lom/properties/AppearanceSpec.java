@@ -41,7 +41,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class AppearanceSpec implements Serializable {
+public final class AppearanceSpec implements Serializable {
 
   /**
    * The display stage element of the appearance specification. Per XSD, this is a complex type, so

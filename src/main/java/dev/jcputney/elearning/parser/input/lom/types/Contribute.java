@@ -64,7 +64,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Contribute implements Serializable {
+public final class Contribute implements Serializable {
 
   /**
    * The role of the contributor, specifying their relationship to the learning object. Example

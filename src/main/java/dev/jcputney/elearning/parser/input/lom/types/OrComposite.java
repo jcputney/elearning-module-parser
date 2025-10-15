@@ -44,7 +44,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class OrComposite implements Serializable {
+public sealed class OrComposite implements Serializable permits Requirement {
 
   /**
    * The type of platform or software requirement, represented as controlled 'vocabulary'.

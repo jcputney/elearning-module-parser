@@ -40,7 +40,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Requirement extends OrComposite {
+public final class Requirement extends OrComposite {
 
   /**
    * The list of OR-composite elements representing a set of alternative conditions that must be met

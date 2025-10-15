@@ -48,7 +48,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class ContributeEntity implements Serializable {
+public final class ContributeEntity implements Serializable {
 
   /**
    * The VCARD representation of the entity contributing to the lifecycle of the learning object.

@@ -34,7 +34,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * completed, or incomplete based on the rollup rule conditions.</p>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class RollupAction implements Serializable {
+public final class RollupAction implements Serializable {
 
   /**
    * Specifies the action to be taken for this rollup rule when the conditions are met. Possible

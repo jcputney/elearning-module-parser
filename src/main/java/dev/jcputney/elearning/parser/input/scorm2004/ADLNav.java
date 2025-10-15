@@ -71,7 +71,7 @@ import java.io.Serializable;
  *   </xs:schema>
  * }</pre>
  */
-public class ADLNav implements Serializable {
+public final class ADLNav implements Serializable {
 
   /**
    * Default constructor for the ADLNav class.

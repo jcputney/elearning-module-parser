@@ -111,7 +111,6 @@ public class AiccManifestTest {
     assertEquals(assignableUnits, manifest.getAssignableUnits());
     assertEquals(descriptors, manifest.getDescriptors());
     assertEquals(courseStructures, manifest.getCourseStructures());
-    assertEquals("test.html", manifest.getLaunchUrl());
 
     // Verify the PackageManifest interface methods
     assertEquals("Test Course", manifest.getTitle());

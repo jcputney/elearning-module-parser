@@ -51,7 +51,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class RollupRules implements Serializable {
+public final class RollupRules implements Serializable {
 
   /**
    * A list of individual rollup rules that define specific conditions and actions for aggregating

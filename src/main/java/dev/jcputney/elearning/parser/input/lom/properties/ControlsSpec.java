@@ -51,7 +51,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class ControlsSpec implements Serializable {
+public final class ControlsSpec implements Serializable {
 
   /**
    * The flag indicating whether to show the finish button.

@@ -22,9 +22,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import dev.jcputney.elearning.parser.input.common.serialization.DurationIso8601Deserializer;
+import dev.jcputney.elearning.parser.input.common.serialization.InstantDeserializer;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
-import dev.jcputney.elearning.parser.util.DurationIso8601Deserializer;
-import dev.jcputney.elearning.parser.util.InstantDeserializer;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
@@ -54,7 +54,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class LimitConditions implements Serializable {
+public final class LimitConditions implements Serializable {
 
   /**
    * The maximum number of attempts allowed for the learner on this activity. When the attempt limit

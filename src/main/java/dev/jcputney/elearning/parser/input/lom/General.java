@@ -57,7 +57,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class General implements Serializable {
+public final class General implements Serializable {
 
   /**
    * A list of identifiers that uniquely identify the learning object.

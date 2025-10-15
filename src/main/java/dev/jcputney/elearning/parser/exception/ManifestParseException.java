@@ -36,7 +36,7 @@ import java.util.Map;
  * <p>This exception extends {@link ModuleException} and inherits its ability to store
  * additional context information as metadata.
  */
-public class ManifestParseException extends ModuleException {
+public final class ManifestParseException extends ModuleException {
 
   /**
    * Constructs a new ManifestParseException with the specified detail message.

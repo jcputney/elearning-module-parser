@@ -50,7 +50,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class TextType implements Serializable {
+public final class TextType implements Serializable {
 
   /**
    * List of localized strings, each represented as a {@link LangString}.

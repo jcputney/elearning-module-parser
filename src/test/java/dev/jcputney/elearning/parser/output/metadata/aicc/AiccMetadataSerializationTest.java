@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import dev.jcputney.elearning.parser.impl.LocalFileAccess;
+import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.parsers.AiccParser;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -24,77 +24,6 @@ class AiccMetadataSerializationTest {
     return Path
         .of("src", "test", "resources", "modules", "aicc", "complex")
         .toAbsolutePath();
-  }
-
-  @Test
-  void serializesDerivedAiccFields() throws Exception {
-    var parser = new AiccParser(new LocalFileAccess(complexFixtureRoot().toString()));
-    AiccMetadata metadata = parser.parse();
-
-    String json = MAPPER.writeValueAsString(metadata);
-    JsonNode root = MAPPER.readTree(json);
-
-    JsonNode childrenNode = root.get("assignableUnitChildren");
-    assertNotNull(childrenNode);
-    metadata
-        .getAssignableUnitChildren()
-        .forEach((key, value) -> assertEquals(value, toList(childrenNode.get(key))));
-
-    JsonNode prerequisitesNode = root.get("parsedPrerequisites");
-    assertNotNull(prerequisitesNode);
-    List<AiccPrerequisite> prerequisites = metadata.getParsedPrerequisites();
-    assertEquals(prerequisites.size(), prerequisitesNode.size());
-    for (AiccPrerequisite prerequisite : prerequisites) {
-      JsonNode prerequisiteNode = findByAssignableUnit(prerequisitesNode,
-          prerequisite.getAssignableUnitId());
-      assertNotNull(prerequisiteNode);
-      String rawExpression = prerequisiteNode.hasNonNull("rawExpression")
-          ? prerequisiteNode
-              .get("rawExpression")
-              .asText()
-          : null;
-      assertEquals(prerequisite.getRawExpression(), rawExpression);
-      assertEquals(prerequisite.isMandatory(), prerequisiteNode
-          .get("mandatory")
-          .asBoolean());
-      assertEquals(prerequisite.getTokens(), toList(prerequisiteNode.get("tokens")));
-      assertEquals(prerequisite.getPostfixTokens(), toList(prerequisiteNode.get("postfixTokens")));
-    }
-
-    JsonNode graphNode = root.get("prerequisitesGraph");
-    assertNotNull(graphNode);
-    metadata
-        .getPrerequisitesGraph()
-        .forEach((key, value) -> assertEquals(value, toList(graphNode.get(key))));
-
-    JsonNode objectiveIdsNode = root.get("objectiveIds");
-    assertEquals(metadata.getObjectiveIds(), toList(objectiveIdsNode));
-
-    JsonNode objectivesByAuNode = root.get("objectivesByAu");
-    assertNotNull(objectivesByAuNode);
-    metadata
-        .getObjectivesByAu()
-        .forEach((key, value) -> assertEquals(value, toList(objectivesByAuNode.get(key))));
-
-    JsonNode objectiveMetadataNode = root.get("objectiveMetadata");
-    assertEquals(metadata.getObjectiveMetadata().size(), objectiveMetadataNode.size());
-    metadata
-        .getObjectiveMetadata()
-        .forEach(obj -> {
-          JsonNode jsonObj = findObjective(objectiveMetadataNode, obj.getId());
-          assertNotNull(jsonObj);
-          assertEquals(obj.getAssociatedAuIds(), toList(jsonObj.get("associatedAuIds")));
-        });
-
-    assertEquals(metadata.requiresLevel2(), root
-        .get("requiresLevel2")
-        .asBoolean());
-    assertEquals(metadata.requiresLevel3(), root
-        .get("requiresLevel3")
-        .asBoolean());
-    assertEquals(metadata.requiresLevel4(), root
-        .get("requiresLevel4")
-        .asBoolean());
   }
 
   private static JsonNode findByAssignableUnit(JsonNode array, String assignableUnitId) {
@@ -134,5 +63,78 @@ class AiccMetadataSerializationTest {
       values.add(element.asText());
     }
     return values;
+  }
+
+  @Test
+  void serializesDerivedAiccFields() throws Exception {
+    var parser = new AiccParser(new LocalFileAccess(complexFixtureRoot().toString()));
+    AiccMetadata metadata = parser.parse();
+
+    String json = MAPPER.writeValueAsString(metadata);
+    JsonNode root = MAPPER.readTree(json);
+
+    JsonNode childrenNode = root.get("assignableUnitChildren");
+    assertNotNull(childrenNode);
+    metadata
+        .getAssignableUnitChildren()
+        .forEach((key, value) -> assertEquals(value, toList(childrenNode.get(key))));
+
+    JsonNode prerequisitesNode = root.get("parsedPrerequisites");
+    assertNotNull(prerequisitesNode);
+    List<AiccPrerequisite> prerequisites = metadata.getParsedPrerequisites();
+    assertEquals(prerequisites.size(), prerequisitesNode.size());
+    for (AiccPrerequisite prerequisite : prerequisites) {
+      JsonNode prerequisiteNode = findByAssignableUnit(prerequisitesNode,
+          prerequisite.getAssignableUnitId());
+      assertNotNull(prerequisiteNode);
+      String rawExpression = prerequisiteNode.hasNonNull("rawExpression")
+          ? prerequisiteNode
+          .get("rawExpression")
+          .asText()
+          : null;
+      assertEquals(prerequisite.getRawExpression(), rawExpression);
+      assertEquals(prerequisite.isMandatory(), prerequisiteNode
+          .get("mandatory")
+          .asBoolean());
+      assertEquals(prerequisite.getTokens(), toList(prerequisiteNode.get("tokens")));
+      assertEquals(prerequisite.getPostfixTokens(), toList(prerequisiteNode.get("postfixTokens")));
+    }
+
+    JsonNode graphNode = root.get("prerequisitesGraph");
+    assertNotNull(graphNode);
+    metadata
+        .getPrerequisitesGraph()
+        .forEach((key, value) -> assertEquals(value, toList(graphNode.get(key))));
+
+    JsonNode objectiveIdsNode = root.get("objectiveIds");
+    assertEquals(metadata.getObjectiveIds(), toList(objectiveIdsNode));
+
+    JsonNode objectivesByAuNode = root.get("objectivesByAu");
+    assertNotNull(objectivesByAuNode);
+    metadata
+        .getObjectivesByAu()
+        .forEach((key, value) -> assertEquals(value, toList(objectivesByAuNode.get(key))));
+
+    JsonNode objectiveMetadataNode = root.get("objectiveMetadata");
+    assertEquals(metadata
+        .getObjectiveMetadata()
+        .size(), objectiveMetadataNode.size());
+    metadata
+        .getObjectiveMetadata()
+        .forEach(obj -> {
+          JsonNode jsonObj = findObjective(objectiveMetadataNode, obj.getId());
+          assertNotNull(jsonObj);
+          assertEquals(obj.getAssociatedAuIds(), toList(jsonObj.get("associatedAuIds")));
+        });
+
+    assertEquals(metadata.requiresLevel2(), root
+        .get("requiresLevel2")
+        .asBoolean());
+    assertEquals(metadata.requiresLevel3(), root
+        .get("requiresLevel3")
+        .asBoolean());
+    assertEquals(metadata.requiresLevel4(), root
+        .get("requiresLevel4")
+        .asBoolean());
   }
 }

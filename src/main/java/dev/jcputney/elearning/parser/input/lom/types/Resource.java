@@ -42,7 +42,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Resource implements Serializable {
+public final class Resource implements Serializable {
 
   /**
    * The list of identifiers that uniquely reference the related resource.

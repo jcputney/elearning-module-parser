@@ -33,7 +33,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * mappings to global objectives for tracking learner progress.
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm2004Objective implements Serializable {
+public final class Scorm2004Objective implements Serializable {
 
   /**
    * A unique identifier for the objective, provided as a URI. This identifier distinguishes the

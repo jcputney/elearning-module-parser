@@ -38,7 +38,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class CompletionThreshold implements Serializable {
+public final class CompletionThreshold implements Serializable {
 
   /**
    * Defines the minimum progress measure for the content to be marked complete. The value should be

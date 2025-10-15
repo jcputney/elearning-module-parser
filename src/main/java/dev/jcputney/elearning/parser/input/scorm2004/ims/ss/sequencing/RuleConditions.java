@@ -39,7 +39,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class RuleConditions implements Serializable {
+public final class RuleConditions implements Serializable {
 
   /**
    * A list of individual rule conditions. Each condition specifies a criterion, such as an

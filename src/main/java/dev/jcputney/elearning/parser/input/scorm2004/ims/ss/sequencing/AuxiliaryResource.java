@@ -34,7 +34,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * content.</p>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class AuxiliaryResource implements Serializable {
+public final class AuxiliaryResource implements Serializable {
 
   /**
    * A unique identifier for the auxiliary resource, provided as a URI. This identifier links the

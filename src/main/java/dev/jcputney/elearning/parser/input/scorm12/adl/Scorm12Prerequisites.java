@@ -30,7 +30,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * value and an optional type attribute.
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm12Prerequisites implements Serializable {
+public final class Scorm12Prerequisites implements Serializable {
 
   /**
    * The string content of the "prerequisites" element.

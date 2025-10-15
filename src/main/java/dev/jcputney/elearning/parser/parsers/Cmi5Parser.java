@@ -30,7 +30,7 @@ import dev.jcputney.elearning.parser.output.metadata.cmi5.Cmi5Metadata;
  * launch URL, prerequisites, dependencies, detailed AU information, and custom metadata.
  * </p>
  */
-public class Cmi5Parser extends BaseParser<Cmi5Metadata, Cmi5Manifest> {
+public final class Cmi5Parser extends BaseParser<Cmi5Metadata, Cmi5Manifest> {
 
   /**
    * The name of the cmi5 XML file that contains the module metadata.

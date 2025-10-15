@@ -48,7 +48,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * Parses AICC (Aviation Industry CBT Committee) eLearning modules by handling both INI-style and
  * CSV-style files with specific extensions such as .crs, .des, .au, .cst, .ort, and .pre.
  */
-public class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
+public final class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
 
   /**
    * The file extension for the AICC course file.

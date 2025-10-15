@@ -47,7 +47,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Rights implements Serializable {
+public final class Rights implements Serializable {
 
   /**
    * The cost information associated with the learning object, represented as a source-value pair.

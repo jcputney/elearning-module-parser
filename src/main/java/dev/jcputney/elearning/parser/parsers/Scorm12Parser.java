@@ -19,7 +19,6 @@ package dev.jcputney.elearning.parser.parsers;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
-import dev.jcputney.elearning.parser.api.ParsingEventListener;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12File;
@@ -42,7 +41,7 @@ import javax.xml.stream.XMLStreamException;
  * {@link ModuleMetadata} object.
  * </p>
  */
-public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> {
+public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> {
 
   /**
    * The name of the manifest file for SCORM 1.2 modules.
@@ -55,17 +54,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    * @param fileAccess An instance of FileAccess for reading files in the module package.
    */
   public Scorm12Parser(FileAccess fileAccess) {
-    this(fileAccess, null);
-  }
-
-  /**
-   * Constructs a Scorm12Parser with the specified FileAccess instance and ParsingEventListener.
-   *
-   * @param fileAccess An instance of FileAccess for reading files in the module package.
-   * @param eventListener Optional listener for parsing events (can be null)
-   */
-  public Scorm12Parser(FileAccess fileAccess, ParsingEventListener eventListener) {
-    super(fileAccess, eventListener);
+    super(fileAccess);
   }
 
   /**
@@ -75,19 +64,7 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    * package.
    */
   public Scorm12Parser(ModuleFileProvider moduleFileProvider) {
-    this(moduleFileProvider, null);
-  }
-
-  /**
-   * Constructs a Scorm12Parser with the specified ModuleFileProvider instance and
-   * ParsingEventListener.
-   *
-   * @param moduleFileProvider An instance of ModuleFileProvider for reading files in the module
-   * package.
-   * @param eventListener Optional listener for parsing events (can be null)
-   */
-  public Scorm12Parser(ModuleFileProvider moduleFileProvider, ParsingEventListener eventListener) {
-    super(moduleFileProvider, eventListener);
+    super(moduleFileProvider);
   }
 
   /**
@@ -100,7 +77,6 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
    */
   @Override
   public Scorm12Metadata parse() throws ModuleParsingException {
-    eventListener.onParsingStarted("SCORM 1.2", moduleFileProvider.getRootPath());
     try {
       // Parse and validate the manifest
       var manifest = parseAndValidateManifest();
@@ -115,7 +91,6 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
       boolean hasXapi = checkForXapi();
 
       // Build and return ModuleMetadata
-      eventListener.onParsingCompleted("SCORM 1.2", System.currentTimeMillis());
       return createMetadata(manifest, hasXapi);
     } catch (IOException | XMLStreamException e) {
       throw new ModuleParsingException(
@@ -225,7 +200,6 @@ public class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Manifest> 
       metadata.setSizeOnDisk(totalSize);
     } catch (IOException e) {
       // Size remains -1 as default - this is not an error
-      eventListener.onParsingWarning("Unable to calculate module size", e.getMessage());
     }
 
     return metadata;

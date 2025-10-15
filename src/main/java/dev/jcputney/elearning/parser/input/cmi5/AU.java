@@ -88,7 +88,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class AU implements Serializable {
+public final class AU implements Serializable {
 
   /**
    * The title of the Assignable Unit (AU).

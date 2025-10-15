@@ -63,7 +63,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm12Metadata implements LoadableMetadata {
+public final class Scorm12Metadata implements LoadableMetadata {
 
   /**
    * The schema used in the metadata description, such as "ADL SCORM". This element is optional.

@@ -34,7 +34,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class NavigationInterface implements Serializable {
+public final class NavigationInterface implements Serializable {
 
   /**
    * A list of elements defining which parts of the LMS UI should be hidden. Each item specifies an

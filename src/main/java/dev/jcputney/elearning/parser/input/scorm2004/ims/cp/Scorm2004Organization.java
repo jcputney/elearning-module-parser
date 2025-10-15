@@ -38,7 +38,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm2004Organization implements Serializable {
+public final class Scorm2004Organization implements Serializable {
 
   /**
    * The unique identifier for this organization, used to distinguish it from other organizations

@@ -54,7 +54,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm12File implements Serializable {
+public final class Scorm12File implements Serializable {
 
   /**
    * The path to the file relative to the resource's base. This is typically a URI pointing to a

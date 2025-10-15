@@ -40,7 +40,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class ExitActionsSpec implements Serializable {
+public final class ExitActionsSpec implements Serializable {
 
   /**
    * The exit action for the intermediate SCO.

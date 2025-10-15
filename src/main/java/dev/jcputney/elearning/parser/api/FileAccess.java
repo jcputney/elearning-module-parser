@@ -17,6 +17,8 @@
 
 package dev.jcputney.elearning.parser.api;
 
+import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
+import dev.jcputney.elearning.parser.impl.access.ZipFileAccess;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -39,10 +41,10 @@ import org.apache.commons.lang3.StringUtils;
  *
  * <p>An implementation of this interface should be provided to parsers for reading files within
  * a module package. The default implementation is the
- * {@link dev.jcputney.elearning.parser.impl.LocalFileAccess} class, but other implementations
+ * {@link LocalFileAccess} class, but other implementations
  * are available for different storage mechanisms:
  * <ul>
- *   <li>{@link dev.jcputney.elearning.parser.impl.ZipFileAccess} - For accessing files in ZIP archives</li>
+ *   <li>{@link ZipFileAccess} - For accessing files in ZIP archives</li>
  *   <li>S3FileAccess implementations - For accessing files in AWS S3 buckets</li>
  * </ul>
  *

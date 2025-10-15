@@ -20,13 +20,13 @@ package dev.jcputney.elearning.parser.parsers;
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
+import dev.jcputney.elearning.parser.input.common.serialization.Scorm2004SchemaValidator;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004File;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organization;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resource;
 import dev.jcputney.elearning.parser.output.metadata.scorm2004.Scorm2004Metadata;
-import dev.jcputney.elearning.parser.util.Scorm2004SchemaValidator;
 import dev.jcputney.elearning.parser.util.XmlParsingUtils;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  * including sequencing information, custom data (adlcp:data), prerequisites, mastery score, and any
  * additional metadata files referenced within the manifest.
  */
-public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Manifest> {
+public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Manifest> {
 
   /**
    * The name of the manifest file for SCORM 2004 modules.
@@ -87,7 +87,7 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
 
       String title = manifest.getTitle();
       String launchUrl = manifest.getLaunchUrl();
-      if (title.isEmpty()) {
+      if (title == null || title.isEmpty()) {
         throw new ModuleParsingException(
             "SCORM 2004 manifest is missing a required <title> element at path: " + MANIFEST_FILE);
       }
@@ -127,7 +127,6 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
     if (manifestPath == null) {
       throw new IllegalArgumentException("Manifest path cannot be null");
     }
-    eventListener.onParsingStarted("manifest", manifestPath);
     try (InputStream manifestStream = moduleFileProvider.getFileContents(manifestPath)) {
       byte[] bytes = manifestStream.readAllBytes();
 
@@ -189,8 +188,7 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
 
   /**
    * Validates the provided schema data against the SCORM 2004 XSD standards. If the schema
-   * validation fails, an exception is thrown. This method also reports validation progress through
-   * the event listener.
+   * validation fails, an exception is thrown.
    *
    * @param bytes The byte array representation of the SCORM schema to validate.
    * @throws IOException If an I/O error occurs during validation.
@@ -199,7 +197,6 @@ public class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm2004Mani
   private void validateSchema(byte[] bytes) throws IOException, ModuleParsingException {
     try {
       Scorm2004SchemaValidator.validate(bytes);
-      eventListener.onParsingProgress("SCORM 2004 XSD validation passed", 25);
     } catch (SAXException e) {
       throw new ModuleParsingException("SCORM 2004 XSD validation failed: " + e.getMessage(), e);
     }

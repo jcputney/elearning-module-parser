@@ -23,7 +23,7 @@ import java.io.Serializable;
  * This class contains constants and utility methods for handling SCORM 1.2 ADLCP elements. It isn't
  * intended to be instantiated.
  */
-public class Scorm12ADLCP implements Serializable {
+public final class Scorm12ADLCP implements Serializable {
 
   /**
    * The namespace URI for SCORM 1.2 ADLCP elements.

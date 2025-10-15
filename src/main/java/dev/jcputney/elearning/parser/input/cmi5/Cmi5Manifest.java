@@ -48,7 +48,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * </ul>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Cmi5Manifest implements PackageManifest {
+public final class Cmi5Manifest implements PackageManifest {
 
   /**
    * The course element, representing the main course metadata.

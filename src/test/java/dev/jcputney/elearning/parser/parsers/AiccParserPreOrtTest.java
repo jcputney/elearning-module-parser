@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.jcputney.elearning.parser.impl.LocalFileAccess;
+import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.output.metadata.aicc.AiccMetadata;
 import java.nio.file.Path;
 import java.util.List;
@@ -58,10 +58,14 @@ class AiccParserPreOrtTest {
     assertTrue(metadata.requiresLevel2());
     assertTrue(metadata.requiresLevel3());
     assertFalse(metadata.requiresLevel4());
-    assertTrue(metadata.getParsedPrerequisites().isEmpty());
+    assertTrue(metadata
+        .getParsedPrerequisites()
+        .isEmpty());
 
     var objectiveMetadata = metadata.getObjectiveMetadata();
     assertEquals(1, objectiveMetadata.size());
-    assertEquals(List.of("A1", "A2"), objectiveMetadata.get(0).getAssociatedAuIds());
+    assertEquals(List.of("A1", "A2"), objectiveMetadata
+        .get(0)
+        .getAssociatedAuIds());
   }
 }

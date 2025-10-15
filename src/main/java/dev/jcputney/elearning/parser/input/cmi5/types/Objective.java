@@ -28,7 +28,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * Represents a single objective with a title, description, and unique identifier.
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Objective implements Serializable {
+public final class Objective implements Serializable {
 
   /**
    * The title of the objective, represented as a localized text type.

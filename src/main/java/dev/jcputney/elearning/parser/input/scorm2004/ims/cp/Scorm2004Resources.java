@@ -36,7 +36,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm2004Resources implements Serializable {
+public final class Scorm2004Resources implements Serializable {
 
   /**
    * The base URL for all resources in the content package. This URL is used to resolve relative

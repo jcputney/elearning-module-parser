@@ -18,7 +18,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * This is a serializable class and overrides the {@code equals} and {@code hashCode} methods to
  * ensure proper equality checks and object usage in hash-based collections.
  */
-public class AiccCompletionCriteria implements Serializable {
+public final class AiccCompletionCriteria implements Serializable {
 
   @Serial
   private static final long serialVersionUID = 1L;

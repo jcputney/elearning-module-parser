@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  * Utility class for detecting character encoding of XML files. Supports BOM (Byte Order Mark)
  * detection and XML declaration parsing.
  */
-public class EncodingDetector {
+public final class EncodingDetector {
 
   /**
    * A regular expression pattern to match the encoding declaration in an XML header. This pattern
@@ -48,7 +48,7 @@ public class EncodingDetector {
    */
   private static final Pattern XML_ENCODING_PATTERN =
       Pattern.compile("encoding\\s*=\\s*['\"]([^'\"]+)['\"]", Pattern.CASE_INSENSITIVE);
-  
+
   /**
    * Defines the size of the buffer used for reading input streams in the encoding detection
    * process. This constant helps optimize performance by specifying an appropriate buffer size for

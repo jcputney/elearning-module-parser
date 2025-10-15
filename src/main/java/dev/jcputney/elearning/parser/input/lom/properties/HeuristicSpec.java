@@ -43,7 +43,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class HeuristicSpec implements Serializable {
+public final class HeuristicSpec implements Serializable {
 
   /**
    * Indicates whether completion is tracked.

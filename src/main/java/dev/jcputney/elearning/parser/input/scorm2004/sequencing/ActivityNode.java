@@ -41,7 +41,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * </p>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class ActivityNode implements Serializable {
+public final class ActivityNode implements Serializable {
 
   /**
    * The unique identifier for this activity node.

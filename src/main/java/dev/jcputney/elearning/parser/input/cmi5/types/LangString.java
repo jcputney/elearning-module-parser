@@ -45,7 +45,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class LangString implements Serializable {
+public final class LangString implements Serializable {
 
   /**
    * The actual text content of the localized string.

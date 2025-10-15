@@ -48,7 +48,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Course implements Serializable {
+public final class Course implements Serializable {
 
   /**
    * The title of the course, represented as a localized text type.

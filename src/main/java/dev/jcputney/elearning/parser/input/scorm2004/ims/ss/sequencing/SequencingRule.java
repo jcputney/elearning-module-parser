@@ -31,7 +31,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class SequencingRule implements Serializable {
+public final class SequencingRule implements Serializable {
 
   /**
    * The conditions that must be met for the rule to apply. These conditions specify criteria such

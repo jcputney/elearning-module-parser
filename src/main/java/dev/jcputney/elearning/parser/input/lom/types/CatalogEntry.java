@@ -38,7 +38,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class CatalogEntry implements Serializable {
+public final class CatalogEntry implements Serializable {
 
   /**
    * The catalog of the entry.

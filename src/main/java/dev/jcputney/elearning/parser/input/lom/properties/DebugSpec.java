@@ -48,7 +48,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class DebugSpec implements Serializable {
+public final class DebugSpec implements Serializable {
 
   /**
    * The audit level for control.

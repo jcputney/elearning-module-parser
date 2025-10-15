@@ -50,7 +50,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm12Resource implements Serializable {
+public final class Scorm12Resource implements Serializable {
 
   /**
    * The unique identifier for this resource, which allows it to be referenced by items.

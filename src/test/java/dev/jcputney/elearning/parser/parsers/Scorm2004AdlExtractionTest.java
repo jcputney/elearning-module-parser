@@ -3,8 +3,8 @@ package dev.jcputney.elearning.parser.parsers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import dev.jcputney.elearning.parser.api.ModuleParserFactory;
-import dev.jcputney.elearning.parser.impl.DefaultModuleParserFactory;
-import dev.jcputney.elearning.parser.impl.LocalFileAccess;
+import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
+import dev.jcputney.elearning.parser.impl.factory.DefaultModuleParserFactory;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import dev.jcputney.elearning.parser.output.metadata.scorm2004.Scorm2004Metadata;
 import java.math.BigDecimal;
@@ -54,9 +54,13 @@ class Scorm2004AdlExtractionTest {
     assertThat(completionThresholds).containsKey("item1");
     Map<String, Object> ct = completionThresholds.get("item1");
     assertThat(ct.get("completedByMeasure")).isEqualTo(true);
-    assertThat(new BigDecimal(ct.get("minProgressMeasure").toString()))
+    assertThat(new BigDecimal(ct
+        .get("minProgressMeasure")
+        .toString()))
         .isEqualByComparingTo(new BigDecimal("0.7500"));
-    assertThat(new BigDecimal(ct.get("progressWeight").toString()))
+    assertThat(new BigDecimal(ct
+        .get("progressWeight")
+        .toString()))
         .isEqualByComparingTo(new BigDecimal("1.0"));
 
     // hideLMSUI

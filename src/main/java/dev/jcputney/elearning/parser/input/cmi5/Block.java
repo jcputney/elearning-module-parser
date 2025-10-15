@@ -52,7 +52,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Block implements Serializable {
+public final class Block implements Serializable {
 
   /**
    * The title of the block, represented as a localized text type.

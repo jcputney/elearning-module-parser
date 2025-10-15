@@ -33,7 +33,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * rules, objectives, and rollup behaviors for a learning activity.
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class SequencingCollection implements Serializable {
+public final class SequencingCollection implements Serializable {
 
   /**
    * A list of {@link Sequencing} elements within the sequencing collection. Each sequencing element

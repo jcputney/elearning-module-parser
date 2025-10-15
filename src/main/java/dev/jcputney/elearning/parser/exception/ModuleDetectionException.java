@@ -42,7 +42,7 @@ import java.util.Map;
  * <p>This exception extends {@link ModuleException} and inherits its ability to store
  * additional context information as metadata.
  */
-public class ModuleDetectionException extends ModuleException {
+public final class ModuleDetectionException extends ModuleException {
 
   /**
    * Constructs a new ModuleDetectionException with the specified detail message.

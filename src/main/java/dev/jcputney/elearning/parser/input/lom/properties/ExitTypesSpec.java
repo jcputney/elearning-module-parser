@@ -42,7 +42,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class ExitTypesSpec implements Serializable {
+public final class ExitTypesSpec implements Serializable {
 
   /**
    * The exit action type for normal exit.

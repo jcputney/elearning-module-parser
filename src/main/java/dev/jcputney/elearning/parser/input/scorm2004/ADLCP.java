@@ -110,7 +110,7 @@ import java.io.Serializable;
  *   </xs:schema>
  * }</pre>
  */
-public class ADLCP implements Serializable {
+public final class ADLCP implements Serializable {
 
   /**
    * The namespace URI for the ADLCP schema.

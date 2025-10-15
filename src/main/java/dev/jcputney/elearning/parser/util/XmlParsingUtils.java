@@ -23,6 +23,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.LoadableMetadata;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
+import dev.jcputney.elearning.parser.input.common.serialization.DurationIso8601Deserializer;
 import dev.jcputney.elearning.parser.input.lom.LOM;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

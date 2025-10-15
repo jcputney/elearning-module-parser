@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
-import dev.jcputney.elearning.parser.impl.LocalFileAccess;
+import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.input.cmi5.AU;
 import dev.jcputney.elearning.parser.input.cmi5.Block;
 import dev.jcputney.elearning.parser.input.cmi5.Cmi5Manifest;
@@ -65,7 +65,8 @@ public class Cmi5ParserTest {
     assertEquals(
         "This course will introduce you into the basics of geology. This includes subjects such as\nplate tectonics, geological materials and the history of the Earth.",
         manifest.getDescription());
-    assertEquals("index.html", manifest.getLaunchUrl());
+    assertEquals("index.html", manifest
+        .getLaunchUrl());
     assertEquals(
         "https://w3id.org/xapi/cmi5/catapult/lts/course/geology-intro-single-au-mastery-score-framed",
         manifest

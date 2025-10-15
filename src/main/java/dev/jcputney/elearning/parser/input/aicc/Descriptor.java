@@ -33,7 +33,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonNaming(SnakeCaseStrategy.class)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Descriptor implements Serializable {
+public final class Descriptor implements Serializable {
 
   /**
    * The system ID of the descriptor element.

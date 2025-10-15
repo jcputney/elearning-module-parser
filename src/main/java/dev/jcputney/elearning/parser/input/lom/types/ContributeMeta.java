@@ -64,7 +64,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class ContributeMeta implements Serializable {
+public final class ContributeMeta implements Serializable {
 
   /**
    * The role of the contributor, specifying their relationship to the metadata. Example: "creator",

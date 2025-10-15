@@ -22,11 +22,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import dev.jcputney.elearning.parser.input.common.serialization.DurationHHMMSSDeserializer;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12ADLCP;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.input.scorm12.adl.Scorm12Prerequisites;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.TimeLimitAction;
-import dev.jcputney.elearning.parser.util.DurationHHMMSSDeserializer;
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.List;
@@ -71,7 +71,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm12Item implements Serializable {
+public final class Scorm12Item implements Serializable {
 
   /**
    * The unique identifier for this item within the organization.

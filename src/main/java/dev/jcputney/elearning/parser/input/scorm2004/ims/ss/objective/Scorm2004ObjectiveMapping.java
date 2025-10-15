@@ -32,7 +32,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * different activities.</p>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class Scorm2004ObjectiveMapping implements Serializable {
+public final class Scorm2004ObjectiveMapping implements Serializable {
 
   /**
    * The unique identifier for the target global objective that this local objective is mapped to.

@@ -28,7 +28,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * Represents a single objective reference.
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class ObjectiveReference implements Serializable {
+public final class ObjectiveReference implements Serializable {
 
   /**
    * The ID reference to the objective, represented as an anyURI.

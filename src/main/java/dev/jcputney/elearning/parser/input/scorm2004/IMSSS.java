@@ -33,7 +33,7 @@ import java.io.Serializable;
  *
  * @see <a href="https://www.imsglobal.org">IMS Global Learning Consortium</a>
  */
-public class IMSSS implements Serializable {
+public final class IMSSS implements Serializable {
 
   /**
    * The XML namespace URI for SCORM IMS Simple Sequencing (imsss).

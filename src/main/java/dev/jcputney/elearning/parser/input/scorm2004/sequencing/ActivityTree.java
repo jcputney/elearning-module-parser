@@ -43,7 +43,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * </p>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class ActivityTree implements Serializable {
+public final class ActivityTree implements Serializable {
 
   /**
    * The root node of the activity tree.

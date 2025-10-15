@@ -32,7 +32,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * the associated rollup rule is applied.
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class RollupCondition implements Serializable {
+public final class RollupCondition implements Serializable {
 
   /**
    * Specifies the operator to use when evaluating the rollup condition. Possible values include:

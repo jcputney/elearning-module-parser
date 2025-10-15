@@ -187,7 +187,8 @@ public class Scorm12ParserPropertyTest {
       assertTrue(manifest
           .getTitle()
           .length() > 100); // Very long title
-      assertEquals("shared/launchpage.html", manifest.getLaunchUrl());
+      assertEquals("shared/launchpage.html", manifest
+          .getLaunchUrl());
     } catch (ModuleParsingException e) {
       // If the parser throws an exception, it should be because of a validation error
       assertTrue(e
@@ -241,7 +242,8 @@ public class Scorm12ParserPropertyTest {
 
     // Verify that the parser extracted the expected values
     assertEquals("Minimal Valid Manifest", manifest.getTitle());
-    assertEquals("index.html", manifest.getLaunchUrl());
+    assertEquals("index.html", manifest
+        .getLaunchUrl());
   }
 
   /**

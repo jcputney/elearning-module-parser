@@ -20,14 +20,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import dev.jcputney.elearning.parser.api.ModuleParser;
 import dev.jcputney.elearning.parser.api.ModuleParserFactory;
 import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
-import dev.jcputney.elearning.parser.impl.DefaultModuleParserFactory;
-import dev.jcputney.elearning.parser.impl.LocalFileAccess;
-import dev.jcputney.elearning.parser.impl.ZipFileAccess;
+import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
+import dev.jcputney.elearning.parser.impl.access.ZipFileAccess;
+import dev.jcputney.elearning.parser.impl.factory.DefaultModuleParserFactory;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;

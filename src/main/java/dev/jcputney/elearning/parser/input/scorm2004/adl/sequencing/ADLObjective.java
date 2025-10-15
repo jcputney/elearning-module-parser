@@ -41,7 +41,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class ADLObjective implements Serializable {
+public final class ADLObjective implements Serializable {
 
   /**
    * The unique identifier for this objective. This is used to map the objective within the LMS to

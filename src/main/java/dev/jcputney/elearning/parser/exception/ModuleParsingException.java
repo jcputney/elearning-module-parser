@@ -17,12 +17,13 @@
 
 package dev.jcputney.elearning.parser.exception;
 
+import dev.jcputney.elearning.parser.api.ModuleParser;
 import java.util.Map;
 
 /**
  * Exception thrown when there's an error parsing an eLearning module.
  *
- * <p>This exception is typically thrown by {@link dev.jcputney.elearning.parser.ModuleParser}
+ * <p>This exception is typically thrown by {@link ModuleParser}
  * implementations when they encounter errors while parsing module content. It is a higher-level
  * exception that may wrap more specific exceptions like {@link ManifestParseException}.
  *
@@ -40,7 +41,7 @@ import java.util.Map;
  * <p>This exception extends {@link ModuleException} and inherits its ability to store
  * additional context information as metadata.
  */
-public class ModuleParsingException extends ModuleException {
+public final class ModuleParsingException extends ModuleException {
 
   /**
    * Constructs a new ModuleParsingException with the specified detail message.

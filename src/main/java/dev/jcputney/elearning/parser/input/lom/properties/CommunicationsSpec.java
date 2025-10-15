@@ -40,7 +40,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class CommunicationsSpec implements Serializable {
+public final class CommunicationsSpec implements Serializable {
 
   /**
    * The maximum number of failed submissions allowed.

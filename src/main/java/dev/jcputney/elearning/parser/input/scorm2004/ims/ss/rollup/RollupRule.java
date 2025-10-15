@@ -37,7 +37,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * and an action that dictate how child activities’ statuses affect the parent activity’s rollup.
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class RollupRule implements Serializable {
+public final class RollupRule implements Serializable {
 
   /**
    * The conditions that must be met for the rollup rule to apply. These conditions specify criteria

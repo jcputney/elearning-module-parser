@@ -27,7 +27,7 @@ import java.math.BigDecimal;
  * Custom deserializer for MeasureType, ensuring the value is within the range of -1 to 1 and has at
  * least four decimal digits.
  */
-public class MeasureTypeDeserializer extends JsonDeserializer<MeasureType> {
+public final class MeasureTypeDeserializer extends JsonDeserializer<MeasureType> {
 
   /**
    * Default constructor for the MeasureTypeDeserializer class.

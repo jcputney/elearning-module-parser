@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
-import dev.jcputney.elearning.parser.impl.LocalFileAccess;
+import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.input.aicc.AiccManifest;
 import dev.jcputney.elearning.parser.output.metadata.aicc.AiccMetadata;
 import java.io.IOException;
@@ -220,10 +220,10 @@ class AiccParserTest {
             Total_Blocks = 0
             Max_Fields_CST = 100
             Max_Fields_ORT
-
+            
             [COURSE_BEHAVIOR]
             MAX_NORMAL = 1
-
+            
             [COURSE_DESCRIPTION]
             A minimal AICC course for regression testing = Parser should ignore null properties.
             """);

@@ -17,13 +17,12 @@
 
 package dev.jcputney.elearning.parser.parsers;
 
-import dev.jcputney.elearning.parser.ModuleParser;
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.LoadableMetadata;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
-import dev.jcputney.elearning.parser.api.ParsingEventListener;
+import dev.jcputney.elearning.parser.api.ModuleParser;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
-import dev.jcputney.elearning.parser.impl.DefaultModuleFileProvider;
+import dev.jcputney.elearning.parser.impl.provider.DefaultModuleFileProvider;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import dev.jcputney.elearning.parser.util.XmlParsingUtils;
@@ -42,8 +41,9 @@ import javax.xml.stream.XMLStreamException;
  * @param <T> The type of ModuleMetadata that this parser will return.
  * @param <M> The type of PackageManifest that this parser will work with.
  */
-public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageManifest> implements
-    ModuleParser<M> {
+public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends PackageManifest>
+    implements ModuleParser<M>
+    permits AiccParser, Cmi5Parser, Scorm12Parser, Scorm2004Parser {
 
   /**
    * The name of the xAPI JavaScript file.
@@ -61,11 +61,6 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
   protected final ModuleFileProvider moduleFileProvider;
 
   /**
-   * The ParsingEventListener for reporting parsing events. Uses NO_OP if none is provided.
-   */
-  protected final ParsingEventListener eventListener;
-
-  /**
    * Constructs a BaseParser with the specified ModuleFileProvider instance.
    *
    * @param moduleFileProvider An instance of ModuleFileProvider for reading files in the module
@@ -73,23 +68,10 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
    * @throws IllegalArgumentException if moduleFileProvider is null
    */
   protected BaseParser(ModuleFileProvider moduleFileProvider) {
-    this(moduleFileProvider, null);
-  }
-
-  /**
-   * Constructs a BaseParser with the specified ModuleFileProvider and ParsingEventListener.
-   *
-   * @param moduleFileProvider An instance of ModuleFileProvider for reading files in the module
-   * package.
-   * @param eventListener Optional listener for parsing events (can be null)
-   * @throws IllegalArgumentException if moduleFileProvider is null
-   */
-  protected BaseParser(ModuleFileProvider moduleFileProvider, ParsingEventListener eventListener) {
     if (moduleFileProvider == null) {
       throw new IllegalArgumentException("ModuleFileProvider cannot be null");
     }
     this.moduleFileProvider = moduleFileProvider;
-    this.eventListener = eventListener != null ? eventListener : ParsingEventListener.NO_OP;
   }
 
   /**
@@ -100,23 +82,10 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
    * @throws IllegalArgumentException if fileAccess is null
    */
   protected BaseParser(FileAccess fileAccess) {
-    this(fileAccess, null);
-  }
-
-  /**
-   * Constructs a BaseParser with the specified FileAccess instance and ParsingEventListener. This
-   * constructor creates a DefaultModuleFileProvider that wraps the FileAccess instance.
-   *
-   * @param fileAccess An instance of FileAccess for reading files in the module package.
-   * @param eventListener Optional listener for parsing events (can be null)
-   * @throws IllegalArgumentException if fileAccess is null
-   */
-  protected BaseParser(FileAccess fileAccess, ParsingEventListener eventListener) {
     if (fileAccess == null) {
       throw new IllegalArgumentException("FileAccess cannot be null");
     }
     this.moduleFileProvider = new DefaultModuleFileProvider(fileAccess);
-    this.eventListener = eventListener != null ? eventListener : ParsingEventListener.NO_OP;
   }
 
   /**
@@ -144,7 +113,6 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
     if (manifestPath == null) {
       throw new IllegalArgumentException("Manifest path cannot be null");
     }
-    eventListener.onParsingStarted("manifest", manifestPath);
     try (InputStream manifestStream = moduleFileProvider.getFileContents(manifestPath)) {
       M manifest = parseXmlToObject(manifestStream, getManifestClass());
       loadExternalMetadata(manifest);
@@ -187,11 +155,7 @@ public abstract class BaseParser<T extends ModuleMetadata<M>, M extends PackageM
    * @return true if xAPI is enabled, false otherwise.
    */
   protected boolean checkForXapi() {
-    boolean hasXapi = moduleFileProvider.hasXapiSupport();
-    if (hasXapi) {
-      eventListener.onParsingProgress("xAPI support detected", 100);
-    }
-    return hasXapi;
+    return moduleFileProvider.hasXapiSupport();
   }
 
   /**

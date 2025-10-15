@@ -49,7 +49,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * }</pre>
  */
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public class MetaMetadata implements Serializable {
+public final class MetaMetadata implements Serializable {
 
   /**
    * The list of unique identifiers for the metadata. Each identifier typically includes a catalog
