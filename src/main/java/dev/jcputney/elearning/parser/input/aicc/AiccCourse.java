@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -58,6 +59,11 @@ public final class AiccCourse implements Serializable {
 
   /**
    * Course description information for the AICC manifest.
+   * <p>
+   * Reconstructs the full description text from the parsed INI section. The [Course_Description]
+   * section can contain either plain text lines or key-value pairs. When Apache Commons INI
+   * Configuration encounters colons in the text, it treats them as key-value separators. This
+   * method reconstructs the original multi-line description by combining all entries.
    *
    * @return the course description, or null if not available
    */
@@ -70,9 +76,18 @@ public final class AiccCourse implements Serializable {
     return courseDescription
         .entrySet()
         .stream()
-        .findFirst()
-        .map(Map.Entry::getKey)
-        .orElse(null);
+        .map(entry -> {
+          String key = entry.getKey();
+          String value = entry.getValue();
+          if (value == null || value.trim().isEmpty()) {
+            // Plain text line (no key=value separator found by parser)
+            return key;
+          } else {
+            // Key-value pair, reconstruct as "key: value"
+            return key + ": " + value;
+          }
+        })
+        .collect(Collectors.joining("\n"));
   }
 
   /**

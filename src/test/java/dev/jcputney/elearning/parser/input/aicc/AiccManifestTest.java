@@ -85,6 +85,9 @@ public class AiccManifestTest {
     descriptor.setTitle("Test AU");
     descriptor.setDescription("Test Assignable Unit");
 
+    // Associate descriptor with assignable unit (normally done in AiccManifest constructor)
+    assignableUnit.setDescriptor(descriptor);
+
     // Create a course structure
     CourseStructure courseStructure = new CourseStructure("ROOT", "A1");
 
@@ -114,7 +117,8 @@ public class AiccManifestTest {
 
     // Verify the PackageManifest interface methods
     assertEquals("Test Course", manifest.getTitle());
-    assertEquals("Test Description", manifest.getDescription());
+    // Description now comes from the descriptor (.des file), not the course description (.crs file)
+    assertEquals("Test Assignable Unit", manifest.getDescription());
     assertEquals("test.html", manifest.getLaunchUrl());
     assertEquals("TEST-001", manifest.getIdentifier());
     assertEquals("1.0", manifest.getVersion());

@@ -144,9 +144,9 @@ class AiccParserTest {
             
             [COURSE_BEHAVIOR]
             MAX_NORMAL = 1
-            
+
             [COURSE_DESCRIPTION]
-            A minimal AICC course for testing = This is a minimal AICC course for testing purposes.
+            A minimal AICC course for testing
             """);
 
     // Create assignable unit file (.au)
@@ -162,7 +162,7 @@ class AiccParserTest {
     Files.writeString(desPath,
         """
             System_ID,Developer_ID,Title,Description
-            A1,DEV-001,Test AU,Test Assignable Unit
+            A1,DEV-001,Test AU,A minimal AICC course for testing
             """);
 
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
@@ -332,5 +332,79 @@ class AiccParserTest {
         .getAssignableUnits()
         .get(2)
         .getSystemId());
+  }
+
+  /**
+   * Tests that the parser correctly handles multi-line descriptions from the descriptor file,
+   * similar to Articulate Storyline AICC packages.
+   */
+  @Test
+  void testParse_withMultiLineDescription_succeeds(@TempDir Path tempDir)
+      throws IOException, ModuleParsingException {
+    // Create a minimal valid AICC package with multi-line description
+    Path csPath = tempDir.resolve("course.cst");
+    Files.writeString(csPath,
+        """
+            block,member
+            ROOT,A001
+            """);
+
+    Path crsPath = tempDir.resolve("course.crs");
+    Files.writeString(crsPath,
+        """
+            [COURSE]
+            COURSE_ID = _6Z0T2HT8b8I
+            COURSE_TITLE = AICC NO QUIZ
+            COURSE_CREATOR = Nikita Reese
+            COURSE_SYSTEM = Articulate Storyline
+            Level = 1
+            Version = 3.0
+            Total_AUs = 1
+            Total_Blocks = 0
+            Max_Fields_CST = 2
+
+            [COURSE_BEHAVIOR]
+            MAX_NORMAL = 99
+
+            [COURSE_DESCRIPTION]
+            Publishing Standard: AICC
+            Slides: 3
+            Quiz: NONE
+            Results Status: Completed/Failed
+            """);
+
+    Path auPath = tempDir.resolve("course.au");
+    Files.writeString(auPath,
+        """
+            System_ID,type,file_name,command_line,Max_Time_Allowed,time_limit_action,Max_Score,Core_Vendor,System_Vendor,Mastery_Score,Web_Launch,AU_Password
+            A001,story,index_lms.html,,9999:59:59,C,N,,,Articulate Storyline,,,
+            """);
+
+    Path desPath = tempDir.resolve("course.des");
+    Files.writeString(desPath,
+        """
+            system_id,developer_id,title,description
+            A001,Articulate_Lesson_ID,AICC NO QUIZ,"Publishing Standard: AICC
+            Slides: 3
+            Quiz: NONE
+            Results Status: Completed/Failed"
+            """);
+
+    AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
+    AiccMetadata metadata = parser.parse();
+
+    assertNotNull(metadata);
+    AiccManifest manifest = metadata.getManifest();
+    assertNotNull(manifest);
+
+    // Verify the multi-line description is correctly parsed from the .des file
+    String expectedDescription = """
+        Publishing Standard: AICC
+        Slides: 3
+        Quiz: NONE
+        Results Status: Completed/Failed""";
+    assertEquals(expectedDescription, manifest.getDescription());
+    assertEquals("AICC NO QUIZ", manifest.getTitle());
+    assertEquals("index_lms.html", manifest.getLaunchUrl());
   }
 }

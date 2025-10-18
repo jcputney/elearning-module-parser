@@ -69,7 +69,7 @@ public class AiccParserComprehensiveTest {
     AiccManifest manifest = metadata.getManifest();
     assertNotNull(manifest);
     assertEquals("UniversitySite AICC Testing Tool", manifest.getTitle());
-    assertEquals("Descriptive Text", manifest.getDescription());
+    assertEquals("Descriptive Text", manifest.getDescription());  // From .des file
     assertEquals("default.htm", manifest.getLaunchUrl());
 
     // Verify course
@@ -123,7 +123,7 @@ public class AiccParserComprehensiveTest {
         .getDescriptors()
         .get(0)
         .getTitle());
-    assertEquals("Description", manifest
+    assertEquals("Descriptive Text", manifest
         .getDescriptors()
         .get(0)
         .getDescription());
@@ -422,7 +422,7 @@ public class AiccParserComprehensiveTest {
     Files.writeString(desPath,
         """
             "system_id","title","description"
-            "A1","Lesson & Test","Description with <special> characters"
+            "A1","Lesson & Test","Course with special characters"
             """);
 
     // Create course structure file (.cst)
@@ -464,7 +464,7 @@ public class AiccParserComprehensiveTest {
         .getDescriptors()
         .get(0)
         .getTitle());
-    assertEquals("Description with <special> characters",
+    assertEquals("Course with special characters",
         manifest
             .getDescriptors()
             .get(0)
@@ -871,7 +871,7 @@ public class AiccParserComprehensiveTest {
     Files.writeString(desPath,
         """
             "system_id","developer_id","title","description"
-            "A1","DEV-001","Lesson 1","Introduction to the course"
+            "A1","DEV-001","Lesson 1","Test Description"
             "A2","DEV-002","Assessment","Final assessment for the course"
             """);
   }

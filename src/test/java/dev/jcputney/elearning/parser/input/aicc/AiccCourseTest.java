@@ -114,8 +114,8 @@ public class AiccCourseTest {
         .getCourseBehavior()
         .getMaxNormal());
 
-    // Verify the getCourseDescription method
-    assertEquals("Test Description", aiccCourse.getCourseDescription());
+    // Verify the getCourseDescription method (reconstructs from key: value pair)
+    assertEquals("Test Description: This is a test course", aiccCourse.getCourseDescription());
   }
 
   /**

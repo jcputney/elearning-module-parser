@@ -561,12 +561,42 @@ public final class AiccManifest implements PackageManifest {
 
   /**
    * Retrieves the description of the course.
+   * <p>
+   * Follows this priority order:
+   * <ol>
+   *   <li>Root AU descriptor description (from .des file)</li>
+   *   <li>Course description (from .crs file [Course_Description] section)</li>
+   * </ol>
+   * <p>
+   * Most AICC authoring tools (including Articulate Storyline) store the primary description
+   * in the descriptor file (.des), which can contain multi-line text. The [Course_Description]
+   * section in the .crs file is often less detailed or may be parsed incorrectly when it
+   * contains special characters like colons.
    *
    * @return the course description as a string
    */
   @Override
   @JsonIgnore
   public String getDescription() {
+    // Try to get description from root AU's descriptor first (.des file)
+    if (assignableUnits != null && !assignableUnits.isEmpty()) {
+      // Find the root assignable unit (the one that matches launchUrl)
+      AssignableUnit rootAU = assignableUnits
+          .stream()
+          .filter(au -> au != null && au.getFileName() != null &&
+                       au.getFileName().equals(this.launchUrl))
+          .findFirst()
+          .orElse(assignableUnits.get(0)); // Fallback to first AU if no match
+
+      if (rootAU != null && rootAU.getDescriptor() != null) {
+        String descriptorDescription = rootAU.getDescriptor().getDescription();
+        if (StringUtils.isNotBlank(descriptorDescription)) {
+          return descriptorDescription;
+        }
+      }
+    }
+
+    // Fallback to course description from .crs file
     return this.course.getCourseDescription();
   }
 
