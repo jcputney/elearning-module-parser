@@ -154,6 +154,28 @@ public final class General implements Serializable {
   @JacksonXmlProperty(localName = "aggregationLevel")
   private SourceValuePair<AggregationLevel> aggregationLevel;
 
+  /**
+   * Constructs a new {@code General} object with the specified parameters.
+   *
+   * @param identifiers a list of {@link Identifier} objects representing the identifiers associated
+   * with this object
+   * @param title an {@code UnboundLangString} representing the title of this object, which may
+   * include multiple string values with language attributes
+   * @param catalogEntries a list of {@link CatalogEntry} objects representing catalog entries
+   * associated with this object
+   * @param language a {@code String} representing the language associated with this object
+   * @param description an {@code UnboundLangString} representing the description of this object,
+   * which may include multiple string values with language attributes
+   * @param keywords a list of {@code UnboundLangString} objects representing the keywords, which
+   * may include multiple string values with language attributes
+   * @param coverage an {@code UnboundLangString} representing the coverage information, which may
+   * include multiple string values with language attributes
+   * @param structure a {@code SourceValuePair<Structure>} representing the structure of the
+   * learning object associated with this instance
+   * @param aggregationLevel a {@code SourceValuePair<AggregationLevel>} representing the
+   * aggregation level, which specifies the level of granularity or complexity of the learning
+   * object
+   */
   public General(List<Identifier> identifiers, UnboundLangString title,
       List<CatalogEntry> catalogEntries, String language, UnboundLangString description,
       List<UnboundLangString> keywords, UnboundLangString coverage,
@@ -169,6 +191,11 @@ public final class General implements Serializable {
     this.aggregationLevel = aggregationLevel;
   }
 
+  /**
+   * Default constructor for the {@code General} class.
+   * <p>
+   * This constructor initializes an empty instance of {@code General} without setting any fields.
+   */
   public General() {
     // no-op
   }

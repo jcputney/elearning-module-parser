@@ -103,6 +103,16 @@ public final class Cmi5Manifest implements PackageManifest {
   @JacksonXmlProperty(localName = "au")
   private List<AU> assignableUnits;
 
+  /**
+   * Constructs a new instance of the Cmi5Manifest class with the specified course, objectives,
+   * blocks, and assignable units.
+   *
+   * @param course the {@code Course} object associated with this manifest
+   * @param objectives the list of objectives represented by an {@code ObjectivesList} object
+   * @param blocks the list of blocks, represented as a {@code List} of {@code Block} objects
+   * @param assignableUnits the list of assignable units, represented as a {@code List} of
+   * {@code AU} objects
+   */
   public Cmi5Manifest(Course course, ObjectivesList objectives, List<Block> blocks,
       List<AU> assignableUnits) {
     this.course = course;
@@ -111,6 +121,10 @@ public final class Cmi5Manifest implements PackageManifest {
     this.assignableUnits = assignableUnits;
   }
 
+  /**
+   * Default no-argument constructor for the Cmi5Manifest class. Initializes an empty Cmi5Manifest
+   * instance without setting any fields or performing any operations.
+   */
   public Cmi5Manifest() {
     // no-op
   }

@@ -75,6 +75,20 @@ public final class RuleCondition implements Serializable {
   @JsonProperty("condition")
   private SequencingRuleConditionType condition;
 
+  /**
+   * Constructs a new instance of the RuleCondition class, which represents a condition used in
+   * sequencing and evaluation rules.
+   *
+   * @param referencedObjective the identifier of the referenced objective as a {@code String}. This
+   * specifies the learning objective associated with the rule condition.
+   * @param measureThreshold the threshold value of type {@code MeasureType} that is evaluated
+   * against the condition. Values must be between -1 and 1.
+   * @param operator the operator of type {@code ConditionOperatorType} that defines how the
+   * condition is applied, such as "not" to negate the condition or "noOp" for no modification.
+   * @param condition the type of condition represented by {@code SequencingRuleConditionType},
+   * which specifies criteria for sequencing rules, such as activity completion status or objective
+   * status.
+   */
   public RuleCondition(String referencedObjective, MeasureType measureThreshold,
       ConditionOperatorType operator,
       SequencingRuleConditionType condition) {
@@ -84,7 +98,15 @@ public final class RuleCondition implements Serializable {
     this.condition = condition;
   }
 
+  /**
+   * Default constructor for the RuleCondition class.
+   * <p>
+   * This constructor initializes a new instance of the RuleCondition class with default values for
+   * its attributes. It is primarily used to create an instance without specifying any initial
+   * parameters.
+   */
   public RuleCondition() {
+    // no-op
   }
 
   /**

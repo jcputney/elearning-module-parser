@@ -84,6 +84,18 @@ public final class PackageProperties implements Serializable {
   @JacksonXmlProperty(localName = "heuristics", namespace = NAMESPACE_URI)
   private HeuristicSpec heuristics;
 
+  /**
+   * Constructs a new {@code PackageProperties} instance with the specified configuration details.
+   *
+   * @param controls the {@code ControlsSpec} instance providing the control-related configurations
+   * @param appearance the {@code AppearanceSpec} instance providing the appearance-related
+   * configurations
+   * @param behavior the {@code BehaviorSpec} instance containing behavior-related configurations
+   * @param rsop the {@code RsopSpec} instance containing the resource synchronization policy
+   * configurations
+   * @param heuristics the {@code HeuristicSpec} instance containing heuristic-related
+   * configurations
+   */
   public PackageProperties(ControlsSpec controls, AppearanceSpec appearance, BehaviorSpec behavior,
       RsopSpec rsop, HeuristicSpec heuristics) {
     this.controls = controls;
@@ -93,6 +105,12 @@ public final class PackageProperties implements Serializable {
     this.heuristics = heuristics;
   }
 
+  /**
+   * Default constructor for the {@code PackageProperties} class.
+   * <p>
+   * Initializes a new instance of {@code PackageProperties} with default values. This constructor
+   * performs no specific actions and sets no initial configurations.
+   */
   public PackageProperties() {
     // no-op
   }

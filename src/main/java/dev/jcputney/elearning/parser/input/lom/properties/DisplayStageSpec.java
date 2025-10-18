@@ -54,6 +54,11 @@ public final class DisplayStageSpec implements Serializable {
   @JacksonXmlProperty(localName = "desired")
   private StageSpec desired;
 
+  /**
+   * Default constructor for the DisplayStageSpec class. Initializes a new instance of the class
+   * without setting any properties. This constructor is intended for frameworks or tools that
+   * require a no-argument constructor for deserialization or instantiation purposes.
+   */
   public DisplayStageSpec() {
     // no-op
   }

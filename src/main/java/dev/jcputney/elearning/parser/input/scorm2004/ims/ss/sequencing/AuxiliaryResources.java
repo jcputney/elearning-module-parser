@@ -59,6 +59,10 @@ public final class AuxiliaryResources implements Serializable {
   @JacksonXmlProperty(localName = "auxiliaryResource", namespace = IMSSS.NAMESPACE_URI)
   private List<AuxiliaryResource> auxiliaryResourceList;
 
+  /**
+   * Default constructor for the AuxiliaryResources class. This constructor initializes a new
+   * instance of AuxiliaryResources without setting any fields or performing additional operations.
+   */
   public AuxiliaryResources() {
     // no-op
   }

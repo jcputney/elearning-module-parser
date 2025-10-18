@@ -113,6 +113,12 @@ public final class Scorm12Resource implements Serializable {
   @JacksonXmlProperty(localName = "dependency", namespace = Scorm12Manifest.NAMESPACE_URI)
   private List<Scorm12Dependency> dependencies;
 
+  /**
+   * Constructs an instance of the {@code Scorm12Resource} class.
+   * <p>
+   * This is the default, no-argument constructor. It initializes a new instance of the
+   * {@code Scorm12Resource} class without setting any initial values for the class fields.
+   */
   public Scorm12Resource() {
     // no-op
   }

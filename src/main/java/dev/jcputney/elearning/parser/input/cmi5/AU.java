@@ -232,6 +232,27 @@ public final class AU implements Serializable {
   @JsonProperty("activityType")
   private String activityType;
 
+  /**
+   * Constructs a new instance of AU with the specified parameters.
+   *
+   * @param title the title of the AU, represented as a {@link TextType}, which supports
+   * multi-language localized text
+   * @param description the description of the AU, represented as a {@link TextType}, which supports
+   * multi-language localized text
+   * @param objectives the objectives associated with the AU, represented as a
+   * {@link ReferencesObjectives} object
+   * @param url the URL associated with the AU, represented as a {@link String}
+   * @param launchParameters the launch parameters for the AU, represented as a {@link String}
+   * @param entitlementKey the entitlement key for the AU, represented as a {@link String}
+   * @param id the unique identifier for the AU, represented as a {@link String}
+   * @param moveOn the {@link MoveOn} enum value representing the conditions that must be met to
+   * move on to the next activity
+   * @param masteryScore the mastery score for the AU, represented as a {@link PercentType}, which
+   * is a percentage value constrained between 0 and 1, inclusive
+   * @param launchMethod the {@link LaunchMethod} enum value specifying the method used to launch
+   * the activity
+   * @param activityType the activity type associated with the AU, represented as a {@link String}
+   */
   public AU(TextType title, TextType description, ReferencesObjectives objectives, String url,
       String launchParameters, String entitlementKey, String id, MoveOn moveOn,
       PercentType masteryScore, LaunchMethod launchMethod, String activityType) {
@@ -248,6 +269,13 @@ public final class AU implements Serializable {
     this.activityType = activityType;
   }
 
+  /**
+   * Default constructor for the AU class.
+   *
+   * Initializes a new instance of the AU class without setting any field values. This constructor
+   * performs no operations and is intended for scenarios where an instance of AU is required but
+   * specific initialization is not necessary.
+   */
   public AU() {
     // no-op
   }

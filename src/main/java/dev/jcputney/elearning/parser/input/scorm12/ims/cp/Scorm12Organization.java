@@ -99,6 +99,18 @@ public final class Scorm12Organization implements Serializable {
   @JacksonXmlProperty(localName = "item", namespace = Scorm12Manifest.NAMESPACE_URI)
   private List<Scorm12Item> items;
 
+  /**
+   * Constructs a new {@code Scorm12Organization} instance with the specified parameters.
+   *
+   * @param identifier A string representing the unique identifier of the SCORM 1.2 organization.
+   * @param structure A string representing the structural definition of the organization.
+   * @param title A string representing the title of the organization, providing a human-readable
+   * label.
+   * @param metadata A {@code Scorm12Metadata} object containing metadata details for the
+   * organization.
+   * @param items A list of {@code Scorm12Item} objects defining the items associated with the
+   * organization.
+   */
   public Scorm12Organization(String identifier, String structure, String title,
       Scorm12Metadata metadata, List<Scorm12Item> items) {
     this.identifier = identifier;
@@ -108,6 +120,12 @@ public final class Scorm12Organization implements Serializable {
     this.items = items;
   }
 
+  /**
+   * Default constructor for the {@code Scorm12Organization} class.
+   * <p>
+   * This constructor initializes a new instance of {@code Scorm12Organization} with no arguments.
+   * It serves primarily as a no-operation initializer, leaving all fields uninitialized.
+   */
   public Scorm12Organization() {
     // no-op
   }

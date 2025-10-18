@@ -68,6 +68,15 @@ public final class ExitTypesSpec implements Serializable {
   @JacksonXmlProperty(localName = "logout")
   private ExitActionType logout;
 
+  /**
+   * Constructs an instance of {@code ExitTypesSpec} with the specified exit action types for
+   * different scenarios: normal, suspend, timeout, and logout.
+   *
+   * @param normal the exit action type associated with a normal exit
+   * @param suspend the exit action type associated with the suspend operation
+   * @param timeout the exit action type associated with the timeout operation
+   * @param logout the exit action type associated with the logout operation
+   */
   public ExitTypesSpec(ExitActionType normal, ExitActionType suspend, ExitActionType timeout,
       ExitActionType logout) {
     this.normal = normal;
@@ -76,6 +85,13 @@ public final class ExitTypesSpec implements Serializable {
     this.logout = logout;
   }
 
+  /**
+   * Default constructor for the {@code ExitTypesSpec} class.
+   * <p>
+   * Creates an instance of {@code ExitTypesSpec} with no predefined exit action types. This
+   * constructor initializes the object to a default state with no set values for normal, suspend,
+   * timeout, or logout exit types.
+   */
   public ExitTypesSpec() {
     // no-op
   }

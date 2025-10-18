@@ -38,8 +38,37 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
 
+  /**
+   * A map representing the prerequisites defined for various learning modules in the SCORM 1.2
+   * metadata. The map is maintained in insertion order and uses module identifiers as keys and
+   * their prerequisite expressions as values. This map is populated during the metadata extraction
+   * process to establish dependencies among modules.
+   */
   private final Map<String, String> prerequisites = new LinkedHashMap<>();
+
+  /**
+   * A map that stores the mastery scores for SCORM 1.2 learning modules. The map's keys represent
+   * the module identifiers, and the values represent the corresponding mastery scores required to
+   * achieve mastery for each module.
+   * <p>
+   * This is initialized as a linked map to maintain the insertion order of module identifiers. The
+   * data is used primarily for tracking mastery requirements within the SCORM 1.2 metadata.
+   * <p>
+   * The map is immutable outside the class and is utilized internally for metadata extraction and
+   * processing related to SCORM 1.2 item mastery.
+   */
   private final Map<String, Double> masteryScores = new LinkedHashMap<>();
+
+  /**
+   * A map that stores custom data associated with SCORM 1.2 metadata. Keys represent identifiers
+   * for specific modules or items, and values contain the corresponding custom data.
+   * <p>
+   * The map is initialized as a LinkedHashMap to maintain the order of entries as they are added.
+   * This ensures that the data maintains insertion-order consistency.
+   * <p>
+   * This field is immutable, and modifications are restricted to ensure the integrity of the custom
+   * metadata data structure throughout the lifecycle of the related Scorm12Metadata instance.
+   */
   private final Map<String, String> customData = new LinkedHashMap<>();
 
   /**

@@ -67,15 +67,33 @@ public final class LangString implements Serializable {
   @JsonDeserialize(using = TrimAndPreserveIndentationDeserializer.class)
   private String value;
 
+  /**
+   * Constructs a {@code LangString} object with a specified language and value.
+   *
+   * @param language the language code for the string, generally using ISO 639-1 or ISO 639-3 codes
+   * @param value the value of the string in the specified language
+   */
   public LangString(String language, String value) {
     this.language = language;
     this.value = value;
   }
 
+  /**
+   * Constructs a {@code LangString} object with a specified value.
+   *
+   * @param value the value of the string; typically representing text in a specific language
+   */
   public LangString(String value) {
     this.value = value;
   }
 
+  /**
+   * Default constructor for the {@code LangString} class.
+   *
+   * Constructs an instance of the {@code LangString} class without initializing the language or
+   * value fields. This constructor is primarily provided for use cases requiring an object without
+   * any preset state.
+   */
   public LangString() {
     // no-op
   }

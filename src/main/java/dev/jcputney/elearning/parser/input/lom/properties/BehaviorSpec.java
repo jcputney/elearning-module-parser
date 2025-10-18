@@ -279,6 +279,12 @@ public final class BehaviorSpec implements Serializable {
   @JacksonXmlProperty(localName = "timeLimit")
   private Integer timeLimit;
 
+  /**
+   * Constructs a new instance of BehaviorSpec.
+   * <p>
+   * This constructor initializes the BehaviorSpec object with its default state. It does not
+   * perform any operations or take parameters.
+   */
   public BehaviorSpec() {
     // no-op
   }

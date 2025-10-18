@@ -88,12 +88,27 @@ public final class TaxonPath implements Serializable {
   @JacksonXmlProperty(localName = "customElement", namespace = LOM.NAMESPACE_URI + "/extend")
   private List<Object> customElements;
 
+  /**
+   * Constructs a new instance of the {@code TaxonPath} class.
+   *
+   * @param source the {@code SingleLangString} object representing metadata that describes the
+   * taxonomy source
+   * @param taxons the list of {@code Taxon} objects representing specific concepts or categories in
+   * a classification hierarchy
+   * @param customElements a list of {@code Object} representing additional metadata or
+   * implementation-specific extensions for the taxonomy
+   */
   public TaxonPath(SingleLangString source, List<Taxon> taxons, List<Object> customElements) {
     this.source = source;
     this.taxons = taxons;
     this.customElements = customElements;
   }
 
+  /**
+   * Default constructor for the {@code TaxonPath} class. Initializes a new instance of the
+   * {@code TaxonPath} with no parameters. This constructor creates a {@code TaxonPath} object with
+   * default values and no initial state for its fields.
+   */
   public TaxonPath() {
     // no-op
   }

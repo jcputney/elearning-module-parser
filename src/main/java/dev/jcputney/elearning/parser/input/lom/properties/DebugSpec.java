@@ -110,6 +110,10 @@ public final class DebugSpec implements Serializable {
   @JacksonXmlProperty(localName = "includeTimestamps")
   private YesNoType includeTimestamps;
 
+  /**
+   * Default constructor for the DebugSpec class. Initializes an instance of the DebugSpec with no
+   * specific settings configured.
+   */
   public DebugSpec() {
     // no-op
   }

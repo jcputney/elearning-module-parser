@@ -53,6 +53,10 @@ public final class RollupCondition implements Serializable {
   @JsonProperty("condition")
   private RollupRuleConditionType condition;
 
+  /**
+   * Default constructor for the RollupCondition class. This constructor initializes an instance of
+   * the RollupCondition without setting any initial values for its fields or properties.
+   */
   public RollupCondition() {
     // no-op
   }

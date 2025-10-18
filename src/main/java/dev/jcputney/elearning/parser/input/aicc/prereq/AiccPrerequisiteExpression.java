@@ -128,6 +128,22 @@ public final class AiccPrerequisiteExpression implements Serializable {
    */
   private final AiccPrerequisiteNode ast;
 
+  /**
+   * Constructs an instance of AiccPrerequisiteExpression with the specified parameters.
+   *
+   * @param rawExpression the raw prerequisite expression as a string
+   * @param mandatory a boolean indicating whether the prerequisite expression is mandatory
+   * @param referencedAuIds a list of strings representing the referenced AU (Assignable Unit) IDs
+   * in the prerequisite expression; can be null
+   * @param optionalAuIds a list of strings representing the optional AU (Assignable Unit) IDs in
+   * the prerequisite expression; can be null
+   * @param tokens a list of AiccPrerequisiteToken objects representing the tokens in the
+   * expression; can be null
+   * @param postfixTokens a list of AiccPrerequisiteToken objects representing the tokens in postfix
+   * notation; can be null
+   * @param ast the abstract syntax tree (AST) representing the prerequisite expression, as an
+   * AiccPrerequisiteNode instance; can be null
+   */
   public AiccPrerequisiteExpression(String rawExpression, boolean mandatory,
       List<String> referencedAuIds, List<String> optionalAuIds,
       List<AiccPrerequisiteToken> tokens, List<AiccPrerequisiteToken> postfixTokens,
@@ -141,6 +157,14 @@ public final class AiccPrerequisiteExpression implements Serializable {
     this.ast = ast;
   }
 
+  /**
+   * Creates a minimal instance of the AiccPrerequisiteExpression by initializing only the essential
+   * fields.
+   *
+   * @param rawExpression the raw prerequisite expression as a string
+   * @param mandatory a boolean indicating whether the prerequisite expression is mandatory
+   * @return an instance of AiccPrerequisiteExpression with minimal configuration
+   */
   public static AiccPrerequisiteExpression minimal(String rawExpression, boolean mandatory) {
     return new AiccPrerequisiteExpression(rawExpression, mandatory, List.of(), List.of(),
         List.of(), List.of(), null);

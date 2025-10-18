@@ -54,6 +54,12 @@ public final class CommunicationsSpec implements Serializable {
   @JacksonXmlProperty(localName = "commitFrequency")
   private Integer commitFrequency;
 
+  /**
+   * Default constructor for the {@code CommunicationsSpec} class.
+   * <p>
+   * Initializes a new instance of the {@code CommunicationsSpec} class with default values. This
+   * constructor performs no specific operation.
+   */
   public CommunicationsSpec() {
     // no-op
   }

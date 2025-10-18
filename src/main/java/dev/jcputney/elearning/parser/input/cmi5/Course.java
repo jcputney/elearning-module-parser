@@ -92,6 +92,15 @@ public final class Course implements Serializable {
   @JsonProperty("id")
   private String id;
 
+  /**
+   * Constructs a new instance of the Course class with specified title, description, custom
+   * extensions, and identifier.
+   *
+   * @param title a {@link TextType} instance representing the title of the course
+   * @param description a {@link TextType} instance representing the description of the course
+   * @param customExtensions a list of objects representing the custom extensions of the course
+   * @param id a string representing the unique identifier of the course
+   */
   public Course(TextType title, TextType description, List<Object> customExtensions, String id) {
     this.title = title;
     this.description = description;
@@ -99,6 +108,10 @@ public final class Course implements Serializable {
     this.id = id;
   }
 
+  /**
+   * Default constructor for the Course class. Initializes a new instance of the Course class
+   * without setting any fields or properties.
+   */
   public Course() {
     // no-op
   }

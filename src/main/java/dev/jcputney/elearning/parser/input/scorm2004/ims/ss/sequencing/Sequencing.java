@@ -124,6 +124,12 @@ public final class Sequencing implements Serializable {
   @JacksonXmlProperty(localName = "constrainedChoiceConsiderations", namespace = ADLSeq.NAMESPACE_URI)
   private ConstrainChoiceConsiderations constrainChoiceConsiderations;
 
+  /**
+   * Default constructor for the Sequencing class.
+   *
+   * Initializes an instance of the Sequencing object with default values. This constructor performs
+   * no specific initialization logic (no-op).
+   */
   public Sequencing() {
     // no-op
   }

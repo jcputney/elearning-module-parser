@@ -50,10 +50,25 @@ public final class RollupAction implements Serializable {
   @JsonProperty("action")
   private RollupActionType action;
 
+  /**
+   * Initializes a new instance of the {@code RollupAction} class with the specified rollup action
+   * type.
+   *
+   * @param action the {@link RollupActionType} defining the action to be taken when the conditions
+   * of the rollup rule are met. This can include marking the activity as satisfied, not satisfied,
+   * completed, or incomplete.
+   */
   public RollupAction(RollupActionType action) {
     this.action = action;
   }
 
+  /**
+   * Default constructor for the {@code RollupAction} class.
+   * <p>
+   * Initializes a new instance of the {@code RollupAction} class without setting an initial rollup
+   * action. This constructor is primarily used for object serialization or other scenarios where
+   * the action will be set or modified after instantiation.
+   */
   public RollupAction() {
     // no-op
   }

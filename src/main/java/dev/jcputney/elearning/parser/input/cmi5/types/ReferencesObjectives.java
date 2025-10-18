@@ -61,10 +61,22 @@ public final class ReferencesObjectives implements Serializable {
   @JacksonXmlProperty(localName = "objective")
   private List<ObjectiveReference> objectives;
 
+  /**
+   * Constructs an instance of {@code ReferencesObjectives} with the specified list of objectives.
+   *
+   * @param objectives a list of {@link ObjectiveReference} objects that represent the objectives
+   * referenced by this instance. Each objective holds an ID reference as defined in the schema.
+   */
   public ReferencesObjectives(List<ObjectiveReference> objectives) {
     this.objectives = objectives;
   }
 
+  /**
+   * Constructs an instance of {@code ReferencesObjectives} with no initial objectives.
+   * <p>
+   * This no-argument constructor initializes an empty instance of {@code ReferencesObjectives}. It
+   * is primarily used for deserialization or scenarios where the objectives will be set later.
+   */
   public ReferencesObjectives() {
     // no-op
   }

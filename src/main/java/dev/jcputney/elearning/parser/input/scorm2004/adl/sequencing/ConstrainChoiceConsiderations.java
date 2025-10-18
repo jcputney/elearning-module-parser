@@ -54,6 +54,12 @@ public final class ConstrainChoiceConsiderations implements Serializable {
   @JsonProperty("constrainChoice")
   private boolean constrainChoice = false;
 
+  /**
+   * Default constructor for the ConstrainChoiceConsiderations class. This constructor initializes a
+   * new instance of the class without setting any specific property values. Both
+   * {@code preventActivation} and {@code constrainChoice} attributes are initialized to their
+   * default values as specified in the schema definition.
+   */
   public ConstrainChoiceConsiderations() {
     // no-op
   }

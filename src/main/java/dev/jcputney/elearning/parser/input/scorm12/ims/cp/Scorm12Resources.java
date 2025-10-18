@@ -69,6 +69,13 @@ public final class Scorm12Resources implements Serializable {
   @JacksonXmlProperty(localName = "resource", namespace = Scorm12Manifest.NAMESPACE_URI)
   private List<Scorm12Resource> resourceList;
 
+  /**
+   * Default constructor for the Scorm12Resources class.
+   * <p>
+   * Creates an instance of the Scorm12Resources class without initializing any fields or
+   * properties. This constructor is useful when an empty instance is needed prior to explicitly
+   * setting its properties.
+   */
   public Scorm12Resources() {
     // no-op
   }

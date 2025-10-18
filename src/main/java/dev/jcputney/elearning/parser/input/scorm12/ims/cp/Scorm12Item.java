@@ -171,6 +171,31 @@ public final class Scorm12Item implements Serializable {
   @JacksonXmlProperty(localName = "item", namespace = Scorm12Manifest.NAMESPACE_URI)
   private List<Scorm12Item> items;
 
+  /**
+   * Constructs a new Scorm12Item with the specified properties.
+   *
+   * @param identifier A unique identifier for the SCORM 1.2 item.
+   * @param identifierRef An identifier reference that points to a resource associated with this
+   * item.
+   * @param isVisible A Boolean indicating whether the item is visible. If true, the item is
+   * visible; otherwise, it is hidden.
+   * @param parameters A string representing additional parameters associated with the item.
+   * @param maxTimeAllowed A Duration object specifying the maximum amount of time allowed for this
+   * item.
+   * @param masteryScore A Double representing the mastery score for the item, indicating the
+   * minimum score required to achieve mastery.
+   * @param prerequisites An instance of Scorm12Prerequisites representing the prerequisites
+   * required for this item.
+   * @param timeLimitAction A TimeLimitAction specifying the action to take when the time limit is
+   * reached. Possible values include EXIT_MESSAGE, EXIT_NO_MESSAGE, CONTINUE_MESSAGE,
+   * CONTINUE_NO_MESSAGE, and UNKNOWN.
+   * @param dataFromLMS A string containing data retrieved from the Learning Management System
+   * (LMS).
+   * @param title A string specifying the title of the item.
+   * @param metadata An instance of Scorm12Metadata containing metadata associated with the item.
+   * @param items A list of Scorm12Item objects representing child items associated with this SCORM
+   * 1.2 item.
+   */
   public Scorm12Item(String identifier, String identifierRef, Boolean isVisible, String parameters,
       Duration maxTimeAllowed, Double masteryScore, Scorm12Prerequisites prerequisites,
       TimeLimitAction timeLimitAction, String dataFromLMS, String title, Scorm12Metadata metadata,
@@ -189,6 +214,11 @@ public final class Scorm12Item implements Serializable {
     this.items = items;
   }
 
+  /**
+   * Default constructor for the Scorm12Item class. Constructs an instance of Scorm12Item with no
+   * initialized values. This constructor is primarily used when no initial properties are
+   * provided.
+   */
   public Scorm12Item() {
     // no-op
   }

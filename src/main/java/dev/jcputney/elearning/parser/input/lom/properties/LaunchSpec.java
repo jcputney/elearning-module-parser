@@ -61,12 +61,27 @@ public final class LaunchSpec implements Serializable {
   @JacksonXmlProperty(localName = "wrapScoWindowWithApi")
   private YesNoType wrapScoWindowWithApi;
 
+  /**
+   * Constructs a new instance of the {@code LaunchSpec} class.
+   *
+   * @param sco the launch type for the Sharable Content Object (SCO), specified as an instance of
+   * {@code LaunchType}
+   * @param player the launch type for the player, specified as an instance of {@code LaunchType}
+   * @param wrapScoWindowWithApi a {@code YesNoType} value indicating whether the SCO window should
+   * be wrapped with an API
+   */
   public LaunchSpec(LaunchType sco, LaunchType player, YesNoType wrapScoWindowWithApi) {
     this.sco = sco;
     this.player = player;
     this.wrapScoWindowWithApi = wrapScoWindowWithApi;
   }
 
+  /**
+   * Constructs a new instance of the {@code LaunchSpec} class with no initial values.
+   * <p>
+   * This default constructor performs no additional initialization and is intended for use in
+   * scenarios where the instance will be configured post-construction.
+   */
   public LaunchSpec() {
     // no-op
   }

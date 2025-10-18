@@ -135,6 +135,10 @@ public final class MapInfo implements Serializable {
   @JsonProperty("writeProgressMeasure")
   private boolean writeProgressMeasure = false;
 
+  /**
+   * Default constructor for the MapInfo class. Initializes a new instance of the MapInfo object
+   * with no specific configuration.
+   */
   public MapInfo() {
     // no-op
   }

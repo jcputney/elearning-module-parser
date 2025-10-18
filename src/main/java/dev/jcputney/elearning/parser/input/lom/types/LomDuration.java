@@ -79,10 +79,22 @@ public final class LomDuration implements Serializable {
   @JacksonXmlProperty(localName = "description")
   private SingleLangString description;
 
+  /**
+   * Default constructor for the {@code LomDuration} class.
+   * <p>
+   * Initializes a new instance of the {@code LomDuration} class with no parameters. This
+   * constructor performs no operations and primarily exists to allow the creation of an empty
+   * {@code LomDuration} instance.
+   */
   public LomDuration() {
     // no-op
   }
 
+  /**
+   * Constructs a new instance of the {@code LomDuration} class with the specified duration.
+   *
+   * @param duration the duration of the resource, represented as a {@link Duration} object
+   */
   public LomDuration(Duration duration) {
     this.duration = duration;
   }

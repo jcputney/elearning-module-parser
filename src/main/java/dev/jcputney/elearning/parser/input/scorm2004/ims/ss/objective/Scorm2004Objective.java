@@ -77,6 +77,18 @@ public final class Scorm2004Objective implements Serializable {
   @JacksonXmlProperty(localName = "mapInfo", namespace = IMSSS.NAMESPACE_URI)
   private List<Scorm2004ObjectiveMapping> mapInfo;
 
+  /**
+   * Constructs a Scorm2004Objective instance with the provided parameters.
+   *
+   * @param objectiveID the unique identifier of the objective, represented as a String
+   * @param satisfiedByMeasure a Boolean indicating whether the objective is considered satisfied
+   * based on certain measures. True if satisfied, false otherwise, or null if not defined
+   * @param minNormalizedMeasure a Double representing the minimum normalized measure required to
+   * meet the objective's satisfaction criteria. This value is typically between 0.0 and 1.0, or
+   * null if no threshold is defined
+   * @param mapInfo a List of Scorm2004ObjectiveMapping objects representing the mappings associated
+   * with this objective. An empty list or null indicates no mappings
+   */
   public Scorm2004Objective(String objectiveID, Boolean satisfiedByMeasure,
       Double minNormalizedMeasure, List<Scorm2004ObjectiveMapping> mapInfo) {
     this.objectiveID = objectiveID;
@@ -85,6 +97,12 @@ public final class Scorm2004Objective implements Serializable {
     this.mapInfo = mapInfo;
   }
 
+  /**
+   * Default no-argument constructor for the Scorm2004Objective class.
+   * <p>
+   * This constructor initializes a new instance of the Scorm2004Objective class with default values
+   * for all fields. It does not perform any specific logic or set any values beyond the defaults.
+   */
   public Scorm2004Objective() {
     // no-op
   }

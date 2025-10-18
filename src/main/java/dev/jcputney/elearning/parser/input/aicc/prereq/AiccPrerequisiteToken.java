@@ -81,10 +81,32 @@ public final class AiccPrerequisiteToken implements Serializable {
    */
   private final boolean unary;
 
+  /**
+   * Constructs an AiccPrerequisiteToken with the specified type and value. The optional and unary
+   * attributes default to false.
+   *
+   * @param type the type of the AICC prerequisite token, represented as
+   * {@code AiccPrerequisiteTokenType}. It must not be null.
+   * @param value the value of the AICC prerequisite token, which may be null or a string
+   * representing a learning object, literal value, or other token-related content.
+   */
   public AiccPrerequisiteToken(AiccPrerequisiteTokenType type, String value) {
     this(type, value, false, false);
   }
 
+  /**
+   * Constructs an AiccPrerequisiteToken with the specified type, value, optional, and unary
+   * attributes.
+   *
+   * @param type the type of the AICC prerequisite token, represented as
+   * {@code AiccPrerequisiteTokenType}. It must not be null.
+   * @param value the value of the AICC prerequisite token, which may be null or a string
+   * representing a learning object, literal value, or other token-related content.
+   * @param optional a boolean value indicating whether the token is optional. If true, the token is
+   * optional; otherwise, it is required.
+   * @param unary a boolean value indicating whether the token is unary. If true, the token is
+   * unary; otherwise, it is not.
+   */
   public AiccPrerequisiteToken(AiccPrerequisiteTokenType type, String value, boolean optional,
       boolean unary) {
     this.type = Objects.requireNonNull(type, "type");

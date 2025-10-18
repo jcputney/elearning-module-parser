@@ -78,6 +78,10 @@ public final class RollupConsiderations implements Serializable {
   @JsonProperty("measureSatisfactionIfActive")
   private boolean measureSatisfactionIfActive = true;
 
+  /**
+   * Default constructor for the RollupConsiderations class. Initializes an instance of the class
+   * with no specific configuration. This constructor performs no operations (no-op).
+   */
   public RollupConsiderations() {
     // no-op
   }

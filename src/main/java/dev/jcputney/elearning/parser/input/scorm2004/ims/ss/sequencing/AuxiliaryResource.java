@@ -59,6 +59,10 @@ public final class AuxiliaryResource implements Serializable {
   @JsonProperty("purpose")
   private String purpose;
 
+  /**
+   * Constructs a new instance of the AuxiliaryResource class. This no-argument constructor
+   * initializes the object without setting any attributes or performing any specific operations.
+   */
   public AuxiliaryResource() {
     // no-op
   }

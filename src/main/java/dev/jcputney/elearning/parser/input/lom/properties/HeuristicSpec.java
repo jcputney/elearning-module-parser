@@ -75,6 +75,21 @@ public final class HeuristicSpec implements Serializable {
   @JacksonXmlProperty(localName = "isIncompleteSatisfactionMeaningful")
   private YesNoType isIncompleteSatisfactionMeaningful;
 
+  /**
+   * Constructs an instance of {@code HeuristicSpec} with specified tracking and meaningfulness
+   * settings.
+   *
+   * @param isCompletionTracked an instance of {@code YesNoType} indicating whether completion
+   * tracking is enabled.
+   * @param isSatisfactionTracked an instance of {@code YesNoType} indicating whether satisfaction
+   * tracking is enabled.
+   * @param isScoreTracked an instance of {@code YesNoType} indicating whether score tracking is
+   * enabled.
+   * @param isIncompleteScoreMeaningful an instance of {@code YesNoType} indicating whether an
+   * incomplete score is considered meaningful.
+   * @param isIncompleteSatisfactionMeaningful an instance of {@code YesNoType} indicating whether
+   * incomplete satisfaction is considered meaningful.
+   */
   public HeuristicSpec(YesNoType isCompletionTracked, YesNoType isSatisfactionTracked,
       YesNoType isScoreTracked, YesNoType isIncompleteScoreMeaningful,
       YesNoType isIncompleteSatisfactionMeaningful) {
@@ -85,6 +100,12 @@ public final class HeuristicSpec implements Serializable {
     this.isIncompleteSatisfactionMeaningful = isIncompleteSatisfactionMeaningful;
   }
 
+  /**
+   * Default constructor for the {@code HeuristicSpec} class.
+   * <p>
+   * Initializes an instance of {@code HeuristicSpec} with default values for tracking and
+   * meaningfulness settings. This constructor performs no additional operations.
+   */
   public HeuristicSpec() {
     // no-op
   }

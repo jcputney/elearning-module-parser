@@ -124,6 +124,11 @@ public final class Classification implements Serializable {
   @JacksonXmlProperty(localName = "keyword")
   private UnboundLangString keywords;
 
+  /**
+   * Default constructor for the Classification class. This constructor initializes a new instance
+   * of the Classification class with default, uninitialized values for all fields. It performs no
+   * additional operations.
+   */
   public Classification() {
     // no-op
   }

@@ -96,6 +96,17 @@ public final class RollupRules implements Serializable {
   @JsonProperty("objectiveMeasureWeight")
   private double objectiveMeasureWeight = 1.0;
 
+  /**
+   * Constructs a RollupRules object with the specified parameters.
+   *
+   * @param rollupRuleList a list of RollupRule objects representing the rollup rules to be
+   * associated with this instance
+   * @param rollupObjectiveSatisfied a boolean value indicating whether the rollup objective is
+   * satisfied
+   * @param rollupProgressCompletion a boolean value indicating whether the rollup progress
+   * completion condition is met
+   * @param objectiveMeasureWeight a double value representing the weight of the objective measure
+   */
   public RollupRules(List<RollupRule> rollupRuleList, boolean rollupObjectiveSatisfied,
       boolean rollupProgressCompletion, double objectiveMeasureWeight) {
     this.rollupRuleList = rollupRuleList;
@@ -104,6 +115,10 @@ public final class RollupRules implements Serializable {
     this.objectiveMeasureWeight = objectiveMeasureWeight;
   }
 
+  /**
+   * Default constructor for the RollupRules class. Creates an instance of RollupRules with no
+   * initial configuration.
+   */
   public RollupRules() {
     // no-op
   }

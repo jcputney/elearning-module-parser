@@ -88,6 +88,11 @@ public final class RollupRule implements Serializable {
   @JsonProperty("minimumPercent")
   private PercentType minimumPercent = new PercentType(BigDecimal.ZERO);
 
+  /**
+   * Default constructor for the RollupRule class. Initializes a new instance with no specific
+   * configuration. This constructor does not perform any operations or set any initial values for
+   * the fields within the class.
+   */
   public RollupRule() {
     // no-op
   }

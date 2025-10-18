@@ -46,6 +46,13 @@ public final class Scorm12Prerequisites implements Serializable {
   @JsonProperty("type")
   private String type;
 
+  /**
+   * Default constructor for the Scorm12Prerequisites class.
+   * <p>
+   * This constructor initializes a new instance of the Scorm12Prerequisites class without assigning
+   * any initial values to its attributes. It is primarily used for creating an object in its
+   * default state.
+   */
   public Scorm12Prerequisites() {
     // no-op
   }

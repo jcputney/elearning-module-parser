@@ -47,6 +47,13 @@ import java.util.Set;
  */
 public final class SequencingUsageDetector {
 
+  /**
+   * Private constructor for the SequencingUsageDetector class.
+   * <p>
+   * This constructor is intentionally declared as private to prevent instantiation of the class.
+   * The SequencingUsageDetector class is designed to only provide static methods or utility
+   * functionality, and as such, it is not intended to be instantiated.
+   */
   private SequencingUsageDetector() {
   }
 
@@ -1131,21 +1138,70 @@ public final class SequencingUsageDetector {
      */
     RESOURCE_SCO(false);
 
+    /**
+     * Indicates whether the sequencing indicator is in a "strong" state.
+     * <p>
+     * This variable determines the level or strength of the sequencing configuration applied within
+     * the context of the sequencing rules or behaviors defined in SCORM IMS Simple Sequencing
+     * (IMSSS) or related specifications.
+     * <p>
+     * When set to {@code true}, the sequencing configuration is enforced with high priority or
+     * strict adherence to the defined rules. Otherwise, when {@code false}, the configuration may
+     * allow for more flexibility or a less strict interpretation of the sequencing behavior.
+     */
     private final boolean strong;
 
+    /**
+     * Constructs a SequencingIndicator with the specified strength.
+     *
+     * @param strong a boolean indicating whether the sequencing indicator is strong
+     */
     SequencingIndicator(boolean strong) {
       this.strong = strong;
     }
 
+    /**
+     * Indicates whether the sequencing indicator is strong.
+     *
+     * @return true if the sequencing indicator is strong; false otherwise
+     */
     public boolean isStrong() {
       return strong;
     }
   }
 
+  /**
+   * The SequencingLevel enum represents different levels of sequencing that can be applied within a
+   * given context. The levels define the granularity or comprehensiveness of sequencing.
+   * <p>
+   * Enum Constants: - NONE: Indicates that no sequencing is applied. - MINIMAL: Represents a
+   * minimal level of sequencing. - MULTI: Denotes a multi-layered or intermediate level of
+   * sequencing. - FULL: Represents the highest level of sequencing with full granularity.
+   */
   public enum SequencingLevel {
+    /**
+     * Represents the absence of any sequencing being applied. This is the default or baseline level
+     * within the SequencingLevel enum, indicating that no specific sequencing rules, constraints,
+     * or granularity are enforced in the given context.
+     */
     NONE,
+    /**
+     * Represents a minimal level of sequencing within the SequencingLevel enum. This level applies
+     * a basic or limited set of sequencing rules, ensuring only essential constraints are enforced
+     * in the given context.
+     */
     MINIMAL,
+    /**
+     * Denotes a multi-SCO or intermediate level of sequencing within the SequencingLevel enum. This
+     * level provides more granularity compared to minimal sequencing, enabling multiple layers of
+     * sequencing rules or constraints to be applied within the given context.
+     */
     MULTI,
+    /**
+     * Represents the highest level of sequencing with full granularity. This level applies the most
+     * comprehensive set of sequencing rules and constraints, ensuring complete sequencing within
+     * the given context.
+     */
     FULL
   }
 
@@ -1161,11 +1217,69 @@ public final class SequencingUsageDetector {
    */
   private static final class DetectionState {
 
+    /**
+     * Represents a collection of sequence identifiers that are associated with content-related
+     * properties found during the SCORM 2004 sequencing detection process.
+     * <p>
+     * This set is used to track sequences that have specific content settings or configurations,
+     * such as those influencing runtime behavior or organizational structures.
+     */
     private final Set<String> collectionSequencesWithContent = new HashSet<>();
+
+    /**
+     * Represents a collection of sequence identifiers associated with minimal sequencing properties
+     * detected during the SCORM 2004 sequencing analysis process.
+     * <p>
+     * This set is used to track sequences that meet the least set of criteria necessary for
+     * sequencing functionality within a SCORM manifest. It helps to identify minimal
+     * characteristics necessary for ensuring correct runtime behavior and organizational
+     * structure.
+     */
     private final Set<String> collectionSequencesMinimal = new HashSet<>();
+
+    /**
+     * Indicates whether the detection process has identified the presence of sequencing content
+     * with specific properties or configurations.
+     * <p>
+     * This field is used to signal the existence of content-related sequencing elements during the
+     * SCORM 2004 sequencing evaluation. Its value is updated as the detection process analyzes
+     * organizational and sequencing elements in the manifest.
+     */
     private boolean hasSequencingContent;
+
+    /**
+     * Indicates whether the organization objectives in the SCORM manifest are global to the
+     * system.
+     * <p>
+     * This field is used during the SCORM 2004 sequencing detection process to determine if the
+     * objectives defined at the organizational level apply globally across all content in the
+     * manifest. The value is updated as the analysis processes organizational and sequencing
+     * elements, providing insight into the scope of objectives within the SCORM structure.
+     */
     private boolean organizationObjectivesGlobal;
+
+    /**
+     * Indicates whether minimal sequencing properties have been identified during the SCORM 2004
+     * sequencing detection process.
+     * <p>
+     * This field is used to determine if the detection process has found sequences that meet the
+     * minimal criteria necessary for proper sequencing functionality within a SCORM manifest. It
+     * represents a flag that helps evaluate compliance with the most basic sequencing rules or
+     * requirements.
+     */
     private boolean hasMinimalSequencing;
+
+    /**
+     * Indicates whether there are multiple Shareable Content Objects (SCOs) associated with the
+     * current detection state.
+     * <p>
+     * SCOs are the smallest units of SCORM learning content that can be launched and tracked
+     * individually. Multiple SCOs in a course signify that the course is structured as a collection
+     * of several distinct learning objects rather than a single unit.
+     * <p>
+     * This variable helps to define and manage content sequencing behavior and ensures appropriate
+     * navigation rules are applied in SCORM-conformant environments.
+     */
     private boolean hasMultipleSCOs;
   }
 
@@ -1177,9 +1291,29 @@ public final class SequencingUsageDetector {
   @SuppressWarnings("ClassCanBeRecord")
   public static final class Result {
 
+    /**
+     * Represents the sequencing level detected as part of the sequencing detection process. The
+     * sequencing level is derived from the {@link SequencingLevel} enum and indicates the
+     * granularity or comprehensiveness of sequencing applied.
+     */
     private final SequencingLevel level;
+
+    /**
+     * Represents a set of sequencing indicators derived from the sequencing detection process. Each
+     * indicator provides detailed information about specific aspects of the detected sequencing
+     * configuration.
+     */
     private final Set<SequencingIndicator> indicators;
 
+    /**
+     * Constructs an instance of the {@code Result} class with the specified sequencing level and a
+     * set of sequencing indicators.
+     *
+     * @param level the sequencing level that represents the detected granularity or
+     * comprehensiveness of sequencing applied
+     * @param indicators the set of sequencing indicators that provide detailed information about
+     * specific aspects of the detected sequencing configuration
+     */
     private Result(SequencingLevel level, EnumSet<SequencingIndicator> indicators) {
       this.level = level;
       this.indicators = indicators.isEmpty()
@@ -1187,18 +1321,42 @@ public final class SequencingUsageDetector {
           : Set.copyOf(indicators);
     }
 
+    /**
+     * Determines if the sequencing level is set to full granularity.
+     *
+     * @return true if the sequencing level is {@code SequencingLevel.FULL}, otherwise false
+     */
     public boolean hasSequencing() {
       return level == SequencingLevel.FULL;
     }
 
+    /**
+     * Determines if any sequencing configuration is applied.
+     *
+     * @return true if the sequencing level is not {@code SequencingLevel.NONE}, otherwise false
+     */
     public boolean hasAnySequencing() {
       return level != SequencingLevel.NONE;
     }
 
+    /**
+     * Retrieves the sequencing level detected as part of the sequencing detection process.
+     *
+     * @return the sequencing level, represented by an instance of {@link SequencingLevel},
+     * indicating the granularity or comprehensiveness of sequencing applied
+     */
     public SequencingLevel getLevel() {
       return level;
     }
 
+    /**
+     * Retrieves the set of sequencing indicators derived from the sequencing detection process.
+     * Each indicator provides detailed information about specific aspects of the detected
+     * sequencing configuration.
+     *
+     * @return a set of {@link SequencingIndicator} representing the detected sequencing indicators;
+     * if no indicators are detected, an empty set is returned
+     */
     public Set<SequencingIndicator> getIndicators() {
       return indicators;
     }

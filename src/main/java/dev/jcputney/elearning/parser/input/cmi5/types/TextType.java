@@ -71,10 +71,23 @@ public final class TextType implements Serializable {
   @JacksonXmlProperty(localName = "langstring")
   private List<LangString> strings;
 
+  /**
+   * Constructs a new {@code TextType} instance with a list of {@link LangString} elements.
+   *
+   * @param strings a list of {@link LangString} instances representing localized text elements,
+   * where each element includes a string value and an optional language attribute
+   */
   public TextType(List<LangString> strings) {
     this.strings = strings;
   }
 
+  /**
+   * Default constructor for the {@code TextType} class.
+   * <p>
+   * Initializes a new instance of the {@code TextType} class with default values. This constructor
+   * does not perform any operations and is used primarily for object instantiation without initial
+   * data.
+   */
   public TextType() {
     // no-op
   }

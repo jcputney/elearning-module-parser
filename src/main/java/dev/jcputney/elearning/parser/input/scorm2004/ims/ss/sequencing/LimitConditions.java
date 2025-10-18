@@ -155,6 +155,21 @@ public final class LimitConditions implements Serializable {
   @JsonProperty("endTimeLimit")
   private Instant endTimeLimit;
 
+  /**
+   * Constructs a LimitConditions object with the specified constraints and duration limits.
+   *
+   * @param attemptLimit the maximum number of attempts allowed, or null to indicate no limit
+   * @param attemptAbsoluteDurationLimit the absolute duration limit for an attempt as a
+   * {@link Duration}, or null if not set
+   * @param attemptExperiencedDurationLimit the experienced duration limit for an attempt as a
+   * {@link Duration}, or null if not set
+   * @param activityAbsoluteDurationLimit the absolute duration limit for the activity as a
+   * {@link Duration}, or null if not set
+   * @param activityExperiencedDurationLimit the experienced duration limit for the activity as a
+   * {@link Duration}, or null if not set
+   * @param beginTimeLimit the start time limit as an {@link Instant}, or null to indicate no limit
+   * @param endTimeLimit the end time limit as an {@link Instant}, or null to indicate no limit
+   */
   public LimitConditions(Integer attemptLimit, Duration attemptAbsoluteDurationLimit,
       Duration attemptExperiencedDurationLimit, Duration activityAbsoluteDurationLimit,
       Duration activityExperiencedDurationLimit, Instant beginTimeLimit, Instant endTimeLimit) {
@@ -167,6 +182,13 @@ public final class LimitConditions implements Serializable {
     this.endTimeLimit = endTimeLimit;
   }
 
+  /**
+   * Default constructor for the LimitConditions class.
+   * <p>
+   * Creates an instance of LimitConditions with no predefined constraints or duration limits. This
+   * constructor initializes the object without setting any specific values for the associated
+   * fields.
+   */
   public LimitConditions() {
     // no-op
   }

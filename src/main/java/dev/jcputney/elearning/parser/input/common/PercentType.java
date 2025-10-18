@@ -26,14 +26,28 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Represents a percentage value constrained between 0 and 1, inclusive. This type enforces the
- * range but does not enforce specific decimal precision.
- *
- * @param value The decimal value for the percentage must be between 0 and 1.
+ * Represents a percentage value constrained between 0 and 1 (inclusive). It is designed for use
+ * cases where percentages are represented as decimal values.
+ * <p>
+ * This class is: - Immutable: Once an instance is created, its value cannot be changed. -
+ * Thread-safe: The immutability ensures no synchronization issues during concurrent access. -
+ * Validated: Ensures the percentage value lies within the valid range [0, 1] during
+ * initialization.
+ * <p>
+ * Features and behaviors: - Contains factory and parsing methods for creating instances. - Provides
+ * a string representation of the percentage value. - Overridden {@code equals} and {@code hashCode}
+ * methods for dictionary lookup or comparison purposes. - Integrated with JSON serialization
+ * frameworks such as Jackson through custom configuration.
+ * <p>
+ * The intended use of this class includes scenarios where precise representation and validation of
+ * percentages are required, for example in financial, academic, or mathematical applications.
+ * <p>
+ * Note: The numeric value does not enforce a specific scale or precision but must lie in the range
+ * 0 to 1.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public record PercentType(BigDecimal value) implements Serializable {
+public final class PercentType implements Serializable {
 
   /**
    * The minimum and maximum values for the percentage.
@@ -44,6 +58,18 @@ public record PercentType(BigDecimal value) implements Serializable {
    * The maximum value for the percentage.
    */
   private static final BigDecimal MAX_VALUE = BigDecimal.ONE;
+
+  /**
+   * Represents the percentage value for an instance of {@code PercentType}.
+   *
+   * <ul>
+   *   <li>This value is constrained between 0 and 1, inclusive.</li>
+   *   <li>It enforces the range bounds but does not enforce specific decimal precision.</li>
+   *   <li>Immutable once assigned, ensuring thread-safe usage and preventing unintended modification.</li>
+   * </ul>
+   */
+  private final BigDecimal value;
+
 
   /**
    * Default constructor for the PercentType class.
@@ -58,13 +84,14 @@ public record PercentType(BigDecimal value) implements Serializable {
    * @param value the decimal value for the percentage must be between 0 and 1.
    * @throws IllegalArgumentException if the value is out of range.
    */
-  public PercentType {
+  public PercentType(BigDecimal value) {
     if (value == null) {
       throw new IllegalArgumentException("Value cannot be null");
     }
     if (value.compareTo(MIN_VALUE) < 0 || value.compareTo(MAX_VALUE) > 0) {
       throw new IllegalArgumentException("Value must be between 0 and 1, inclusive.");
     }
+    this.value = value;
   }
 
   /**
@@ -113,4 +140,14 @@ public record PercentType(BigDecimal value) implements Serializable {
         .append(value())
         .toHashCode();
   }
+
+  /**
+   * Retrieves the value of the percentage as a BigDecimal.
+   *
+   * @return the decimal representation of the percentage value.
+   */
+  public BigDecimal value() {
+    return value;
+  }
+
 }

@@ -50,6 +50,12 @@ public final class RuleAction implements Serializable {
   @JsonProperty("action")
   private String action;
 
+  /**
+   * Default constructor for the RuleAction class.
+   * <p>
+   * This constructor initializes the RuleAction object without any specific values. It is primarily
+   * used to create an instance of RuleAction with default settings.
+   */
   public RuleAction() {
     // no-op
   }

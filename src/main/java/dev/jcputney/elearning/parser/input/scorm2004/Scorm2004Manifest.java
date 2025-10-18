@@ -339,6 +339,10 @@ public final class Scorm2004Manifest implements PackageManifest {
   @JacksonXmlProperty(localName = "sequencingCollection", namespace = IMSSS.NAMESPACE_URI)
   private SequencingCollection sequencingCollection;
 
+  /**
+   * Default constructor for the Scorm2004Manifest class. This constructor initializes an instance
+   * of the Scorm2004Manifest without any additional setup or parameters.
+   */
   public Scorm2004Manifest() {
     // no-op
   }
@@ -706,29 +710,45 @@ public final class Scorm2004Manifest implements PackageManifest {
   }
 
   /**
-   * Returns the declared ADLCP namespace URI on the manifest root element, if present.
+   * Retrieves the ADLCP (Advanced Distributed Learning Content Package) namespace URI.
+   *
+   * @return The ADLCP namespace URI as a String.
    */
   public String getAdlcpNamespaceUri() {
     return this.adlcpNamespaceUri;
   }
 
+  /**
+   * Sets the ADLCP namespace URI.
+   *
+   * @param adlcpNamespaceUri the ADLCP namespace URI to set
+   */
   public void setAdlcpNamespaceUri(String adlcpNamespaceUri) {
     this.adlcpNamespaceUri = adlcpNamespaceUri;
   }
 
   /**
-   * Returns the declared IMSSS namespace URI on the manifest root element, if present.
+   * Retrieves the IMS Simple Sequencing namespace URI.
+   *
+   * @return the IMS Simple Sequencing namespace URI as a string
    */
   public String getImsssNamespaceUri() {
     return this.imsssNamespaceUri;
   }
 
+  /**
+   * Sets the IMS Simple Sequencing (IMSSS) namespace URI.
+   *
+   * @param imsssNamespaceUri the namespace URI to be set for IMS Simple Sequencing
+   */
   public void setImsssNamespaceUri(String imsssNamespaceUri) {
     this.imsssNamespaceUri = imsssNamespaceUri;
   }
 
   /**
-   * Returns the declared ADL Sequencing namespace URI on the manifest root element, if present.
+   * Retrieves the namespace URI associated with the ADL sequence.
+   *
+   * @return the namespace URI as a String.
    */
   public String getAdlseqNamespaceUri() {
     return this.adlseqNamespaceUri;
@@ -744,7 +764,9 @@ public final class Scorm2004Manifest implements PackageManifest {
   }
 
   /**
-   * Returns the declared ADL Navigation namespace URI on the manifest root element, if present.
+   * Retrieves the namespace URI associated with ADL navigation.
+   *
+   * @return the namespace URI as a String
    */
   public String getAdlnavNamespaceUri() {
     return this.adlnavNamespaceUri;
@@ -760,7 +782,9 @@ public final class Scorm2004Manifest implements PackageManifest {
   }
 
   /**
-   * Returns the declared schemaLocation attribute value from the manifest root element.
+   * Retrieves the schema location.
+   *
+   * @return the schema location as a String
    */
   public String getSchemaLocation() {
     return this.schemaLocation;

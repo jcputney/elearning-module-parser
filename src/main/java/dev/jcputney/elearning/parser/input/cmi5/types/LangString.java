@@ -72,11 +72,22 @@ public final class LangString implements Serializable {
   @JsonProperty("lang")
   private String lang;
 
+  /**
+   * Constructs a new {@code LangString} with the specified value and language.
+   *
+   * @param value the actual text content of the localized string
+   * @param lang the language of the string, represented as a {@code String}; this value is
+   * optional
+   */
   public LangString(String value, String lang) {
     this.value = value;
     this.lang = lang;
   }
 
+  /**
+   * Default no-argument constructor for the LangString class. Initializes a new instance of
+   * LangString with no initial value or language set.
+   */
   public LangString() {
     // no-op
   }

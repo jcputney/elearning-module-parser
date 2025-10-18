@@ -50,6 +50,12 @@ public final class Date implements Serializable {
   @JacksonXmlProperty(localName = "description")
   private UnboundLangString description;
 
+  /**
+   * Default constructor for the {@code Date} class.
+   * <p>
+   * Initializes a new instance of the {@code Date} class. This constructor performs no operations
+   * and primarily exists to allow object creation without any initial state or parameters.
+   */
   public Date() {
     // no-op
   }

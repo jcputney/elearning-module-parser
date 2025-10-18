@@ -160,6 +160,11 @@ public final class Scorm2004Item implements Serializable {
   @JacksonXmlProperty(localName = "dataFromLMS", namespace = ADLCP.NAMESPACE_URI)
   private String dataFromLMS;
 
+  /**
+   * Default constructor for the Scorm2004Item class. Initializes a new instance of the
+   * Scorm2004Item without any specific configuration or data. This constructor is primarily used to
+   * create a blank SCORM 2004 item that can later be configured using setter methods.
+   */
   public Scorm2004Item() {
     // no-op
   }

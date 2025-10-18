@@ -67,6 +67,19 @@ public final class AiccObjectiveMetadata implements Serializable {
    */
   private final Map<String, String> statusMap;
 
+  /**
+   * Constructs an instance of AiccObjectiveMetadata with the specified details.
+   *
+   * @param id the unique identifier of the objective metadata
+   * @param description a description of the objective metadata
+   * @param associatedAuIds a list of associated AU (Assignable Unit) IDs; if null, an empty list is
+   * assigned
+   * @param satisfiedByMeasure indicates whether the objective is satisfied by measure; can be null
+   * @param minNormalizedMeasure the minimum normalized measure for the objective; can be null
+   * @param progressMeasureWeight the weight for the progress measure; can be null
+   * @param statusMap a map representing status information for the objective; if null, an empty map
+   * is assigned
+   */
   public AiccObjectiveMetadata(String id, String description, List<String> associatedAuIds,
       Boolean satisfiedByMeasure, Double minNormalizedMeasure, Double progressMeasureWeight,
       Map<String, String> statusMap) {

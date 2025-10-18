@@ -40,6 +40,13 @@ public final class StreamingUtils {
    */
   public static final long DEFAULT_PROGRESS_INTERVAL = 1024 * 1024L;
 
+  /**
+   * Utility class for handling streaming operations. This class provides static utility methods for
+   * wrapping InputStreams with additional functionality such as buffering and progress tracking.
+   * <p>
+   * This class is not meant to be instantiated. The constructor is private and throws an
+   * AssertionError if instantiation is attempted.
+   */
   private StreamingUtils() {
     throw new AssertionError("Utility class should not be instantiated");
   }
@@ -173,6 +180,15 @@ public final class StreamingUtils {
      */
     private long lastProgressUpdate = 0;
 
+    /**
+     * Constructs a ProgressTrackingInputStream that wraps an underlying InputStream and monitors
+     * the progress of read operations by invoking a provided StreamingProgressListener.
+     *
+     * @param in the underlying InputStream to wrap
+     * @param totalSize the total size of the stream in bytes; if unknown, pass -1
+     * @param listener the listener to notify about streaming progress and completion
+     * @param progressInterval the interval, in bytes, at which progress updates are reported
+     */
     protected ProgressTrackingInputStream(
         InputStream in,
         long totalSize,

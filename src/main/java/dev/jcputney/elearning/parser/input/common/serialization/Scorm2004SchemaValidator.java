@@ -102,7 +102,15 @@ public final class Scorm2004SchemaValidator {
   }
 
   /**
-   * Returns true if SCORM 2004 XSD validation is enabled via system property or environment.
+   * Determines whether validation is enabled based on system properties or environment variables.
+   * <p>
+   * The method first checks the system property corresponding to {@code VALIDATE_SYSPROP}. If a
+   * value is found, it converts it to a boolean and returns the result. If the system property is
+   * not set, it then checks the environment variable corresponding to {@code VALIDATE_ENV} and
+   * converts it to a boolean.
+   *
+   * @return {@code true} if validation is enabled based on the corresponding system property or
+   * environment variable; otherwise {@code false}.
    */
   public static boolean isEnabled() {
     String fromSysProp = System.getProperty(VALIDATE_SYSPROP);

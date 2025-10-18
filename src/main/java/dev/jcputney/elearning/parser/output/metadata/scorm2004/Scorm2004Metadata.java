@@ -54,18 +54,106 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
 
+  /**
+   * A mapping of activity identifiers to their associated delivery controls. This map uses a
+   * LinkedHashMap to preserve the order of insertion, allowing for predictable iteration order.
+   * <p>
+   * The keys in this map represent unique identifiers for specific activities, while the values
+   * correspond to {@code DeliveryControls} objects that define the delivery-related configurations
+   * for those activities.
+   */
   private final Map<String, DeliveryControls> activityDeliveryControls = new LinkedHashMap<>();
+
+  /**
+   * A set containing delivery control override keys. This collection is used to manage specific
+   * delivery control configurations that need to deviate from standard settings. It ensures
+   * insertion order is preserved and prevents duplicate entries.
+   */
   private final Set<String> deliveryControlOverrides = new LinkedHashSet<>();
+
+  /**
+   * A collection that holds unique identifiers for global objectives. The identifiers are stored in
+   * a LinkedHashSet to maintain insertion order while ensuring uniqueness.
+   */
   private final Set<String> globalObjectiveIds = new LinkedHashSet<>();
+
+  /**
+   * A list that holds sequencing indicators represented as strings. This list is initialized as an
+   * empty ArrayList and is intended to store indicators used for sequencing purposes within the
+   * application. The contents of this list are immutable as it is declared final, which ensures
+   * that the reference to the list cannot be reassigned after initialization.
+   */
   private final List<String> sequencingIndicators = new ArrayList<>();
+
+  /**
+   * A map that stores completion thresholds. The outer map uses a string as a key to categorize
+   * thresholds, while the inner map maps string keys to their respective threshold values, which
+   * are represented as generic objects.
+   * <p>
+   * This structure allows for organizing and managing multiple thresholds under different
+   * categories or contexts, providing flexibility in defining and retrieving these thresholds as
+   * needed.
+   */
   private final Map<String, Map<String, Object>> completionThresholds = new LinkedHashMap<>();
+
+  /**
+   * A map that associates specific action names (keys) with their corresponding time limit
+   * descriptions or identifiers (values). The LinkedHashMap ensures that the order of insertion is
+   * maintained when processing or iterating through the entries of the map. This is helpful when
+   * the sequence of actions and their timing constraints need to be preserved for business logic or
+   * execution policies.
+   */
   private final Map<String, String> timeLimitActions = new LinkedHashMap<>();
+
+  /**
+   * A map that holds data retrieved from the LMS (Learning Management System). The map uses a
+   * {@code String} as the key and a {@code String} as the value. Keys and values are ordered as
+   * they are inserted, maintaining a predictable iteration order. This map is immutable once
+   * initialized due to being declared as {@code final}.
+   */
   private final Map<String, String> dataFromLms = new LinkedHashMap<>();
+
+  /**
+   * A mapping that determines the LMS (Learning Management System) UI elements to be hidden for
+   * specified criteria. The key represents a criteria string, and the value is a list of
+   * identifiers for UI elements that should be hidden under that criteria. The order of the
+   * mappings is preserved as it uses a LinkedHashMap.
+   */
   private final Map<String, List<String>> hideLmsUi = new LinkedHashMap<>();
+
+  /**
+   * A nested map structure that represents control modes with a specific hierarchy. The outer map
+   * uses a string as the key to represent a top-level category or mode group. Each top-level key is
+   * associated with another map (inner map), where: - The key of the inner map is a string
+   * representing a specific sub-mode or sub-category. - The value of the inner map is a boolean
+   * indicating the state or activation of that specific sub-mode.
+   * <p>
+   * This structure allows organizing control modes in a hierarchical way, enabling quick access and
+   * evaluation of mode states.
+   */
   private final Map<String, Map<String, Boolean>> controlModes = new LinkedHashMap<>();
+
+  /**
+   * Indicates whether sequencing is enabled or present. This variable is used as a flag to
+   * determine if sequencing-related features or functionalities should be considered.
+   */
   private boolean hasSequencing;
+
+  /**
+   * Represents the current sequencing level for a specific operation or process. The sequencing
+   * level determines the degree or mode of sequencing applied. Default value is set to
+   * SequencingLevel.NONE, indicating no sequencing.
+   */
   private SequencingLevel sequencingLevel = SequencingLevel.NONE;
 
+  /**
+   * Constructs an instance of the Scorm2004Metadata class. This constructor initializes the
+   * Scorm2004Metadata object by invoking the superclass's constructor and preparing it for further
+   * operations.
+   * <p>
+   * This class is likely associated with handling metadata specific to the SCORM 2004 standard, a
+   * set of technical standards for eLearning.
+   */
   protected Scorm2004Metadata() {
     super();
   }

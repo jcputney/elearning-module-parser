@@ -66,12 +66,28 @@ public final class Scorm12Organizations implements Serializable {
   @JacksonXmlProperty(localName = "organization", namespace = Scorm12Manifest.NAMESPACE_URI)
   private List<Scorm12Organization> organizationList;
 
+  /**
+   * Constructs a new instance of Scorm12Organizations with the specified default organization
+   * identifier and list of organizations.
+   *
+   * @param defaultOrganization The identifier of the default organization for the SCORM 1.2 content
+   * package.
+   * @param organizationList A list of {@code Scorm12Organization} objects representing all
+   * organizations associated with this SCORM 1.2 package.
+   */
   public Scorm12Organizations(String defaultOrganization,
       List<Scorm12Organization> organizationList) {
     this.defaultOrganization = defaultOrganization;
     this.organizationList = organizationList;
   }
 
+  /**
+   * Default constructor for the Scorm12Organizations class.
+   * <p>
+   * This constructor initializes an empty instance of the Scorm12Organizations class without
+   * setting any default organization or associated organizations. It provides a no-operation base
+   * instance suitable for further configuration.
+   */
   public Scorm12Organizations() {
     // no-op
   }

@@ -56,6 +56,13 @@ public final class Requirement extends OrComposite {
   @JacksonXmlProperty(localName = "orComposite")
   private List<OrComposite> orCompositeList;
 
+  /**
+   * Default constructor for the {@code Requirement} class.
+   * <p>
+   * Initializes a new instance of the {@code Requirement} class without performing any specific
+   * operations. This constructor allows object creation without the need for initial parameters or
+   * state.
+   */
   public Requirement() {
     // no-op
   }

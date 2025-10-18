@@ -129,6 +129,10 @@ public final class LifeCycle implements Serializable {
   @JacksonXmlProperty(localName = "customElements")
   private List<Object> customElements;
 
+  /**
+   * Default constructor for the LifeCycle class. Initializes a new instance of the LifeCycle object
+   * with no predefined values or configurations.
+   */
   public LifeCycle() {
     // no-op
   }

@@ -1,6 +1,17 @@
 <component name="InspectionProjectProfileManager">
   <profile version="1.0">
     <option name="myName" value="Project Default" />
+    <inspection_tool class="ClassCanBeRecord" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="myIgnoredAnnotations">
+        <list>
+          <option value="com.fasterxml.jackson.annotation.JsonFormat" />
+          <option value="io.micronaut.*" />
+          <option value="jakarta.*" />
+          <option value="javax.*" />
+          <option value="org.springframework.*" />
+        </list>
+      </option>
+    </inspection_tool>
     <inspection_tool class="HttpUrlsUsage" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <option name="ignoredUrls">
         <list>

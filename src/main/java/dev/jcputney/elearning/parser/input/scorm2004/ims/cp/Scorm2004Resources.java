@@ -54,6 +54,10 @@ public final class Scorm2004Resources implements Serializable {
   @JacksonXmlProperty(localName = "resource", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private List<Scorm2004Resource> resourceList;
 
+  /**
+   * Default constructor for the Scorm2004Resources class. This constructor creates an instance of
+   * the Scorm2004Resources class with no initial parameters.
+   */
   public Scorm2004Resources() {
     // no-op
   }

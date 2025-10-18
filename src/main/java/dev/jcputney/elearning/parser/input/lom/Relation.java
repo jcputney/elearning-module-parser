@@ -86,6 +86,11 @@ public final class Relation implements Serializable {
   @JacksonXmlProperty(localName = "resource")
   private List<Resource> resource;
 
+  /**
+   * Default constructor for the Relation class. Initializes a new instance of the Relation object
+   * with no specific properties or behaviors. This constructor is primarily provided for object
+   * creation without parameter initialization.
+   */
   public Relation() {
     // no-op
   }

@@ -52,10 +52,23 @@ public final class UnboundLangString implements Serializable {
   @JsonDeserialize(using = LangStringListDeserializer.class)
   private List<LangString> langStrings;
 
+  /**
+   * Default constructor for the {@code UnboundLangString} class.
+   * <p>
+   * Initializes a new instance of the {@code UnboundLangString} class. This constructor performs no
+   * operations and is primarily used to create an object without any initial state or parameters.
+   */
   public UnboundLangString() {
     // no-op
   }
 
+  /**
+   * Constructs an instance of the {@code UnboundLangString} class with a specified list of
+   * {@code LangString} objects.
+   *
+   * @param langStrings the list of {@code LangString} objects to initialize the instance with; each
+   * {@code LangString} represents a string value and its associated language attributes
+   */
   public UnboundLangString(List<LangString> langStrings) {
     this.langStrings = langStrings;
   }

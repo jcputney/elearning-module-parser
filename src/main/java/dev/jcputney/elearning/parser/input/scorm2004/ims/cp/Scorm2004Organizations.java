@@ -53,6 +53,10 @@ public final class Scorm2004Organizations implements Serializable {
   @JacksonXmlProperty(localName = "organization", namespace = Scorm2004Manifest.NAMESPACE_URI)
   private List<Scorm2004Organization> organizationList;
 
+  /**
+   * Default constructor for the Scorm2004Organizations class. This constructor initializes an
+   * instance of the Scorm2004Organizations class without any initial parameters or configurations.
+   */
   public Scorm2004Organizations() {
     // no-op
   }

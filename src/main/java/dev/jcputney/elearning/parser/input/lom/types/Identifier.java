@@ -53,6 +53,13 @@ public final class Identifier implements Serializable {
   @JacksonXmlProperty(localName = "entry")
   private String entry;
 
+  /**
+   * Default constructor for the {@code Identifier} class.
+   * <p>
+   * Initializes a new instance of the {@code Identifier} class. This constructor is intended for
+   * use when no initial properties need to be set. It performs no operations and primarily allows
+   * object creation with a default, uninitialized state.
+   */
   public Identifier() {
     // no-op
   }

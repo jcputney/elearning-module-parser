@@ -41,6 +41,10 @@ public final class ObjectiveReference implements Serializable {
   @JsonProperty("idref")
   private String idref;
 
+  /**
+   * Constructs an instance of {@code ObjectiveReference}. This is a no-operation constructor,
+   * intended for default initialization.
+   */
   public ObjectiveReference() {
     // no-op
   }

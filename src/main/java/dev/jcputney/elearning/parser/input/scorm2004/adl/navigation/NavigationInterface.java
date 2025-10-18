@@ -44,6 +44,10 @@ public final class NavigationInterface implements Serializable {
   @JacksonXmlProperty(localName = "hideLMSUI", namespace = ADLNav.NAMESPACE_URI)
   private List<HideLMSUI> hideLMSUI;
 
+  /**
+   * Constructs a new instance of the NavigationInterface class. This constructor initializes the
+   * NavigationInterface object with default values.
+   */
   public NavigationInterface() {
     // no-op
   }

@@ -104,6 +104,10 @@ public final class Scorm2004Organization implements Serializable {
   @JacksonXmlProperty(localName = "sequencing", namespace = IMSSS.NAMESPACE_URI)
   private Sequencing sequencing;
 
+  /**
+   * Default constructor for the Scorm2004Organization class. Initializes a new instance of the
+   * Scorm2004Organization without setting any fields or properties.
+   */
   public Scorm2004Organization() {
     // no-op
   }

@@ -66,6 +66,17 @@ public final class CompletionThreshold implements Serializable {
   @JsonProperty("completedByMeasure")
   private Boolean completedByMeasure = false;
 
+  /**
+   * Constructs a `CompletionThreshold` object with the specified parameters.
+   *
+   * @param minProgressMeasure the minimum progress measure for the completion threshold,
+   * represented as a {@code MeasureType} instance.
+   * @param progressWeight the progress weight, represented as a {@code PercentType}. This value is
+   * a percentage between 0 and 1 inclusive.
+   * @param completedByMeasure a {@code Boolean} value indicating whether the completion is
+   * determined by the measure. Set to {@code true} if completion is based on the measure, otherwise
+   * {@code false}.
+   */
   public CompletionThreshold(MeasureType minProgressMeasure, PercentType progressWeight,
       Boolean completedByMeasure) {
     this.minProgressMeasure = minProgressMeasure;
@@ -73,6 +84,13 @@ public final class CompletionThreshold implements Serializable {
     this.completedByMeasure = completedByMeasure;
   }
 
+  /**
+   * Default constructor for the CompletionThreshold class.
+   * <p>
+   * This no-argument constructor initializes a default instance of the CompletionThreshold class
+   * without setting any fields or performing any specific operations. It serves as a placeholder
+   * for creating CompletionThreshold objects.
+   */
   public CompletionThreshold() {
     // no-op
   }

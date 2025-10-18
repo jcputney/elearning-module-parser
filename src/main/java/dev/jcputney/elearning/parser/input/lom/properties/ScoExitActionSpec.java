@@ -54,11 +54,24 @@ public final class ScoExitActionSpec implements Serializable {
   @JacksonXmlProperty(localName = "notSatisfied")
   private ExitTypesSpec notSatisfied;
 
+  /**
+   * Constructs an instance of the ScoExitActionSpec class with specified actions to take based on
+   * the satisfaction or non-satisfaction of the condition.
+   *
+   * @param satisfied the {@code ExitTypesSpec} defining the action to be executed when the
+   * condition is satisfied
+   * @param notSatisfied the {@code ExitTypesSpec} defining the action to be executed when the
+   * condition is not satisfied
+   */
   public ScoExitActionSpec(ExitTypesSpec satisfied, ExitTypesSpec notSatisfied) {
     this.satisfied = satisfied;
     this.notSatisfied = notSatisfied;
   }
 
+  /**
+   * Default constructor for the ScoExitActionSpec class. Initializes a new instance of the
+   * ScoExitActionSpec class with no specific configuration.
+   */
   public ScoExitActionSpec() {
     // no-op
   }

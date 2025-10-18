@@ -47,6 +47,10 @@ public final class RsopSpec implements Serializable {
   @JacksonXmlProperty(localName = "offlineSynchMode")
   private OfflineSynchModeType offlineSynchMode;
 
+  /**
+   * Default constructor for the RsopSpec class. Initializes a new instance of the RsopSpec class
+   * with no specific configuration.
+   */
   public RsopSpec() {
     // no-op
   }

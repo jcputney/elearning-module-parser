@@ -83,6 +83,12 @@ public final class Scorm2004CourseMetadata implements LoadableMetadata {
   @JacksonXmlProperty(localName = "lom", namespace = LOM.NAMESPACE_URI)
   private LOM lom;
 
+  /**
+   * Constructs an instance of the {@code Scorm2004CourseMetadata} class.
+   * <p>
+   * This is a no-operation constructor meant to initialize an object without setting any
+   * properties.
+   */
   public Scorm2004CourseMetadata() {
     // no-op
   }

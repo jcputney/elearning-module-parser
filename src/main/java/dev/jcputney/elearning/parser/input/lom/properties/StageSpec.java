@@ -62,6 +62,11 @@ public final class StageSpec implements Serializable {
   @JacksonXmlProperty(localName = "fullscreen")
   private YesNoType fullscreen;
 
+  /**
+   * Default constructor for the StageSpec class.
+   * <p>
+   * Initializes a new instance of the StageSpec class with no specific configuration.
+   */
   public StageSpec() {
     // no-op
   }

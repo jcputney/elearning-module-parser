@@ -58,6 +58,13 @@ public final class RollupConditions implements Serializable {
   @JsonProperty("conditionCombination")
   private String conditionCombination = "any";
 
+  /**
+   * Default constructor for the RollupConditions class.
+   * <p>
+   * This no-argument constructor initializes an instance of the RollupConditions class without
+   * setting any fields or performing any specific actions. It can be used to create an empty
+   * instance of the class for further configuration or use.
+   */
   public RollupConditions() {
     // no-op
   }

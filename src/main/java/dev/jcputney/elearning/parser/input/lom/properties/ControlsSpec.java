@@ -131,6 +131,10 @@ public final class ControlsSpec implements Serializable {
   @JacksonXmlProperty(localName = "forceDisableRootChoice")
   private YesNoType forceDisableRootChoice;
 
+  /**
+   * Default constructor for the ControlsSpec class. This constructor initializes a new instance of
+   * the ControlsSpec class. No specific initialization is performed in this constructor.
+   */
   public ControlsSpec() {
     // no-op
   }
@@ -322,6 +326,12 @@ public final class ControlsSpec implements Serializable {
     return this.showTitleBar;
   }
 
+  /**
+   * Sets whether the title bar should be displayed.
+   *
+   * @param showTitleBar a YesNoType value indicating if the title bar should be visible (Yes) or
+   * hidden (No)
+   */
   public void setShowTitleBar(YesNoType showTitleBar) {
     this.showTitleBar = showTitleBar;
   }

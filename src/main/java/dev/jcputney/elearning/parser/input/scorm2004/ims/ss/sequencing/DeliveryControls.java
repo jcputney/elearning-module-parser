@@ -95,6 +95,13 @@ public final class DeliveryControls implements Serializable {
   @JsonProperty("objectiveSetByContent")
   private boolean objectiveSetByContent = false;
 
+  /**
+   * Constructs an instance of the DeliveryControls class.
+   * <p>
+   * This is a default no-operation constructor that initializes a new instance of the
+   * DeliveryControls class without setting any specific properties or performing any additional
+   * operations.
+   */
   public DeliveryControls() {
     // no-op
   }

@@ -81,6 +81,12 @@ public final class SequencingRules implements Serializable {
   @JacksonXmlProperty(localName = "postConditionRule", namespace = IMSSS.NAMESPACE_URI)
   private List<SequencingRule> postConditionRules;
 
+  /**
+   * Default constructor for the {@code SequencingRules} class.
+   * <p>
+   * This constructor initializes an instance of the {@code SequencingRules} class with no initial
+   * values or properties set. It is primarily used to create a default instance of the class.
+   */
   public SequencingRules() {
     // no-op
   }

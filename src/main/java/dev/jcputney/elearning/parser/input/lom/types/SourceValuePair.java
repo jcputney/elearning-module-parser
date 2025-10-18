@@ -66,6 +66,13 @@ public final class SourceValuePair<T extends Serializable> implements Serializab
   @JsonProperty("value")
   private T value;
 
+  /**
+   * Default constructor for the {@code SourceValuePair} class.
+   * <p>
+   * Initializes a new instance of the {@code SourceValuePair} class. This constructor performs no
+   * operations and exists to allow object creation without setting any initial state or
+   * parameters.
+   */
   public SourceValuePair() {
     // no-op
   }

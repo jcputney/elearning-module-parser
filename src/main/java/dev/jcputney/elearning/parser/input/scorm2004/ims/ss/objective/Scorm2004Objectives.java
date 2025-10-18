@@ -69,12 +69,28 @@ public final class Scorm2004Objectives implements Serializable {
   @JacksonXmlProperty(localName = "objective", namespace = IMSSS.NAMESPACE_URI)
   private List<Scorm2004Objective> objectiveList;
 
+  /**
+   * Constructs a `Scorm2004Objectives` object with a primary objective and a list of additional
+   * objectives.
+   *
+   * @param primaryObjective the primary learning objective for this instance, represented as a
+   * Scorm2004Objective object.
+   * @param objectiveList a list of additional learning objectives associated with this instance,
+   * provided as a List of Scorm2004Objective objects.
+   */
   public Scorm2004Objectives(Scorm2004Objective primaryObjective,
       List<Scorm2004Objective> objectiveList) {
     this.primaryObjective = primaryObjective;
     this.objectiveList = objectiveList;
   }
 
+  /**
+   * Default constructor for the Scorm2004Objectives class.
+   * <p>
+   * This constructor initializes an instance of Scorm2004Objectives with no primary objective or
+   * additional objectives. Typically used when initial values will be set manually after
+   * instantiation.
+   */
   public Scorm2004Objectives() {
     // no-op
   }

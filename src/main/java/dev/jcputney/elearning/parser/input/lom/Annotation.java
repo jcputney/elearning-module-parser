@@ -97,6 +97,10 @@ public final class Annotation implements Serializable {
   @JacksonXmlProperty(localName = "description")
   private SingleLangString description;
 
+  /**
+   * Default constructor for the Annotation class. Initializes a new instance of the Annotation
+   * object without setting any fields.
+   */
   public Annotation() {
     // no-op
   }

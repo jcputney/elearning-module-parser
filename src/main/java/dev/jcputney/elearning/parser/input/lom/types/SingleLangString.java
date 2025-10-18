@@ -46,6 +46,11 @@ public final class SingleLangString implements Serializable {
   @JsonAlias("langstring")
   private LangString langString;
 
+  /**
+   * Default constructor for the {@code SingleLangString} class. Creates an empty instance of the
+   * {@code SingleLangString} class with no initial state. Primarily used for object instantiation
+   * without predefined data.
+   */
   public SingleLangString() {
     // no-op
   }

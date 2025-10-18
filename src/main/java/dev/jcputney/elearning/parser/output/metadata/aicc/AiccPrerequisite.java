@@ -104,6 +104,23 @@ public final class AiccPrerequisite implements Serializable {
    */
   private final AiccCompletionCriteria completionCriteria;
 
+  /**
+   * Constructs an instance of AiccPrerequisite with the specified attributes.
+   *
+   * @param assignableUnitId the unique identifier for the assignable unit.
+   * @param expression the prerequisite expression associated with this instance of
+   * {@code AiccPrerequisite}.
+   * @param mandatory a flag indicating if the prerequisite is mandatory; {@code true} if mandatory,
+   * {@code false} otherwise.
+   * @param referencedAuIds a list of assignable unit (AU) IDs referenced by this prerequisite. May
+   * be null or empty.
+   * @param optionalAuIds a list of optional assignable unit (AU) IDs associated with this
+   * prerequisite. May be null or empty.
+   * @param tokens the list of token strings used for parsing and validation. May be null or empty.
+   * @param postfixTokens a list of strings representing the postfix notation of the prerequisite
+   * expression. May be null or empty.
+   * @param completionCriteria the completion criteria associated with this prerequisite.
+   */
   public AiccPrerequisite(String assignableUnitId, AiccPrerequisiteExpression expression,
       boolean mandatory, List<String> referencedAuIds, List<String> optionalAuIds,
       List<String> tokens, List<String> postfixTokens,

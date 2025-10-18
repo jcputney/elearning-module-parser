@@ -111,10 +111,22 @@ public final class CourseStructure implements Serializable {
    */
   private String attributesRaw;
 
+  /**
+   * Default constructor for the CourseStructure class. This constructor initializes an empty
+   * CourseStructure object without setting any fields or performing any operations.
+   */
   public CourseStructure() {
     // no-op
   }
 
+  /**
+   * Constructs a CourseStructure instance with the specified block and member.
+   *
+   * @param block the block associated with the course structure. Represents a specific aspect or
+   * grouping within the course structure. Can be null.
+   * @param member the member associated with the course structure. Represents a specific entity
+   * within the course structure. Can be null.
+   */
   public CourseStructure(String block, String member) {
     this.block = block;
     this.member = member;

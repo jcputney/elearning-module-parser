@@ -65,6 +65,11 @@ public final class ContributeEntity implements Serializable {
   @JacksonXmlProperty(localName = "vcard")
   private String vCard;
 
+  /**
+   * Default constructor for the {@code ContributeEntity} class. Initializes a new instance of the
+   * class with no specific properties set. This constructor is primarily used for serialization,
+   * deserialization, or creating an empty instance to be configured later.
+   */
   public ContributeEntity() {
     // no-op
   }

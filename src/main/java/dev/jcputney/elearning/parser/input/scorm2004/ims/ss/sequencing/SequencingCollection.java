@@ -46,6 +46,12 @@ public final class SequencingCollection implements Serializable {
   @JacksonXmlProperty(localName = "sequencing", namespace = NAMESPACE_URI)
   private List<Sequencing> sequencingList;
 
+  /**
+   * Default constructor for the {@code SequencingCollection} class.
+   * <p>
+   * This constructor initializes an empty {@code SequencingCollection} instance. It does not
+   * perform any additional setup or initialization.
+   */
   public SequencingCollection() {
     // no-op
   }

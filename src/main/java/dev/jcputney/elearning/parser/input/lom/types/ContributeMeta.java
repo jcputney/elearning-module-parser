@@ -93,12 +93,28 @@ public final class ContributeMeta implements Serializable {
   @JacksonXmlProperty(localName = "date")
   private Date date;
 
+  /**
+   * Constructs an instance of the {@code ContributeMeta} class with the specified role, entities,
+   * and date. This constructor is used to initialize the contribution metadata with known values.
+   *
+   * @param role a {@code SourceValuePair<RoleMeta>} representing the role information, where the
+   * source provides the origin of the value and the value specifies the specific role of the
+   * contribution (e.g., "creator" or "validator")
+   * @param entities a {@code List<String>} containing the entities associated with the contribution
+   * metadata, typically representing individuals or organizations contributing to the resource
+   * @param date a {@code Date} object representing the time of the contribution or relevant
+   * temporal information
+   */
   public ContributeMeta(SourceValuePair<RoleMeta> role, List<String> entities, Date date) {
     this.role = role;
     this.entities = entities;
     this.date = date;
   }
 
+  /**
+   * Creates an instance of the ContributeMeta class with default values. This no-argument
+   * constructor can be used when no initial data is provided for the contribution metadata.
+   */
   public ContributeMeta() {
     // no-op
   }

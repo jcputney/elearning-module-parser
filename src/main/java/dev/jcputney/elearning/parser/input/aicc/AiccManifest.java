@@ -114,6 +114,19 @@ public final class AiccManifest implements PackageManifest {
     // no-op
   }
 
+  /**
+   * Constructs an AiccManifest object that maps the relationship between the AICC course, its
+   * assignable units, descriptors, and course structures, and derives the launch URL of the root
+   * assignable unit.
+   *
+   * @param course the AICC course to which the manifest corresponds
+   * @param assignableUnits a list of assignable units associated with the course
+   * @param descriptors a list of descriptors providing metadata for assignable units
+   * @param courseStructures a list of course structures defining the hierarchical relationships and
+   * structure of the course
+   * @throws ModuleParsingException if the root assignable unit or its ID cannot be determined, or
+   * if there is inconsistent data in the manifest mappings
+   */
   public AiccManifest(AiccCourse course, List<AssignableUnit> assignableUnits,
       List<Descriptor> descriptors, List<CourseStructure> courseStructures)
       throws ModuleParsingException {
@@ -584,12 +597,16 @@ public final class AiccManifest implements PackageManifest {
       AssignableUnit rootAU = assignableUnits
           .stream()
           .filter(au -> au != null && au.getFileName() != null &&
-                       au.getFileName().equals(this.launchUrl))
+              au
+                  .getFileName()
+                  .equals(this.launchUrl))
           .findFirst()
           .orElse(assignableUnits.get(0)); // Fallback to first AU if no match
 
       if (rootAU != null && rootAU.getDescriptor() != null) {
-        String descriptorDescription = rootAU.getDescriptor().getDescription();
+        String descriptorDescription = rootAU
+            .getDescriptor()
+            .getDescription();
         if (StringUtils.isNotBlank(descriptorDescription)) {
           return descriptorDescription;
         }

@@ -157,6 +157,10 @@ public final class MetaMetadata implements Serializable {
   @JacksonXmlProperty(localName = "customElements")
   private List<Object> customElements;
 
+  /**
+   * Constructs a new instance of the MetaMetadata class. This is a no-operation constructor,
+   * primarily used for initializing an empty instance.
+   */
   public MetaMetadata() {
     // no-op
   }
@@ -172,6 +176,8 @@ public final class MetaMetadata implements Serializable {
 
   /**
    * Sets the list of identifiers associated with this object.
+   *
+   * @param identifier the list of {@link Identifier} objects to set
    */
   public void setIdentifier(List<Identifier> identifier) {
     this.identifier = identifier;

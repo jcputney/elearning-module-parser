@@ -229,6 +229,12 @@ public final class LOM implements Serializable {
   @JacksonXmlProperty(localName = "classification")
   private List<Classification> classifications;
 
+  /**
+   * Default constructor for the LOM class.
+   * <p>
+   * This constructor creates an instance of the LOM class with no initial settings or
+   * configurations. Primarily used for deserialization or manual initialization purposes.
+   */
   public LOM() {
     // no-op
   }

@@ -103,6 +103,10 @@ public final class Rights implements Serializable {
   @JacksonXmlProperty(localName = "description")
   private UnboundLangString descriptions;
 
+  /**
+   * Default constructor for the Rights class. Initializes an instance of the Rights class with no
+   * specific configuration or properties.
+   */
   public Rights() {
     // no-op
   }

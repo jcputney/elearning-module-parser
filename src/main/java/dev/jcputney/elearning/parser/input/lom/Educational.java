@@ -263,6 +263,10 @@ public final class Educational implements Serializable {
   @JacksonXmlProperty(localName = "language")
   private List<String> languages;
 
+  /**
+   * Constructs an instance of the Educational class. This is a no-operation constructor designed
+   * for creating objects of the Educational class with default settings or properties.
+   */
   public Educational() {
     // no-op
   }

@@ -120,6 +120,23 @@ public final class ControlMode implements Serializable {
   @JsonProperty("useCurrentAttemptProgressInfo")
   private boolean useCurrentAttemptProgressInfo = true;
 
+  /**
+   * Constructor for the ControlMode class, which allows customization of various navigation and
+   * information usage settings.
+   *
+   * @param choice a boolean value indicating whether the "choice" option is enabled (true) or
+   * disabled (false)
+   * @param choiceExit a boolean value indicating whether the "choiceExit" option is enabled (true)
+   * or disabled (false)
+   * @param flow a boolean value indicating whether the "flow" navigation option is enabled (true)
+   * or disabled (false)
+   * @param forwardOnly a boolean value indicating whether navigation is restricted to a
+   * forward-only direction (true) or not (false)
+   * @param useCurrentAttemptObjectiveInfo a boolean value indicating whether to use objective
+   * information for the current attempt (true) or not (false)
+   * @param useCurrentAttemptProgressInfo a boolean value indicating whether to use progress
+   * information for the current attempt (true) or not (false)
+   */
   public ControlMode(boolean choice, boolean choiceExit, boolean flow, boolean forwardOnly,
       boolean useCurrentAttemptObjectiveInfo, boolean useCurrentAttemptProgressInfo) {
     this.choice = choice;
@@ -130,6 +147,12 @@ public final class ControlMode implements Serializable {
     this.useCurrentAttemptProgressInfo = useCurrentAttemptProgressInfo;
   }
 
+  /**
+   * Default constructor for the ControlMode class.
+   *
+   * This constructor initializes the ControlMode instance with default settings. The fields will be
+   * initialized to their default values, such as false for boolean fields.
+   */
   public ControlMode() {
     // no-op
   }

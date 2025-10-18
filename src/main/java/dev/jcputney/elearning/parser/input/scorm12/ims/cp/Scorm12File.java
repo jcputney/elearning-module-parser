@@ -77,6 +77,13 @@ public final class Scorm12File implements Serializable {
    */
   private boolean exists = false;
 
+  /**
+   * Default constructor for the Scorm12File class.
+   * <p>
+   * This constructor initializes a new instance of the Scorm12File class without setting any
+   * initial values for its fields. All properties of the instance will need to be explicitly set
+   * after construction.
+   */
   public Scorm12File() {
     // no-op
   }

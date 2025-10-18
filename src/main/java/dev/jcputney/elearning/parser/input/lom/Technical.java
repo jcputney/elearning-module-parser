@@ -213,6 +213,25 @@ public final class Technical implements Serializable {
   @JacksonXmlProperty(localName = "customElements")
   private List<Object> customElements;
 
+  /**
+   * Constructs a new instance of the Technical class with the specified parameters.
+   *
+   * @param format a List of Strings representing the formats associated with this instance
+   * @param size an Integer representing the size associated with this instance
+   * @param location a List of Strings representing the locations associated with this instance
+   * @param requirements a List of {@link Requirement} objects representing the requirements
+   * associated with this instance
+   * @param installationRemarks a {@link SingleLangString} object representing the installation
+   * remarks for this instance
+   * @param otherPlatformRequirements a {@link SingleLangString} object representing the other
+   * platform requirements for this instance
+   * @param duration a {@link LomDuration} object representing the duration metadata for this
+   * instance
+   * @param packageProperties a {@link PackageProperties} object representing the package properties
+   * for this instance
+   * @param customElements a List of Objects representing custom elements associated with this
+   * instance
+   */
   public Technical(List<String> format, Integer size, List<String> location,
       List<Requirement> requirements, SingleLangString installationRemarks,
       SingleLangString otherPlatformRequirements, LomDuration duration,
@@ -228,6 +247,10 @@ public final class Technical implements Serializable {
     this.customElements = customElements;
   }
 
+  /**
+   * Default constructor for the Technical class. Initializes a new instance of the Technical class
+   * with no parameters.
+   */
   public Technical() {
     // no-op
   }

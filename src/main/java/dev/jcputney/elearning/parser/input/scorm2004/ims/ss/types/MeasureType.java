@@ -27,18 +27,15 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Represents a decimal measure with a value between -1 and 1, inclusive, with at least four
- * significant decimal digits.
- *
- * <p>This type enforces the range and precision for a measure as defined in the XML schema.
- * Valid values for this type fall within the range of -1 to 1.</p>
- *
- * @param value The decimal value for the measure must be between -1 and 1 with at least four
- * decimal digits.
+ * A class representing a specific measure type in a decimal format, constrained by specific bounds
+ * and precision requirements.
+ * <p>
+ * This class ensures that the value is within the range of -1 to 1 (inclusive) and formatted to at
+ * least four decimal places. Instances of this class are immutable.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-public record MeasureType(BigDecimal value) implements Serializable {
+public final class MeasureType implements Serializable {
 
   /**
    * The minimum and maximum values for the measure type.
@@ -53,7 +50,17 @@ public record MeasureType(BigDecimal value) implements Serializable {
   /**
    * The scale for the measure type, which defines the number of decimal places.
    */
-  private static final int SCALE = 4; // At least 4 significant decimal digits
+  private static final int SCALE = 4;
+
+
+  /**
+   * Represents the decimal value associated with a specific measure type. The value must be a
+   * BigDecimal and adhere to specific constraints: it must be between -1 and 1, inclusive, and must
+   * have at least four decimal digits. This field is immutable and cannot be modified after
+   * initialization.
+   */
+  private final BigDecimal value;
+
 
   /**
    * Default constructor for the MeasureType class.
@@ -139,4 +146,14 @@ public record MeasureType(BigDecimal value) implements Serializable {
         .append(value())
         .toHashCode();
   }
+
+  /**
+   * Retrieves the current value of the measure.
+   *
+   * @return the decimal value of the measure as a BigDecimal.
+   */
+  public BigDecimal value() {
+    return value;
+  }
+
 }

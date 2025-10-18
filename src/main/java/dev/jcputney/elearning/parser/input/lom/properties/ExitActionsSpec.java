@@ -54,6 +54,11 @@ public final class ExitActionsSpec implements Serializable {
   @JacksonXmlProperty(localName = "finalSco")
   private ScoExitActionSpec finalSco;
 
+  /**
+   * Constructs an instance of the {@code ExitActionsSpec} class.
+   * <p>
+   * This constructor initializes the object with no defined properties.
+   */
   public ExitActionsSpec() {
     // no-op
   }

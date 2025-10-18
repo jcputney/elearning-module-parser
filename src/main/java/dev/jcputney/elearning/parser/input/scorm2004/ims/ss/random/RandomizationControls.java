@@ -100,6 +100,10 @@ public final class RandomizationControls implements Serializable {
   @JsonProperty("selectCount")
   private Integer selectCount;
 
+  /**
+   * Default constructor for the {@code RandomizationControls} class. Initializes a new instance
+   * with default settings.
+   */
   public RandomizationControls() {
     // no-op
   }

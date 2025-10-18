@@ -59,6 +59,15 @@ public final class Descriptor implements Serializable {
   @JsonProperty(value = "Description")
   private String description;
 
+  /**
+   * Constructs a Descriptor object with the specified system ID, developer ID, title, and
+   * description.
+   *
+   * @param systemId the unique identifier for the system.
+   * @param developerId the unique identifier for the developer.
+   * @param title the title of the descriptor.
+   * @param description a detailed description of the descriptor.
+   */
   public Descriptor(String systemId, String developerId, String title, String description) {
     this.systemId = systemId;
     this.developerId = developerId;
@@ -66,6 +75,10 @@ public final class Descriptor implements Serializable {
     this.description = description;
   }
 
+  /**
+   * Default constructor for the Descriptor class. Initializes an instance of the Descriptor object
+   * with no initial values set for its fields.
+   */
   public Descriptor() {
     // no-op
   }

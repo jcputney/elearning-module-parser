@@ -53,6 +53,13 @@ public final class DataMap implements Serializable {
   @JsonProperty("writeSharedData")
   private boolean writeSharedData = false;
 
+  /**
+   * Default constructor for the DataMap class.
+   * <p>
+   * This constructor initializes an instance of the DataMap class without setting any properties or
+   * performing any actions. It serves as a no-operation (no-op) placeholder for object
+   * instantiation.
+   */
   public DataMap() {
     // no-op
   }

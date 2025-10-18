@@ -41,6 +41,11 @@ public final class Presentation implements Serializable {
   @JacksonXmlProperty(localName = "navigationInterface", namespace = ADLNav.NAMESPACE_URI)
   private NavigationInterface navigationInterface;
 
+  /**
+   * Constructs a new Presentation instance. This default constructor is provided to create an
+   * instance of the Presentation class, which manages navigation interface settings that control
+   * the visibility and behavior of navigation components in a learning management system (LMS).
+   */
   public Presentation() {
     // no-op
   }

@@ -83,6 +83,11 @@ public final class ActivityNode implements Serializable {
    */
   private boolean isVisible;
 
+  /**
+   * Default constructor for the ActivityNode class.
+   * <p>
+   * Initializes an instance of ActivityNode with default values.
+   */
   public ActivityNode() {
   }
 
@@ -166,6 +171,11 @@ public final class ActivityNode implements Serializable {
     return Collections.unmodifiableList(children);
   }
 
+  /**
+   * Sets the list of child nodes for this activity node.
+   *
+   * @param children The list of child ActivityNode objects to set.
+   */
   public void setChildren(List<ActivityNode> children) {
     this.children = children;
   }
@@ -179,6 +189,11 @@ public final class ActivityNode implements Serializable {
     return parent;
   }
 
+  /**
+   * Sets the parent activity node for this node.
+   *
+   * @param parent The ActivityNode to set as the parent of this node.
+   */
   public void setParent(ActivityNode parent) {
     this.parent = parent;
   }
@@ -192,6 +207,11 @@ public final class ActivityNode implements Serializable {
     return sequencing;
   }
 
+  /**
+   * Sets the sequencing information for this activity node.
+   *
+   * @param sequencing The Sequencing object to associate with this activity node.
+   */
   public void setSequencing(Sequencing sequencing) {
     this.sequencing = sequencing;
   }

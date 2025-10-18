@@ -116,6 +116,13 @@ public sealed class OrComposite implements Serializable permits Requirement {
   @JacksonXmlProperty(localName = "maximumVersion")
   private String maximumVersion;
 
+  /**
+   * Constructs a new instance of the {@code OrComposite} class.
+   * <p>
+   * This default constructor initializes an {@code OrComposite} object without setting any
+   * properties or performing additional logic. It primarily exists to allow the creation of an
+   * instance with no predefined state.
+   */
   public OrComposite() {
     // no-op
   }

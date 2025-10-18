@@ -56,6 +56,13 @@ public final class CatalogEntry implements Serializable {
   @JacksonXmlProperty(localName = "entry")
   private UnboundLangString entry;
 
+  /**
+   * Default constructor for the CatalogEntry class.
+   * <p>
+   * Initializes an empty instance of the CatalogEntry object with no assigned catalog or entry
+   * values. Primarily used for deserialization or creating placeholders before explicit values are
+   * set.
+   */
   public CatalogEntry() {
     // no-op
   }

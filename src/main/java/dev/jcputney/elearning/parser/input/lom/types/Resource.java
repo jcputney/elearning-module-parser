@@ -109,6 +109,13 @@ public final class Resource implements Serializable {
   @JacksonXmlProperty(localName = "customElements")
   private List<Object> customElements;
 
+  /**
+   * Default constructor for the {@code Resource} class.
+   * <p>
+   * Initializes a new instance of the {@code Resource} class. This constructor performs no
+   * operations and primarily exists to allow object creation without any initial state or
+   * parameters.
+   */
   public Resource() {
     // no-op
   }

@@ -48,6 +48,13 @@ public final class SequencingRule implements Serializable {
   @JacksonXmlProperty(localName = "ruleAction", namespace = IMSSS.NAMESPACE_URI)
   private RuleAction ruleAction;
 
+  /**
+   * Default constructor for the SequencingRule class.
+   * <p>
+   * This constructor initializes a new instance of the SequencingRule without setting any
+   * conditions or actions. It is intended for creating a default instance of the class before
+   * properties are configured.
+   */
   public SequencingRule() {
     // no-op
   }

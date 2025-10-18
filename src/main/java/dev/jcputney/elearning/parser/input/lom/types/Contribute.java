@@ -148,12 +148,22 @@ public final class Contribute implements Serializable {
   @JacksonXmlProperty(localName = "date")
   private Date date;
 
+  /**
+   * Default constructor for the Contribute class.
+   * <p>
+   * This constructor initializes an instance of the Contribute class with no initial configuration.
+   * It performs no operations and leaves the instance fields in their default state.
+   */
   public Contribute() {
     // no-op
   }
 
   /**
-   * Retrieves the role associated with the current
+   * Retrieves the role associated with the current contribution.
+   *
+   * @return a {@code SourceValuePair<Role>} representing the role of the entity contributing to the
+   * resource. The role is defined as one of the predefined values in the {@link Role} enumeration,
+   * such as "author", "editor", "publisher", etc.
    */
   public SourceValuePair<Role> getRole() {
     return this.role;

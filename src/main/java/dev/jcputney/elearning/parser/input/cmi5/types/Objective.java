@@ -61,6 +61,10 @@ public final class Objective implements Serializable {
   @JsonProperty("id")
   private String id;
 
+  /**
+   * Default constructor for the Objective class. This constructor initializes an Objective instance
+   * with no predefined values.
+   */
   public Objective() {
     // no-op
   }

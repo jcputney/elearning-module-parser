@@ -54,6 +54,10 @@ public final class Scorm2004File implements Serializable {
    */
   private boolean exists = false;
 
+  /**
+   * Default constructor for the Scorm2004File class. This constructor creates an instance of the
+   * Scorm2004File class with no initial parameters.
+   */
   public Scorm2004File() {
     // no-op
   }

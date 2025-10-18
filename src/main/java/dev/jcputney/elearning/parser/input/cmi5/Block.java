@@ -118,6 +118,19 @@ public final class Block implements Serializable {
   @JsonProperty("id")
   private String id;
 
+  /**
+   * Constructs a new {@code Block} instance with the specified parameters.
+   *
+   * @param title the title of the block, represented as a {@link TextType} object
+   * @param description the description of the block, represented as a {@link TextType} object
+   * @param objectives the objectives associated with the block, represented as a
+   * {@link ReferencesObjectives} object
+   * @param assignableUnits the list of assignable units for the block, represented as a
+   * {@link List} of {@code AU} objects
+   * @param nestedBlocks the list of nested blocks contained within this block, represented as a
+   * {@link List} of {@code Block} objects
+   * @param id the unique identifier of the block, represented as a {@code String}
+   */
   public Block(TextType title, TextType description, ReferencesObjectives objectives,
       List<AU> assignableUnits,
       List<Block> nestedBlocks, String id) {
@@ -129,6 +142,10 @@ public final class Block implements Serializable {
     this.id = id;
   }
 
+  /**
+   * Default constructor for the {@code Block} class. Initializes a new instance of the
+   * {@code Block} with no specific properties set.
+   */
   public Block() {
     // no-op
   }

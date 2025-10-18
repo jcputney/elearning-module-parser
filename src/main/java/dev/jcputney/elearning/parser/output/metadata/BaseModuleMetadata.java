@@ -84,6 +84,11 @@ public abstract class BaseModuleMetadata<M extends PackageManifest> extends Modu
     this.xapiEnabled = xapiEnabled;
   }
 
+  /**
+   * Default constructor for the BaseModuleMetadata class. This constructor is protected and
+   * performs no specific initialization. Primarily intended for usage within derived classes or
+   * internal processes.
+   */
   protected BaseModuleMetadata() {
     // no-op
   }

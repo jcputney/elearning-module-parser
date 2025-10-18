@@ -80,6 +80,19 @@ public final class AiccPrerequisiteNode implements Serializable {
    */
   private final List<AiccPrerequisiteNode> children;
 
+  /**
+   * Constructs an instance of {@code AiccPrerequisiteNode} representing a node in an AICC
+   * prerequisite expression tree. A node can represent various logical operations (e.g., AND, OR,
+   * NOT) or a leaf node identified by an identifier value. The node may also have child nodes that
+   * define its hierarchical structure within the expression tree.
+   *
+   * @param type the type of the node, defining its role in the prerequisite expression tree. Must
+   * not be null.
+   * @param value the value associated with the node. May be null for certain node types that do not
+   * require a specific value (e.g., AND, OR, NOT).
+   * @param children the list of child nodes associated with this node. If null is provided, it will
+   * be replaced with an empty list.
+   */
   public AiccPrerequisiteNode(AiccPrerequisiteNodeType type, String value,
       List<AiccPrerequisiteNode> children) {
     this.type = Objects.requireNonNull(type, "type");

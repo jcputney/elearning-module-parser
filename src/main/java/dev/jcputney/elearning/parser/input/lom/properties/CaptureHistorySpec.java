@@ -54,11 +54,26 @@ public final class CaptureHistorySpec implements Serializable {
   @JacksonXmlProperty(localName = "captureHistoryDetailed")
   private YesNoType captureHistoryDetailed;
 
+  /**
+   * Constructs a new instance of the {@code CaptureHistorySpec} class with the specified values.
+   *
+   * @param captureHistory the capture history flag, which indicates whether capture history is
+   * enabled or not. The value should be of type {@code YesNoType}.
+   * @param captureHistoryDetailed the detailed capture history flag, which specifies whether
+   * detailed capture history is enabled or not. The value should be of type {@code YesNoType}.
+   */
   public CaptureHistorySpec(YesNoType captureHistory, YesNoType captureHistoryDetailed) {
     this.captureHistory = captureHistory;
     this.captureHistoryDetailed = captureHistoryDetailed;
   }
 
+  /**
+   * Default constructor for the {@code CaptureHistorySpec} class.
+   * <p>
+   * Creates an instance of {@code CaptureHistorySpec} with no initial values set. This constructor
+   * is primarily used when no specific initialization is required or when values will be set
+   * manually after object creation.
+   */
   public CaptureHistorySpec() {
     // no-op
   }
@@ -72,6 +87,13 @@ public final class CaptureHistorySpec implements Serializable {
     return this.captureHistory;
   }
 
+  /**
+   * Sets the capture history flag, which indicates whether capture history should be enabled or
+   * not.
+   *
+   * @param captureHistory the capture history flag, represented as a {@code YesNoType}. Acceptable
+   * values include "yes", "no", "true", or "false".
+   */
   public void setCaptureHistory(YesNoType captureHistory) {
     this.captureHistory = captureHistory;
   }
@@ -86,6 +108,13 @@ public final class CaptureHistorySpec implements Serializable {
     return this.captureHistoryDetailed;
   }
 
+  /**
+   * Sets the detailed capture history flag, specifying whether detailed capture history is enabled
+   * or not.
+   *
+   * @param captureHistoryDetailed the detailed capture history flag, represented as a
+   * {@code YesNoType}. Acceptable values are "yes", "no", "true", or "false".
+   */
   public void setCaptureHistoryDetailed(YesNoType captureHistoryDetailed) {
     this.captureHistoryDetailed = captureHistoryDetailed;
   }

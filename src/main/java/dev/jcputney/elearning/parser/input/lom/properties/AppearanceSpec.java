@@ -57,6 +57,12 @@ public final class AppearanceSpec implements Serializable {
   @JacksonXmlProperty(localName = "courseStructureWidth")
   private BigInteger courseStructureWidth;
 
+  /**
+   * Default constructor for the AppearanceSpec class.
+   * <p>
+   * Initializes a new instance of the AppearanceSpec class. This constructor does not perform any
+   * operations and is intended for use in creating an empty AppearanceSpec object.
+   */
   public AppearanceSpec() {
     // no-op
   }

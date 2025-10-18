@@ -71,10 +71,20 @@ public final class ObjectivesList implements Serializable {
   @JacksonXmlProperty(localName = "objective")
   private List<Objective> objectives;
 
+  /**
+   * Constructs an instance of {@code ObjectivesList} with a specified list of objectives.
+   *
+   * @param objectives the list of objectives to initialize this instance with, where each objective
+   * is represented by an {@link Objective}
+   */
   public ObjectivesList(List<Objective> objectives) {
     this.objectives = objectives;
   }
 
+  /**
+   * Constructs an instance of {@code ObjectivesList} with no predefined objectives. This
+   * no-argument constructor initializes an empty ObjectivesList instance.
+   */
   public ObjectivesList() {
     // no-op
   }

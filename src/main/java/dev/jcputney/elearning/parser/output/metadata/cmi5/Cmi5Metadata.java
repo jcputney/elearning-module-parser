@@ -44,15 +44,109 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
 
+  /**
+   * A list of IDs representing assignable units within the Cmi5 metadata. Each assignable unit
+   * corresponds to a specific learning activity or module that can be assigned and tracked within a
+   * Cmi5-compliant system. This variable is immutable and is initialized to an empty list by
+   * default.
+   */
   private final List<String> assignableUnitIds = new ArrayList<>();
+
+  /**
+   * A list of URLs associated with assignable units in the CMI5 metadata. This field is used to
+   * store the URLs of activity units (AUs) extracted from the CMI5 manifest or provided metadata.
+   * It is populated with the URLs of assignable units during metadata extraction or processing.
+   * <p>
+   * The URLs correspond to the locations where the assignable units are hosted or can be accessed.
+   * These URLs are typically used to identify and reference the specific AUs within the context of
+   * the metadata.
+   * <p>
+   * This list is defined as final to ensure that the reference to the list does not change, but the
+   * contents of the list may still be modified during the metadata extraction process.
+   */
   private final List<String> assignableUnitUrls = new ArrayList<>();
+
+  /**
+   * A map holding the details of assignable units (AUs) in the metadata. Each entry in the map is a
+   * key-value pair, where the key is a unique identifier for the assignable unit, and the value is
+   * another map containing detailed metadata for that assignable unit. The metadata may include
+   * details such as URLs, titles, descriptions, and other relevant attributes.
+   */
   private final Map<String, Map<String, Object>> auDetails = new HashMap<>();
+
+  /**
+   * A mapping of assignable unit identifiers to their corresponding mastery scores. Each key in the
+   * map represents the unique identifier of an assignable unit, and its associated value represents
+   * the mastery score as a {@code double}.
+   * <p>
+   * This data structure is used to store the mastery thresholds required for successful completion
+   * of the corresponding assignable units. It allows for quick retrieval of proficiency levels
+   * required for each unit.
+   */
   private final Map<String, Double> masteryScores = new HashMap<>();
+
+  /**
+   * Represents the mapping of move-on criteria for assignable units within the Cmi5 metadata. Each
+   * entry in this map associates the unique identifier of an assignable unit with its corresponding
+   * move-on criterion. The move-on criterion defines the conditions required for the learner to
+   * advance within a course or module.
+   * <p>
+   * This field is immutable, ensuring the mapping remains constant after initialization.
+   */
   private final Map<String, String> moveOnCriteria = new HashMap<>();
+
+  /**
+   * A map that holds the launch methods associated with the metadata. Each entry in the map
+   * represents a key-value pair, where the key is a unique identifier and the value is the
+   * corresponding launch method information.
+   * <p>
+   * This field is used to store and retrieve the launch method details tied to specific
+   * identifiable elements within the metadata. Launch methods indicate the mechanisms or formats
+   * through which the associated activity or resource can be initiated.
+   * <p>
+   * This map is immutable and should be accessed using the appropriate getter method.
+   */
   private final Map<String, String> launchMethods = new HashMap<>();
+
+  /**
+   * A map representing the activity types associated with the metadata. Each activity type is
+   * defined as a key-value pair, where the key is a unique identifier for the activity type, and
+   * the value is a human-readable description of the activity type.
+   * <p>
+   * This field is intended to store metadata that categorizes and identifies specific types of
+   * activities within the system, providing a means to distinguish between different activity types
+   * and their purpose.
+   * <p>
+   * The map is initialized as an empty HashMap and can be populated during the metadata extraction
+   * or creation process.
+   */
   private final Map<String, String> activityTypes = new HashMap<>();
+
+  /**
+   * A map that stores launch parameters associated with the metadata. Each entry in the map
+   * represents a key-value pair, where the key is a unique identifier for the launch parameter, and
+   * the value is the corresponding information or value for that parameter.
+   * <p>
+   * This map is used to configure launch-related settings or attributes for assignable units or
+   * activities within the context of the CMI5 metadata. It is initialized as an empty map and
+   * populated as required during metadata processing or instantiation.
+   * <p>
+   * The keys in this map represent parameter names, while the values provide specific details or
+   * configurations related to those parameters.
+   */
   private final Map<String, String> launchParameters = new HashMap<>();
+
+  /**
+   * Holds a list of unique identifiers for blocks associated with the metadata. Block IDs are used
+   * to identify and organize blocks defined within the metadata structure. This list is immutable
+   * once initialized.
+   */
   private final List<String> blockIds = new ArrayList<>();
+
+  /**
+   * A list of objective IDs associated with the metadata. Each objective ID represents a unique
+   * identifier for an objective defined within the metadata.
+   */
   private final List<String> objectiveIds = new ArrayList<>();
 
   /**
@@ -122,7 +216,13 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
   }
 
   /**
-   * Extract or consolidate all metadata for a single AU into the provided metadata instance.
+   * Adds metadata for a specific activity unit (AU) to the provided Cmi5Metadata object. This
+   * includes details such as activity unit metadata, mastery score, move-on criteria, launch
+   * method, activity type, and launch parameters, if available.
+   *
+   * @param metadata The Cmi5Metadata object where the activity unit metadata should be added.
+   * @param au The activity unit (AU) containing metadata to be extracted and stored in the
+   * Cmi5Metadata object.
    */
   private static void addAssignableUnitMetadata(Cmi5Metadata metadata, AU au) {
     String auId = au.getId();

@@ -59,6 +59,11 @@ public final class ADLObjective implements Serializable {
   @JacksonXmlProperty(localName = "mapInfo", namespace = ADLSeq.NAMESPACE_URI)
   private List<MapInfo> mapInfoList;
 
+  /**
+   * Default constructor for the ADLObjective class.
+   * <p>
+   * Initializes a new instance of the ADLObjective class with default settings.
+   */
   public ADLObjective() {
     // no-op
   }

@@ -41,6 +41,13 @@ public final class ADLData implements Serializable {
   @JacksonXmlProperty(localName = "map", namespace = ADLCP.NAMESPACE_URI)
   private List<DataMap> mapList;
 
+  /**
+   * Default constructor for the ADLData class.
+   * <p>
+   * This constructor initializes an instance of the ADLData class without setting any properties or
+   * performing any actions. It serves as a no-operation (no-op) placeholder for object
+   * instantiation.
+   */
   public ADLData() {
     // no-op
   }

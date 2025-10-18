@@ -85,6 +85,12 @@ public final class Taxon implements Serializable {
   @JacksonXmlProperty(localName = "customElement", namespace = LOM.NAMESPACE_URI + "/extend")
   private List<Object> customElements;
 
+  /**
+   * Default constructor for the {@code Taxon} class.
+   * <p>
+   * Initializes a new instance of the {@code Taxon} class. This constructor performs no operations
+   * and is primarily provided to allow object creation without any initial parameters or state.
+   */
   public Taxon() {
     // no-op
   }

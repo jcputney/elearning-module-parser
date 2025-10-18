@@ -124,6 +124,20 @@ public final class Scorm2004ObjectiveMapping implements Serializable {
   @JsonProperty("writeCompletionStatus")
   private boolean writeCompletionStatus = false;
 
+  /**
+   * Constructs a Scorm2004ObjectiveMapping object with specified parameters to configure the
+   * capabilities for reading and writing SCORM 2004 objective properties.
+   *
+   * @param targetObjectiveID the identifier for the SCORM objective that this mapping applies to
+   * @param readSatisfiedStatus a boolean indicating whether the "satisfied status" can be read
+   * @param readNormalizedMeasure a boolean indicating whether the "normalized measure" can be read
+   * @param writeSatisfiedStatus a boolean indicating whether the "satisfied status" can be written
+   * @param writeNormalizedMeasure a boolean indicating whether the "normalized measure" can be
+   * written
+   * @param readCompletionStatus a boolean indicating whether the "completion status" can be read
+   * @param writeCompletionStatus a boolean indicating whether the "completion status" can be
+   * written
+   */
   public Scorm2004ObjectiveMapping(String targetObjectiveID, boolean readSatisfiedStatus,
       boolean readNormalizedMeasure, boolean writeSatisfiedStatus, boolean writeNormalizedMeasure,
       boolean readCompletionStatus, boolean writeCompletionStatus) {
@@ -136,6 +150,13 @@ public final class Scorm2004ObjectiveMapping implements Serializable {
     this.writeCompletionStatus = writeCompletionStatus;
   }
 
+  /**
+   * Default constructor for the Scorm2004ObjectiveMapping class.
+   * <p>
+   * This constructor initializes a Scorm2004ObjectiveMapping instance with no specific
+   * configuration or parameters. It serves as a no-operation constructor and provides an instance
+   * of the class without setting any attributes or enabling any SCORM objective properties.
+   */
   public Scorm2004ObjectiveMapping() {
     // no-op
   }

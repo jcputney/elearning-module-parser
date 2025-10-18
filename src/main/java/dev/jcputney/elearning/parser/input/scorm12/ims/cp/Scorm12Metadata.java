@@ -90,6 +90,13 @@ public final class Scorm12Metadata implements LoadableMetadata {
   @JacksonXmlProperty(localName = "location", namespace = Scorm12ADLCP.NAMESPACE_URI)
   private String location;
 
+  /**
+   * Default constructor for the Scorm12Metadata class.
+   * <p>
+   * This constructor initializes a new instance of the Scorm12Metadata class without setting any
+   * initial values for its fields. All properties of the instance will need to be explicitly set
+   * after construction.
+   */
   public Scorm12Metadata() {
     // no-op
   }

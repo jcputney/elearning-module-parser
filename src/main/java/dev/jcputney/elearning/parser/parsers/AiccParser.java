@@ -100,7 +100,13 @@ public final class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
   }
 
   /**
-   * Parses the AICC module and returns its metadata.
+   * Parses the AICC module components and generates corresponding metadata. This method validates
+   * the presence of required data, such as title and launch URL, in the AICC module's course file,
+   * and constructs an {@code AiccMetadata} instance based on parsed information.
+   *
+   * @return An instance of {@code AiccMetadata} containing the parsed metadata for the AICC module.
+   * @throws ModuleParsingException If the module is missing required data, files, or an unexpected
+   * error occurs.
    */
   @Override
   public AiccMetadata parse() throws ModuleParsingException {
@@ -178,6 +184,11 @@ public final class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
     // No external metadata to load for AICC
   }
 
+  /**
+   * Returns the class type representing the AICC manifest.
+   *
+   * @return The class type {@code AiccManifest.class}.
+   */
   @Override
   protected Class<AiccManifest> getManifestClass() {
     return AiccManifest.class;

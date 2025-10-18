@@ -56,6 +56,13 @@ public final class RuleConditions implements Serializable {
   @JsonProperty("conditionCombination")
   private ConditionCombinationType conditionCombination = ConditionCombinationType.ANY;
 
+  /**
+   * Default constructor for the RuleConditions class.
+   * <p>
+   * This constructor initializes an instance of the RuleConditions object with default settings. It
+   * does not initialize or modify any fields or properties during its execution. This constructor
+   * can be used to create a new instance for defining or managing conditions in a sequencing rule.
+   */
   public RuleConditions() {
     // no-op
   }

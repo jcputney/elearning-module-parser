@@ -65,6 +65,10 @@ public final class Scorm2004SubMetadata implements LoadableMetadata {
   @JacksonXmlProperty(localName = "lom", namespace = LOM.NAMESPACE_URI)
   private LOM lom;
 
+  /**
+   * Default constructor for the Scorm2004SubMetadata class. Creates an instance of
+   * Scorm2004SubMetadata with default values. This is a no-op constructor.
+   */
   public Scorm2004SubMetadata() {
     // no-op
   }

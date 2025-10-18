@@ -41,10 +41,22 @@ public final class Scorm2004Dependency implements Serializable {
   @JsonProperty("identifierref")
   private String identifierRef;
 
+  /**
+   * Constructs a Scorm2004Dependency object with the specified identifier reference.
+   *
+   * @param identifierRef the identifier reference pointing to another resource in the content
+   * package that this resource depends on
+   */
   public Scorm2004Dependency(String identifierRef) {
     this.identifierRef = identifierRef;
   }
 
+  /**
+   * Constructs a new instance of Scorm2004Dependency with default values. This no-argument
+   * constructor initializes a Scorm2004Dependency object without setting any identifier reference.
+   * Primarily used for deserialization or scenarios where an initial dependency reference is not
+   * immediately required.
+   */
   public Scorm2004Dependency() {
     // no-op
   }

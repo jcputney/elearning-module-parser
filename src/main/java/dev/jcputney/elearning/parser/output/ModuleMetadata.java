@@ -78,6 +78,13 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
     this.xapiEnabled = xapiEnabled;
   }
 
+  /**
+   * Default constructor for the ModuleMetadata class.
+   * <p>
+   * This constructor is protected and does not perform any specific initialization. It is intended
+   * for use by subclasses or internal processes where explicit instantiation of the ModuleMetadata
+   * class is required.
+   */
   protected ModuleMetadata() {
     // no-op
   }

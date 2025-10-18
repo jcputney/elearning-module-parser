@@ -356,6 +356,11 @@ public final class Scorm12Manifest implements PackageManifest {
   @JacksonXmlProperty(localName = "resources", namespace = NAMESPACE_URI)
   private Scorm12Resources resources;
 
+  /**
+   * Default constructor for the Scorm12Manifest class. This constructor initializes an instance of
+   * the Scorm12Manifest class without performing any operations. Designed primarily for scenarios
+   * where explicit initialization of fields is not required.
+   */
   public Scorm12Manifest() {
     // no-op
   }
