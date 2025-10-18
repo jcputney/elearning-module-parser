@@ -3,7 +3,7 @@
 
   <groupId>dev.jcputney</groupId>
   <artifactId>elearning-module-parser</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <name>elearning-module-parser</name>
 
   <description>A library for parsing eLearning module configuration files and packages</description>
@@ -14,7 +14,7 @@
     <connection>scm:git:https://github.com/jcputney/elearning-module-parser.git</connection>
     <developerConnection>scm:git:git@github.com:jcputney/elearning-module-parser.git
     </developerConnection>
-    <tag>HEAD</tag>
+    <tag>v0.1.0</tag>
   </scm>
 
   <developers>
