@@ -64,11 +64,12 @@ class DefaultModuleTypeDetectorTest {
   void constructor_registersDefaultPlugins() {
     List<ModuleTypeDetectorPlugin> plugins = detector.getPlugins();
 
-    // Verify that default plugins are registered
-    assertEquals(3, plugins.size());
-    assertInstanceOf(ScormDetectorPlugin.class, plugins.get(0));
-    assertInstanceOf(Cmi5DetectorPlugin.class, plugins.get(1));
-    assertInstanceOf(AiccDetectorPlugin.class, plugins.get(2));
+    // Verify that default plugins are registered (sorted by priority descending)
+    assertEquals(4, plugins.size());
+    assertInstanceOf(ScormDetectorPlugin.class, plugins.get(0));  // Priority 100
+    assertInstanceOf(Cmi5DetectorPlugin.class, plugins.get(1));   // Priority 90
+    assertInstanceOf(AiccDetectorPlugin.class, plugins.get(2));   // Priority 80
+    assertInstanceOf(XapiDetectorPlugin.class, plugins.get(3));   // Priority 40
   }
 
   @Test

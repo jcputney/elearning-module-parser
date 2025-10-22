@@ -18,6 +18,7 @@
 package dev.jcputney.elearning.parser.output;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.PackageManifest;
@@ -160,6 +161,38 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
   public Duration getDuration() {
     return manifest.getDuration();
   }
+
+  /**
+   * Determines whether this module contains multiple launchable units.
+   * <p>
+   * This affects player configuration defaults such as navigation controls,
+   * table of contents display, and launch behavior. In Rustici Engine and similar
+   * LMS platforms, this flag is used to conditionally enable multi-SCO navigation features.
+   * </p>
+   * <ul>
+   *   <li>SCORM 1.2: Multiple resources with scormType="sco"</li>
+   *   <li>SCORM 2004: Multiple items in organization</li>
+   *   <li>AICC: Multiple assignable units</li>
+   *   <li>cmi5/xAPI: Always false (single AU/activity)</li>
+   * </ul>
+   *
+   * @return true if the module contains multiple launchable units, false otherwise
+   */
+  @JsonIgnore
+  public abstract boolean hasMultipleLaunchableUnits();
+
+  /**
+   * Retrieves the filename of the manifest file for this module.
+   * <p>
+   * For most module types, this is a constant defined by the specification
+   * (e.g., "imsmanifest.xml" for SCORM, "cmi5.xml" for cmi5). For AICC modules,
+   * the filename is discovered during parsing as the .crs file can have any name.
+   * </p>
+   *
+   * @return the manifest filename (e.g., "imsmanifest.xml", "cmi5.xml", "course.crs")
+   */
+  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+  public abstract String getManifestFile();
 
   /**
    * Gets the total size of all files in the module on disk.

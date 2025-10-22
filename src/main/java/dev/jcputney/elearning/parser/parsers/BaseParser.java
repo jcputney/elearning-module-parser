@@ -43,7 +43,7 @@ import javax.xml.stream.XMLStreamException;
  */
 public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends PackageManifest>
     implements ModuleParser<M>
-    permits AiccParser, Cmi5Parser, Scorm12Parser, Scorm2004Parser {
+    permits AiccParser, Cmi5Parser, Scorm12Parser, Scorm2004Parser, XapiParser {
 
   /**
    * The name of the xAPI JavaScript file.

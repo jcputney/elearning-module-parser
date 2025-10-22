@@ -156,6 +156,33 @@ public class IntegrationTest {
   }
 
   /**
+   * Tests the end-to-end parsing process for an xAPI/TinCan module.
+   * <p>
+   * This test verifies that: 1. The ModuleParserFactory correctly detects the module type 2. The
+   * appropriate parser is created 3. The parser successfully parses the module 4. The parsed
+   * metadata contains the expected values
+   * </p>
+   */
+  @Test
+  void testEndToEndParsingXapi()
+      throws IOException, ModuleDetectionException, ModuleParsingException {
+    // Arrange
+    String modulePath = "src/test/resources/modules/xapi/basic_course";
+
+    // Act
+    LocalFileAccess fileAccess = new LocalFileAccess(modulePath);
+    ModuleParserFactory parserFactory = new DefaultModuleParserFactory(fileAccess);
+    ModuleParser<?> parser = parserFactory.getParser();
+    ModuleMetadata<?> metadata = parser.parse();
+
+    // Assert
+    assertNotNull(metadata);
+    assertEquals(ModuleType.XAPI, metadata.getModuleType());
+    assertEquals("Basic xAPI Course", metadata.getTitle());
+    assertEquals("index.html", metadata.getLaunchUrl());
+  }
+
+  /**
    * Tests the error handling for an invalid module.
    * <p>
    * This test verifies that: 1. The ModuleParserFactory correctly throws an exception for an
@@ -224,6 +251,15 @@ public class IntegrationTest {
       assertNotNull(cmi5Metadata);
       assertEquals(ModuleType.CMI5, cmi5Metadata.getModuleType());
     }
+
+    // Test xAPI/TinCan
+    LocalFileAccess xapiFileAccess = new LocalFileAccess(
+        "src/test/resources/modules/xapi/basic_course");
+    ModuleParserFactory xapiFactory = new DefaultModuleParserFactory(xapiFileAccess);
+    ModuleParser<?> xapiParser = xapiFactory.getParser();
+    ModuleMetadata<?> xapiMetadata = xapiParser.parse();
+    assertNotNull(xapiMetadata);
+    assertEquals(ModuleType.XAPI, xapiMetadata.getModuleType());
   }
 
   /**

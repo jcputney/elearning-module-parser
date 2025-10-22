@@ -27,9 +27,9 @@ import dev.jcputney.elearning.parser.input.cmi5.Block;
 import dev.jcputney.elearning.parser.input.cmi5.Cmi5Manifest;
 import dev.jcputney.elearning.parser.input.cmi5.Course;
 import dev.jcputney.elearning.parser.input.cmi5.ObjectivesList;
-import dev.jcputney.elearning.parser.input.cmi5.types.LangString;
+import dev.jcputney.elearning.parser.input.xapi.types.LangString;
 import dev.jcputney.elearning.parser.input.cmi5.types.Objective;
-import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
+import dev.jcputney.elearning.parser.input.xapi.types.TextType;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -253,5 +253,66 @@ class Cmi5MetadataTest {
     Objective objective = new Objective();
     objective.setId(id);
     return objective;
+  }
+
+  /**
+   * Tests that hasMultipleLaunchableUnits() always returns false for cmi5,
+   * even with no AUs.
+   */
+  @Test
+  void hasMultipleLaunchableUnits_withNoAUs_returnsFalse() {
+    // Arrange
+    Course course = createCourse("course-id", "Test Course", "Test Description");
+    Cmi5Manifest manifest = new Cmi5Manifest();
+    manifest.setCourse(course);
+
+    // Act
+    Cmi5Metadata metadata = Cmi5Metadata.create(manifest, false);
+
+    // Assert
+    assertFalse(metadata.hasMultipleLaunchableUnits());
+  }
+
+  /**
+   * Tests that hasMultipleLaunchableUnits() always returns false for cmi5,
+   * even with a single AU.
+   */
+  @Test
+  void hasMultipleLaunchableUnits_withSingleAU_returnsFalse() {
+    // Arrange
+    Course course = createCourse("course-id", "Test Course", "Test Description");
+    AU au = createAU("au1", "url1");
+    Cmi5Manifest manifest = new Cmi5Manifest();
+    manifest.setCourse(course);
+    manifest.setAssignableUnits(List.of(au));
+
+    // Act
+    Cmi5Metadata metadata = Cmi5Metadata.create(manifest, false);
+
+    // Assert
+    assertFalse(metadata.hasMultipleLaunchableUnits());
+  }
+
+  /**
+   * Tests that hasMultipleLaunchableUnits() always returns false for cmi5,
+   * even with multiple AUs. This is because cmi5 is designed as a single-launch
+   * standard from a navigation perspective.
+   */
+  @Test
+  void hasMultipleLaunchableUnits_withMultipleAUs_returnsFalse() {
+    // Arrange
+    Course course = createCourse("course-id", "Test Course", "Test Description");
+    AU au1 = createAU("au1", "url1");
+    AU au2 = createAU("au2", "url2");
+    AU au3 = createAU("au3", "url3");
+    Cmi5Manifest manifest = new Cmi5Manifest();
+    manifest.setCourse(course);
+    manifest.setAssignableUnits(List.of(au1, au2, au3));
+
+    // Act
+    Cmi5Metadata metadata = Cmi5Metadata.create(manifest, false);
+
+    // Assert
+    assertFalse(metadata.hasMultipleLaunchableUnits());
   }
 }

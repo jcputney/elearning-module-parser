@@ -331,5 +331,15 @@ class ModuleMetadataTest {
       return manifest;
     }
 
+    @Override
+    public boolean hasMultipleLaunchableUnits() {
+      return false;
+    }
+
+    @Override
+    public String getManifestFile() {
+      return "test-manifest.xml";
+    }
+
   }
 }

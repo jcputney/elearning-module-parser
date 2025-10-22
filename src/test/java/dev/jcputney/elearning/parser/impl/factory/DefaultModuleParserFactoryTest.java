@@ -314,6 +314,16 @@ class DefaultModuleParserFactoryTest {
       super(manifest, ModuleType.SCORM_12,
           dev.jcputney.elearning.parser.enums.ModuleEditionType.SCORM_12, false);
     }
+
+    @Override
+    public boolean hasMultipleLaunchableUnits() {
+      return false;
+    }
+
+    @Override
+    public String getManifestFile() {
+      return "test-manifest.xml";
+    }
   }
 
   private static class MockModuleParser implements ModuleParser<PackageManifest> {

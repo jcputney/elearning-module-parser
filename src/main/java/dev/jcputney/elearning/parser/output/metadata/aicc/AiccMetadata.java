@@ -188,13 +188,34 @@ public class AiccMetadata extends BaseModuleMetadata<AiccManifest> {
   private boolean requiresLevel4;
 
   /**
+   * The filename of the AICC course (.crs) file discovered during parsing.
+   * AICC allows the .crs file to have any name, so this is determined at parse time.
+   */
+  private String manifestFile;
+
+  @Override
+  public boolean hasMultipleLaunchableUnits() {
+    if (manifest == null || manifest.getAssignableUnits() == null) {
+      return false;
+    }
+
+    return manifest.getAssignableUnits().size() > 1;
+  }
+
+  @Override
+  public String getManifestFile() {
+    return manifestFile;
+  }
+
+  /**
    * Creates and initializes an instance of AiccMetadata based on the provided AICC manifest.
    *
    * @param manifest the AICC manifest from which metadata will be extracted
    * @param xapiEnabled a boolean indicating whether xAPI is enabled
+   * @param manifestFile the filename of the AICC .crs file discovered during parsing
    * @return a populated instance of AiccMetadata containing metadata extracted from the manifest
    */
-  public static AiccMetadata create(AiccManifest manifest, boolean xapiEnabled) {
+  public static AiccMetadata create(AiccManifest manifest, boolean xapiEnabled, String manifestFile) {
     if (manifest == null) {
       throw new IllegalArgumentException("Manifest cannot be null");
     }
@@ -203,6 +224,7 @@ public class AiccMetadata extends BaseModuleMetadata<AiccManifest> {
     metadata.moduleType = ModuleType.AICC;
     metadata.moduleEditionType = ModuleEditionType.AICC;
     metadata.xapiEnabled = xapiEnabled;
+    metadata.manifestFile = manifestFile;
 
     int declaredLevel = parseDeclaredLevel(manifest);
     metadata.requiresLevel2 = declaredLevel >= 2;

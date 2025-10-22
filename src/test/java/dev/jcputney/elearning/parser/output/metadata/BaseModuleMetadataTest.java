@@ -86,5 +86,15 @@ class BaseModuleMetadataTest {
     TestBaseModuleMetadata(TestManifest manifest, ModuleType moduleType, boolean xapiEnabled) {
       super(manifest, moduleType, xapiEnabled);
     }
+
+    @Override
+    public boolean hasMultipleLaunchableUnits() {
+      return false;
+    }
+
+    @Override
+    public String getManifestFile() {
+      return "test-manifest.xml";
+    }
   }
 }

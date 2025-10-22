@@ -34,6 +34,7 @@ import dev.jcputney.elearning.parser.parsers.AiccParser;
 import dev.jcputney.elearning.parser.parsers.Cmi5Parser;
 import dev.jcputney.elearning.parser.parsers.Scorm12Parser;
 import dev.jcputney.elearning.parser.parsers.Scorm2004Parser;
+import dev.jcputney.elearning.parser.parsers.XapiParser;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -155,5 +156,6 @@ public final class DefaultModuleParserFactory implements ModuleParserFactory {
     registerParser(ModuleType.SCORM_2004, Scorm2004Parser::new);
     registerParser(ModuleType.AICC, AiccParser::new);
     registerParser(ModuleType.CMI5, Cmi5Parser::new);
+    registerParser(ModuleType.XAPI, XapiParser::new);
   }
 }

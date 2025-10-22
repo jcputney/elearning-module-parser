@@ -43,4 +43,9 @@ public enum ModuleType {
    * cmi5 (xAPI for cmi5) module type.
    */
   CMI5,
+
+  /**
+   * xAPI/TinCan module type.
+   */
+  XAPI,
 }

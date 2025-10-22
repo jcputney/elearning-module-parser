@@ -158,3 +158,6 @@ pom.xml.releaseBackup
 /logs/
 docs/sequencing.md
 /test_modules/
+
+# Git worktrees
+.worktrees/

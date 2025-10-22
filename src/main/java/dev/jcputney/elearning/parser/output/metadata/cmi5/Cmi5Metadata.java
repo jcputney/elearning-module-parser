@@ -492,4 +492,17 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
   public List<String> getObjectiveIds() {
     return List.copyOf(objectiveIds);
   }
+
+  @Override
+  public boolean hasMultipleLaunchableUnits() {
+    // cmi5 is designed as a single-launch standard from a navigation perspective,
+    // even though it may contain multiple AUs. The player treats it as a single
+    // entry point, so this always returns false.
+    return false;
+  }
+
+  @Override
+  public String getManifestFile() {
+    return "cmi5.xml";
+  }
 }

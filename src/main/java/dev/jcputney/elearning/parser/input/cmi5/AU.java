@@ -24,7 +24,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.cmi5.types.LaunchMethod;
 import dev.jcputney.elearning.parser.input.cmi5.types.MoveOn;
 import dev.jcputney.elearning.parser.input.cmi5.types.ReferencesObjectives;
-import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
+import dev.jcputney.elearning.parser.input.xapi.types.TextType;
 import dev.jcputney.elearning.parser.input.common.PercentType;
 import dev.jcputney.elearning.parser.input.common.PercentTypeDeserializer;
 import java.io.Serializable;

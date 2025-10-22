@@ -5,16 +5,16 @@
 [![Maven Central][maven-badge]][maven-link]
 [![Java 17+][java-badge]][java-link]
 
-A production-ready Java 17 library for parsing and validating SCORM 1.2, SCORM 2004, AICC, and cmi5
-modules. The parser normalizes metadata across formats, making it simple to integrate new eLearning
-packages into LMS platforms, content pipelines, and QA tooling.
+A production-ready Java 17 library for parsing and validating SCORM 1.2, SCORM 2004, AICC, cmi5, and
+xAPI/TinCan modules. The parser normalizes metadata across formats, making it simple to integrate new
+eLearning packages into LMS platforms, content pipelines, and QA tooling.
 
 ## Highlights
 
-- Auto-detects SCORM 1.2, SCORM 2004 (editions 2-4), AICC, and cmi5 manifests via pluggable
-  detectors
-- Produces typed metadata (`Scorm2004Metadata`, `Scorm12Metadata`, `AiccMetadata`, `Cmi5Metadata`)
-  with consistent accessors for titles, launch URLs, structure, and mastery data
+- Auto-detects SCORM 1.2, SCORM 2004 (editions 2-4), AICC, cmi5, and xAPI/TinCan manifests via
+  pluggable detectors
+- Produces typed metadata (`Scorm2004Metadata`, `Scorm12Metadata`, `AiccMetadata`, `Cmi5Metadata`,
+  `XapiMetadata`) with consistent accessors for titles, launch URLs, structure, and mastery data
 - Uses storage-agnostic `FileAccess` strategies (local directories, ZIP files, AWS S3 SDK v1/v2,
   in-memory payloads, and cached wrappers)
 - Emits rich domain exceptions (`ModuleDetectionException`, `ManifestParseException`,
@@ -100,6 +100,8 @@ println("Launch URL: "+metadata.getLaunchUrl());
   and prerequisite graphs.
 - **cmi5**: detected by the presence of `cmi5.xml`; provides AU metadata, move-on criteria, and
   launch parameters.
+- **xAPI/TinCan**: detected by the presence of `tincan.xml`; parses activity definitions, launch
+  URLs, and metadata for Tin Can API packages.
 
 ## Usage
 
@@ -175,8 +177,44 @@ Scorm12Metadata scorm12 = (Scorm12Metadata) metadata;
 
 println(scorm12.getMasteryScores());
     }
+    case XAPI ->{
+XapiMetadata xapi = (XapiMetadata) metadata;
+    xapi.
+
+getActivities().
+
+forEach(activity ->System.out.
+
+println(activity.getName()));
+    }
     }
 ```
+
+### Enhanced metadata features
+
+All metadata objects now provide additional helper methods for better LMS integration:
+
+```java
+ModuleMetadata<?> metadata = factory.parseModule();
+
+// Check if module has multiple launchable units (affects navigation UI)
+boolean hasMultipleUnits = metadata.hasMultipleLaunchableUnits();
+
+// Get the manifest filename
+String manifestFile = metadata.getManifestFile();
+
+// Module type and edition information
+ModuleType type = metadata.getModuleType();
+ModuleEditionType edition = metadata.getEditionType();
+```
+
+The `hasMultipleLaunchableUnits()` method is particularly useful for LMS player configuration, as it
+indicates whether navigation controls and table of contents should be displayed:
+
+- **SCORM 1.2**: Multiple resources with `scormType="sco"`
+- **SCORM 2004**: Multiple items in organization
+- **AICC**: Multiple assignable units
+- **cmi5/xAPI**: Always `false` (single AU/activity)
 
 ### Performance optimization
 

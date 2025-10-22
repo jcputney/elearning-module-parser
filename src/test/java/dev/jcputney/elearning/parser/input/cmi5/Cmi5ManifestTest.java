@@ -25,8 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import dev.jcputney.elearning.parser.input.cmi5.types.LangString;
-import dev.jcputney.elearning.parser.input.cmi5.types.TextType;
+import dev.jcputney.elearning.parser.input.xapi.types.LangString;
+import dev.jcputney.elearning.parser.input.xapi.types.TextType;
 import java.time.Duration;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;

@@ -21,6 +21,7 @@ import dev.jcputney.elearning.parser.output.metadata.aicc.AiccMetadata;
 import dev.jcputney.elearning.parser.output.metadata.cmi5.Cmi5Metadata;
 import dev.jcputney.elearning.parser.output.metadata.scorm12.Scorm12Metadata;
 import dev.jcputney.elearning.parser.output.metadata.scorm2004.Scorm2004Metadata;
+import dev.jcputney.elearning.parser.output.metadata.xapi.XapiMetadata;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.Console;
@@ -633,6 +634,7 @@ public final class ModuleBatchRunner {
       case SCORM_2004 -> OBJECT_MAPPER.readValue(json, Scorm2004Metadata.class);
       case AICC -> OBJECT_MAPPER.readValue(json, AiccMetadata.class);
       case CMI5 -> OBJECT_MAPPER.readValue(json, Cmi5Metadata.class);
+      case XAPI -> OBJECT_MAPPER.readValue(json, XapiMetadata.class);
     };
 
     boolean jsonMatches = metadata.equals(typedMetadata);

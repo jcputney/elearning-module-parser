@@ -124,8 +124,15 @@ public final class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
             + "' has empty or missing launch URL in course file (expected in [Course_Data] section)");
       }
 
+      // Find the .crs manifest filename
+      String manifestFilename = findFileByExtension(CRS_EXTENSION);
+      if (manifestFilename == null) {
+        throw new ModuleParsingException("AICC .crs file not found in module at '"
+            + this.moduleFileProvider.getRootPath() + "'");
+      }
+
       // Build and return metadata
-      return AiccMetadata.create(aiccManifest, checkForXapi());
+      return AiccMetadata.create(aiccManifest, checkForXapi(), manifestFilename);
     } catch (IOException | ManifestParseException e) {
       throw new ModuleParsingException(
           "Error parsing AICC module at '" + this.moduleFileProvider.getRootPath()

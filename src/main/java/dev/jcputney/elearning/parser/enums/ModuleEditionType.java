@@ -59,7 +59,12 @@ public enum ModuleEditionType {
   /**
    * cmi5 (xAPI for cmi5) module type.
    */
-  CMI5;
+  CMI5,
+
+  /**
+   * xAPI/TinCan module type.
+   */
+  XAPI;
 
   /**
    * Creates a ModuleEditionType from a ModuleType and optional edition information.
@@ -89,6 +94,7 @@ public enum ModuleEditionType {
       case SCORM_2004 -> SCORM_2004;
       case AICC -> AICC;
       case CMI5 -> CMI5;
+      case XAPI -> XAPI;
     };
   }
 
@@ -117,6 +123,7 @@ public enum ModuleEditionType {
           ModuleType.SCORM_2004;
       case AICC -> ModuleType.AICC;
       case CMI5 -> ModuleType.CMI5;
+      case XAPI -> ModuleType.XAPI;
     };
   }
 }

@@ -29,10 +29,13 @@ import static org.mockito.Mockito.when;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import dev.jcputney.elearning.parser.input.scorm2004.SequencingUsageDetector.SequencingLevel;
+import dev.jcputney.elearning.parser.input.scorm2004.adl.types.ScormType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004CourseMetadata;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organization;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organizations;
+import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resource;
+import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resources;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004Objective;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004ObjectiveMapping;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004Objectives;
@@ -418,6 +421,151 @@ class Scorm2004MetadataTest {
 
     // Act
     boolean result = Scorm2004Metadata.hasSequencing(mockManifest);
+
+    // Assert
+    assertTrue(result);
+  }
+
+  @Test
+  void testHasMultipleLaunchableUnits_NullManifest_ReturnsFalse() {
+    // Arrange
+    Scorm2004Metadata metadata = new Scorm2004Metadata() {
+      {
+        manifest = null;
+      }
+    };
+
+    // Act
+    boolean result = metadata.hasMultipleLaunchableUnits();
+
+    // Assert
+    assertFalse(result);
+  }
+
+  @Test
+  void testHasMultipleLaunchableUnits_NullDefaultOrganization_ReturnsFalse() {
+    // Arrange
+    when(mockManifest.getOrganizations()).thenReturn(mockOrganizations);
+    when(mockOrganizations.getOrganizationList()).thenReturn(Collections.emptyList());
+    when(mockOrganizations.getDefault()).thenReturn(null);
+
+    Scorm2004Metadata metadata = Scorm2004Metadata.create(mockManifest, false);
+
+    // Act
+    boolean result = metadata.hasMultipleLaunchableUnits();
+
+    // Assert
+    assertFalse(result);
+  }
+
+  @Test
+  void testHasMultipleLaunchableUnits_SingleSCO_ReturnsFalse() {
+    // Arrange
+    Scorm2004Resources mockResources = mock(Scorm2004Resources.class);
+    Scorm2004Resource mockResource = mock(Scorm2004Resource.class);
+
+    when(mockManifest.getOrganizations()).thenReturn(mockOrganizations);
+    when(mockOrganizations.getDefault()).thenReturn(mockOrganization);
+    when(mockOrganization.getItems()).thenReturn(List.of(mockItem));
+    when(mockManifest.getResources()).thenReturn(mockResources);
+    when(mockResources.getResourceList()).thenReturn(List.of(mockResource));
+    when(mockResource.getIdentifier()).thenReturn("resource1");
+    when(mockResource.getScormType()).thenReturn(ScormType.SCO);
+    when(mockItem.getIdentifierRef()).thenReturn("resource1");
+
+    Scorm2004Metadata metadata = Scorm2004Metadata.create(mockManifest, false);
+
+    // Act
+    boolean result = metadata.hasMultipleLaunchableUnits();
+
+    // Assert
+    assertFalse(result);
+  }
+
+  @Test
+  void testHasMultipleLaunchableUnits_MultipleSCOs_ReturnsTrue() {
+    // Arrange
+    Scorm2004Resources mockResources = mock(Scorm2004Resources.class);
+    Scorm2004Resource mockResource1 = mock(Scorm2004Resource.class);
+    Scorm2004Resource mockResource2 = mock(Scorm2004Resource.class);
+    Scorm2004Item mockItem2 = mock(Scorm2004Item.class);
+
+    when(mockManifest.getOrganizations()).thenReturn(mockOrganizations);
+    when(mockOrganizations.getDefault()).thenReturn(mockOrganization);
+    when(mockOrganization.getItems()).thenReturn(List.of(mockItem, mockItem2));
+    when(mockManifest.getResources()).thenReturn(mockResources);
+    when(mockResources.getResourceList()).thenReturn(List.of(mockResource1, mockResource2));
+
+    when(mockResource1.getIdentifier()).thenReturn("resource1");
+    when(mockResource1.getScormType()).thenReturn(ScormType.SCO);
+    when(mockResource2.getIdentifier()).thenReturn("resource2");
+    when(mockResource2.getScormType()).thenReturn(ScormType.SCO);
+
+    when(mockItem.getIdentifierRef()).thenReturn("resource1");
+    when(mockItem2.getIdentifierRef()).thenReturn("resource2");
+
+    Scorm2004Metadata metadata = Scorm2004Metadata.create(mockManifest, false);
+
+    // Act
+    boolean result = metadata.hasMultipleLaunchableUnits();
+
+    // Assert
+    assertTrue(result);
+  }
+
+  @Test
+  void testHasMultipleLaunchableUnits_OnlyAssets_ReturnsFalse() {
+    // Arrange
+    Scorm2004Resources mockResources = mock(Scorm2004Resources.class);
+    Scorm2004Resource mockResource1 = mock(Scorm2004Resource.class);
+    Scorm2004Resource mockResource2 = mock(Scorm2004Resource.class);
+
+    when(mockManifest.getOrganizations()).thenReturn(mockOrganizations);
+    when(mockOrganizations.getDefault()).thenReturn(mockOrganization);
+    when(mockOrganization.getItems()).thenReturn(List.of(mockItem));
+    when(mockManifest.getResources()).thenReturn(mockResources);
+    when(mockResources.getResourceList()).thenReturn(List.of(mockResource1, mockResource2));
+
+    when(mockResource1.getIdentifier()).thenReturn("resource1");
+    when(mockResource1.getScormType()).thenReturn(ScormType.ASSET);
+    when(mockResource2.getIdentifier()).thenReturn("resource2");
+    when(mockResource2.getScormType()).thenReturn(ScormType.ASSET);
+
+    Scorm2004Metadata metadata = Scorm2004Metadata.create(mockManifest, false);
+
+    // Act
+    boolean result = metadata.hasMultipleLaunchableUnits();
+
+    // Assert
+    assertFalse(result);
+  }
+
+  @Test
+  void testHasMultipleLaunchableUnits_NestedSCOs_ReturnsTrue() {
+    // Arrange
+    Scorm2004Resources mockResources = mock(Scorm2004Resources.class);
+    Scorm2004Resource mockResource1 = mock(Scorm2004Resource.class);
+    Scorm2004Resource mockResource2 = mock(Scorm2004Resource.class);
+
+    when(mockManifest.getOrganizations()).thenReturn(mockOrganizations);
+    when(mockOrganizations.getDefault()).thenReturn(mockOrganization);
+    when(mockOrganization.getItems()).thenReturn(List.of(mockItem));
+    when(mockItem.getItems()).thenReturn(List.of(mockSubItem));
+    when(mockManifest.getResources()).thenReturn(mockResources);
+    when(mockResources.getResourceList()).thenReturn(List.of(mockResource1, mockResource2));
+
+    when(mockResource1.getIdentifier()).thenReturn("resource1");
+    when(mockResource1.getScormType()).thenReturn(ScormType.SCO);
+    when(mockResource2.getIdentifier()).thenReturn("resource2");
+    when(mockResource2.getScormType()).thenReturn(ScormType.SCO);
+
+    when(mockItem.getIdentifierRef()).thenReturn("resource1");
+    when(mockSubItem.getIdentifierRef()).thenReturn("resource2");
+
+    Scorm2004Metadata metadata = Scorm2004Metadata.create(mockManifest, false);
+
+    // Act
+    boolean result = metadata.hasMultipleLaunchableUnits();
 
     // Assert
     assertTrue(result);

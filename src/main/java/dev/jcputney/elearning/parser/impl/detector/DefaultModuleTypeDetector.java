@@ -42,6 +42,7 @@ import java.util.List;
  * <ol>
  *   <li>{@link ScormDetectorPlugin} - Detects SCORM 1.2 and SCORM 2004 modules</li>
  *   <li>{@link Cmi5DetectorPlugin} - Detects cmi5 modules</li>
+ *   <li>{@link XapiDetectorPlugin} - Detects xAPI/TinCan modules</li>
  *   <li>{@link AiccDetectorPlugin} - Detects AICC modules</li>
  * </ol>
  *
@@ -187,6 +188,7 @@ public final class DefaultModuleTypeDetector implements ModuleTypeDetector {
   private void registerDefaultPlugins() {
     registerPlugin(new ScormDetectorPlugin());
     registerPlugin(new Cmi5DetectorPlugin());
+    registerPlugin(new XapiDetectorPlugin());
     registerPlugin(new AiccDetectorPlugin());
   }
 }

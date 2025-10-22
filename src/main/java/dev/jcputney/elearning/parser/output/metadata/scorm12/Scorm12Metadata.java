@@ -21,6 +21,7 @@ import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Item;
+import dev.jcputney.elearning.parser.input.scorm2004.adl.types.ScormType;
 import dev.jcputney.elearning.parser.output.metadata.BaseModuleMetadata;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -160,6 +161,24 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
    */
   public Map<String, String> getCustomData() {
     return Map.copyOf(customData);
+  }
+
+  @Override
+  public boolean hasMultipleLaunchableUnits() {
+    if (manifest == null || manifest.getResources() == null || manifest.getResources().getResourceList() == null) {
+      return false;
+    }
+
+    long scoCount = manifest.getResources().getResourceList().stream()
+        .filter(resource -> resource.getScormType() == ScormType.SCO)
+        .count();
+
+    return scoCount > 1;
+  }
+
+  @Override
+  public String getManifestFile() {
+    return "imsmanifest.xml";
   }
 
   /**

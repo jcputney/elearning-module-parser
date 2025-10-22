@@ -23,7 +23,9 @@ import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import dev.jcputney.elearning.parser.input.scorm2004.SequencingUsageDetector;
 import dev.jcputney.elearning.parser.input.scorm2004.SequencingUsageDetector.SequencingLevel;
+import dev.jcputney.elearning.parser.input.scorm2004.adl.types.ScormType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
+import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resource;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004Objective;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004ObjectiveMapping;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.DeliveryControls;
@@ -444,6 +446,64 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
   @JsonIgnore
   public boolean overridesDeliveryControlDefaults(String activityId) {
     return deliveryControlOverrides.contains(activityId);
+  }
+
+  @Override
+  public boolean hasMultipleLaunchableUnits() {
+    if (manifest == null || manifest.getOrganizations() == null
+        || manifest.getOrganizations().getDefault() == null) {
+      return false;
+    }
+
+    // Build a map of resource identifiers to their SCO type
+    Map<String, ScormType> resourceTypes = new LinkedHashMap<>();
+    if (manifest.getResources() != null && manifest.getResources().getResourceList() != null) {
+      for (Scorm2004Resource resource : manifest.getResources().getResourceList()) {
+        resourceTypes.put(resource.getIdentifier(), resource.getScormType());
+      }
+    }
+
+    // Count items that reference SCO resources
+    List<Scorm2004Item> items = manifest.getOrganizations().getDefault().getItems();
+    long scoCount = countScoItems(items, resourceTypes);
+
+    return scoCount > 1;
+  }
+
+  @Override
+  public String getManifestFile() {
+    return "imsmanifest.xml";
+  }
+
+  /**
+   * Recursively counts items that reference SCO resources.
+   *
+   * @param items The list of items to process.
+   * @param resourceTypes A map of resource identifiers to their SCORM types.
+   * @return The count of items that reference SCO resources.
+   */
+  private long countScoItems(List<Scorm2004Item> items, Map<String, ScormType> resourceTypes) {
+    if (items == null || items.isEmpty()) {
+      return 0;
+    }
+
+    long count = 0;
+    for (Scorm2004Item item : items) {
+      // Check if this item references a SCO resource
+      if (item.getIdentifierRef() != null) {
+        ScormType type = resourceTypes.get(item.getIdentifierRef());
+        if (type == ScormType.SCO) {
+          count++;
+        }
+      }
+
+      // Recursively count child items
+      if (item.getItems() != null && !item.getItems().isEmpty()) {
+        count += countScoItems(item.getItems(), resourceTypes);
+      }
+    }
+
+    return count;
   }
 
   /**
