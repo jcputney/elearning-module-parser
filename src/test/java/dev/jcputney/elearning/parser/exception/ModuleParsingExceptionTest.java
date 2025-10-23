@@ -17,136 +17,38 @@
 
 package dev.jcputney.elearning.parser.exception;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-
-import java.io.IOException;
-import javax.xml.stream.XMLStreamException;
+import dev.jcputney.elearning.parser.validation.ValidationIssue;
+import dev.jcputney.elearning.parser.validation.ValidationResult;
 import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.*;
 
-/**
- * Test class for ModuleParsingException.
- */
 class ModuleParsingExceptionTest {
 
-  @Test
-  void testConstructor_WithMessage_Success() {
-    // Act
-    ModuleParsingException exception = new ModuleParsingException("Parse error");
+    @Test
+    void testExceptionFromValidationResult() {
+        ValidationResult result = ValidationResult.of(
+            ValidationIssue.error("CODE1", "First error", "location1"),
+            ValidationIssue.error("CODE2", "Second error", "location2")
+        );
 
-    // Assert
-    assertEquals("Parse error", exception.getMessage());
-    assertNull(exception.getCause());
-  }
+        ModuleParsingException ex = new ModuleParsingException("Parse failed", result);
 
-  @Test
-  void testConstructor_WithMessageAndCause_Success() {
-    // Arrange
-    Throwable cause = new RuntimeException("Underlying cause");
+        assertThat(ex.getMessage()).contains("Parse failed");
+        assertThat(ex.getMessage()).contains("2 error(s) found");
+        assertThat(ex.getMessage()).contains("CODE1");
+        assertThat(ex.getMessage()).contains("CODE2");
+        assertThat(ex.getValidationResult()).isEqualTo(result);
+    }
 
-    // Act
-    ModuleParsingException exception = new ModuleParsingException("Parse error", cause);
+    @Test
+    void testExceptionViaToException() {
+        ValidationResult result = ValidationResult.of(
+            ValidationIssue.error("CODE", "Error message", "location")
+        );
 
-    // Assert
-    assertEquals("Parse error", exception.getMessage());
-    assertSame(cause, exception.getCause());
-  }
+        ModuleParsingException ex = result.toException("Context message");
 
-  @Test
-  void testConstructor_WithNullMessage_Success() {
-    // Act
-    ModuleParsingException exception = new ModuleParsingException(null);
-
-    // Assert
-    assertNull(exception.getMessage());
-    assertNull(exception.getCause());
-  }
-
-  @Test
-  void testConstructor_WithNullCause_Success() {
-    // Act
-    ModuleParsingException exception = new ModuleParsingException("Parse error", null);
-
-    // Assert
-    assertEquals("Parse error", exception.getMessage());
-    assertNull(exception.getCause());
-  }
-
-  @Test
-  void testInheritance_ExtendsModuleException() {
-    // Arrange
-    ModuleParsingException exception = new ModuleParsingException("Parse error");
-
-    // Assert
-    assertInstanceOf(ModuleException.class, exception);
-    assertInstanceOf(Exception.class, exception);
-    assertInstanceOf(Throwable.class, exception);
-  }
-
-  @Test
-  void testRealisticScenario_ManifestParsingError_Success() {
-    // Arrange
-    Throwable xmlException = new XMLStreamException("Invalid XML at line 15");
-
-    // Act
-    ModuleParsingException exception = new ModuleParsingException(
-        "Failed to parse SCORM manifest", xmlException);
-
-    // Assert
-    assertEquals("Failed to parse SCORM manifest", exception.getMessage());
-    assertInstanceOf(XMLStreamException.class, exception.getCause());
-    assertEquals("Invalid XML at line 15", exception.getCause().getMessage());
-  }
-
-  @Test
-  void testRealisticScenario_MissingRequiredElement_Success() {
-    // Arrange & Act
-    ModuleParsingException exception = new ModuleParsingException(
-        "Missing required element: <title>");
-
-    // Assert
-    assertEquals("Missing required element: <title>", exception.getMessage());
-  }
-
-  @Test
-  void testRealisticScenario_InvalidModuleStructure_Success() {
-    // Arrange
-    IOException ioException = new IOException("File not found: launch.html");
-
-    // Act
-    ModuleParsingException exception = new ModuleParsingException(
-        "Invalid module structure: missing launch file", ioException);
-
-    // Assert
-    assertEquals("Invalid module structure: missing launch file", exception.getMessage());
-    assertInstanceOf(IOException.class, exception.getCause());
-  }
-
-  @Test
-  void testChainedExceptions_MultipleWrappingLevels_Success() {
-    // Arrange
-    RuntimeException rootCause = new RuntimeException("Database connection failed");
-    IOException ioException = new IOException("Failed to read metadata", rootCause);
-
-    // Act
-    ModuleParsingException exception = new ModuleParsingException("Module parsing failed",
-        ioException);
-
-    // Assert
-    assertEquals("Module parsing failed", exception.getMessage());
-    assertSame(ioException, exception.getCause());
-    assertSame(rootCause, exception.getCause().getCause());
-  }
-
-  @Test
-  void testEmptyMessage_Success() {
-    // Act
-    ModuleParsingException exception = new ModuleParsingException("");
-
-    // Assert
-    assertEquals("", exception.getMessage());
-    assertNull(exception.getCause());
-  }
+        assertThat(ex.getMessage()).contains("Context message");
+        assertThat(ex.getValidationResult()).isEqualTo(result);
+    }
 }

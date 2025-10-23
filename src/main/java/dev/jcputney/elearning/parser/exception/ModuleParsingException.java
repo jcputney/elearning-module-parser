@@ -18,6 +18,7 @@
 package dev.jcputney.elearning.parser.exception;
 
 import dev.jcputney.elearning.parser.api.ModuleParser;
+import dev.jcputney.elearning.parser.validation.ValidationResult;
 
 /**
  * Exception thrown when there's an error parsing an eLearning module.
@@ -39,28 +40,51 @@ import dev.jcputney.elearning.parser.api.ModuleParser;
  */
 public final class ModuleParsingException extends ModuleException {
 
+  private final ValidationResult validationResult;
+
+  /**
+   * Constructs a new ModuleParsingException with validation result.
+   * This constructor should only be called from ValidationResult.toException().
+   *
+   * @param contextMessage Context describing what was being parsed
+   * @param result ValidationResult containing all validation issues
+   */
+  public ModuleParsingException(String contextMessage, ValidationResult result) {
+    super(contextMessage + ":\n" + result.formatErrors());
+    this.validationResult = result;
+  }
+
   /**
    * Constructs a new ModuleParsingException with the specified detail message.
    *
-   * @param message the detail message (which is saved for later retrieval by the
-   * {@link #getMessage()} method)
+   * @deprecated Use {@link #ModuleParsingException(String, ValidationResult)} instead
+   * @param message the detail message
    */
+  @Deprecated(since = "0.1.1", forRemoval = true)
   public ModuleParsingException(String message) {
     super(message);
+    this.validationResult = null;
   }
 
   /**
    * Constructs a new ModuleParsingException with the specified detail message and cause.
    *
-   * <p>Note that the detail message associated with {@code cause} is <i>not</i> automatically
-   * incorporated into this exception's detail message.
-   *
-   * @param message the detail message (which is saved for later retrieval by the
-   * {@link #getMessage()} method)
-   * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method).
-   * A null value is permitted and indicates that the cause is nonexistent or unknown.
+   * @deprecated Use {@link #ModuleParsingException(String, ValidationResult)} instead
+   * @param message the detail message
+   * @param cause the cause
    */
+  @Deprecated(since = "0.1.1", forRemoval = true)
   public ModuleParsingException(String message, Throwable cause) {
     super(message, cause);
+    this.validationResult = null;
+  }
+
+  /**
+   * Gets the validation result containing all issues found during parsing.
+   *
+   * @return ValidationResult with errors and warnings, or null if this exception was created with deprecated constructors
+   */
+  public ValidationResult getValidationResult() {
+    return validationResult;
   }
 }

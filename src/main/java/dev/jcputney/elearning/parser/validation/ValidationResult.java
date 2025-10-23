@@ -151,9 +151,7 @@ public final class ValidationResult {
      * @param contextMessage Context message describing what was being parsed
      * @return ModuleParsingException containing this result
      */
-    // NOTE: Commented out temporarily because ModuleParsingException constructor doesn't exist yet
-    // Will be uncommented in Task 4
-    // public ModuleParsingException toException(String contextMessage) {
-    //     return new ModuleParsingException(contextMessage, this);
-    // }
+    public ModuleParsingException toException(String contextMessage) {
+        return new ModuleParsingException(contextMessage, this);
+    }
 }
