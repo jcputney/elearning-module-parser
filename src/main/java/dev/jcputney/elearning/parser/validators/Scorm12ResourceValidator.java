@@ -29,19 +29,9 @@ import dev.jcputney.elearning.parser.validators.rules.scorm12.OrganizationsRequi
 import dev.jcputney.elearning.parser.validators.rules.scorm12.ResourceHrefRequiredRule;
 import dev.jcputney.elearning.parser.validators.rules.scorm12.ResourceReferenceValidRule;
 import dev.jcputney.elearning.parser.validators.rules.scorm12.ResourcesRequiredRule;
-import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Item;
-import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organization;
-import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organizations;
-import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resource;
-import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resources;
-import dev.jcputney.elearning.parser.validation.ValidationIssue;
-import dev.jcputney.elearning.parser.validation.ValidationIssue.Severity;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Validator for SCORM 1.2 manifests and their resource references.
@@ -79,123 +69,14 @@ public class Scorm12ResourceValidator {
 
   /**
    * Validates a SCORM 1.2 manifest for structural and reference integrity.
-   * Now uses rule-based validation for better testability and maintainability.
+   * Uses rule-based validation for better testability and maintainability.
    *
    * @param manifest The SCORM 1.2 manifest to validate
    * @return ValidationResult containing any issues found
    */
   public ValidationResult validate(Scorm12Manifest manifest) {
-    // Run common rules first
-    ValidationResult commonRulesResult = commonRules.stream()
+    return commonRules.stream()
         .map(rule -> rule.validate(manifest))
         .reduce(ValidationResult.valid(), ValidationResult::merge);
-
-    // Keep existing validation logic (will be extracted to rules later)
-    ValidationResult existingValidation = validateExisting(manifest);
-
-    // Merge all results
-    return commonRulesResult.merge(existingValidation);
   }
-
-  /**
-   * Existing validation logic - will be extracted to individual rules in future tasks.
-   */
-  private ValidationResult validateExisting(Scorm12Manifest manifest) {
-    List<ValidationIssue> issues = new ArrayList<>();
-
-    // Build resource index for fast lookup
-    Map<String, Scorm12Resource> resourceIndex = buildResourceIndex(manifest);
-
-    // Validate organizations
-    validateOrganizations(manifest, resourceIndex, issues);
-
-    return ValidationResult.of(issues.toArray(new ValidationIssue[0]));
-  }
-
-  /**
-   * Builds an index of resources by their identifier for fast lookup.
-   *
-   * @param manifest The manifest containing resources
-   * @return Map of resource identifier to resource
-   */
-  private Map<String, Scorm12Resource> buildResourceIndex(Scorm12Manifest manifest) {
-    Map<String, Scorm12Resource> index = new HashMap<>();
-    Scorm12Resources resources = manifest.getResources();
-
-    if (resources != null && resources.getResourceList() != null) {
-      for (Scorm12Resource resource : resources.getResourceList()) {
-        if (resource.getIdentifier() != null) {
-          index.put(resource.getIdentifier(), resource);
-        }
-      }
-    }
-
-    return index;
-  }
-
-  /**
-   * Validates the organizations structure and default organization reference.
-   *
-   * @param manifest The manifest to validate
-   * @param resourceIndex Index of available resources
-   * @param issues List to collect validation issues
-   */
-  private void validateOrganizations(Scorm12Manifest manifest,
-                                     Map<String, Scorm12Resource> resourceIndex,
-                                     List<ValidationIssue> issues) {
-    Scorm12Organizations organizations = manifest.getOrganizations();
-
-    // Organizations null check now handled by OrganizationsRequiredRule
-    // Default organization validity now handled by DefaultOrganizationValidRule
-    if (organizations == null) {
-      return;
-    }
-
-    // Validate all organizations
-    if (organizations.getOrganizationList() != null) {
-      for (Scorm12Organization org : organizations.getOrganizationList()) {
-        validateOrganization(org, resourceIndex, issues);
-      }
-    }
-  }
-
-  /**
-   * Validates a single organization and its items.
-   *
-   * @param organization The organization to validate
-   * @param resourceIndex Index of available resources
-   * @param issues List to collect validation issues
-   */
-  private void validateOrganization(Scorm12Organization organization,
-                                    Map<String, Scorm12Resource> resourceIndex,
-                                    List<ValidationIssue> issues) {
-    if (organization.getItems() != null) {
-      for (Scorm12Item item : organization.getItems()) {
-        validateItem(item, organization.getIdentifier(), resourceIndex, issues);
-      }
-    }
-  }
-
-  /**
-   * Recursively validates an item and its children.
-   *
-   * @param item The item to validate
-   * @param orgId The parent organization identifier
-   * @param resourceIndex Index of available resources
-   * @param issues List to collect validation issues
-   */
-  private void validateItem(Scorm12Item item, String orgId,
-                            Map<String, Scorm12Resource> resourceIndex,
-                            List<ValidationIssue> issues) {
-    // Resource reference validation now handled by ResourceReferenceValidRule
-    // Resource href validation now handled by ResourceHrefRequiredRule
-
-    // Recursively validate child items
-    if (item.getItems() != null) {
-      for (Scorm12Item childItem : item.getItems()) {
-        validateItem(childItem, orgId, resourceIndex, issues);
-      }
-    }
-  }
-
 }
