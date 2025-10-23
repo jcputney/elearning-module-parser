@@ -22,6 +22,7 @@ import dev.jcputney.elearning.parser.validators.rules.ValidationRule;
 import dev.jcputney.elearning.parser.validators.rules.common.DuplicateIdentifierRule;
 import dev.jcputney.elearning.parser.validators.rules.common.OrphanedResourcesRule;
 import dev.jcputney.elearning.parser.validators.rules.common.PathSecurityRule;
+import dev.jcputney.elearning.parser.validators.rules.scorm12.OrganizationsRequiredRule;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Item;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organization;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organizations;
@@ -59,7 +60,8 @@ public class Scorm12ResourceValidator {
     this.commonRules = Arrays.asList(
         new DuplicateIdentifierRule(),
         new PathSecurityRule(),
-        new OrphanedResourcesRule()
+        new OrphanedResourcesRule(),
+        new OrganizationsRequiredRule()
     );
   }
 
@@ -131,12 +133,8 @@ public class Scorm12ResourceValidator {
                                      List<ValidationIssue> issues) {
     Scorm12Organizations organizations = manifest.getOrganizations();
 
+    // Organizations null check now handled by OrganizationsRequiredRule
     if (organizations == null) {
-      issues.add(ValidationIssue.error(
-          "SCORM12_MISSING_ORGANIZATIONS",
-          "Manifest must contain an <organizations> element",
-          "manifest"
-      ));
       return;
     }
 
