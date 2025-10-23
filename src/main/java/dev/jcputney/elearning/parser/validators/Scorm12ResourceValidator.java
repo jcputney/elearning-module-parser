@@ -24,6 +24,7 @@ import dev.jcputney.elearning.parser.validators.rules.common.OrphanedResourcesRu
 import dev.jcputney.elearning.parser.validators.rules.common.PathSecurityRule;
 import dev.jcputney.elearning.parser.validators.rules.scorm12.DefaultOrganizationValidRule;
 import dev.jcputney.elearning.parser.validators.rules.scorm12.OrganizationsRequiredRule;
+import dev.jcputney.elearning.parser.validators.rules.scorm12.ResourceReferenceValidRule;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Item;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organization;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organizations;
@@ -63,7 +64,8 @@ public class Scorm12ResourceValidator {
         new PathSecurityRule(),
         new OrphanedResourcesRule(),
         new OrganizationsRequiredRule(),
-        new DefaultOrganizationValidRule()
+        new DefaultOrganizationValidRule(),
+        new ResourceReferenceValidRule()
     );
   }
 
@@ -179,20 +181,12 @@ public class Scorm12ResourceValidator {
                             List<ValidationIssue> issues) {
     String identifierRef = item.getIdentifierRef();
 
-    // If item references a resource, validate it
+    // Resource reference validation now handled by ResourceReferenceValidRule
+    // If item references a resource, validate the resource has a launch URL
     if (identifierRef != null && !identifierRef.isEmpty()) {
       Scorm12Resource resource = resourceIndex.get(identifierRef);
-
-      if (resource == null) {
-        issues.add(ValidationIssue.error(
-            "SCORM12_MISSING_RESOURCE_REF",
-            "Item references non-existent resource '" + identifierRef + "'",
-            "organization[@identifier='" + orgId + "']/item[@identifier='" +
-                item.getIdentifier() + "']/@identifierref",
-            "Ensure the identifierref attribute references a valid resource identifier"
-        ));
-      } else {
-        // Validate that the resource has a launch URL
+      if (resource != null) {
+        // Validate that the resource has a launch URL (will be extracted in Task 4)
         validateResourceHref(resource, item.getIdentifier(), orgId, issues);
       }
     }
