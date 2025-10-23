@@ -10,6 +10,7 @@ import com.github.freva.asciitable.Styler;
 import dev.jcputney.elearning.parser.api.ModuleParserFactory;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.impl.access.S3FileAccessV2;
@@ -599,7 +600,7 @@ public final class ModuleBatchRunner {
       long elapsed = System.currentTimeMillis() - startTime;
       logger.info("S3: " + LOG_ELAPSED, job.modulePrefix, elapsed / 1000, elapsed % 1000);
       return successResult(SourceType.S3, job.modulePrefix, job.uuid, job.version, metadata);
-    } catch (ModuleDetectionException | ModuleParsingException | IOException exception) {
+    } catch (ModuleException | IOException exception) {
       long elapsed = System.currentTimeMillis() - startTime;
       logger.error("S3: " + LOG_ELAPSED_FAILED, job.modulePrefix, elapsed / 1000, elapsed % 1000);
       logModuleFailure(SourceType.S3, job.modulePrefix, job.uuid, job.version, exception);
@@ -616,7 +617,7 @@ public final class ModuleBatchRunner {
       long elapsed = System.currentTimeMillis() - startTime;
       logger.info("Local: " + LOG_ELAPSED, job.displayPath(), elapsed / 1000, elapsed % 1000);
       return successResult(SourceType.LOCAL, job.displayPath(), "-", "-", metadata);
-    } catch (ModuleDetectionException | ModuleParsingException | IOException exception) {
+    } catch (ModuleException | IOException exception) {
       String location = job.displayPath();
       long elapsed = System.currentTimeMillis() - startTime;
       logger.error("Local: " + LOG_ELAPSED_FAILED, location, elapsed / 1000, elapsed % 1000);
@@ -831,7 +832,7 @@ public final class ModuleBatchRunner {
     }
 
     ModuleMetadata<?> parse(S3ModuleJob job)
-        throws ModuleDetectionException, ModuleParsingException {
+        throws ModuleException {
       fileAccess.prepareForModule(job.modulePrefix);
       // Use batch processing options (no file existence validation, no size calculation)
       ParserOptions options = new ParserOptions();

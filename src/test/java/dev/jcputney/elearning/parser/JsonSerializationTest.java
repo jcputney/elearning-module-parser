@@ -10,6 +10,7 @@ import dev.jcputney.elearning.parser.api.ModuleParser;
 import dev.jcputney.elearning.parser.api.ModuleParserFactory;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.access.ZipFileAccess;
 import dev.jcputney.elearning.parser.impl.factory.DefaultModuleParserFactory;
@@ -30,7 +31,7 @@ class JsonSerializationTest {
 
   @Test
   void testScorm2004JsonSerialization()
-      throws IOException, ModuleDetectionException, ModuleParsingException {
+      throws IOException, ModuleDetectionException, ModuleException {
     String modulePath = "src/test/resources/modules/zips/scorm2004.zip";
     ModuleParserFactory parserFactory = new DefaultModuleParserFactory(
         new ZipFileAccess(modulePath));
