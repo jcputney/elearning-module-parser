@@ -27,6 +27,7 @@ import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resource;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resources;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
 import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -158,6 +159,46 @@ class Scorm12ResourceValidatorTest {
     assertThat(result.isValid()).isFalse();
     assertThat(result.hasErrors()).isTrue();
     assertThat(result.getErrors().get(0).code()).isEqualTo("SCORM12_MISSING_ORGANIZATIONS");
+  }
+
+  @Test
+  void validate_withMultipleRuleViolations_returnsAllIssues() {
+    // Create manifest with multiple violations:
+    // 1. Duplicate identifiers
+    // 2. Orphaned resource
+    // 3. Missing resource reference
+    Scorm12Manifest manifest = new Scorm12Manifest();
+    manifest.setIdentifier("dup_id");
+
+    Scorm12Organizations organizations = new Scorm12Organizations();
+    Scorm12Organization org = new Scorm12Organization();
+    org.setIdentifier("dup_id"); // Duplicate!
+
+    Scorm12Item item = new Scorm12Item();
+    item.setIdentifier("item1");
+    item.setIdentifierRef("missing_resource"); // Missing ref!
+    org.setItems(Collections.singletonList(item));
+    organizations.setOrganizationList(Collections.singletonList(org));
+    manifest.setOrganizations(organizations);
+
+    Scorm12Resources resources = new Scorm12Resources();
+    Scorm12Resource res1 = new Scorm12Resource();
+    res1.setIdentifier("orphaned"); // Orphaned!
+    res1.setHref("unused.html");
+    resources.setResourceList(Collections.singletonList(res1));
+    manifest.setResources(resources);
+
+    Scorm12ResourceValidator validator = new Scorm12ResourceValidator();
+    ValidationResult result = validator.validate(manifest);
+
+    assertThat(result.isValid()).isFalse();
+    assertThat(result.hasErrors()).isTrue();
+    assertThat(result.hasWarnings()).isTrue();
+
+    // Should have errors from duplicate ID and missing ref
+    assertThat(result.getErrors().size()).isGreaterThanOrEqualTo(2);
+    // Should have warning from orphaned resource
+    assertThat(result.getWarnings().size()).isGreaterThanOrEqualTo(1);
   }
 
   /**

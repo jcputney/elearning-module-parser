@@ -18,6 +18,10 @@
 package dev.jcputney.elearning.parser.validators;
 
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
+import dev.jcputney.elearning.parser.validators.rules.ValidationRule;
+import dev.jcputney.elearning.parser.validators.rules.common.DuplicateIdentifierRule;
+import dev.jcputney.elearning.parser.validators.rules.common.OrphanedResourcesRule;
+import dev.jcputney.elearning.parser.validators.rules.common.PathSecurityRule;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Item;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organization;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organizations;
@@ -27,6 +31,7 @@ import dev.jcputney.elearning.parser.validation.ValidationIssue;
 import dev.jcputney.elearning.parser.validation.ValidationIssue.Severity;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,13 +50,43 @@ import java.util.Map;
  */
 public class Scorm12ResourceValidator {
 
+  private final List<ValidationRule<Scorm12Manifest>> commonRules;
+
+  /**
+   * Constructs a new Scorm12ResourceValidator with default rules.
+   */
+  public Scorm12ResourceValidator() {
+    this.commonRules = Arrays.asList(
+        new DuplicateIdentifierRule(),
+        new PathSecurityRule(),
+        new OrphanedResourcesRule()
+    );
+  }
+
   /**
    * Validates a SCORM 1.2 manifest for structural and reference integrity.
+   * Now uses rule-based validation for better testability and maintainability.
    *
    * @param manifest The SCORM 1.2 manifest to validate
    * @return ValidationResult containing any issues found
    */
   public ValidationResult validate(Scorm12Manifest manifest) {
+    // Run common rules first
+    ValidationResult commonRulesResult = commonRules.stream()
+        .map(rule -> rule.validate(manifest))
+        .reduce(ValidationResult.valid(), ValidationResult::merge);
+
+    // Keep existing validation logic (will be extracted to rules later)
+    ValidationResult existingValidation = validateExisting(manifest);
+
+    // Merge all results
+    return commonRulesResult.merge(existingValidation);
+  }
+
+  /**
+   * Existing validation logic - will be extracted to individual rules in future tasks.
+   */
+  private ValidationResult validateExisting(Scorm12Manifest manifest) {
     List<ValidationIssue> issues = new ArrayList<>();
 
     // Build resource index for fast lookup
