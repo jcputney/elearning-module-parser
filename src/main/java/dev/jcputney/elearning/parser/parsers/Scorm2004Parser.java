@@ -19,14 +19,21 @@ package dev.jcputney.elearning.parser.parsers;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
+import dev.jcputney.elearning.parser.config.FileExistenceValidator;
+import dev.jcputney.elearning.parser.config.ModuleSizeCalculator;
+import dev.jcputney.elearning.parser.exception.ManifestParseException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.common.serialization.Scorm2004SchemaValidator;
+import dev.jcputney.elearning.parser.validation.ValidationIssue;
+import dev.jcputney.elearning.parser.validation.ValidationResult;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004File;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organization;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resource;
 import dev.jcputney.elearning.parser.output.metadata.scorm2004.Scorm2004Metadata;
+import dev.jcputney.elearning.parser.util.FileUtils;
 import dev.jcputney.elearning.parser.util.XmlParsingUtils;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,6 +65,17 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
   }
 
   /**
+   * Constructs a Scorm2004Parser with the specified FileAccess instance and parser options.
+   *
+   * @param fileAccess An instance of FileAccess for reading files in the module package.
+   * @param options The parser options to control validation and calculation behavior.
+   */
+  public Scorm2004Parser(FileAccess fileAccess,
+      dev.jcputney.elearning.parser.api.ParserOptions options) {
+    super(fileAccess, options);
+  }
+
+  /**
    * Constructs a Scorm2004Parser with the specified ModuleFileProvider instance.
    *
    * @param moduleFileProvider An instance of ModuleFileProvider for reading files in the module
@@ -76,25 +94,40 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
    * @throws ModuleParsingException if an error occurs during parsing.
    */
   @Override
-  public Scorm2004Metadata parse() throws ModuleParsingException {
+  public Scorm2004Metadata parse() throws ModuleException {
     try {
-      if (!moduleFileProvider.fileExists(MANIFEST_FILE)) {
-        throw new ModuleParsingException(
-            "SCORM 2004 manifest file not found at path: " + MANIFEST_FILE);
+      // Find the manifest file (case-insensitive)
+      var files = moduleFileProvider.listFiles("");
+      String manifestFile = FileUtils.findFileIgnoreCase(files, MANIFEST_FILE);
+
+      if (manifestFile == null) {
+        ValidationResult result = ValidationResult.of(
+            ValidationIssue.error("SCORM2004_MISSING_MANIFEST",
+                "SCORM 2004 manifest file not found at path: " + MANIFEST_FILE,
+                "package root")
+        );
+        throw result.toException("Failed to parse SCORM 2004 module");
       }
 
-      var manifest = parseManifest(MANIFEST_FILE);
+      var manifest = parseManifest(manifestFile);
 
       String title = manifest.getTitle();
       String launchUrl = manifest.getLaunchUrl();
       if (title == null || title.isEmpty()) {
-        throw new ModuleParsingException(
-            "SCORM 2004 manifest is missing a required <title> element at path: " + MANIFEST_FILE);
+        ValidationResult result = ValidationResult.of(
+            ValidationIssue.error("SCORM2004_MISSING_TITLE",
+                "SCORM 2004 manifest is missing a required <title> element at path: " + manifestFile,
+                "imsmanifest.xml")
+        );
+        throw result.toException("Failed to parse SCORM 2004 module");
       }
       if (launchUrl == null || launchUrl.isEmpty()) {
-        throw new ModuleParsingException(
-            "SCORM 2004 manifest is missing a required <launchUrl> in <resource> element at path: "
-                + MANIFEST_FILE);
+        ValidationResult result = ValidationResult.of(
+            ValidationIssue.error("SCORM2004_MISSING_LAUNCH_URL",
+                "SCORM 2004 manifest is missing a required <launchUrl> in <resource> element at path: " + manifestFile,
+                "imsmanifest.xml")
+        );
+        throw result.toException("Failed to parse SCORM 2004 module");
       }
 
       Scorm2004Metadata metadata = Scorm2004Metadata.create(manifest, checkForXapi());
@@ -103,8 +136,10 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
 
       return metadata;
     } catch (IOException | XMLStreamException e) {
-      throw new ModuleParsingException(
+      throw new ManifestParseException(
           "Error parsing SCORM 2004 module at path: " + this.moduleFileProvider.getRootPath(), e);
+    } catch (ModuleParsingException e) {
+      throw e;
     }
   }
 
@@ -123,15 +158,19 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
    */
   @Override
   public Scorm2004Manifest parseManifest(String manifestPath)
-      throws IOException, XMLStreamException, ModuleParsingException {
+      throws IOException, XMLStreamException, ManifestParseException {
     if (manifestPath == null) {
       throw new IllegalArgumentException("Manifest path cannot be null");
     }
     try (InputStream manifestStream = moduleFileProvider.getFileContents(manifestPath)) {
       byte[] bytes = manifestStream.readAllBytes();
 
-      if (Scorm2004SchemaValidator.isEnabled()) {
-        validateSchema(bytes);
+      try {
+        if (Scorm2004SchemaValidator.isEnabled()) {
+          validateSchema(bytes);
+        }
+      } catch (ModuleParsingException e) {
+        throw new ManifestParseException("SCORM 2004 XSD validation failed: " + e.getMessage(), e);
       }
 
       Scorm2004Manifest manifest = XmlParsingUtils
@@ -140,10 +179,10 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
       loadExternalMetadata(manifest);
       return manifest;
     } catch (IOException e) {
-      throw new ModuleParsingException(
+      throw new ManifestParseException(
           String.format("Failed to read manifest file '%s': %s", manifestPath, e.getMessage()), e);
     } catch (XMLStreamException e) {
-      throw new ModuleParsingException(
+      throw new ManifestParseException(
           String.format("Failed to parse manifest XML at '%s': %s", manifestPath, e.getMessage()),
           e);
     }
@@ -177,6 +216,11 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
    * @param metadata The metadata object where the module size will be set.
    */
   private void calculateAndSetModuleSize(Scorm2004Metadata metadata) {
+    // Only calculate module size if enabled in options
+    if (!ModuleSizeCalculator.isEnabled()) {
+      return;
+    }
+
     // Calculate and set the module size
     try {
       long totalSize = moduleFileProvider.getTotalSize();
@@ -198,7 +242,14 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
     try {
       Scorm2004SchemaValidator.validate(bytes);
     } catch (SAXException e) {
-      throw new ModuleParsingException("SCORM 2004 XSD validation failed: " + e.getMessage(), e);
+      throw new ModuleParsingException("SCORM 2004 XSD validation failed: " + e.getMessage(),
+          dev.jcputney.elearning.parser.validation.ValidationResult.of(
+              dev.jcputney.elearning.parser.validation.ValidationIssue.error(
+                  "SCORM2004_XSD_VALIDATION_FAILED",
+                  "SCORM 2004 XSD validation failed: " + e.getMessage(),
+                  "imsmanifest.xml"
+              )
+          ));
     }
   }
 
@@ -233,27 +284,34 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
       return;
     }
 
-    // Collect all file paths for batch checking
-    List<String> filePaths = new ArrayList<>();
-    for (Scorm2004File file : files) {
-      if (file.getHref() != null) {
-        filePaths.add(file.getHref());
+    // Only check file existence if validation is enabled in options
+    if (FileExistenceValidator.isEnabled()) {
+      // Collect all file paths for batch checking
+      List<String> filePaths = new ArrayList<>();
+      for (Scorm2004File file : files) {
+        if (file.getHref() != null) {
+          filePaths.add(file.getHref());
+        }
+      }
+
+      // Check file existence in a batch
+      Map<String, Boolean> existenceMap = Map.of();
+      if (!filePaths.isEmpty()) {
+        existenceMap = moduleFileProvider.fileExistsBatch(filePaths);
+      }
+
+      // Apply results
+      for (Scorm2004File file : files) {
+        if (file.getHref() != null) {
+          file.setExists(existenceMap.getOrDefault(file.getHref(), false));
+        } else {
+          file.setExists(false);
+        }
       }
     }
 
-    // Check file existence in a batch
-    Map<String, Boolean> existenceMap = Map.of();
-    if (!filePaths.isEmpty()) {
-      existenceMap = moduleFileProvider.fileExistsBatch(filePaths);
-    }
-
-    // Apply results and load metadata
+    // Always load external metadata
     for (Scorm2004File file : files) {
-      if (file.getHref() != null) {
-        file.setExists(existenceMap.getOrDefault(file.getHref(), false));
-      } else {
-        file.setExists(false);
-      }
       loadExternalMetadataIntoMetadata(file.getMetadata());
     }
   }

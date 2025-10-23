@@ -1,7 +1,6 @@
 package dev.jcputney.elearning.parser.input.xapi.tincan;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import dev.jcputney.elearning.parser.input.xapi.types.TextType;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,16 +9,13 @@ class TincanActivityTest {
 
   @Test
   void shouldDeserializeFromXml() throws Exception {
+    // Using the standard TinCan format per official XSD schema
     String xml = """
         <activity id="http://example.com/activity/test"
                   type="http://adlnet.gov/expapi/activities/course">
-          <name>Test Activity</name>
-          <description>
-            <langstring lang="en-US">Test description</langstring>
-          </description>
-          <launch>
-            <langstring lang="en-us">index.html</langstring>
-          </launch>
+          <name lang="en-US">Test Activity</name>
+          <description lang="en-US">Test description</description>
+          <launch lang="en-US">index.html</launch>
         </activity>
         """;
 
@@ -29,5 +25,7 @@ class TincanActivityTest {
     assertThat(activity.getId()).isEqualTo("http://example.com/activity/test");
     assertThat(activity.getType()).isEqualTo("http://adlnet.gov/expapi/activities/course");
     assertThat(activity.getName()).isEqualTo("Test Activity");
+    assertThat(activity.getDescription()).isEqualTo("Test description");
+    assertThat(activity.getLaunch()).isEqualTo("index.html");
   }
 }

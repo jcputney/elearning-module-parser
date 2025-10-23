@@ -21,6 +21,9 @@ import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.LoadableMetadata;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
 import dev.jcputney.elearning.parser.api.ModuleParser;
+import dev.jcputney.elearning.parser.api.ParserOptions;
+import dev.jcputney.elearning.parser.exception.ManifestParseException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.provider.DefaultModuleFileProvider;
 import dev.jcputney.elearning.parser.input.PackageManifest;
@@ -61,31 +64,62 @@ public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends P
   protected final ModuleFileProvider moduleFileProvider;
 
   /**
-   * Constructs a BaseParser with the specified ModuleFileProvider instance.
+   * The parser options controlling validation and calculation behavior.
+   */
+  protected final ParserOptions options;
+
+  /**
+   * Constructs a BaseParser with the specified ModuleFileProvider instance and parser options.
+   *
+   * @param moduleFileProvider An instance of ModuleFileProvider for reading files in the module
+   * package.
+   * @param options Parser options controlling validation and calculation behavior (null for defaults)
+   * @throws IllegalArgumentException if moduleFileProvider is null
+   */
+  protected BaseParser(ModuleFileProvider moduleFileProvider, ParserOptions options) {
+    if (moduleFileProvider == null) {
+      throw new IllegalArgumentException("ModuleFileProvider cannot be null");
+    }
+    this.moduleFileProvider = moduleFileProvider;
+    this.options = options != null ? options : new ParserOptions();
+  }
+
+  /**
+   * Constructs a BaseParser with the specified ModuleFileProvider instance and default options.
    *
    * @param moduleFileProvider An instance of ModuleFileProvider for reading files in the module
    * package.
    * @throws IllegalArgumentException if moduleFileProvider is null
    */
   protected BaseParser(ModuleFileProvider moduleFileProvider) {
-    if (moduleFileProvider == null) {
-      throw new IllegalArgumentException("ModuleFileProvider cannot be null");
-    }
-    this.moduleFileProvider = moduleFileProvider;
+    this(moduleFileProvider, null);
   }
 
   /**
-   * Constructs a BaseParser with the specified FileAccess instance. This constructor creates a
-   * DefaultModuleFileProvider that wraps the FileAccess instance.
+   * Constructs a BaseParser with the specified FileAccess instance and parser options.
+   * This constructor creates a DefaultModuleFileProvider that wraps the FileAccess instance.
+   *
+   * @param fileAccess An instance of FileAccess for reading files in the module package.
+   * @param options Parser options controlling validation and calculation behavior (null for defaults)
+   * @throws IllegalArgumentException if fileAccess is null
+   */
+  protected BaseParser(FileAccess fileAccess, ParserOptions options) {
+    if (fileAccess == null) {
+      throw new IllegalArgumentException("FileAccess cannot be null");
+    }
+    this.moduleFileProvider = new DefaultModuleFileProvider(fileAccess);
+    this.options = options != null ? options : new ParserOptions();
+  }
+
+  /**
+   * Constructs a BaseParser with the specified FileAccess instance and default options.
+   * This constructor creates a DefaultModuleFileProvider that wraps the FileAccess instance.
    *
    * @param fileAccess An instance of FileAccess for reading files in the module package.
    * @throws IllegalArgumentException if fileAccess is null
    */
   protected BaseParser(FileAccess fileAccess) {
-    if (fileAccess == null) {
-      throw new IllegalArgumentException("FileAccess cannot be null");
-    }
-    this.moduleFileProvider = new DefaultModuleFileProvider(fileAccess);
+    this(fileAccess, null);
   }
 
   /**
@@ -93,10 +127,52 @@ public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends P
    * be implemented by the child parsers (for example, SCORM, cmi5, LTI).
    *
    * @return A ModuleMetadata object containing the parsed module metadata.
-   * @throws ModuleParsingException If the module type can't be determined or there's an error
-   * parsing.
+   * @throws ModuleException If the module type can't be determined or there's an error parsing.
    */
-  public abstract T parse() throws ModuleParsingException;
+  public abstract T parse() throws ModuleException;
+
+  /**
+   * Gets the parser options controlling validation behavior.
+   *
+   * @return ParserOptions for this parser
+   */
+  @Override
+  public ParserOptions getOptions() {
+    return options;
+  }
+
+  /**
+   * Validates the module without parsing. Returns validation result with errors/warnings.
+   * Default implementation parses the module and returns any validation errors.
+   * Subclasses can override for more specific validation logic.
+   *
+   * @return ValidationResult containing errors and warnings
+   */
+  @Override
+  public dev.jcputney.elearning.parser.validation.ValidationResult validate() {
+    try {
+      parse();
+      return dev.jcputney.elearning.parser.validation.ValidationResult.valid();
+    } catch (ModuleParsingException e) {
+      return e.getValidationResult() != null
+          ? e.getValidationResult()
+          : dev.jcputney.elearning.parser.validation.ValidationResult.of(
+              dev.jcputney.elearning.parser.validation.ValidationIssue.error(
+                  "PARSE_ERROR",
+                  e.getMessage(),
+                  "module"
+              )
+          );
+    } catch (ModuleException e) {
+      return dev.jcputney.elearning.parser.validation.ValidationResult.of(
+          dev.jcputney.elearning.parser.validation.ValidationIssue.error(
+              "MODULE_ERROR",
+              e.getMessage(),
+              "module"
+          )
+      );
+    }
+  }
 
   /**
    * Parses the manifest file at the specified path and returns the corresponding manifest object.
@@ -109,7 +185,7 @@ public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends P
    * @throws IllegalArgumentException if manifestPath is null
    */
   public M parseManifest(String manifestPath)
-      throws IOException, XMLStreamException, ModuleParsingException {
+      throws IOException, XMLStreamException, ManifestParseException {
     if (manifestPath == null) {
       throw new IllegalArgumentException("Manifest path cannot be null");
     }
@@ -118,10 +194,10 @@ public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends P
       loadExternalMetadata(manifest);
       return manifest;
     } catch (IOException e) {
-      throw new ModuleParsingException(
+      throw new ManifestParseException(
           String.format("Failed to read manifest file '%s': %s", manifestPath, e.getMessage()), e);
     } catch (XMLStreamException e) {
-      throw new ModuleParsingException(
+      throw new ManifestParseException(
           String.format("Failed to parse manifest XML at '%s': %s", manifestPath, e.getMessage()),
           e);
     }

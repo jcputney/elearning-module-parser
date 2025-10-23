@@ -18,6 +18,7 @@
 package dev.jcputney.elearning.parser.api;
 
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 
@@ -48,5 +49,5 @@ public interface ModuleParserFactory {
    * @throws ModuleDetectionException if the module type cannot be determined.
    * @throws ModuleParsingException if an error occurs during parsing.
    */
-  ModuleMetadata<?> parseModule() throws ModuleDetectionException, ModuleParsingException;
+  ModuleMetadata<?> parseModule() throws ModuleDetectionException, ModuleException;
 }

@@ -26,7 +26,9 @@ import dev.jcputney.elearning.parser.api.ModuleTypeDetectorPlugin;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.parsers.Scorm12Parser;
+import dev.jcputney.elearning.parser.util.FileUtils;
 import dev.jcputney.elearning.parser.util.ScormVersionDetector;
+import java.io.IOException;
 
 /**
  * Plugin for detecting SCORM modules (both 1.2 and 2004 versions).
@@ -88,15 +90,20 @@ public class ScormDetectorPlugin implements ModuleTypeDetectorPlugin {
       throw new IllegalArgumentException("FileAccess cannot be null");
     }
 
-    if (fileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)) {
-      try {
+    try {
+      var files = fileAccess.listFiles("");
+      String manifestFile = FileUtils.findFileIgnoreCase(files, Scorm12Parser.MANIFEST_FILE);
+
+      if (manifestFile != null) {
         // Use the ScormVersionDetector to determine the specific SCORM version
         return ScormVersionDetector.detectScormVersion(fileAccess);
-      } catch (Exception e) {
-        throw new ModuleDetectionException("Error detecting SCORM version", e);
       }
-    }
 
-    return null; // Not SCORM module
+      return null; // Not SCORM module
+    } catch (IOException e) {
+      throw new ModuleDetectionException("Error detecting SCORM module", e);
+    } catch (Exception e) {
+      throw new ModuleDetectionException("Error detecting SCORM version", e);
+    }
   }
 }

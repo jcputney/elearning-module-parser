@@ -25,8 +25,10 @@ import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleParser;
 import dev.jcputney.elearning.parser.api.ModuleParserFactory;
 import dev.jcputney.elearning.parser.api.ModuleTypeDetector;
+import dev.jcputney.elearning.parser.api.ParserOptions;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.detector.DefaultModuleTypeDetector;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
@@ -50,18 +52,21 @@ public final class DefaultModuleParserFactory implements ModuleParserFactory {
 
   private final ModuleTypeDetector moduleTypeDetector;
   private final FileAccess fileAccess;
+  private final ParserOptions options;
   private final Map<ModuleType, Function<FileAccess, ModuleParser<?>>> parserRegistry;
 
   /**
-   * Constructs a new DefaultModuleParserFactory with the specified FileAccess and
-   * ModuleTypeDetector implementations.
+   * Constructs a new DefaultModuleParserFactory with the specified FileAccess, ModuleTypeDetector,
+   * and ParserOptions.
    *
    * @param fileAccess the FileAccess implementation to use for accessing module files
    * @param moduleTypeDetector the ModuleTypeDetector implementation to use for detecting module
    * types
+   * @param options the parser options to control validation and calculation behavior
    * @throws IllegalArgumentException if fileAccess or moduleTypeDetector is null
    */
-  public DefaultModuleParserFactory(FileAccess fileAccess, ModuleTypeDetector moduleTypeDetector) {
+  public DefaultModuleParserFactory(FileAccess fileAccess, ModuleTypeDetector moduleTypeDetector,
+      ParserOptions options) {
     if (fileAccess == null) {
       throw new IllegalArgumentException("FileAccess cannot be null");
     }
@@ -70,19 +75,45 @@ public final class DefaultModuleParserFactory implements ModuleParserFactory {
     }
     this.fileAccess = fileAccess;
     this.moduleTypeDetector = moduleTypeDetector;
+    this.options = options != null ? options : new ParserOptions();
     this.parserRegistry = new EnumMap<>(ModuleType.class);
     registerDefaultParsers();
   }
 
   /**
-   * Constructs a new DefaultModuleParserFactory with the specified FileAccess implementation and a
-   * default ModuleTypeDetector.
+   * Constructs a new DefaultModuleParserFactory with the specified FileAccess and
+   * ModuleTypeDetector implementations, using default parser options.
+   *
+   * @param fileAccess the FileAccess implementation to use for accessing module files
+   * @param moduleTypeDetector the ModuleTypeDetector implementation to use for detecting module
+   * types
+   * @throws IllegalArgumentException if fileAccess or moduleTypeDetector is null
+   */
+  public DefaultModuleParserFactory(FileAccess fileAccess, ModuleTypeDetector moduleTypeDetector) {
+    this(fileAccess, moduleTypeDetector, null);
+  }
+
+  /**
+   * Constructs a new DefaultModuleParserFactory with the specified FileAccess implementation, a
+   * default ModuleTypeDetector, and custom parser options.
+   *
+   * @param fileAccess the FileAccess implementation to use for accessing module files
+   * @param options the parser options to control validation and calculation behavior
+   * @throws IllegalArgumentException if fileAccess is null
+   */
+  public DefaultModuleParserFactory(FileAccess fileAccess, ParserOptions options) {
+    this(fileAccess, new DefaultModuleTypeDetector(fileAccess), options);
+  }
+
+  /**
+   * Constructs a new DefaultModuleParserFactory with the specified FileAccess implementation, a
+   * default ModuleTypeDetector, and default parser options.
    *
    * @param fileAccess the FileAccess implementation to use for accessing module files
    * @throws IllegalArgumentException if fileAccess is null
    */
   public DefaultModuleParserFactory(FileAccess fileAccess) {
-    this(fileAccess, new DefaultModuleTypeDetector(fileAccess));
+    this(fileAccess, new DefaultModuleTypeDetector(fileAccess), null);
   }
 
   /**
@@ -144,7 +175,7 @@ public final class DefaultModuleParserFactory implements ModuleParserFactory {
    * @throws ModuleParsingException if an error occurs during parsing.
    */
   @Override
-  public ModuleMetadata<?> parseModule() throws ModuleDetectionException, ModuleParsingException {
+  public ModuleMetadata<?> parseModule() throws ModuleDetectionException, ModuleException {
     return getParser().parse();
   }
 
@@ -152,10 +183,10 @@ public final class DefaultModuleParserFactory implements ModuleParserFactory {
    * Registers the default set of parsers.
    */
   private void registerDefaultParsers() {
-    registerParser(ModuleType.SCORM_12, Scorm12Parser::new);
-    registerParser(ModuleType.SCORM_2004, Scorm2004Parser::new);
-    registerParser(ModuleType.AICC, AiccParser::new);
-    registerParser(ModuleType.CMI5, Cmi5Parser::new);
-    registerParser(ModuleType.XAPI, XapiParser::new);
+    registerParser(ModuleType.SCORM_12, fa -> new Scorm12Parser(fa, options));
+    registerParser(ModuleType.SCORM_2004, fa -> new Scorm2004Parser(fa, options));
+    registerParser(ModuleType.AICC, fa -> new AiccParser(fa, options));
+    registerParser(ModuleType.CMI5, fa -> new Cmi5Parser(fa, options));
+    registerParser(ModuleType.XAPI, fa -> new XapiParser(fa, options));
   }
 }

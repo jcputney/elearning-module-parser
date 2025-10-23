@@ -27,6 +27,7 @@ import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.parsers.AiccParser;
 import java.io.IOException;
+import org.apache.commons.lang3.Strings;
 
 /**
  * Plugin for detecting AICC modules.
@@ -91,9 +92,10 @@ public class AiccDetectorPlugin implements ModuleTypeDetectorPlugin {
       var files = fileAccess.listFiles("");
       boolean isAicc = files
           .stream()
-          .anyMatch(file -> file.endsWith(AiccParser.AU_EXTENSION) && files
+          .anyMatch(file -> Strings.CI.endsWith(file, AiccParser.AU_EXTENSION)
+              && files
               .stream()
-              .anyMatch(f -> f.endsWith(AiccParser.CRS_EXTENSION)));
+              .anyMatch(f -> Strings.CI.endsWith(f, AiccParser.CRS_EXTENSION)));
 
       if (isAicc) {
         return ModuleType.AICC;

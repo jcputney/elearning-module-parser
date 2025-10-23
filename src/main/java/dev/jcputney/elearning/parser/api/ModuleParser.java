@@ -21,6 +21,7 @@
 
 package dev.jcputney.elearning.parser.api;
 
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
@@ -53,9 +54,9 @@ public interface ModuleParser<M extends PackageManifest> {
    * In lenient mode, continues parsing and attaches validation result to metadata.
    *
    * @return A ModuleMetadata object containing standardized metadata.
-   * @throws ModuleParsingException if parsing fails or validation fails in strict mode.
+   * @throws ModuleException if parsing fails or validation fails in strict mode.
    */
-  ModuleMetadata<M> parse() throws ModuleParsingException;
+  ModuleMetadata<M> parse() throws ModuleException;
 
   /**
    * Gets the parser options controlling validation behavior.

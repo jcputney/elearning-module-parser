@@ -335,6 +335,110 @@ class AiccParserTest {
   }
 
   /**
+   * Tests that the parser correctly handles Course_Description sections with blank lines
+   * between paragraphs, which can cause Apache Commons Configuration to return null keys.
+   * This test verifies that the parser filters out null keys to prevent Jackson serialization errors.
+   */
+  @Test
+  void testParse_withBlankLinesInCourseDescription_succeeds() throws ModuleParsingException {
+    String modulePath = BASE_MODULE_PATH + "/multiline-description";
+    AiccParser parser = new AiccParser(new LocalFileAccess(modulePath));
+    AiccMetadata metadata = parser.parse();
+
+    assertNotNull(metadata);
+    AiccManifest manifest = metadata.getManifest();
+    assertNotNull(manifest);
+    assertEquals("Achieving Work-Life Balance", manifest.getTitle());
+
+    // Verify that the description was parsed despite blank lines and null keys
+    String description = manifest.getCourse().getCourseDescription();
+    assertNotNull(description);
+    // Verify the description contains the expected content
+    assert description.contains("Web APIs") : "Description should contain 'Web APIs'";
+    assert description.contains("ASP") : "Description should contain 'ASP' (from ASP.NET)";
+  }
+
+  /**
+   * Tests that the parser correctly handles .crs files with UTF-8 BOM before the section headers.
+   * Some authoring tools (e.g., Notepad on Windows) add a BOM to UTF-8 files, which can cause
+   * INI parsing to fail if not properly handled.
+   */
+  @Test
+  void testParse_withUtf8BomInCrsFile_succeeds(@TempDir Path tempDir)
+      throws IOException, ModuleParsingException {
+    // Create a minimal valid AICC package with UTF-8 BOM in .crs file
+    Path csPath = tempDir.resolve("course.cst");
+    Files.writeString(csPath,
+        """
+            block,member
+            ROOT,A1
+            """);
+
+    // Create course file (.crs) with UTF-8 BOM (0xEF 0xBB 0xBF) before the content
+    Path crsPath = tempDir.resolve("course.crs");
+    byte[] utf8Bom = new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF};
+    String crsContent =
+        """
+            [COURSE]
+            COURSE_ID = BOM_Test_Course
+            COURSE_TITLE = AICC Course with BOM
+            COURSE_CREATOR = Test Creator
+            COURSE_SYSTEM = Test System
+            Level = 1
+            Version = 1.0
+            Total_AUs = 1
+            Total_Blocks = 0
+            Max_Fields_CST = 100
+
+            [COURSE_BEHAVIOR]
+            MAX_NORMAL = 1
+
+            [COURSE_DESCRIPTION]
+            A course with UTF-8 BOM for testing encoding handling
+            """;
+    byte[] contentBytes = crsContent.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+    byte[] combined = new byte[utf8Bom.length + contentBytes.length];
+    System.arraycopy(utf8Bom, 0, combined, 0, utf8Bom.length);
+    System.arraycopy(contentBytes, 0, combined, utf8Bom.length, contentBytes.length);
+    Files.write(crsPath, combined);
+
+    // Create assignable unit file (.au)
+    Path auPath = tempDir.resolve("au.au");
+    Files.writeString(auPath,
+        """
+            System_ID,Command_Line,File_Name,Core_Vendor,Type
+            A1,test.html,test.html,Test Vendor,
+            """);
+
+    // Create descriptor file (.des)
+    Path desPath = tempDir.resolve("course.des");
+    Files.writeString(desPath,
+        """
+            System_ID,Developer_ID,Title,Description
+            A1,DEV-001,Test AU,Test course with BOM
+            """);
+
+    // This should succeed even with BOM present
+    AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
+    AiccMetadata metadata = parser.parse();
+
+    assertNotNull(metadata);
+    assertEquals(ModuleType.AICC, metadata.getModuleType());
+
+    AiccManifest manifest = metadata.getManifest();
+    assertNotNull(manifest);
+    assertEquals("AICC Course with BOM", manifest.getTitle());
+    // Description comes from the .des file, not the .crs file
+    assertEquals("Test course with BOM", manifest.getDescription());
+    assertEquals("test.html", manifest.getLaunchUrl());
+
+    // Verify that the COURSE_DESCRIPTION section from .crs was also parsed correctly despite BOM
+    String courseDescription = manifest.getCourse().getCourseDescription();
+    assertNotNull(courseDescription);
+    assert courseDescription.contains("UTF-8 BOM") : "Course description should contain 'UTF-8 BOM'";
+  }
+
+  /**
    * Tests that the parser correctly handles multi-line descriptions from the descriptor file,
    * similar to Articulate Storyline AICC packages.
    */

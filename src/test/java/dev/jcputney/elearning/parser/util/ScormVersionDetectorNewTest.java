@@ -181,7 +181,7 @@ class ScormVersionDetectorNewTest {
 
     @Override
     public List<String> listFilesInternal(String directoryPath) {
-      return Collections.emptyList();
+      return List.copyOf(files.keySet());
     }
 
     @Override

@@ -17,9 +17,6 @@
 
 package dev.jcputney.elearning.parser.api;
 
-import dev.jcputney.elearning.parser.config.FileExistenceValidator;
-import dev.jcputney.elearning.parser.config.ModuleSizeCalculator;
-
 /**
  * Configuration options for module parsing behavior.
  * Controls validation strictness and other parsing settings.
@@ -72,102 +69,5 @@ public class ParserOptions {
      */
     public static ParserOptions lenient() {
         return new ParserOptions().setStrictMode(false);
-    }
-
-    // ========== Backward compatibility methods ==========
-    // These methods provide compatibility with the old ParserOptions API
-    // for file existence validation and module size calculation
-
-    /**
-     * Creates default parser options.
-     * Provides backward compatibility with old API.
-     *
-     * @return Default parser options
-     */
-    public static ParserOptions defaults() {
-        return new ParserOptions();
-    }
-
-    /**
-     * Whether to validate that all files referenced in the manifest actually exist.
-     * This delegates to the FileExistenceValidator configuration.
-     *
-     * @return true if file existence validation is enabled
-     */
-    public boolean shouldValidateFileExists() {
-        return FileExistenceValidator.isEnabled();
-    }
-
-    /**
-     * Whether to calculate the total size of all files in the module.
-     * This delegates to the ModuleSizeCalculator configuration.
-     *
-     * @return true if module size calculation is enabled
-     */
-    public boolean shouldCalculateModuleSize() {
-        return ModuleSizeCalculator.isEnabled();
-    }
-
-    /**
-     * Creates parser options optimized for batch processing.
-     * This is equivalent to defaults() in the new API.
-     *
-     * @return Parser options for batch processing
-     */
-    public static ParserOptions forBatchProcessing() {
-        return new ParserOptions();
-    }
-
-    /**
-     * Creates a builder for ParserOptions.
-     * Returns a builder that ignores old configuration options.
-     *
-     * @return Builder instance
-     * @deprecated Use constructor or factory methods instead
-     */
-    @Deprecated
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    /**
-     * Builder class for backward compatibility.
-     * Ignores old configuration options (calculateModuleSize, validateFileExists).
-     *
-     * @deprecated Use constructor or factory methods instead
-     */
-    @Deprecated
-    public static class Builder {
-        private Builder() {}
-
-        /**
-         * Ignored - kept for backward compatibility.
-         * @param calculate ignored
-         * @return this builder
-         * @deprecated No longer used
-         */
-        @Deprecated
-        public Builder calculateModuleSize(boolean calculate) {
-            return this;
-        }
-
-        /**
-         * Ignored - kept for backward compatibility.
-         * @param validate ignored
-         * @return this builder
-         * @deprecated No longer used
-         */
-        @Deprecated
-        public Builder validateFileExists(boolean validate) {
-            return this;
-        }
-
-        /**
-         * Builds the ParserOptions.
-         * @return new ParserOptions instance
-         */
-        public ParserOptions build() {
-            return new ParserOptions();
-        }
     }
 }

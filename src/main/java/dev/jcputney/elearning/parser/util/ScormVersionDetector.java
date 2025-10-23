@@ -127,7 +127,14 @@ public final class ScormVersionDetector {
    * @throws IOException if an I/O error occurs while reading the manifest file
    */
   private static byte[] readManifestBytes(FileAccess fileAccess) throws IOException {
-    try (InputStream inputStream = fileAccess.getFileContents(MANIFEST_FILE)) {
+    var files = fileAccess.listFiles("");
+    String manifestFile = FileUtils.findFileIgnoreCase(files, MANIFEST_FILE);
+
+    if (manifestFile == null) {
+      throw new IOException("SCORM manifest file not found: " + MANIFEST_FILE);
+    }
+
+    try (InputStream inputStream = fileAccess.getFileContents(manifestFile)) {
       return inputStream.readAllBytes();
     }
   }

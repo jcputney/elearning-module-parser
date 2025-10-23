@@ -110,7 +110,7 @@ class ScormVersionDetectorTest {
 
     @Override
     public List<String> listFilesInternal(String directoryPath) throws IOException {
-      return Collections.emptyList();
+      return List.copyOf(fileContents.keySet());
     }
 
     @Override

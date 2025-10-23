@@ -19,14 +19,21 @@ package dev.jcputney.elearning.parser.parsers;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
+import dev.jcputney.elearning.parser.config.FileExistenceValidator;
+import dev.jcputney.elearning.parser.config.ModuleSizeCalculator;
+import dev.jcputney.elearning.parser.exception.ManifestParseException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
+import dev.jcputney.elearning.parser.validation.ValidationIssue;
+import dev.jcputney.elearning.parser.validation.ValidationResult;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12File;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Item;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organization;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resource;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import dev.jcputney.elearning.parser.output.metadata.scorm12.Scorm12Metadata;
+import dev.jcputney.elearning.parser.util.FileUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +65,17 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
   }
 
   /**
+   * Constructs a Scorm12Parser with the specified FileAccess instance and parser options.
+   *
+   * @param fileAccess An instance of FileAccess for reading files in the module package.
+   * @param options The parser options to control validation and calculation behavior.
+   */
+  public Scorm12Parser(FileAccess fileAccess,
+      dev.jcputney.elearning.parser.api.ParserOptions options) {
+    super(fileAccess, options);
+  }
+
+  /**
    * Constructs a Scorm12Parser with the specified ModuleFileProvider instance.
    *
    * @param moduleFileProvider An instance of ModuleFileProvider for reading files in the module
@@ -76,7 +94,7 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
    * @throws ModuleParsingException if an error occurs during parsing.
    */
   @Override
-  public Scorm12Metadata parse() throws ModuleParsingException {
+  public Scorm12Metadata parse() throws ModuleException {
     try {
       // Parse and validate the manifest
       var manifest = parseAndValidateManifest();
@@ -93,7 +111,7 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
       // Build and return ModuleMetadata
       return createMetadata(manifest, hasXapi);
     } catch (IOException | XMLStreamException e) {
-      throw new ModuleParsingException(
+      throw new ManifestParseException(
           String.format("Failed to parse SCORM 1.2 module at '%s': %s",
               this.moduleFileProvider.getRootPath(), e.getMessage()), e);
     } catch (ModuleParsingException e) {
@@ -101,7 +119,7 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
       throw e;
     } catch (Exception e) {
       // Catch any other unexpected exceptions
-      throw new ModuleParsingException(
+      throw new ManifestParseException(
           String.format("Unexpected error parsing SCORM 1.2 module at '%s': %s",
               this.moduleFileProvider.getRootPath(),
               e.getMessage()), e);
@@ -149,16 +167,22 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
    * @throws ModuleParsingException If the manifest file is not found.
    */
   private Scorm12Manifest parseAndValidateManifest()
-      throws IOException, XMLStreamException, ModuleParsingException {
-    // Define the manifest path and verify its existence
-    if (!moduleFileProvider.fileExists(MANIFEST_FILE)) {
-      throw new ModuleParsingException(
-          String.format("SCORM 1.2 manifest file not found: %s in module at '%s'", MANIFEST_FILE,
-              moduleFileProvider.getRootPath()));
+      throws IOException, XMLStreamException, ManifestParseException, ModuleParsingException {
+    // Find the manifest file (case-insensitive)
+    var files = moduleFileProvider.listFiles("");
+    String manifestFile = FileUtils.findFileIgnoreCase(files, MANIFEST_FILE);
+
+    if (manifestFile == null) {
+      ValidationResult result = ValidationResult.of(
+          ValidationIssue.error("SCORM12_MISSING_MANIFEST",
+              String.format("SCORM 1.2 manifest file not found: %s in module at '%s'", MANIFEST_FILE, moduleFileProvider.getRootPath()),
+              "package root")
+      );
+      throw result.toException("Failed to parse SCORM 1.2 module");
     }
 
     // Parse the manifest XML file using a secure parser from BaseParser
-    return parseManifest(MANIFEST_FILE);
+    return parseManifest(manifestFile);
   }
 
   /**
@@ -172,15 +196,20 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
     String launchUrl = manifest.getLaunchUrl();
 
     if (title == null || title.isEmpty()) {
-      throw new ModuleParsingException(
-          String.format("SCORM 1.2 manifest at '%s' is missing required <title> element",
-              moduleFileProvider.getRootPath()));
+      ValidationResult result = ValidationResult.of(
+          ValidationIssue.error("SCORM12_MISSING_TITLE",
+              String.format("SCORM 1.2 manifest at '%s' is missing required <title> element", moduleFileProvider.getRootPath()),
+              "imsmanifest.xml")
+      );
+      throw result.toException("Failed to parse SCORM 1.2 module");
     }
     if (launchUrl == null || launchUrl.isEmpty()) {
-      throw new ModuleParsingException(
-          String.format(
-              "SCORM 1.2 manifest at '%s' is missing required launch URL in <resource> element",
-              moduleFileProvider.getRootPath()));
+      ValidationResult result = ValidationResult.of(
+          ValidationIssue.error("SCORM12_MISSING_LAUNCH_URL",
+              String.format("SCORM 1.2 manifest at '%s' is missing required launch URL in <resource> element", moduleFileProvider.getRootPath()),
+              "imsmanifest.xml")
+      );
+      throw result.toException("Failed to parse SCORM 1.2 module");
     }
   }
 
@@ -194,12 +223,15 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
   private Scorm12Metadata createMetadata(Scorm12Manifest manifest, boolean hasXapi) {
     Scorm12Metadata metadata = Scorm12Metadata.create(manifest, hasXapi);
 
-    // Calculate and set the module size
-    try {
-      long totalSize = moduleFileProvider.getTotalSize();
-      metadata.setSizeOnDisk(totalSize);
-    } catch (IOException e) {
-      // Size remains -1 as default - this is not an error
+    // Only calculate module size if enabled in options
+    if (ModuleSizeCalculator.isEnabled()) {
+      // Calculate and set the module size
+      try {
+        long totalSize = moduleFileProvider.getTotalSize();
+        metadata.setSizeOnDisk(totalSize);
+      } catch (IOException e) {
+        // Size remains -1 as default - this is not an error
+      }
     }
 
     return metadata;
@@ -236,28 +268,31 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
       return;
     }
 
-    // Collect all file paths for batch checking
-    List<String> filePaths = new ArrayList<>();
-    for (Scorm12File file : files) {
-      if (file.getHref() != null) {
-        filePaths.add(file.getHref());
-      }
-    }
-
-    // Check file existence in a batch
-    if (!filePaths.isEmpty()) {
-      Map<String, Boolean> existenceMap = moduleFileProvider.fileExistsBatch(filePaths);
-
-      // Update file existence status
+    // Only check file existence if validation is enabled in options
+    if (FileExistenceValidator.isEnabled()) {
+      // Collect all file paths for batch checking
+      List<String> filePaths = new ArrayList<>();
       for (Scorm12File file : files) {
         if (file.getHref() != null) {
-          Boolean exists = existenceMap.get(file.getHref());
-          file.setExists(exists != null && exists);
+          filePaths.add(file.getHref());
+        }
+      }
+
+      // Check file existence in a batch
+      if (!filePaths.isEmpty()) {
+        Map<String, Boolean> existenceMap = moduleFileProvider.fileExistsBatch(filePaths);
+
+        // Update file existence status
+        for (Scorm12File file : files) {
+          if (file.getHref() != null) {
+            Boolean exists = existenceMap.get(file.getHref());
+            file.setExists(exists != null && exists);
+          }
         }
       }
     }
 
-    // Load external metadata for each file
+    // Always load external metadata for each file
     for (Scorm12File file : files) {
       loadExternalMetadataIntoMetadata(file.getMetadata());
     }

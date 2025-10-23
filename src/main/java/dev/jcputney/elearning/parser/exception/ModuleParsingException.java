@@ -55,34 +55,9 @@ public final class ModuleParsingException extends ModuleException {
   }
 
   /**
-   * Constructs a new ModuleParsingException with the specified detail message.
-   *
-   * @deprecated Use {@link #ModuleParsingException(String, ValidationResult)} instead
-   * @param message the detail message
-   */
-  @Deprecated(since = "0.1.1", forRemoval = true)
-  public ModuleParsingException(String message) {
-    super(message);
-    this.validationResult = null;
-  }
-
-  /**
-   * Constructs a new ModuleParsingException with the specified detail message and cause.
-   *
-   * @deprecated Use {@link #ModuleParsingException(String, ValidationResult)} instead
-   * @param message the detail message
-   * @param cause the cause
-   */
-  @Deprecated(since = "0.1.1", forRemoval = true)
-  public ModuleParsingException(String message, Throwable cause) {
-    super(message, cause);
-    this.validationResult = null;
-  }
-
-  /**
    * Gets the validation result containing all issues found during parsing.
    *
-   * @return ValidationResult with errors and warnings, or null if this exception was created with deprecated constructors
+   * @return ValidationResult with errors and warnings
    */
   public ValidationResult getValidationResult() {
     return validationResult;

@@ -42,6 +42,8 @@ import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.parsers.Scorm12Parser;
 import dev.jcputney.elearning.parser.util.ScormVersionDetector;
+import java.io.IOException;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -91,20 +93,20 @@ class ScormDetectorPluginTest {
   @Test
   void testDetect_ManifestDoesNotExist_ReturnsNull() throws Exception {
     // Arrange
-    when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(false);
+    when(mockFileAccess.listFiles("")).thenReturn(List.of("index.html"));
 
     // Act
     ModuleType result = plugin.detect(mockFileAccess);
 
     // Assert
     assertNull(result);
-    verify(mockFileAccess).fileExists(Scorm12Parser.MANIFEST_FILE);
+    verify(mockFileAccess).listFiles("");
   }
 
   @Test
   void testDetect_ManifestExistsScorm12_ReturnsScorm12() throws Exception {
     // Arrange
-    when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(true);
+    when(mockFileAccess.listFiles("")).thenReturn(List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
 
     try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
         ScormVersionDetector.class)) {
@@ -117,7 +119,7 @@ class ScormDetectorPluginTest {
 
       // Assert
       assertEquals(ModuleType.SCORM_12, result);
-      verify(mockFileAccess).fileExists(Scorm12Parser.MANIFEST_FILE);
+      verify(mockFileAccess).listFiles("");
       mockedDetector.verify(() -> ScormVersionDetector.detectScormVersion(mockFileAccess));
     }
   }
@@ -125,7 +127,7 @@ class ScormDetectorPluginTest {
   @Test
   void testDetect_ManifestExistsScorm2004_ReturnsScorm2004() throws Exception {
     // Arrange
-    when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(true);
+    when(mockFileAccess.listFiles("")).thenReturn(List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
 
     try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
         ScormVersionDetector.class)) {
@@ -138,7 +140,7 @@ class ScormDetectorPluginTest {
 
       // Assert
       assertEquals(ModuleType.SCORM_2004, result);
-      verify(mockFileAccess).fileExists(Scorm12Parser.MANIFEST_FILE);
+      verify(mockFileAccess).listFiles("");
       mockedDetector.verify(() -> ScormVersionDetector.detectScormVersion(mockFileAccess));
     }
   }
@@ -146,7 +148,7 @@ class ScormDetectorPluginTest {
   @Test
   void testDetect_VersionDetectorThrowsException_ThrowsModuleDetectionException() throws Exception {
     // Arrange
-    when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(true);
+    when(mockFileAccess.listFiles("")).thenReturn(List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
 
     try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
         ScormVersionDetector.class)) {
@@ -161,43 +163,43 @@ class ScormDetectorPluginTest {
       });
       assertEquals("Error detecting SCORM version", exception.getMessage());
       assertSame(originalException, exception.getCause());
-      verify(mockFileAccess).fileExists(Scorm12Parser.MANIFEST_FILE);
+      verify(mockFileAccess).listFiles("");
       mockedDetector.verify(() -> ScormVersionDetector.detectScormVersion(mockFileAccess));
     }
   }
 
   @Test
-  void testDetect_FileExistsCheckThrowsException_PropagatesException() {
+  void testDetect_FileExistsCheckThrowsException_PropagatesException() throws Exception {
     // Arrange
-    RuntimeException runtimeException = new RuntimeException("File access error");
-    when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenThrow(runtimeException);
+    IOException ioException = new IOException("File access error");
+    when(mockFileAccess.listFiles("")).thenThrow(ioException);
 
     // Act & Assert
-    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+    ModuleDetectionException exception = assertThrows(ModuleDetectionException.class, () -> {
       plugin.detect(mockFileAccess);
     });
-    assertSame(runtimeException, exception);
-    verify(mockFileAccess).fileExists(Scorm12Parser.MANIFEST_FILE);
+    assertEquals("Error detecting SCORM module", exception.getMessage());
+    verify(mockFileAccess).listFiles("");
   }
 
   @Test
   void testDetect_ConstantValueVerification_UsesScorm12ParserConstant() throws Exception {
     // This test verifies that the plugin uses the constant from Scorm12Parser
     // Arrange
-    when(mockFileAccess.fileExists("imsmanifest.xml")).thenReturn(false);
+    when(mockFileAccess.listFiles("")).thenReturn(List.of("index.html"));
 
     // Act
     ModuleType result = plugin.detect(mockFileAccess);
 
     // Assert
     assertNull(result);
-    verify(mockFileAccess).fileExists("imsmanifest.xml");
+    verify(mockFileAccess).listFiles("");
   }
 
   @Test
   void testDetect_VersionDetectorReturnsNull_ReturnsNull() throws Exception {
     // Arrange
-    when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(true);
+    when(mockFileAccess.listFiles("")).thenReturn(List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
 
     try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
         ScormVersionDetector.class)) {
@@ -210,7 +212,7 @@ class ScormDetectorPluginTest {
 
       // Assert
       assertNull(result);
-      verify(mockFileAccess).fileExists(Scorm12Parser.MANIFEST_FILE);
+      verify(mockFileAccess).listFiles("");
       mockedDetector.verify(() -> ScormVersionDetector.detectScormVersion(mockFileAccess));
     }
   }
@@ -218,7 +220,7 @@ class ScormDetectorPluginTest {
   @Test
   void testDetect_MultipleCallsSameFileAccess_ConsistentResults() throws Exception {
     // Arrange
-    when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(true);
+    when(mockFileAccess.listFiles("")).thenReturn(List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
 
     try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
         ScormVersionDetector.class)) {
@@ -234,7 +236,7 @@ class ScormDetectorPluginTest {
       assertEquals(ModuleType.SCORM_12, result1);
       assertEquals(ModuleType.SCORM_12, result2);
       assertEquals(result1, result2);
-      verify(mockFileAccess, times(2)).fileExists(Scorm12Parser.MANIFEST_FILE);
+      verify(mockFileAccess, times(2)).listFiles("");
       mockedDetector.verify(() -> ScormVersionDetector.detectScormVersion(mockFileAccess),
           times(2));
     }
@@ -244,8 +246,8 @@ class ScormDetectorPluginTest {
   void testDetect_DifferentFileAccessInstances_IndependentResults() throws Exception {
     // Arrange
     FileAccess mockFileAccess2 = mock(FileAccess.class);
-    when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(true);
-    when(mockFileAccess2.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(false);
+    when(mockFileAccess.listFiles("")).thenReturn(List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
+    when(mockFileAccess2.listFiles("")).thenReturn(List.of("index.html"));
 
     try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
         ScormVersionDetector.class)) {
@@ -260,8 +262,8 @@ class ScormDetectorPluginTest {
       // Assert
       assertEquals(ModuleType.SCORM_2004, result1);
       assertNull(result2);
-      verify(mockFileAccess).fileExists(Scorm12Parser.MANIFEST_FILE);
-      verify(mockFileAccess2).fileExists(Scorm12Parser.MANIFEST_FILE);
+      verify(mockFileAccess).listFiles("");
+      verify(mockFileAccess2).listFiles("");
       mockedDetector.verify(() -> ScormVersionDetector.detectScormVersion(mockFileAccess));
       mockedDetector.verify(() -> ScormVersionDetector.detectScormVersion(mockFileAccess2),
           never());
@@ -272,7 +274,7 @@ class ScormDetectorPluginTest {
   void testDetect_VersionDetectorThrowsIOException_WrapsInModuleDetectionException()
       throws Exception {
     // Arrange
-    when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(true);
+    when(mockFileAccess.listFiles("")).thenReturn(List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
 
     try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
         ScormVersionDetector.class)) {
@@ -286,9 +288,10 @@ class ScormDetectorPluginTest {
       ModuleDetectionException exception = assertThrows(ModuleDetectionException.class, () -> {
         plugin.detect(mockFileAccess);
       });
-      assertEquals("Error detecting SCORM version", exception.getMessage());
+      // IOException is caught by the IOException catch block, not the general Exception catch block
+      assertEquals("Error detecting SCORM module", exception.getMessage());
       assertSame(ioException, exception.getCause());
-      verify(mockFileAccess).fileExists(Scorm12Parser.MANIFEST_FILE);
+      verify(mockFileAccess).listFiles("");
       mockedDetector.verify(() -> ScormVersionDetector.detectScormVersion(mockFileAccess));
     }
   }
@@ -311,7 +314,7 @@ class ScormDetectorPluginTest {
   void testDetect_EdgeCase_ManifestExistsButVersionDetectionReturnsUnexpectedType()
       throws Exception {
     // Arrange
-    when(mockFileAccess.fileExists(Scorm12Parser.MANIFEST_FILE)).thenReturn(true);
+    when(mockFileAccess.listFiles("")).thenReturn(List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
 
     try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
         ScormVersionDetector.class)) {
@@ -325,7 +328,7 @@ class ScormDetectorPluginTest {
 
       // Assert
       assertEquals(ModuleType.AICC, result); // Plugin should return whatever the detector returns
-      verify(mockFileAccess).fileExists(Scorm12Parser.MANIFEST_FILE);
+      verify(mockFileAccess).listFiles("");
       mockedDetector.verify(() -> ScormVersionDetector.detectScormVersion(mockFileAccess));
     }
   }

@@ -39,7 +39,9 @@ public class Scorm12ParserTest {
   void testParseScorm12Course_ContentPackagingOneFilePerSCO_SCORM12()
       throws ModuleParsingException {
     String modulePath = "src/test/resources/modules/scorm12/ContentPackagingOneFilePerSCO_SCORM12/";
-    Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
+    // Use default parser options
+    dev.jcputney.elearning.parser.api.ParserOptions options = new dev.jcputney.elearning.parser.api.ParserOptions();
+    Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath), options);
     Scorm12Metadata metadata = parser.parse();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();

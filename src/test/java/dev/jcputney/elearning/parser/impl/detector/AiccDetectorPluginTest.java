@@ -190,7 +190,7 @@ class AiccDetectorPluginTest {
 
   @Test
   void testDetect_FilesWithDifferentExtensions_CaseInsensitive_ReturnsNull() throws Exception {
-    // Arrange - Extensions don't match exactly (.AU vs .au)
+    // Arrange - Extensions with different case (.AU vs .au)
     List<String> files = Arrays.asList(
         "course.AU",  // Different case
         "course.CRS", // Different case
@@ -202,7 +202,7 @@ class AiccDetectorPluginTest {
     ModuleType result = plugin.detect(mockFileAccess);
 
     // Assert
-    assertNull(result); // Current implementation is case-sensitive
+    assertEquals(ModuleType.AICC, result); // Implementation is case-insensitive
     verify(mockFileAccess).listFiles("");
   }
 

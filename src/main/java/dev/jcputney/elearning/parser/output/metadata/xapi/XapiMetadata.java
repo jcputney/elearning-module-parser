@@ -31,6 +31,18 @@ import dev.jcputney.elearning.parser.output.ModuleMetadata;
 public class XapiMetadata extends ModuleMetadata<TincanManifest> {
 
   /**
+   * Protected no-argument constructor for XapiMetadata.
+   * <p>
+   * This constructor is primarily used for internal and subclassing purposes. It initializes an
+   * instance of XapiMetadata without setting a manifest or other properties.
+   * <p>
+   * Instances created using this constructor are expected to be configured manually or used in
+   * specific scenarios where the default state is sufficient.
+   */
+  protected XapiMetadata() {
+  }
+
+  /**
    * Constructor for XapiMetadata.
    *
    * @param manifest the TinCan manifest

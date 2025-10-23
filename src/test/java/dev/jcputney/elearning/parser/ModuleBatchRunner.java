@@ -15,6 +15,7 @@ import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.impl.access.S3FileAccessV2;
 import dev.jcputney.elearning.parser.impl.access.ZipFileAccess;
 import dev.jcputney.elearning.parser.impl.factory.DefaultModuleParserFactory;
+import dev.jcputney.elearning.parser.api.ParserOptions;
 import dev.jcputney.elearning.parser.input.scorm2004.SequencingUsageDetector.SequencingLevel;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import dev.jcputney.elearning.parser.output.metadata.aicc.AiccMetadata;
@@ -104,6 +105,8 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public final class ModuleBatchRunner {
 
+  public static final String LOG_ELAPSED = "Checked {} - Elapsed: {}s {}ms";
+  public static final String LOG_ELAPSED_FAILED = "Checked {} - Elapsed: {}s {}ms (failed)";
   private static final int DEFAULT_S3_CONCURRENCY = 4;
   private static final int MAX_S3_CONCURRENCY = 16;
   private static final Pattern UUID_PATTERN = Pattern.compile(
@@ -471,7 +474,6 @@ public final class ModuleBatchRunner {
         }
 
         String moduleRoot = ensureTrailingSlash(versionPrefix);
-        logger.info("Checking {}", moduleRoot);
         submitter.submit(new S3ModuleJob(config.bucket(), moduleRoot, uuidSegment, versionSegment));
         if (limit.isPresent()) {
           remaining.decrementAndGet();
@@ -591,10 +593,15 @@ public final class ModuleBatchRunner {
   }
 
   private ModuleProcessingResult processS3Module(S3ModuleResources resources, S3ModuleJob job) {
+    long startTime = System.currentTimeMillis();
     try {
       ModuleMetadata<?> metadata = resources.parse(job);
+      long elapsed = System.currentTimeMillis() - startTime;
+      logger.info("S3: " + LOG_ELAPSED, job.modulePrefix, elapsed / 1000, elapsed % 1000);
       return successResult(SourceType.S3, job.modulePrefix, job.uuid, job.version, metadata);
     } catch (ModuleDetectionException | ModuleParsingException | IOException exception) {
+      long elapsed = System.currentTimeMillis() - startTime;
+      logger.error("S3: " + LOG_ELAPSED_FAILED, job.modulePrefix, elapsed / 1000, elapsed % 1000);
       logModuleFailure(SourceType.S3, job.modulePrefix, job.uuid, job.version, exception);
       return ModuleProcessingResult.failure(SourceType.S3, job.modulePrefix, job.uuid, job.version,
           exception.getMessage());
@@ -602,12 +609,17 @@ public final class ModuleBatchRunner {
   }
 
   private ModuleProcessingResult processLocalModule(LocalModuleJob job) {
+    long startTime = System.currentTimeMillis();
     try {
       ModuleParserFactory parserFactory = buildLocalFactory(job.modulePath);
       ModuleMetadata<?> metadata = parserFactory.parseModule();
+      long elapsed = System.currentTimeMillis() - startTime;
+      logger.info("Local: " + LOG_ELAPSED, job.displayPath(), elapsed / 1000, elapsed % 1000);
       return successResult(SourceType.LOCAL, job.displayPath(), "-", "-", metadata);
     } catch (ModuleDetectionException | ModuleParsingException | IOException exception) {
       String location = job.displayPath();
+      long elapsed = System.currentTimeMillis() - startTime;
+      logger.error("Local: " + LOG_ELAPSED_FAILED, location, elapsed / 1000, elapsed % 1000);
       logModuleFailure(SourceType.LOCAL, location, "-", "-", exception);
       return ModuleProcessingResult.failure(SourceType.LOCAL, location, "-", "-",
           exception.getMessage());
@@ -615,10 +627,13 @@ public final class ModuleBatchRunner {
   }
 
   private ModuleParserFactory buildLocalFactory(Path modulePath) throws IOException {
+    // Use batch processing options (no file existence validation, no size calculation)
+    ParserOptions options = new ParserOptions();
+
     if (Files.isDirectory(modulePath)) {
-      return new DefaultModuleParserFactory(new LocalFileAccess(modulePath.toString()));
+      return new DefaultModuleParserFactory(new LocalFileAccess(modulePath.toString()), options);
     }
-    return new DefaultModuleParserFactory(new ZipFileAccess(modulePath.toString()));
+    return new DefaultModuleParserFactory(new ZipFileAccess(modulePath.toString()), options);
   }
 
   private ModuleProcessingResult successResult(SourceType source, String location, String uuid,
@@ -818,7 +833,9 @@ public final class ModuleBatchRunner {
     ModuleMetadata<?> parse(S3ModuleJob job)
         throws ModuleDetectionException, ModuleParsingException {
       fileAccess.prepareForModule(job.modulePrefix);
-      ModuleParserFactory parserFactory = new DefaultModuleParserFactory(fileAccess);
+      // Use batch processing options (no file existence validation, no size calculation)
+      ParserOptions options = new ParserOptions();
+      ModuleParserFactory parserFactory = new DefaultModuleParserFactory(fileAccess, options);
       return parserFactory.parseModule();
     }
 
@@ -1370,6 +1387,12 @@ public final class ModuleBatchRunner {
         column.setId(i + 1);
         column.setName(HEADERS[i]);
       }
+
+      // Enable auto-filter
+      if (!ctTable.isSetAutoFilter()) {
+        ctTable.addNewAutoFilter();
+      }
+      ctTable.getAutoFilter().setRef(table.getArea().formatAsString());
 
       return ctTable.isSetTableStyleInfo()
           ? ctTable.getTableStyleInfo()

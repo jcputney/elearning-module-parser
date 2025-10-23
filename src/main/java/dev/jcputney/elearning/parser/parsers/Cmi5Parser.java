@@ -18,9 +18,15 @@
 package dev.jcputney.elearning.parser.parsers;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.exception.ManifestParseException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.cmi5.Cmi5Manifest;
 import dev.jcputney.elearning.parser.output.metadata.cmi5.Cmi5Metadata;
+import dev.jcputney.elearning.parser.util.FileUtils;
+import dev.jcputney.elearning.parser.validation.ValidationIssue;
+import dev.jcputney.elearning.parser.validation.ValidationResult;
+import java.io.IOException;
 
 /**
  * Cmi5Parser is responsible for parsing cmi5-specific metadata from the cmi5.xml file.
@@ -47,6 +53,16 @@ public final class Cmi5Parser extends BaseParser<Cmi5Metadata, Cmi5Manifest> {
   }
 
   /**
+   * Constructs a Cmi5Parser with the specified FileAccess instance and parser options.
+   *
+   * @param fileAccess An instance of FileAccess for reading files in the module package.
+   * @param options The parser options to control validation and calculation behavior.
+   */
+  public Cmi5Parser(FileAccess fileAccess, dev.jcputney.elearning.parser.api.ParserOptions options) {
+    super(fileAccess, options);
+  }
+
+  /**
    * Parses the cmi5 module located at the specified modulePath.
    * <p>
    * This method reads the cmi5.xml file to extract metadata such as the title, launch URL,
@@ -59,25 +75,49 @@ public final class Cmi5Parser extends BaseParser<Cmi5Metadata, Cmi5Manifest> {
    * are missing.
    */
   @Override
-  public Cmi5Metadata parse() throws ModuleParsingException {
+  public Cmi5Metadata parse() throws ModuleException {
     try {
+      // Find the cmi5 manifest file (case-insensitive)
+      var files = moduleFileProvider.listFiles("");
+      String cmi5File = FileUtils.findFileIgnoreCase(files, CMI5_XML);
+
+      if (cmi5File == null) {
+        ValidationResult result = ValidationResult.of(
+            ValidationIssue.error("CMI5_MISSING_MANIFEST",
+                "cmi5 manifest file not found: " + CMI5_XML + " in module at '" + moduleFileProvider.getRootPath() + "'",
+                "package root")
+        );
+        throw result.toException("Failed to parse cmi5 module");
+      }
+
       // Parse cmi5-specific metadata from cmi5.xml
-      var manifest = parseManifest(CMI5_XML);
+      var manifest = parseManifest(cmi5File);
 
       String title = manifest.getTitle();
       if (title == null || title.isEmpty()) {
-        throw new ModuleParsingException("cmi5 module missing required title field");
+        ValidationResult result = ValidationResult.of(
+            ValidationIssue.error("CMI5_MISSING_TITLE", "cmi5 module missing required title field", "cmi5.xml")
+        );
+        throw result.toException("Failed to parse cmi5 module");
       }
       String launchUrl = manifest.getLaunchUrl();
       if (launchUrl == null || launchUrl.isEmpty()) {
-        throw new ModuleParsingException("cmi5 module missing required launch URL field");
+        ValidationResult result = ValidationResult.of(
+            ValidationIssue.error("CMI5_MISSING_LAUNCH_URL", "cmi5 module missing required launch URL field", "cmi5.xml")
+        );
+        throw result.toException("Failed to parse cmi5 module");
       }
 
       // Build and return the Cmi5Metadata
       return Cmi5Metadata.create(manifest, true); // cmi5 modules are always xAPI-enabled
 
+    } catch (IOException e) {
+      throw new ManifestParseException(
+          "Error listing files in cmi5 module at path: " + this.moduleFileProvider.getRootPath(), e);
+    } catch (ModuleParsingException e) {
+      throw e;
     } catch (Exception e) {
-      throw new ModuleParsingException(
+      throw new ManifestParseException(
           "Error parsing cmi5 module at path: " + this.moduleFileProvider.getRootPath(), e);
     }
   }

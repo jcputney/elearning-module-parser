@@ -3,13 +3,9 @@
   <activities>
     <activity id="http://example.com/activities/basic-course"
               type="http://adlnet.gov/expapi/activities/course">
-      <name>Basic xAPI Course</name>
-      <description>
-        <langstring lang="en-US">A simple test course for xAPI/TinCan package parsing</langstring>
-      </description>
-      <launch>
-        <langstring lang="en-US">index.html</langstring>
-      </launch>
+      <name lang="en-US">Basic xAPI Course</name>
+      <description lang="en-US">A simple test course for xAPI/TinCan package parsing</description>
+      <launch lang="en-US">index.html</launch>
     </activity>
   </activities>
 </tincan>

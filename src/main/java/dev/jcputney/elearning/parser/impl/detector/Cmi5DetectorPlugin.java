@@ -26,6 +26,8 @@ import dev.jcputney.elearning.parser.api.ModuleTypeDetectorPlugin;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.parsers.Cmi5Parser;
+import dev.jcputney.elearning.parser.util.FileUtils;
+import java.io.IOException;
 
 /**
  * Plugin for detecting cmi5 modules.
@@ -86,10 +88,17 @@ public class Cmi5DetectorPlugin implements ModuleTypeDetectorPlugin {
       throw new IllegalArgumentException("FileAccess cannot be null");
     }
 
-    if (fileAccess.fileExists(Cmi5Parser.CMI5_XML)) {
-      return ModuleType.CMI5;
-    }
+    try {
+      var files = fileAccess.listFiles("");
+      String cmi5File = FileUtils.findFileIgnoreCase(files, Cmi5Parser.CMI5_XML);
 
-    return null; // Not a cmi5 module
+      if (cmi5File != null) {
+        return ModuleType.CMI5;
+      }
+
+      return null; // Not a cmi5 module
+    } catch (IOException e) {
+      throw new ModuleDetectionException("Error detecting cmi5 module", e);
+    }
   }
 }

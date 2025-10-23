@@ -222,14 +222,26 @@ public final class S3FileAccessV2 extends AbstractS3FileAccess {
         }
 
         ListObjectsV2Response response = s3Client.listObjectsV2(requestBuilder.build());
-        allKeys.addAll(response
-            .contents()
-            .stream()
-            .map(S3Object::key)
-            .filter(key -> !key.endsWith("/")) // Filter out directory markers
-            .filter(this::shouldIncludeKey)
-            .map(this::toRelativeKey)
-            .toList());
+
+        // Cache file sizes while listing to avoid separate headObject calls later
+        for (S3Object s3Object : response.contents()) {
+          String key = s3Object.key();
+
+          // Filter out directory markers
+          if (key.endsWith("/")) {
+            continue;
+          }
+
+          // Filter by root path
+          if (!shouldIncludeKey(key)) {
+            continue;
+          }
+
+          // Cache the size immediately
+          String relativeKey = toRelativeKey(key);
+          fileSizeCache.put(relativeKey, s3Object.size());
+          allKeys.add(relativeKey);
+        }
 
         continuationToken = response.nextContinuationToken();
       } while (continuationToken != null);

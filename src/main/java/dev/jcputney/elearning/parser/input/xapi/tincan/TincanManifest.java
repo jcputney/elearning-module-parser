@@ -23,7 +23,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import dev.jcputney.elearning.parser.input.PackageManifest;
-import dev.jcputney.elearning.parser.input.xapi.types.LangString;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
@@ -105,10 +104,6 @@ public class TincanManifest implements PackageManifest {
         .filter(list -> !list.isEmpty())
         .map(list -> list.get(0))
         .map(TincanActivity::getDescription)
-        .map(desc -> desc.getStrings())
-        .filter(strings -> !strings.isEmpty())
-        .map(strings -> strings.get(0))
-        .map(LangString::getValue)
         .orElse(null);
   }
 
@@ -124,10 +119,6 @@ public class TincanManifest implements PackageManifest {
         .filter(list -> !list.isEmpty())
         .map(list -> list.get(0))
         .map(TincanActivity::getLaunch)
-        .map(launch -> launch.getStrings())
-        .filter(strings -> !strings.isEmpty())
-        .map(strings -> strings.get(0))
-        .map(LangString::getValue)
         .orElse(null);
   }
 

@@ -24,13 +24,17 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
 import dev.jcputney.elearning.parser.exception.ManifestParseException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.aicc.AiccCourse;
 import dev.jcputney.elearning.parser.input.aicc.AiccManifest;
+import dev.jcputney.elearning.parser.validation.ValidationIssue;
+import dev.jcputney.elearning.parser.validation.ValidationResult;
 import dev.jcputney.elearning.parser.input.aicc.AssignableUnit;
 import dev.jcputney.elearning.parser.input.aicc.CourseStructure;
 import dev.jcputney.elearning.parser.input.aicc.Descriptor;
 import dev.jcputney.elearning.parser.output.metadata.aicc.AiccMetadata;
+import dev.jcputney.elearning.parser.util.EncodingDetector;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -43,6 +47,7 @@ import java.util.Map;
 import org.apache.commons.configuration2.INIConfiguration;
 import org.apache.commons.configuration2.SubnodeConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.lang3.Strings;
 
 /**
  * Parses AICC (Aviation Industry CBT Committee) eLearning modules by handling both INI-style and
@@ -90,6 +95,17 @@ public final class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
   }
 
   /**
+   * Constructs an AiccParser with the specified FileAccess instance and parser options.
+   *
+   * @param fileAccess An instance of FileAccess for reading files.
+   * @param options The parser options to control validation and calculation behavior.
+   */
+  public AiccParser(FileAccess fileAccess,
+      dev.jcputney.elearning.parser.api.ParserOptions options) {
+    super(fileAccess, options);
+  }
+
+  /**
    * Constructs an AiccParser with the specified ModuleFileProvider instance.
    *
    * @param moduleFileProvider An instance of ModuleFileProvider for reading files in the module
@@ -109,32 +125,44 @@ public final class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
    * error occurs.
    */
   @Override
-  public AiccMetadata parse() throws ModuleParsingException {
+  public AiccMetadata parse() throws ModuleException {
     try {
       var aiccManifest = parseManifest();
 
       String title = aiccManifest.getTitle();
       String launchUrl = aiccManifest.getLaunchUrl();
       if (title == null || title.isEmpty()) {
-        throw new ModuleParsingException("AICC module at '" + this.moduleFileProvider.getRootPath()
-            + "' has empty or missing title in course file (expected in [Course_Data] section)");
+        ValidationResult result = ValidationResult.of(
+            ValidationIssue.error("AICC_MISSING_TITLE",
+                "AICC module at '" + this.moduleFileProvider.getRootPath() + "' has empty or missing title in course file (expected in [Course_Data] section)",
+                ".crs file")
+        );
+        throw result.toException("Failed to parse AICC module");
       }
       if (launchUrl == null || launchUrl.isEmpty()) {
-        throw new ModuleParsingException("AICC module at '" + this.moduleFileProvider.getRootPath()
-            + "' has empty or missing launch URL in course file (expected in [Course_Data] section)");
+        ValidationResult result = ValidationResult.of(
+            ValidationIssue.error("AICC_MISSING_LAUNCH_URL",
+                "AICC module at '" + this.moduleFileProvider.getRootPath() + "' has empty or missing launch URL in course file (expected in [Course_Data] section)",
+                ".crs file")
+        );
+        throw result.toException("Failed to parse AICC module");
       }
 
       // Find the .crs manifest filename
       String manifestFilename = findFileByExtension(CRS_EXTENSION);
       if (manifestFilename == null) {
-        throw new ModuleParsingException("AICC .crs file not found in module at '"
-            + this.moduleFileProvider.getRootPath() + "'");
+        ValidationResult result = ValidationResult.of(
+            ValidationIssue.error("AICC_MISSING_CRS_FILE",
+                "AICC .crs file not found in module at '" + this.moduleFileProvider.getRootPath() + "'",
+                "package root")
+        );
+        throw result.toException("Failed to parse AICC module");
       }
 
       // Build and return metadata
       return AiccMetadata.create(aiccManifest, checkForXapi(), manifestFilename);
-    } catch (IOException | ManifestParseException e) {
-      throw new ModuleParsingException(
+    } catch (IOException e) {
+      throw new ManifestParseException(
           "Error parsing AICC module at '" + this.moduleFileProvider.getRootPath()
               + "' (requires .crs, .des, .au, and .cst files): " + e.getMessage(), e);
     } catch (ModuleParsingException e) {
@@ -142,7 +170,7 @@ public final class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
       throw e;
     } catch (Exception e) {
       // Catch any other unexpected exceptions
-      throw new ModuleParsingException(
+      throw new ManifestParseException(
           "Unexpected error parsing AICC module at '" + this.moduleFileProvider.getRootPath()
               + "': " + e
               .getClass()
@@ -293,50 +321,129 @@ public final class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
   }
 
   /**
-   * Parses an AICC INI file with the specified extension, converting its contents into an object of
-   * the target type. This method reads the INI configuration, processes its sections and keys into
-   * a structured map, and maps the resulting data to the target class using a JSON object mapper.
-   * If the file is not found or is improperly formatted, appropriate exceptions are thrown.
+   * Parses an AICC INI file with the specified extension, converting its contents into an
+   * AiccCourse object. This method reads the INI configuration, processes its sections and keys
+   * into a structured map, and maps the resulting data to the AiccCourse class using a JSON object
+   * mapper. If the file is not found or is improperly formatted, appropriate exceptions are
+   * thrown.
    *
-   * @param <T> The target type to which the parsed INI data will be mapped.
-   * @return An object of the specified type containing the parsed INI data.
+   * @return An AiccCourse object containing the parsed INI data.
    * @throws IOException If the INI file cannot be located or an error occurs while reading its
    * contents.
    * @throws ManifestParseException If an error occurs during INI file parsing or data conversion.
    */
-  private <T> T parseIniFile() throws IOException, ManifestParseException {
+  private AiccCourse parseIniFile() throws IOException, ManifestParseException {
     String fileName = findFileByExtension(AiccParser.CRS_EXTENSION);
     if (fileName == null) {
       checkAvailableFiles(AiccParser.CRS_EXTENSION, "AICC INI file with extension '");
     }
 
-    try (InputStream inputStream = moduleFileProvider.getFileContents(
-        fileName); InputStreamReader reader = new InputStreamReader(inputStream)) {
-      INIConfiguration iniData = new INIConfiguration();
-      iniData.read(reader);
-      Map<String, Map<String, String>> mapData = new HashMap<>();
-      for (String section : iniData.getSections()) {
-        Map<String, String> subSectionMap = new HashMap<>();
-        SubnodeConfiguration confSection = iniData.getSection(section);
-        Iterator<String> keyIterator = confSection.getKeys();
-        while (keyIterator.hasNext()) {
-          String key = keyIterator.next();
-          Object rawValue = confSection.getProperty(key);
-          // Authoring tools sometimes emit keys without values; treat those as null instead of
-          // failing with a NullPointerException when calling toString().
-          String value = rawValue != null ? rawValue.toString() : null;
-          subSectionMap.put(key, value);
+    try (InputStream inputStream = moduleFileProvider.getFileContents(fileName)) {
+      // Detect encoding and handle BOM (Byte Order Mark) which some authoring tools add
+      EncodingDetector.EncodingAwareInputStream encodingAwareStream =
+          EncodingDetector.detectEncoding(inputStream);
+
+      // First, extract the raw Course_Description text before INI parsing mangles it
+      String rawCourseDescription = extractCourseDescription(encodingAwareStream, fileName);
+
+      // Reset stream for INI parsing
+      encodingAwareStream = EncodingDetector.detectEncoding(
+          moduleFileProvider.getFileContents(fileName));
+
+      try (InputStreamReader reader = new InputStreamReader(
+          encodingAwareStream.inputStream(), encodingAwareStream.charset())) {
+        INIConfiguration iniData = new INIConfiguration();
+        iniData.read(reader);
+        Map<String, Map<String, String>> mapData = new HashMap<>();
+        for (String section : iniData.getSections()) {
+          // Skip Course_Description - we'll handle it separately
+          if ("Course_Description".equalsIgnoreCase(section)) {
+            continue;
+          }
+          Map<String, String> subSectionMap = new HashMap<>();
+          SubnodeConfiguration confSection = iniData.getSection(section);
+          Iterator<String> keyIterator = confSection.getKeys();
+          while (keyIterator.hasNext()) {
+            String key = keyIterator.next();
+            Object rawValue = confSection.getProperty(key);
+            // Authoring tools sometimes emit keys without values; treat those as null instead of
+            // failing with a NullPointerException when calling toString().
+            String value = rawValue != null ? rawValue.toString() : null;
+
+            // Filter out null keys to prevent Jackson serialization errors
+            if (key != null) {
+              subSectionMap.put(key, value);
+            }
+          }
+          mapData.put(section, subSectionMap);
         }
-        mapData.put(section, subSectionMap);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        AiccCourse result = objectMapper.convertValue(mapData, AiccCourse.class);
+
+        // Set the raw description text directly
+        if (rawCourseDescription != null) {
+          result.setCourseDescription(rawCourseDescription);
+        }
+
+        return result;
       }
-      ObjectMapper objectMapper = new ObjectMapper();
-      //noinspection unchecked
-      return objectMapper.convertValue(mapData, (Class<T>) AiccCourse.class);
     } catch (ConfigurationException e) {
       throw new ManifestParseException(
           "Error parsing AICC INI file '" + fileName + "' in module at '"
               + moduleFileProvider.getRootPath() + "' (check file format and encoding): "
               + e.getMessage(), e);
+    }
+  }
+
+  /**
+   * Extracts the raw text content from the [Course_Description] section of an AICC .crs file. The
+   * [Course_Description] section contains plain text that should not be parsed as key-value pairs.
+   *
+   * @param encodingAwareStream the input stream with detected encoding
+   * @param fileName the name of the file being parsed (for error messages)
+   * @return the raw description text, or null if the section is not found
+   * @throws IOException if an error occurs reading the file
+   */
+  private String extractCourseDescription(
+      EncodingDetector.EncodingAwareInputStream encodingAwareStream,
+      String fileName) throws IOException {
+    try (InputStreamReader reader = new InputStreamReader(
+        encodingAwareStream.inputStream(), encodingAwareStream.charset())) {
+      StringBuilder description = new StringBuilder();
+      String line;
+      boolean inDescriptionSection = false;
+      java.io.BufferedReader bufferedReader = new java.io.BufferedReader(reader);
+
+      while ((line = bufferedReader.readLine()) != null) {
+        String trimmedLine = line.trim();
+
+        // Check if we're entering the Course_Description section
+        if (trimmedLine.equalsIgnoreCase("[Course_Description]")) {
+          inDescriptionSection = true;
+          continue;
+        }
+
+        // Check if we're leaving the section (entering a new section)
+        if (inDescriptionSection && trimmedLine.startsWith("[") && trimmedLine.endsWith("]")) {
+          break;
+        }
+
+        // Collect lines within the Course_Description section
+        if (inDescriptionSection && !trimmedLine.isEmpty()) {
+          if (!description.isEmpty()) {
+            description.append("\n");
+          }
+          description.append(line.trim());
+        } else if (inDescriptionSection) {
+          // Preserve empty lines within the description
+          if (!description.isEmpty()) {
+            description.append("\n");
+          }
+        }
+      }
+
+      return !description.isEmpty() ? description.toString() : null;
     }
   }
 
@@ -354,7 +461,7 @@ public final class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
     return moduleFileProvider
         .listFiles("")
         .stream()
-        .filter(fileName -> fileName.endsWith(extension))
+        .filter(fileName -> Strings.CI.endsWith(fileName, extension))
         .findFirst()
         .orElse(null);
   }

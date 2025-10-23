@@ -1,0 +1,18 @@
+[Course]
+Course_Creator=lifespeak
+Course_ID=7174
+Course_System=opslearning.lifespeak.com
+Course_Title=Achieving Work-Life Balance
+Level=2
+Max_Fields_CST=2
+Total_AUs=1
+Total_Blocks=0
+Version=3.0
+[Course_Behavior]
+Max_Normal=99
+[Course_Description]
+Web APIs drive the most popular and powerful web and mobile apps—making the developer who can build a robust web API a developer that's in demand. Get started creating your own with ASP.NET Core, the open-source framework for Windows, macOS, and Linux.
+
+First, learn about attribute routing, the preferred method of handling HTTP requests in ASP.NET Core 2. Then learn how to set up controllers, connect them to the data model, set up validation for incoming requests, and configure HTTP responses. Instructor Chris Woodruff also shows how to implement CRUD operations on the cloud-based Azure SQL Server where the data is stored. An advanced development chapter provides insights on using a repository layer and dependency injection to make your API more abstract, and testing projects with tools such as MSTest and xUnit. Chapters on optimization and caching show how to improve the performance of your APIs.
+
+Follow along with Chris to learn all these concepts and more, and complete the web API shown in the course: an ecommerce engine for creating and viewing customer orders and assigning orders to sales reps.

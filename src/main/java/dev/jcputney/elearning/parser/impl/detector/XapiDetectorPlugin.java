@@ -20,6 +20,9 @@ package dev.jcputney.elearning.parser.impl.detector;
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleTypeDetectorPlugin;
 import dev.jcputney.elearning.parser.enums.ModuleType;
+import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
+import dev.jcputney.elearning.parser.util.FileUtils;
+import java.io.IOException;
 
 /**
  * Detector plugin for xAPI/TinCan packages.
@@ -45,13 +48,26 @@ public class XapiDetectorPlugin implements ModuleTypeDetectorPlugin {
    *
    * @param fileAccess the file access interface
    * @return {@link ModuleType#XAPI} if tincan.xml exists, null otherwise
+   * @throws ModuleDetectionException if an error occurs during detection
    */
   @Override
-  public ModuleType detect(FileAccess fileAccess) {
-    if (fileAccess.fileExists(TINCAN_MANIFEST)) {
-      return ModuleType.XAPI;
+  public ModuleType detect(FileAccess fileAccess) throws ModuleDetectionException {
+    if (fileAccess == null) {
+      throw new IllegalArgumentException("FileAccess cannot be null");
     }
-    return null;
+
+    try {
+      var files = fileAccess.listFiles("");
+      String tincanFile = FileUtils.findFileIgnoreCase(files, TINCAN_MANIFEST);
+
+      if (tincanFile != null) {
+        return ModuleType.XAPI;
+      }
+
+      return null;
+    } catch (IOException e) {
+      throw new ModuleDetectionException("Error detecting xAPI module", e);
+    }
   }
 
   /**

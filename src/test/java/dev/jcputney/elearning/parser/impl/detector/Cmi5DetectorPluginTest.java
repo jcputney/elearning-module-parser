@@ -37,7 +37,10 @@ import static org.mockito.Mockito.when;
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleTypeDetectorPlugin;
 import dev.jcputney.elearning.parser.enums.ModuleType;
+import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.parsers.Cmi5Parser;
+import java.io.IOException;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -86,72 +89,72 @@ class Cmi5DetectorPluginTest {
   @Test
   void testDetect_Cmi5XmlExists_ReturnsCMI5() throws Exception {
     // Arrange
-    when(mockFileAccess.fileExists(Cmi5Parser.CMI5_XML)).thenReturn(true);
+    when(mockFileAccess.listFiles("")).thenReturn(List.of(Cmi5Parser.CMI5_XML, "index.html"));
 
     // Act
     ModuleType result = plugin.detect(mockFileAccess);
 
     // Assert
     assertEquals(ModuleType.CMI5, result);
-    verify(mockFileAccess).fileExists(Cmi5Parser.CMI5_XML);
+    verify(mockFileAccess).listFiles("");
   }
 
   @Test
   void testDetect_Cmi5XmlDoesNotExist_ReturnsNull() throws Exception {
     // Arrange
-    when(mockFileAccess.fileExists(Cmi5Parser.CMI5_XML)).thenReturn(false);
+    when(mockFileAccess.listFiles("")).thenReturn(List.of("index.html"));
 
     // Act
     ModuleType result = plugin.detect(mockFileAccess);
 
     // Assert
     assertNull(result);
-    verify(mockFileAccess).fileExists(Cmi5Parser.CMI5_XML);
+    verify(mockFileAccess).listFiles("");
   }
 
   @Test
   void testDetect_ConstantValueVerification_UsesCmi5ParserConstant() throws Exception {
     // This test verifies that the plugin uses the constant from Cmi5Parser
     // Arrange
-    when(mockFileAccess.fileExists("cmi5.xml")).thenReturn(true);
+    when(mockFileAccess.listFiles("")).thenReturn(List.of("cmi5.xml", "index.html"));
 
     // Act
     ModuleType result = plugin.detect(mockFileAccess);
 
     // Assert
     assertEquals(ModuleType.CMI5, result);
-    verify(mockFileAccess).fileExists("cmi5.xml");
+    verify(mockFileAccess).listFiles("");
   }
 
   @Test
   void testDetect_FileAccessDoesNotThrowException_ProcessesNormally() throws Exception {
     // Arrange
-    when(mockFileAccess.fileExists(Cmi5Parser.CMI5_XML)).thenReturn(false);
+    when(mockFileAccess.listFiles("")).thenReturn(List.of("index.html"));
 
     // Act & Assert - Should not throw any exception
     ModuleType result = plugin.detect(mockFileAccess);
     assertNull(result);
-    verify(mockFileAccess).fileExists(Cmi5Parser.CMI5_XML);
+    verify(mockFileAccess).listFiles("");
   }
 
   @Test
-  void testDetect_FileAccessThrowsRuntimeException_PropagatesException() {
+  void testDetect_FileAccessThrowsRuntimeException_PropagatesException() throws Exception {
     // Arrange
-    RuntimeException runtimeException = new RuntimeException("File access error");
-    when(mockFileAccess.fileExists(Cmi5Parser.CMI5_XML)).thenThrow(runtimeException);
+    IOException ioException = new IOException("File access error");
+    when(mockFileAccess.listFiles("")).thenThrow(ioException);
 
     // Act & Assert
-    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+    ModuleDetectionException exception = assertThrows(ModuleDetectionException.class, () -> {
       plugin.detect(mockFileAccess);
     });
-    assertSame(runtimeException, exception);
-    verify(mockFileAccess).fileExists(Cmi5Parser.CMI5_XML);
+    assertEquals("Error detecting cmi5 module", exception.getMessage());
+    verify(mockFileAccess).listFiles("");
   }
 
   @Test
   void testDetect_MultipleCallsSameFileAccess_ConsistentResults() throws Exception {
     // Arrange
-    when(mockFileAccess.fileExists(Cmi5Parser.CMI5_XML)).thenReturn(true);
+    when(mockFileAccess.listFiles("")).thenReturn(List.of(Cmi5Parser.CMI5_XML, "index.html"));
 
     // Act
     ModuleType result1 = plugin.detect(mockFileAccess);
@@ -161,15 +164,15 @@ class Cmi5DetectorPluginTest {
     assertEquals(ModuleType.CMI5, result1);
     assertEquals(ModuleType.CMI5, result2);
     assertEquals(result1, result2);
-    verify(mockFileAccess, times(2)).fileExists(Cmi5Parser.CMI5_XML);
+    verify(mockFileAccess, times(2)).listFiles("");
   }
 
   @Test
   void testDetect_DifferentFileAccessInstances_IndependentResults() throws Exception {
     // Arrange
     FileAccess mockFileAccess2 = mock(FileAccess.class);
-    when(mockFileAccess.fileExists(Cmi5Parser.CMI5_XML)).thenReturn(true);
-    when(mockFileAccess2.fileExists(Cmi5Parser.CMI5_XML)).thenReturn(false);
+    when(mockFileAccess.listFiles("")).thenReturn(List.of(Cmi5Parser.CMI5_XML, "index.html"));
+    when(mockFileAccess2.listFiles("")).thenReturn(List.of("index.html"));
 
     // Act
     ModuleType result1 = plugin.detect(mockFileAccess);
@@ -178,8 +181,8 @@ class Cmi5DetectorPluginTest {
     // Assert
     assertEquals(ModuleType.CMI5, result1);
     assertNull(result2);
-    verify(mockFileAccess).fileExists(Cmi5Parser.CMI5_XML);
-    verify(mockFileAccess2).fileExists(Cmi5Parser.CMI5_XML);
+    verify(mockFileAccess).listFiles("");
+    verify(mockFileAccess2).listFiles("");
   }
 
   @Test
@@ -197,15 +200,28 @@ class Cmi5DetectorPluginTest {
   }
 
   @Test
-  void testDetect_EdgeCase_ExceptionHandling() {
+  void testDetect_EdgeCase_ExceptionHandling() throws Exception {
     // Arrange
-    when(mockFileAccess.fileExists(Cmi5Parser.CMI5_XML)).thenThrow(
-        new RuntimeException("Simulated error"));
+    when(mockFileAccess.listFiles("")).thenThrow(
+        new IOException("Simulated error"));
 
     // Act & Assert
-    assertThrows(RuntimeException.class, () -> {
+    assertThrows(ModuleDetectionException.class, () -> {
       plugin.detect(mockFileAccess);
     });
-    verify(mockFileAccess).fileExists(Cmi5Parser.CMI5_XML);
+    verify(mockFileAccess).listFiles("");
+  }
+
+  @Test
+  void testDetect_CaseInsensitive_DetectsCmi5WithDifferentCasing() throws Exception {
+    // Arrange
+    when(mockFileAccess.listFiles("")).thenReturn(List.of("CMI5.XML", "index.html"));
+
+    // Act
+    ModuleType result = plugin.detect(mockFileAccess);
+
+    // Assert
+    assertEquals(ModuleType.CMI5, result);
+    verify(mockFileAccess).listFiles("");
   }
 }

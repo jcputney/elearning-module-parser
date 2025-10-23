@@ -4,6 +4,7 @@ import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.xapi.tincan.TincanActivity;
 import dev.jcputney.elearning.parser.input.xapi.tincan.TincanManifest;
+import dev.jcputney.elearning.parser.input.xapi.types.SimpleLangString;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -16,7 +17,7 @@ class XapiMetadataTest {
   void shouldCreateWithCorrectModuleType() {
     TincanActivity activity = new TincanActivity();
     activity.setId("http://example.com/activity/1");
-    activity.setName("Test");
+    activity.setNames(List.of(new SimpleLangString("Test", "en")));
 
     TincanManifest manifest = new TincanManifest(List.of(activity));
     XapiMetadata metadata = new XapiMetadata(manifest);
@@ -39,7 +40,7 @@ class XapiMetadataTest {
   void shouldDelegateToManifest() {
     TincanActivity activity = new TincanActivity();
     activity.setId("http://example.com/activity/1");
-    activity.setName("Test Course");
+    activity.setNames(List.of(new SimpleLangString("Test Course", "en")));
 
     TincanManifest manifest = new TincanManifest(List.of(activity));
     XapiMetadata metadata = new XapiMetadata(manifest);

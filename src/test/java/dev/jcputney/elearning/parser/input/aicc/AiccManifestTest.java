@@ -29,9 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -62,8 +60,7 @@ public class AiccManifestTest {
     courseBehavior.setMaxNormal("1");
 
     // Create a course description
-    Map<String, String> courseDescription = new HashMap<>();
-    courseDescription.put("Test Description", "This is a test course");
+    String courseDescription = "This is a test course";
 
     // Create an AiccCourse
     AiccCourse aiccCourse = new AiccCourse();
@@ -148,8 +145,7 @@ public class AiccManifestTest {
     courseBehavior.setMaxNormal("1");
 
     // Create a course description
-    Map<String, String> courseDescription = new HashMap<>();
-    courseDescription.put("Test Description", "This is a test course");
+    String courseDescription = "This is a test course";
 
     // Create an AiccCourse
     AiccCourse aiccCourse = new AiccCourse();

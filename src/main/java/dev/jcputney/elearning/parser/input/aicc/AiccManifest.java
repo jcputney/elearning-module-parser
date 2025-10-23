@@ -20,6 +20,8 @@ package dev.jcputney.elearning.parser.input.aicc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.PackageManifest;
+import dev.jcputney.elearning.parser.validation.ValidationIssue;
+import dev.jcputney.elearning.parser.validation.ValidationResult;
 import dev.jcputney.elearning.parser.input.common.serialization.DurationHHMMSSDeserializer;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -187,7 +189,10 @@ public final class AiccManifest implements PackageManifest {
     }
     String rootAssignableUnitId = root.getMember();
     if (rootAssignableUnitId == null || rootAssignableUnitId.isEmpty()) {
-      throw new ModuleParsingException("No root assignable unit found.");
+      ValidationResult result = ValidationResult.of(
+          ValidationIssue.error("AICC_NO_ROOT_AU", "No root assignable unit found", "CourseStructure")
+      );
+      throw result.toException("Failed to build AICC manifest");
     }
 
     AssignableUnit rootAssignableUnit = assignableUnits
@@ -196,8 +201,14 @@ public final class AiccManifest implements PackageManifest {
             .getSystemId()
             .equals(rootAssignableUnitId))
         .findFirst()
-        .orElseThrow(() -> new ModuleParsingException(
-            "No assignable unit found with ID: " + rootAssignableUnitId));
+        .orElseThrow(() -> {
+          ValidationResult result = ValidationResult.of(
+              ValidationIssue.error("AICC_AU_NOT_FOUND",
+                  "No assignable unit found with ID: " + rootAssignableUnitId,
+                  "AssignableUnit list")
+          );
+          return result.toException("Failed to build AICC manifest");
+        });
 
     this.launchUrl = rootAssignableUnit.getFileName();
   }

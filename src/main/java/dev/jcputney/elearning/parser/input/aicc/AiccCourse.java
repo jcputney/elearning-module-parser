@@ -18,12 +18,9 @@
 package dev.jcputney.elearning.parser.input.aicc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -54,49 +51,24 @@ public final class AiccCourse implements Serializable {
   /**
    * Course description information for the AICC manifest.
    */
-  @JsonProperty(value = "Course_Description", required = true)
-  private Map<String, String> courseDescription;
+  @JsonProperty(value = "Course_Description", required = false)
+  private String courseDescription;
 
   /**
-   * Course description information for the AICC manifest.
-   * <p>
-   * Reconstructs the full description text from the parsed INI section. The [Course_Description]
-   * section can contain either plain text lines or key-value pairs. When Apache Commons INI
-   * Configuration encounters colons in the text, it treats them as key-value separators. This
-   * method reconstructs the original multi-line description by combining all entries.
+   * Retrieves the course description.
    *
    * @return the course description, or null if not available
    */
-  @JsonIgnore
   public String getCourseDescription() {
-    if (courseDescription == null || courseDescription.isEmpty()) {
-      return null;
-    }
-
-    return courseDescription
-        .entrySet()
-        .stream()
-        .map(entry -> {
-          String key = entry.getKey();
-          String value = entry.getValue();
-          if (value == null || value.trim().isEmpty()) {
-            // Plain text line (no key=value separator found by parser)
-            return key;
-          } else {
-            // Key-value pair, reconstruct as "key: value"
-            return key + ": " + value;
-          }
-        })
-        .collect(Collectors.joining("\n"));
+    return courseDescription;
   }
 
   /**
    * Sets the course description information for the AICC manifest.
    *
-   * @param courseDescription a map representing course description details, where the key is a
-   * language code and the value is the description in that language
+   * @param courseDescription the plain text description of the course
    */
-  public void setCourseDescription(Map<String, String> courseDescription) {
+  public void setCourseDescription(String courseDescription) {
     this.courseDescription = courseDescription;
   }
 

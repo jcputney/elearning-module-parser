@@ -75,7 +75,7 @@ class DefaultModuleParserFactoryTest {
   @Test
   void constructor_withNullModuleTypeDetector_throwsIllegalArgumentException() {
     assertThrows(IllegalArgumentException.class,
-        () -> new DefaultModuleParserFactory(fileAccess, null));
+        () -> new DefaultModuleParserFactory(fileAccess, (dev.jcputney.elearning.parser.api.ModuleTypeDetector) null));
   }
 
   @Test

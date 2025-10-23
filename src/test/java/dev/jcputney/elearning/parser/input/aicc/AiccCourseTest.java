@@ -24,8 +24,6 @@ package dev.jcputney.elearning.parser.input.aicc;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -57,9 +55,8 @@ public class AiccCourseTest {
     AiccCourse.CourseBehavior courseBehavior = new AiccCourse.CourseBehavior();
     courseBehavior.setMaxNormal("5");
 
-    // Create a course description map
-    Map<String, String> courseDescription = new HashMap<>();
-    courseDescription.put("Test Description", "This is a test course");
+    // Create a course description
+    String courseDescription = "This is a test course";
 
     // Create an AiccCourse using the builder
     AiccCourse aiccCourse = new AiccCourse();
@@ -114,8 +111,8 @@ public class AiccCourseTest {
         .getCourseBehavior()
         .getMaxNormal());
 
-    // Verify the getCourseDescription method (reconstructs from key: value pair)
-    assertEquals("Test Description: This is a test course", aiccCourse.getCourseDescription());
+    // Verify the getCourseDescription method returns the plain text description
+    assertEquals("This is a test course", aiccCourse.getCourseDescription());
   }
 
   /**
@@ -140,8 +137,8 @@ public class AiccCourseTest {
     AiccCourse.CourseBehavior courseBehavior = new AiccCourse.CourseBehavior();
     courseBehavior.setMaxNormal("5");
 
-    // Create an empty course description map
-    Map<String, String> courseDescription = new HashMap<>();
+    // Create an empty course description
+    String courseDescription = "";
 
     // Create an AiccCourse using the builder
     AiccCourse aiccCourse = new AiccCourse();
@@ -149,8 +146,8 @@ public class AiccCourseTest {
     aiccCourse.setCourseBehavior(courseBehavior);
     aiccCourse.setCourseDescription(courseDescription);
 
-    // Verify the getCourseDescription method returns null for an empty map
-    assertNull(aiccCourse.getCourseDescription());
+    // Verify the getCourseDescription method returns empty string
+    assertEquals("", aiccCourse.getCourseDescription());
   }
 
   /**

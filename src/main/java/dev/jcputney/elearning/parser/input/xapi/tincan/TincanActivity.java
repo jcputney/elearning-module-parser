@@ -18,21 +18,27 @@
 package dev.jcputney.elearning.parser.input.xapi.tincan;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import dev.jcputney.elearning.parser.input.xapi.types.TextType;
+import dev.jcputney.elearning.parser.input.xapi.types.SimpleLangString;
+import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Represents an activity element in a TinCan manifest.
  *
+ * <p>According to the official TinCan XSD schema, activities use the langstring format
+ * where elements have text content and an optional {@code lang} attribute:</p>
+ *
  * <p>Example XML:</p>
  * <pre>{@code
  * <activity id="http://example.com/activity/1"
  *           type="http://adlnet.gov/expapi/activities/course">
- *   <name>Course Name</name>
+ *   <name lang="en-US">Course Name</name>
  *   <description lang="en-US">Course description</description>
- *   <launch lang="en-us">index.html</launch>
+ *   <launch lang="en-US">index.html</launch>
  * </activity>
  * }</pre>
  */
@@ -54,21 +60,27 @@ public class TincanActivity {
 
   /**
    * The name/title of the activity (required).
+   * May appear multiple times for different languages.
    */
+  @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "name")
-  private String name;
+  private List<SimpleLangString> names;
 
   /**
    * The description of the activity with language support (optional).
+   * May appear multiple times for different languages.
    */
+  @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "description")
-  private TextType description;
+  private List<SimpleLangString> descriptions;
 
   /**
    * The launch URL with language support (required).
+   * May appear multiple times for different languages.
    */
+  @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "launch")
-  private TextType launch;
+  private List<SimpleLangString> launches;
 
   /**
    * Default no-argument constructor.
@@ -81,17 +93,17 @@ public class TincanActivity {
    *
    * @param id the activity IRI
    * @param type the activity type URI
-   * @param name the activity name
-   * @param description the activity description
-   * @param launch the launch URL
+   * @param names the activity names (may be multiple for different languages)
+   * @param descriptions the activity descriptions (may be multiple for different languages)
+   * @param launches the launch URLs (may be multiple for different languages)
    */
-  public TincanActivity(String id, String type, String name, TextType description,
-      TextType launch) {
+  public TincanActivity(String id, String type, List<SimpleLangString> names,
+      List<SimpleLangString> descriptions, List<SimpleLangString> launches) {
     this.id = id;
     this.type = type;
-    this.name = name;
-    this.description = description;
-    this.launch = launch;
+    this.names = names;
+    this.descriptions = descriptions;
+    this.launches = launches;
   }
 
   /**
@@ -131,57 +143,93 @@ public class TincanActivity {
   }
 
   /**
-   * Gets the activity name.
+   * Gets the list of activity names.
    *
-   * @return the activity name
+   * @return the list of activity names
    */
+  public List<SimpleLangString> getNames() {
+    return names;
+  }
+
+  /**
+   * Sets the list of activity names.
+   *
+   * @param names the list of activity names
+   */
+  public void setNames(List<SimpleLangString> names) {
+    this.names = names;
+  }
+
+  /**
+   * Gets the first activity name value (for convenience).
+   *
+   * @return the first name value, or null if no names
+   */
+  @JsonIgnore
   public String getName() {
-    return name;
+    return names != null && !names.isEmpty() && names.get(0) != null
+        ? names.get(0).getValue()
+        : null;
   }
 
   /**
-   * Sets the activity name.
+   * Gets the list of activity descriptions.
    *
-   * @param name the activity name
+   * @return the list of activity descriptions
    */
-  public void setName(String name) {
-    this.name = name;
+  public List<SimpleLangString> getDescriptions() {
+    return descriptions;
   }
 
   /**
-   * Gets the activity description.
+   * Sets the list of activity descriptions.
    *
-   * @return the activity description
+   * @param descriptions the list of activity descriptions
    */
-  public TextType getDescription() {
-    return description;
+  public void setDescriptions(List<SimpleLangString> descriptions) {
+    this.descriptions = descriptions;
   }
 
   /**
-   * Sets the activity description.
+   * Gets the first activity description value (for convenience).
    *
-   * @param description the activity description
+   * @return the first description value, or null if no descriptions
    */
-  public void setDescription(TextType description) {
-    this.description = description;
+  @JsonIgnore
+  public String getDescription() {
+    return descriptions != null && !descriptions.isEmpty() && descriptions.get(0) != null
+        ? descriptions.get(0).getValue()
+        : null;
   }
 
   /**
-   * Gets the launch URL for this activity.
+   * Gets the list of launch URLs.
    *
-   * @return the launch URL
+   * @return the list of launch URLs
    */
-  public TextType getLaunch() {
-    return launch;
+  public List<SimpleLangString> getLaunches() {
+    return launches;
   }
 
   /**
-   * Sets the launch URL for this activity.
+   * Sets the list of launch URLs.
    *
-   * @param launch the launch URL
+   * @param launches the list of launch URLs
    */
-  public void setLaunch(TextType launch) {
-    this.launch = launch;
+  public void setLaunches(List<SimpleLangString> launches) {
+    this.launches = launches;
+  }
+
+  /**
+   * Gets the first launch URL value (for convenience).
+   *
+   * @return the first launch URL value, or null if no launches
+   */
+  @JsonIgnore
+  public String getLaunch() {
+    return launches != null && !launches.isEmpty() && launches.get(0) != null
+        ? launches.get(0).getValue()
+        : null;
   }
 
   @Override
@@ -195,9 +243,9 @@ public class TincanActivity {
     return new EqualsBuilder()
         .append(getId(), that.getId())
         .append(getType(), that.getType())
-        .append(getName(), that.getName())
-        .append(getDescription(), that.getDescription())
-        .append(getLaunch(), that.getLaunch())
+        .append(getNames(), that.getNames())
+        .append(getDescriptions(), that.getDescriptions())
+        .append(getLaunches(), that.getLaunches())
         .isEquals();
   }
 
@@ -206,9 +254,9 @@ public class TincanActivity {
     return new HashCodeBuilder(17, 37)
         .append(getId())
         .append(getType())
-        .append(getName())
-        .append(getDescription())
-        .append(getLaunch())
+        .append(getNames())
+        .append(getDescriptions())
+        .append(getLaunches())
         .toHashCode();
   }
 }
