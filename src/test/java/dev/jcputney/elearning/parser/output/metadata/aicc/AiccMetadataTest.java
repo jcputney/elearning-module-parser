@@ -17,11 +17,14 @@
 
 package dev.jcputney.elearning.parser.output.metadata.aicc;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.jcputney.elearning.parser.input.aicc.AiccManifest;
 import dev.jcputney.elearning.parser.input.aicc.AssignableUnit;
 import java.util.Collections;
@@ -131,5 +134,43 @@ class AiccMetadataTest {
 
     // Assert
     assertTrue(result);
+  }
+
+  @Test
+  void testGetManifestFile_ReturnsCorrectFilename() {
+    // Arrange
+    AiccManifest mockManifest = mock(AiccManifest.class);
+    when(mockManifest.getAssignableUnits()).thenReturn(Collections.emptyList());
+
+    String expectedFilename = "course.crs";
+    AiccMetadata metadata = AiccMetadata.create(mockManifest, false, expectedFilename);
+
+    // Act
+    String actualFilename = metadata.getManifestFile();
+
+    // Assert
+    assertEquals(expectedFilename, actualFilename);
+  }
+
+  @Test
+  void testGetManifestFile_JsonRoundTrip_PreservesValue() throws Exception {
+    // Arrange
+    AiccManifest mockManifest = mock(AiccManifest.class);
+    when(mockManifest.getAssignableUnits()).thenReturn(Collections.emptyList());
+
+    String expectedFilename = "my_course.crs";
+    AiccMetadata originalMetadata = AiccMetadata.create(mockManifest, false, expectedFilename);
+
+    ObjectMapper mapper = new ObjectMapper();
+
+    // Act - Serialize to JSON and deserialize back
+    String json = mapper.writeValueAsString(originalMetadata);
+    AiccMetadata deserializedMetadata = mapper.readValue(json, AiccMetadata.class);
+
+    // Assert
+    assertNotNull(deserializedMetadata.getManifestFile(),
+        "manifestFile should not be null after JSON deserialization");
+    assertEquals(expectedFilename, deserializedMetadata.getManifestFile(),
+        "manifestFile should be preserved through JSON round-trip");
   }
 }

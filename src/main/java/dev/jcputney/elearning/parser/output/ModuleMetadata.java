@@ -18,7 +18,6 @@
 package dev.jcputney.elearning.parser.output;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.PackageManifest;
@@ -165,9 +164,9 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
   /**
    * Determines whether this module contains multiple launchable units.
    * <p>
-   * This affects player configuration defaults such as navigation controls,
-   * table of contents display, and launch behavior. In Rustici Engine and similar
-   * LMS platforms, this flag is used to conditionally enable multi-SCO navigation features.
+   * This affects player configuration defaults such as navigation controls, table of contents
+   * display, and launch behavior. In Rustici Engine and similar LMS platforms, this flag is used to
+   * conditionally enable multi-SCO navigation features.
    * </p>
    * <ul>
    *   <li>SCORM 1.2: Multiple resources with scormType="sco"</li>
@@ -184,15 +183,24 @@ public abstract class ModuleMetadata<M extends PackageManifest> implements Packa
   /**
    * Retrieves the filename of the manifest file for this module.
    * <p>
-   * For most module types, this is a constant defined by the specification
-   * (e.g., "imsmanifest.xml" for SCORM, "cmi5.xml" for cmi5). For AICC modules,
-   * the filename is discovered during parsing as the .crs file can have any name.
+   * For most module types, this is a constant defined by the specification (e.g., "imsmanifest.xml"
+   * for SCORM, "cmi5.xml" for cmi5). For AICC modules, the filename is discovered during parsing as
+   * the .crs file can have any name.
    * </p>
    *
    * @return the manifest filename (e.g., "imsmanifest.xml", "cmi5.xml", "course.crs")
    */
-  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   public abstract String getManifestFile();
+
+  /**
+   * Sets the name of the manifest file associated with the module.
+   *
+   * @param manifestFile the filename of the manifest, typically representing the module's metadata
+   * file (e.g., "imsmanifest.xml" for SCORM)
+   */
+  public void setManifestFile(String manifestFile) {
+    // no-op
+  }
 
   /**
    * Gets the total size of all files in the module on disk.

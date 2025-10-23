@@ -188,24 +188,10 @@ public class AiccMetadata extends BaseModuleMetadata<AiccManifest> {
   private boolean requiresLevel4;
 
   /**
-   * The filename of the AICC course (.crs) file discovered during parsing.
-   * AICC allows the .crs file to have any name, so this is determined at parse time.
+   * The filename of the AICC course (.crs) file discovered during parsing. AICC allows the .crs
+   * file to have any name, so this is determined at parse time.
    */
   private String manifestFile;
-
-  @Override
-  public boolean hasMultipleLaunchableUnits() {
-    if (manifest == null || manifest.getAssignableUnits() == null) {
-      return false;
-    }
-
-    return manifest.getAssignableUnits().size() > 1;
-  }
-
-  @Override
-  public String getManifestFile() {
-    return manifestFile;
-  }
 
   /**
    * Creates and initializes an instance of AiccMetadata based on the provided AICC manifest.
@@ -215,7 +201,8 @@ public class AiccMetadata extends BaseModuleMetadata<AiccManifest> {
    * @param manifestFile the filename of the AICC .crs file discovered during parsing
    * @return a populated instance of AiccMetadata containing metadata extracted from the manifest
    */
-  public static AiccMetadata create(AiccManifest manifest, boolean xapiEnabled, String manifestFile) {
+  public static AiccMetadata create(AiccManifest manifest, boolean xapiEnabled,
+      String manifestFile) {
     if (manifest == null) {
       throw new IllegalArgumentException("Manifest cannot be null");
     }
@@ -1001,6 +988,42 @@ public class AiccMetadata extends BaseModuleMetadata<AiccManifest> {
     if (!key.isEmpty() && !value.isEmpty()) {
       target.put(key, value);
     }
+  }
+
+  @Override
+  public boolean hasMultipleLaunchableUnits() {
+    if (manifest == null || manifest.getAssignableUnits() == null) {
+      return false;
+    }
+
+    return manifest
+        .getAssignableUnits()
+        .size() > 1;
+  }
+
+  /**
+   * Gets the AICC manifest filename (e.g., "course.crs").
+   * <p>
+   * Unlike other module types where the manifest filename is constant, AICC allows the .crs file to
+   * have any name, so this value is discovered during parsing.
+   * </p>
+   *
+   * @return the discovered AICC .crs filename
+   */
+  @Override
+  @JsonProperty
+  public String getManifestFile() {
+    return manifestFile;
+  }
+
+  /**
+   * Sets the manifest file to the specified path.
+   *
+   * @param manifestFile the file path of the manifest to be set
+   */
+  @Override
+  public void setManifestFile(String manifestFile) {
+    this.manifestFile = manifestFile;
   }
 
   @Override
