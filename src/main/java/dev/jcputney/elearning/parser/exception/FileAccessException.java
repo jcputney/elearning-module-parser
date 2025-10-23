@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.exception;
 
-import java.util.Map;
-
 /**
  * Exception thrown when there's an error accessing files within a module.
  *
@@ -29,14 +27,6 @@ import java.util.Map;
  *   <li>Permission denied</li>
  *   <li>I/O errors</li>
  *   <li>Network errors (for remote file access)</li>
- * </ul>
- *
- * <p>This exception extends {@link ModuleException} and inherits its ability to store
- * additional context information as metadata. Common metadata keys include:
- * <ul>
- *   <li>"path" - The path of the file being accessed</li>
- *   <li>"operation" - The operation being performed (e.g., "read", "list")</li>
- *   <li>"fileAccess" - The type of FileAccess implementation</li>
  * </ul>
  */
 public final class FileAccessException extends ModuleException {
@@ -64,18 +54,5 @@ public final class FileAccessException extends ModuleException {
    */
   public FileAccessException(String message, Throwable cause) {
     super(message, cause);
-  }
-
-  /**
-   * Constructs a new FileAccessException with the specified detail message, cause, and metadata.
-   *
-   * @param message the detail message (which is saved for later retrieval by the
-   * {@link #getMessage()} method)
-   * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method).
-   * A null value is permitted and indicates that the cause is nonexistent or unknown.
-   * @param metadata a map of additional context information about the exception
-   */
-  public FileAccessException(String message, Throwable cause, Map<String, Object> metadata) {
-    super(message, cause, metadata);
   }
 }

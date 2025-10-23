@@ -190,17 +190,9 @@ public final class CachedFileAccess implements FileAccess {
           List<String> files = delegate.listFiles(p);
           return Collections.unmodifiableList(files);
         } catch (IOException e) {
-          // Create detailed metadata for the exception
-          Map<String, Object> metadata = new HashMap<>();
-          metadata.put("path", p);
-          metadata.put("operation", "listFiles");
-          metadata.put("fileAccess", delegate
-              .getClass()
-              .getSimpleName());
-
           // Wrap the IOException in a FileAccessException to be compatible with computeIfAbsent
           throw new RuntimeFileAccessException(new FileAccessException(
-              String.format("Failed to list files in directory '%s'", p), e, metadata));
+              String.format("Failed to list files in directory '%s' using %s", p, delegate.getClass().getSimpleName()), e));
         }
       });
     } catch (RuntimeFileAccessException e) {
@@ -242,17 +234,9 @@ public final class CachedFileAccess implements FileAccess {
           }
           return os.toByteArray();
         } catch (IOException e) {
-          // Create detailed metadata for the exception
-          Map<String, Object> metadata = new HashMap<>();
-          metadata.put("path", p);
-          metadata.put("operation", "getFileContents");
-          metadata.put("fileAccess", delegate
-              .getClass()
-              .getSimpleName());
-
           // Wrap the IOException in a FileAccessException to be compatible with computeIfAbsent
           throw new RuntimeFileAccessException(new FileAccessException(
-              String.format("Failed to read file contents from '%s'", p), e, metadata));
+              String.format("Failed to read file contents from '%s' using %s", p, delegate.getClass().getSimpleName()), e));
         }
       });
 

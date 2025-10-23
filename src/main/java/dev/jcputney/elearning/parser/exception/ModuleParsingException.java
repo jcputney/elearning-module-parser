@@ -18,7 +18,6 @@
 package dev.jcputney.elearning.parser.exception;
 
 import dev.jcputney.elearning.parser.api.ModuleParser;
-import java.util.Map;
 
 /**
  * Exception thrown when there's an error parsing an eLearning module.
@@ -37,9 +36,6 @@ import java.util.Map;
  *
  * <p>Applications should catch this exception and provide appropriate feedback to users about
  * the invalid or problematic module.
- *
- * <p>This exception extends {@link ModuleException} and inherits its ability to store
- * additional context information as metadata.
  */
 public final class ModuleParsingException extends ModuleException {
 
@@ -66,19 +62,5 @@ public final class ModuleParsingException extends ModuleException {
    */
   public ModuleParsingException(String message, Throwable cause) {
     super(message, cause);
-  }
-
-  /**
-   * Constructs a new ModuleParsingException with the specified detail message, cause, and
-   * metadata.
-   *
-   * @param message the detail message (which is saved for later retrieval by the
-   * {@link #getMessage()} method)
-   * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method).
-   * A null value is permitted and indicates that the cause is nonexistent or unknown.
-   * @param metadata a map of additional context information about the exception
-   */
-  public ModuleParsingException(String message, Throwable cause, Map<String, Object> metadata) {
-    super(message, cause, metadata);
   }
 }

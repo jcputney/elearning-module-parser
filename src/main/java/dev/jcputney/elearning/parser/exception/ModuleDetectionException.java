@@ -17,8 +17,6 @@
 
 package dev.jcputney.elearning.parser.exception;
 
-import java.util.Map;
-
 /**
  * Exception thrown when a module type cannot be detected or when there's an error during the module
  * detection process.
@@ -38,9 +36,6 @@ import java.util.Map;
  *
  * <p>Applications should catch this exception and provide appropriate feedback to users about
  * the invalid or unsupported module.
- *
- * <p>This exception extends {@link ModuleException} and inherits its ability to store
- * additional context information as metadata.
  */
 public final class ModuleDetectionException extends ModuleException {
 
@@ -67,19 +62,5 @@ public final class ModuleDetectionException extends ModuleException {
    */
   public ModuleDetectionException(String message, Throwable cause) {
     super(message, cause);
-  }
-
-  /**
-   * Constructs a new ModuleDetectionException with the specified detail message, cause, and
-   * metadata.
-   *
-   * @param message the detail message (which is saved for later retrieval by the
-   * {@link #getMessage()} method)
-   * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method).
-   * A null value is permitted and indicates that the cause is nonexistent or unknown.
-   * @param metadata a map of additional context information about the exception
-   */
-  public ModuleDetectionException(String message, Throwable cause, Map<String, Object> metadata) {
-    super(message, cause, metadata);
   }
 }
