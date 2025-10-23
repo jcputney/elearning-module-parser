@@ -31,6 +31,9 @@ import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleParser;
 import dev.jcputney.elearning.parser.api.ModuleTypeDetector;
 import dev.jcputney.elearning.parser.api.ModuleTypeDetectorPlugin;
+import dev.jcputney.elearning.parser.api.ParserOptions;
+import dev.jcputney.elearning.parser.validation.ValidationIssue;
+import dev.jcputney.elearning.parser.validation.ValidationResult;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
@@ -335,9 +338,21 @@ class DefaultModuleParserFactoryTest {
     }
 
     @Override
+    public ValidationResult validate() {
+      return ValidationResult.valid();
+    }
+
+    @Override
+    public ParserOptions getOptions() {
+      return new ParserOptions();
+    }
+
+    @Override
     public ModuleMetadata<PackageManifest> parse() throws ModuleParsingException {
       if (throwException) {
-        throw new ModuleParsingException("Mock parsing exception");
+        throw ValidationResult.of(
+            ValidationIssue.error("MOCK_ERROR", "Mock parsing exception", "test")
+        ).toException("Mock parsing failed");
       }
       return new MockModuleMetadata(new MockPackageManifest());
     }

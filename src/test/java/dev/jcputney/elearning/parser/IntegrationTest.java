@@ -25,6 +25,7 @@ import dev.jcputney.elearning.parser.api.ModuleParserFactory;
 import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.impl.access.ZipFileAccess;
@@ -53,7 +54,7 @@ public class IntegrationTest {
    */
   @Test
   void testEndToEndParsingScorm12()
-      throws IOException, ModuleDetectionException, ModuleParsingException {
+      throws IOException, ModuleDetectionException, ModuleException {
     // Arrange
     String modulePath = "src/test/resources/modules/zips/scorm12.zip";
 
@@ -81,7 +82,7 @@ public class IntegrationTest {
    */
   @Test
   void testEndToEndParsingScorm2004()
-      throws IOException, ModuleDetectionException, ModuleParsingException {
+      throws IOException, ModuleDetectionException, ModuleException {
     // Arrange
     String modulePath = "src/test/resources/modules/zips/scorm2004.zip";
 
@@ -109,7 +110,7 @@ public class IntegrationTest {
    */
   @Test
   void testEndToEndParsingAicc()
-      throws IOException, ModuleDetectionException, ModuleParsingException {
+      throws IOException, ModuleDetectionException, ModuleException {
     // Arrange
     String modulePath = "src/test/resources/modules/zips/aicc.zip";
 
@@ -137,7 +138,7 @@ public class IntegrationTest {
    */
   @Test
   void testEndToEndParsingCmi5()
-      throws IOException, ModuleDetectionException, ModuleParsingException {
+      throws IOException, ModuleDetectionException, ModuleException {
     // Arrange
     String modulePath = "src/test/resources/modules/zips/cmi5.zip";
 
@@ -165,7 +166,7 @@ public class IntegrationTest {
    */
   @Test
   void testEndToEndParsingXapi()
-      throws IOException, ModuleDetectionException, ModuleParsingException {
+      throws IOException, ModuleDetectionException, ModuleException {
     // Arrange
     String modulePath = "src/test/resources/modules/xapi/basic_course";
 
@@ -213,7 +214,7 @@ public class IntegrationTest {
    */
   @Test
   void testEndToEndParsingAllModuleTypes()
-      throws IOException, ModuleDetectionException, ModuleParsingException {
+      throws IOException, ModuleDetectionException, ModuleException {
     // Test SCORM 1.2
     try (ZipFileAccess scorm12Zip = new ZipFileAccess(
         "src/test/resources/modules/zips/scorm12.zip")) {
@@ -267,7 +268,7 @@ public class IntegrationTest {
    */
   @Test
   void testScorm2004SecondEditionDetection()
-      throws ModuleDetectionException, ModuleParsingException {
+      throws ModuleDetectionException, ModuleException {
     // Arrange
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingSingleSCO_SCORM20042ndEdition";
 
@@ -290,7 +291,7 @@ public class IntegrationTest {
    */
   @Test
   void testScorm2004ThirdEditionDetection()
-      throws ModuleDetectionException, ModuleParsingException {
+      throws ModuleDetectionException, ModuleException {
     // Arrange
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingSingleSCO_SCORM20043rdEdition";
 
@@ -313,7 +314,7 @@ public class IntegrationTest {
    */
   @Test
   void testScorm2004FourthEditionDetection()
-      throws ModuleDetectionException, ModuleParsingException {
+      throws ModuleDetectionException, ModuleException {
     // Arrange
     String modulePath = "src/test/resources/modules/scorm2004/SequencingPostTestRollup4thEd_SCORM20044thEdition";
 
@@ -336,7 +337,7 @@ public class IntegrationTest {
    */
   @Test
   void testNonScorm2004EditionTypes()
-      throws IOException, ModuleDetectionException, ModuleParsingException {
+      throws IOException, ModuleDetectionException, ModuleException {
     // Test SCORM 1.2
     ModuleParserFactory scorm12Factory = new DefaultModuleParserFactory(
         new ZipFileAccess("src/test/resources/modules/zips/scorm12.zip"));
