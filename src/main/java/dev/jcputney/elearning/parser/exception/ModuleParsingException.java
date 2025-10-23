@@ -40,11 +40,22 @@ import dev.jcputney.elearning.parser.validation.ValidationResult;
  */
 public final class ModuleParsingException extends ModuleException {
 
+  /**
+   * Represents the result of validation performed during the parsing of a module. This field
+   * contains an immutable {@link ValidationResult} instance, encapsulating all validation issues,
+   * such as errors and warnings, encountered during the parsing process.
+   * <p>
+   * The validation result provides various methods to retrieve detailed information about the
+   * issues, such as severity, error messages, and suggestions for fixes.
+   * <p>
+   * This field is used in the context of exceptions to describe validation failures and provides a
+   * mechanism to access the full list of issues for further processing or reporting.
+   */
   private final ValidationResult validationResult;
 
   /**
-   * Constructs a new ModuleParsingException with validation result.
-   * This constructor should only be called from ValidationResult.toException().
+   * Constructs a new ModuleParsingException with validation result. This constructor should only be
+   * called from ValidationResult.toException().
    *
    * @param contextMessage Context describing what was being parsed
    * @param result ValidationResult containing all validation issues

@@ -73,7 +73,8 @@ public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends P
    *
    * @param moduleFileProvider An instance of ModuleFileProvider for reading files in the module
    * package.
-   * @param options Parser options controlling validation and calculation behavior (null for defaults)
+   * @param options Parser options controlling validation and calculation behavior (null for
+   * defaults)
    * @throws IllegalArgumentException if moduleFileProvider is null
    */
   protected BaseParser(ModuleFileProvider moduleFileProvider, ParserOptions options) {
@@ -96,11 +97,12 @@ public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends P
   }
 
   /**
-   * Constructs a BaseParser with the specified FileAccess instance and parser options.
-   * This constructor creates a DefaultModuleFileProvider that wraps the FileAccess instance.
+   * Constructs a BaseParser with the specified FileAccess instance and parser options. This
+   * constructor creates a DefaultModuleFileProvider that wraps the FileAccess instance.
    *
    * @param fileAccess An instance of FileAccess for reading files in the module package.
-   * @param options Parser options controlling validation and calculation behavior (null for defaults)
+   * @param options Parser options controlling validation and calculation behavior (null for
+   * defaults)
    * @throws IllegalArgumentException if fileAccess is null
    */
   protected BaseParser(FileAccess fileAccess, ParserOptions options) {
@@ -112,8 +114,8 @@ public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends P
   }
 
   /**
-   * Constructs a BaseParser with the specified FileAccess instance and default options.
-   * This constructor creates a DefaultModuleFileProvider that wraps the FileAccess instance.
+   * Constructs a BaseParser with the specified FileAccess instance and default options. This
+   * constructor creates a DefaultModuleFileProvider that wraps the FileAccess instance.
    *
    * @param fileAccess An instance of FileAccess for reading files in the module package.
    * @throws IllegalArgumentException if fileAccess is null
@@ -142,9 +144,9 @@ public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends P
   }
 
   /**
-   * Validates the module without parsing. Returns validation result with errors/warnings.
-   * Default implementation parses the module and returns any validation errors.
-   * Subclasses can override for more specific validation logic.
+   * Validates the module without parsing. Returns validation result with errors/warnings. Default
+   * implementation parses the module and returns any validation errors. Subclasses can override for
+   * more specific validation logic.
    *
    * @return ValidationResult containing errors and warnings
    */
@@ -175,14 +177,15 @@ public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends P
   }
 
   /**
-   * Parses the manifest file at the specified path and returns the corresponding manifest object.
+   * Parses a manifest file from the given path, processes its content, and returns the parsed
+   * manifest object.
    *
-   * @param manifestPath The path to the manifest file.
-   * @return The parsed manifest object.
-   * @throws IOException If an error occurs while reading the file.
-   * @throws XMLStreamException If an error occurs while parsing the XML.
-   * @throws ModuleParsingException If there's an error parsing the manifest.
-   * @throws IllegalArgumentException if manifestPath is null
+   * @param manifestPath the file path to the manifest file to be parsed. This cannot be null.
+   * @return an object of type M representing the parsed manifest content.
+   * @throws IOException if an error occurs while reading the manifest file.
+   * @throws XMLStreamException if an error occurs while parsing the XML content of the manifest.
+   * @throws ManifestParseException if the manifest file cannot be read or parsed.
+   * @throws IllegalArgumentException if the provided manifestPath is null.
    */
   public M parseManifest(String manifestPath)
       throws IOException, XMLStreamException, ManifestParseException {
