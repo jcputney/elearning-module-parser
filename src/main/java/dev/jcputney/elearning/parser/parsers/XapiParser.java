@@ -26,7 +26,9 @@ import dev.jcputney.elearning.parser.output.metadata.xapi.XapiMetadata;
 import dev.jcputney.elearning.parser.util.FileUtils;
 import dev.jcputney.elearning.parser.validation.ValidationIssue;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
+import dev.jcputney.elearning.parser.validators.XapiValidator;
 import java.io.IOException;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * Parser for xAPI/TinCan packages.
@@ -61,6 +63,33 @@ public final class XapiParser extends BaseParser<XapiMetadata, TincanManifest> {
    */
   public XapiParser(FileAccess fileAccess, dev.jcputney.elearning.parser.api.ParserOptions options) {
     super(fileAccess, options);
+  }
+
+  /**
+   * Validates the xAPI/TinCan module without fully parsing it.
+   * This method provides efficient validation by only parsing the manifest file
+   * and running structural validation checks.
+   *
+   * @return ValidationResult containing any errors or warnings found
+   */
+  @Override
+  public ValidationResult validate() {
+    try {
+      // Parse manifest only (lightweight)
+      TincanManifest manifest = parseManifest(TINCAN_XML);
+
+      // Run validator
+      XapiValidator validator = new XapiValidator();
+      return validator.validate(manifest);
+    } catch (ManifestParseException | IOException | XMLStreamException e) {
+      return ValidationResult.of(
+          ValidationIssue.error(
+              "MANIFEST_PARSE_ERROR",
+              "Failed to parse manifest: " + e.getMessage(),
+              TINCAN_XML
+          )
+      );
+    }
   }
 
   /**

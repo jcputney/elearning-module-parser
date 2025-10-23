@@ -35,6 +35,7 @@ import dev.jcputney.elearning.parser.input.aicc.CourseStructure;
 import dev.jcputney.elearning.parser.input.aicc.Descriptor;
 import dev.jcputney.elearning.parser.output.metadata.aicc.AiccMetadata;
 import dev.jcputney.elearning.parser.util.EncodingDetector;
+import dev.jcputney.elearning.parser.validators.AiccValidator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -113,6 +114,33 @@ public final class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
    */
   public AiccParser(ModuleFileProvider moduleFileProvider) {
     super(moduleFileProvider);
+  }
+
+  /**
+   * Validates the AICC module without fully parsing it.
+   * This method provides efficient validation by only parsing the manifest files
+   * and running structural validation checks.
+   *
+   * @return ValidationResult containing any errors or warnings found
+   */
+  @Override
+  public ValidationResult validate() {
+    try {
+      // Parse AICC manifest (lightweight)
+      AiccManifest manifest = parseManifest();
+
+      // Run validator
+      AiccValidator validator = new AiccValidator();
+      return validator.validate(manifest);
+    } catch (ManifestParseException | IOException | ModuleParsingException e) {
+      return ValidationResult.of(
+          ValidationIssue.error(
+              "MANIFEST_PARSE_ERROR",
+              "Failed to parse AICC manifest: " + e.getMessage(),
+              ".crs file"
+          )
+      );
+    }
   }
 
   /**

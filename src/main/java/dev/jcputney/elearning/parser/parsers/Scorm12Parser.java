@@ -34,6 +34,7 @@ import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resource;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import dev.jcputney.elearning.parser.output.metadata.scorm12.Scorm12Metadata;
 import dev.jcputney.elearning.parser.util.FileUtils;
+import dev.jcputney.elearning.parser.validators.Scorm12ResourceValidator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +84,33 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
    */
   public Scorm12Parser(ModuleFileProvider moduleFileProvider) {
     super(moduleFileProvider);
+  }
+
+  /**
+   * Validates the SCORM 1.2 module without fully parsing it.
+   * This method provides efficient validation by only parsing the manifest file
+   * and running structural validation checks.
+   *
+   * @return ValidationResult containing any errors or warnings found
+   */
+  @Override
+  public ValidationResult validate() {
+    try {
+      // Parse manifest only (lightweight)
+      Scorm12Manifest manifest = parseManifest(MANIFEST_FILE);
+
+      // Run validator
+      Scorm12ResourceValidator validator = new Scorm12ResourceValidator();
+      return validator.validate(manifest);
+    } catch (ManifestParseException | IOException | XMLStreamException e) {
+      return ValidationResult.of(
+          ValidationIssue.error(
+              "MANIFEST_PARSE_ERROR",
+              "Failed to parse manifest: " + e.getMessage(),
+              MANIFEST_FILE
+          )
+      );
+    }
   }
 
   /**

@@ -35,6 +35,7 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resource;
 import dev.jcputney.elearning.parser.output.metadata.scorm2004.Scorm2004Metadata;
 import dev.jcputney.elearning.parser.util.FileUtils;
 import dev.jcputney.elearning.parser.util.XmlParsingUtils;
+import dev.jcputney.elearning.parser.validators.Scorm2004ResourceValidator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -83,6 +84,33 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
    */
   public Scorm2004Parser(ModuleFileProvider moduleFileProvider) {
     super(moduleFileProvider);
+  }
+
+  /**
+   * Validates the SCORM 2004 module without fully parsing it.
+   * This method provides efficient validation by only parsing the manifest file
+   * and running structural validation checks.
+   *
+   * @return ValidationResult containing any errors or warnings found
+   */
+  @Override
+  public ValidationResult validate() {
+    try {
+      // Parse manifest only (lightweight)
+      Scorm2004Manifest manifest = parseManifest(MANIFEST_FILE);
+
+      // Run validator
+      Scorm2004ResourceValidator validator = new Scorm2004ResourceValidator();
+      return validator.validate(manifest);
+    } catch (ManifestParseException | IOException | XMLStreamException e) {
+      return ValidationResult.of(
+          ValidationIssue.error(
+              "MANIFEST_PARSE_ERROR",
+              "Failed to parse manifest: " + e.getMessage(),
+              MANIFEST_FILE
+          )
+      );
+    }
   }
 
   /**

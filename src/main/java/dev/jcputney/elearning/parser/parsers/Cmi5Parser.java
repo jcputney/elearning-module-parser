@@ -26,7 +26,9 @@ import dev.jcputney.elearning.parser.output.metadata.cmi5.Cmi5Metadata;
 import dev.jcputney.elearning.parser.util.FileUtils;
 import dev.jcputney.elearning.parser.validation.ValidationIssue;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
+import dev.jcputney.elearning.parser.validators.Cmi5Validator;
 import java.io.IOException;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * Cmi5Parser is responsible for parsing cmi5-specific metadata from the cmi5.xml file.
@@ -60,6 +62,33 @@ public final class Cmi5Parser extends BaseParser<Cmi5Metadata, Cmi5Manifest> {
    */
   public Cmi5Parser(FileAccess fileAccess, dev.jcputney.elearning.parser.api.ParserOptions options) {
     super(fileAccess, options);
+  }
+
+  /**
+   * Validates the cmi5 module without fully parsing it.
+   * This method provides efficient validation by only parsing the manifest file
+   * and running structural validation checks.
+   *
+   * @return ValidationResult containing any errors or warnings found
+   */
+  @Override
+  public ValidationResult validate() {
+    try {
+      // Parse manifest only (lightweight)
+      Cmi5Manifest manifest = parseManifest(CMI5_XML);
+
+      // Run validator
+      Cmi5Validator validator = new Cmi5Validator();
+      return validator.validate(manifest);
+    } catch (ManifestParseException | IOException | XMLStreamException e) {
+      return ValidationResult.of(
+          ValidationIssue.error(
+              "MANIFEST_PARSE_ERROR",
+              "Failed to parse manifest: " + e.getMessage(),
+              CMI5_XML
+          )
+      );
+    }
   }
 
   /**
