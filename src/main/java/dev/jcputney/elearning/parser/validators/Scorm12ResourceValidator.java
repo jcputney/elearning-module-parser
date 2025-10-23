@@ -23,6 +23,7 @@ import dev.jcputney.elearning.parser.validators.rules.common.DuplicateIdentifier
 import dev.jcputney.elearning.parser.validators.rules.common.OrphanedResourcesRule;
 import dev.jcputney.elearning.parser.validators.rules.common.PathSecurityRule;
 import dev.jcputney.elearning.parser.validators.rules.scorm12.DefaultOrganizationValidRule;
+import dev.jcputney.elearning.parser.validators.rules.scorm12.ManifestIdentifierRequiredRule;
 import dev.jcputney.elearning.parser.validators.rules.scorm12.OrganizationsRequiredRule;
 import dev.jcputney.elearning.parser.validators.rules.scorm12.ResourceHrefRequiredRule;
 import dev.jcputney.elearning.parser.validators.rules.scorm12.ResourceReferenceValidRule;
@@ -64,6 +65,7 @@ public class Scorm12ResourceValidator {
         new DuplicateIdentifierRule(),
         new PathSecurityRule(),
         new OrphanedResourcesRule(),
+        new ManifestIdentifierRequiredRule(),
         new OrganizationsRequiredRule(),
         new DefaultOrganizationValidRule(),
         new ResourceReferenceValidRule(),

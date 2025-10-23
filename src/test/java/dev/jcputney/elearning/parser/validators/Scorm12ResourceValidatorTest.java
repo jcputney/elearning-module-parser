@@ -59,6 +59,7 @@ class Scorm12ResourceValidatorTest {
   void validate_missingResourceRef_hasError() {
     // Create manifest with item referencing non-existent resource
     Scorm12Manifest manifest = new Scorm12Manifest();
+    manifest.setIdentifier("MANIFEST-001");
 
     Scorm12Organizations organizations = new Scorm12Organizations();
     Scorm12Organization org = new Scorm12Organization();
@@ -93,6 +94,7 @@ class Scorm12ResourceValidatorTest {
   void validate_missingLaunchUrl_hasError() {
     // Create manifest with resource missing href
     Scorm12Manifest manifest = new Scorm12Manifest();
+    manifest.setIdentifier("MANIFEST-002");
 
     Scorm12Organizations organizations = new Scorm12Organizations();
     Scorm12Organization org = new Scorm12Organization();
@@ -127,6 +129,7 @@ class Scorm12ResourceValidatorTest {
   void validate_invalidDefaultOrg_hasError() {
     // Create manifest with invalid default organization
     Scorm12Manifest manifest = new Scorm12Manifest();
+    manifest.setIdentifier("MANIFEST-003");
 
     Scorm12Organizations organizations = new Scorm12Organizations();
     organizations.setDefaultOrganization("nonexistent");
@@ -148,6 +151,7 @@ class Scorm12ResourceValidatorTest {
   void validate_missingOrganizations_hasError() {
     // Create manifest without organizations
     Scorm12Manifest manifest = new Scorm12Manifest();
+    manifest.setIdentifier("MANIFEST-004");
     manifest.setOrganizations(null);
 
     Scorm12Resources resources = new Scorm12Resources();
@@ -206,6 +210,7 @@ class Scorm12ResourceValidatorTest {
    */
   private Scorm12Manifest createValidManifest() {
     Scorm12Manifest manifest = new Scorm12Manifest();
+    manifest.setIdentifier("MANIFEST-VALID");
 
     // Create organizations
     Scorm12Organizations organizations = new Scorm12Organizations();
