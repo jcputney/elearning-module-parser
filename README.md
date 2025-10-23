@@ -6,7 +6,8 @@
 [![Java 17+][java-badge]][java-link]
 
 A production-ready Java 17 library for parsing and validating SCORM 1.2, SCORM 2004, AICC, cmi5, and
-xAPI/TinCan modules. The parser normalizes metadata across formats, making it simple to integrate new
+xAPI/TinCan modules. The parser normalizes metadata across formats, making it simple to integrate
+new
 eLearning packages into LMS platforms, content pipelines, and QA tooling.
 
 ## Highlights
@@ -30,7 +31,6 @@ The library is published to Maven Central.
 ### Maven
 
 ```xml
-
 <dependency>
    <groupId>dev.jcputney</groupId>
    <artifactId>elearning-module-parser</artifactId>
@@ -55,39 +55,26 @@ Add one of the AWS SDKs to enable S3-backed storage:
    <artifactId>s3</artifactId>
    <version>2.32.5</version>
 </dependency>
-
-    <!-- Alternatively: AWS SDK v1 -->
+<!-- Alternatively: AWS SDK v1 -->
 <dependency>
-<groupId>com.amazonaws</groupId>
-<artifactId>aws-java-sdk-s3</artifactId>
-<version>1.12.788</version>
+   <groupId>com.amazonaws</groupId>
+   <artifactId>aws-java-sdk-s3</artifactId>
+   <version>1.12.788</version>
 </dependency>
 ```
 
 ## Quick Start
 
 ```java
-import dev.jcputney.elearning.parser.api.ModuleParser;
-import dev.jcputney.elearning.parser.api.ModuleParserFactory;
-import dev.jcputney.elearning.parser.impl.factory.DefaultModuleParserFactory;
-import dev.jcputney.elearning.parser.impl.access.ZipFileAccess;
-import dev.jcputney.elearning.parser.output.ModuleMetadata;
-
-try(ZipFileAccess access = new ZipFileAccess("path/to/module.zip")){
-ModuleParserFactory factory = new DefaultModuleParserFactory(access);
-ModuleParser<?> parser = factory.getParser();
-ModuleMetadata<?> metadata = parser.parse();
-
-  System.out.
-
-println("Module Type: "+metadata.getModuleType());
-    System.out.
-
-println("Title: "+metadata.getTitle());
-    System.out.
-
-println("Launch URL: "+metadata.getLaunchUrl());
-    }
+try(ZipFileAccess access = new ZipFileAccess("path/to/module.zip")) {
+   ModuleParserFactory factory = new DefaultModuleParserFactory(access);
+   ModuleParser<?> parser = factory.getParser();
+   ModuleMetadata<?> metadata = parser.parse();
+   
+   System.out.println("Module Type: "+metadata.getModuleType());
+   System.out.println("Title: "+metadata.getTitle());
+   System.out.println("Launch URL: "+metadata.getLaunchUrl());
+}
 ```
 
 ## Supported Formats
@@ -109,14 +96,13 @@ println("Launch URL: "+metadata.getLaunchUrl());
 
 ```java
 // ZIP archives
-try(ZipFileAccess zip = new ZipFileAccess("module.zip")){
-ModuleMetadata<?> metadata = new DefaultModuleParserFactory(zip).parseModule();
+try(ZipFileAccess zip = new ZipFileAccess("module.zip")) {
+  ModuleMetadata<?> metadata = new DefaultModuleParserFactory(zip).parseModule();
 }
 
-    // Extracted directories
-    try(
-LocalFileAccess local = new LocalFileAccess("/path/to/folder")){
-ModuleMetadata<?> metadata = new DefaultModuleParserFactory(local).parseModule();
+// Extracted directories
+try(LocalFileAccess local = new LocalFileAccess("/path/to/folder")) {
+   ModuleMetadata<?> metadata = new DefaultModuleParserFactory(local).parseModule();
 }
 
 // AWS S3 (SDK v2)
@@ -132,62 +118,34 @@ implement `FileAccess` for custom backends.
 
 ```java
 ModuleMetadata<?> metadata = factory.parseModule();
-System.out.
+System.out.println(metadata.getTitle());
+System.out.println(metadata.getDuration());
+System.out.println(metadata.getSizeOnDisk());
 
-println(metadata.getTitle());
-    System.out.
-
-println(metadata.getDuration());
-    System.out.
-
-println(metadata.getSizeOnDisk());
-
-    switch(metadata.
-
-getModuleType()){
-    case SCORM_2004 ->{
-Scorm2004Metadata scorm = (Scorm2004Metadata) metadata;
-    scorm.
-
-getActivityDeliveryControls().
-
-forEach((id, controls) ->{
-    // Inspect sequencing and navigation controls
-    });
+switch(metadata.getModuleType()) {
+    case SCORM_2004 -> {
+       Scorm2004Metadata scorm = (Scorm2004Metadata) metadata;
+       scorm.getActivityDeliveryControls().forEach((id, controls) -> {
+          // Inspect sequencing and navigation controls
+       });
     }
-    case AICC ->{
-AiccMetadata aicc = (AiccMetadata) metadata;
-    System.out.
-
-println(aicc.getPrerequisitesGraph());
+    case AICC -> {
+       AiccMetadata aicc = (AiccMetadata) metadata;
+       System.out.println(aicc.getPrerequisitesGraph());
     }
     case CMI5 ->{
-Cmi5Metadata cmi5 = (Cmi5Metadata) metadata;
-    cmi5.
-
-getAuDetails().
-
-forEach(au ->System.out.
-
-println(au.getLaunchMethod()));
+       Cmi5Metadata cmi5 = (Cmi5Metadata) metadata;
+       cmi5.getAuDetails().forEach(au -> System.out.println(au.getLaunchMethod()));
     }
     case SCORM_12 ->{
-Scorm12Metadata scorm12 = (Scorm12Metadata) metadata;
-    System.out.
-
-println(scorm12.getMasteryScores());
+       Scorm12Metadata scorm12 = (Scorm12Metadata) metadata;
+       System.out.println(scorm12.getMasteryScores());
     }
     case XAPI ->{
-XapiMetadata xapi = (XapiMetadata) metadata;
-    xapi.
-
-getActivities().
-
-forEach(activity ->System.out.
-
-println(activity.getName()));
+       XapiMetadata xapi = (XapiMetadata) metadata;
+       xapi.getActivities().forEach(activity -> System.out.println(activity.getName()));
     }
-    }
+}
 ```
 
 ### Enhanced metadata features
@@ -221,13 +179,13 @@ indicates whether navigation controls and table of contents should be displayed:
 Use `CachedFileAccess` to cache file reads and improve performance when parsing modules repeatedly:
 
 ```java
-try (ZipFileAccess zip = new ZipFileAccess("module.zip")) {
-    CachedFileAccess cached = new CachedFileAccess(zip);
-    ModuleMetadata<?> metadata = new DefaultModuleParserFactory(cached).parseModule();
+try(ZipFileAccess zip = new ZipFileAccess("module.zip")){
+   CachedFileAccess cached = new CachedFileAccess(zip);
+   ModuleMetadata<?> metadata = new DefaultModuleParserFactory(cached).parseModule();
 
-    // Subsequent operations will use cached data
-    Map<String, Object> stats = cached.getCacheStatistics();
-    System.out.println("Cache hit ratio: " + stats.get("hitRatio"));
+   // Subsequent operations will use cached data
+   Map<String, Object> stats = cached.getCacheStatistics();
+   System.out.println("Cache hit ratio: "+stats.get("hitRatio"));
 }
 ```
 
@@ -237,9 +195,7 @@ Register additional detection plugins or parsers without touching the core pipel
 
 ```java
 ModuleTypeDetector detector = new DefaultModuleTypeDetector(fileAccess);
-detector.
-
-registerPlugin(new ModuleTypeDetectorPlugin() {
+detector.registerPlugin(new ModuleTypeDetectorPlugin() {
    @Override public int getPriority () {
       return 100;
    }
@@ -250,9 +206,7 @@ registerPlugin(new ModuleTypeDetectorPlugin() {
 });
 
 DefaultModuleParserFactory factory = new DefaultModuleParserFactory(fileAccess, detector);
-factory.
-
-registerParser(ModuleType.CUSTOM, CustomModuleParser::new);
+factory.registerParser(ModuleType.CUSTOM, CustomModuleParser::new);
 ```
 
 ## Validation and error handling
