@@ -39,8 +39,9 @@ public class Scorm12ParserTest {
   void testParseScorm12Course_ContentPackagingOneFilePerSCO_SCORM12()
       throws ModuleException {
     String modulePath = "src/test/resources/modules/scorm12/ContentPackagingOneFilePerSCO_SCORM12/";
-    // Use default parser options
-    dev.jcputney.elearning.parser.api.ParserOptions options = new dev.jcputney.elearning.parser.api.ParserOptions();
+    // Use parser options with size calculation enabled
+    dev.jcputney.elearning.parser.api.ParserOptions options = new dev.jcputney.elearning.parser.api.ParserOptions()
+        .setCalculateModuleSize(true);
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath), options);
     Scorm12Metadata metadata = parser.parse();
     assertNotNull(metadata);

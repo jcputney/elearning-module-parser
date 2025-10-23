@@ -217,7 +217,7 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
    */
   private void calculateAndSetModuleSize(Scorm2004Metadata metadata) {
     // Only calculate module size if enabled in options
-    if (!ModuleSizeCalculator.isEnabled()) {
+    if (!options.shouldCalculateModuleSize()) {
       return;
     }
 

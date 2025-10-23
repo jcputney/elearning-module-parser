@@ -23,6 +23,7 @@ package dev.jcputney.elearning.parser.api;
  */
 public class ParserOptions {
     private boolean strictMode = true;
+    private Boolean calculateModuleSize = null; // null = use system default
 
     /**
      * Creates parser options with default settings (strict mode enabled).
@@ -69,5 +70,40 @@ public class ParserOptions {
      */
     public static ParserOptions lenient() {
         return new ParserOptions().setStrictMode(false);
+    }
+
+    /**
+     * Sets whether to calculate module size (total disk size of all files).
+     * If not explicitly set (null), uses system property or environment variable.
+     *
+     * @param calculate true to enable size calculation, false to disable, null for system default
+     * @return this ParserOptions instance for method chaining
+     */
+    public ParserOptions setCalculateModuleSize(Boolean calculate) {
+        this.calculateModuleSize = calculate;
+        return this;
+    }
+
+    /**
+     * Gets the module size calculation setting.
+     *
+     * @return true to enable, false to disable, null to use system default
+     */
+    public Boolean getCalculateModuleSize() {
+        return calculateModuleSize;
+    }
+
+    /**
+     * Checks if module size calculation is enabled based on this options object.
+     * Returns the explicit setting if present, otherwise falls back to system default.
+     *
+     * @return true if size calculation should be performed
+     */
+    public boolean shouldCalculateModuleSize() {
+        if (calculateModuleSize != null) {
+            return calculateModuleSize;
+        }
+        // Fall back to system property/environment variable
+        return dev.jcputney.elearning.parser.config.ModuleSizeCalculator.isEnabled();
     }
 }

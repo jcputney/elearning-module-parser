@@ -224,7 +224,7 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
     Scorm12Metadata metadata = Scorm12Metadata.create(manifest, hasXapi);
 
     // Only calculate module size if enabled in options
-    if (ModuleSizeCalculator.isEnabled()) {
+    if (options.shouldCalculateModuleSize()) {
       // Calculate and set the module size
       try {
         long totalSize = moduleFileProvider.getTotalSize();
