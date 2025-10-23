@@ -24,6 +24,7 @@ import dev.jcputney.elearning.parser.validators.rules.common.OrphanedResourcesRu
 import dev.jcputney.elearning.parser.validators.rules.common.PathSecurityRule;
 import dev.jcputney.elearning.parser.validators.rules.scorm12.DefaultOrganizationValidRule;
 import dev.jcputney.elearning.parser.validators.rules.scorm12.OrganizationsRequiredRule;
+import dev.jcputney.elearning.parser.validators.rules.scorm12.ResourceHrefRequiredRule;
 import dev.jcputney.elearning.parser.validators.rules.scorm12.ResourceReferenceValidRule;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Item;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organization;
@@ -65,7 +66,8 @@ public class Scorm12ResourceValidator {
         new OrphanedResourcesRule(),
         new OrganizationsRequiredRule(),
         new DefaultOrganizationValidRule(),
-        new ResourceReferenceValidRule()
+        new ResourceReferenceValidRule(),
+        new ResourceHrefRequiredRule()
     );
   }
 
@@ -179,17 +181,8 @@ public class Scorm12ResourceValidator {
   private void validateItem(Scorm12Item item, String orgId,
                             Map<String, Scorm12Resource> resourceIndex,
                             List<ValidationIssue> issues) {
-    String identifierRef = item.getIdentifierRef();
-
     // Resource reference validation now handled by ResourceReferenceValidRule
-    // If item references a resource, validate the resource has a launch URL
-    if (identifierRef != null && !identifierRef.isEmpty()) {
-      Scorm12Resource resource = resourceIndex.get(identifierRef);
-      if (resource != null) {
-        // Validate that the resource has a launch URL (will be extracted in Task 4)
-        validateResourceHref(resource, item.getIdentifier(), orgId, issues);
-      }
-    }
+    // Resource href validation now handled by ResourceHrefRequiredRule
 
     // Recursively validate child items
     if (item.getItems() != null) {
@@ -199,25 +192,4 @@ public class Scorm12ResourceValidator {
     }
   }
 
-  /**
-   * Validates that a resource has a valid href (launch URL).
-   *
-   * @param resource The resource to validate
-   * @param itemId The item identifier that references this resource
-   * @param orgId The organization identifier
-   * @param issues List to collect validation issues
-   */
-  private void validateResourceHref(Scorm12Resource resource, String itemId, String orgId,
-                                    List<ValidationIssue> issues) {
-    String href = resource.getHref();
-
-    if (href == null || href.trim().isEmpty()) {
-      issues.add(ValidationIssue.error(
-          "SCORM12_MISSING_LAUNCH_URL",
-          "Resource '" + resource.getIdentifier() + "' is missing href attribute (launch URL)",
-          "resource[@identifier='" + resource.getIdentifier() + "']/@href",
-          "Add an href attribute pointing to the SCO's launch file"
-      ));
-    }
-  }
 }
