@@ -24,6 +24,7 @@ package dev.jcputney.elearning.parser.api;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
+import dev.jcputney.elearning.parser.validation.ValidationResult;
 
 /**
  * Interface for parsing module files and extracting metadata.
@@ -38,10 +39,28 @@ import dev.jcputney.elearning.parser.output.ModuleMetadata;
 public interface ModuleParser<M extends PackageManifest> {
 
   /**
+   * Validates the module without parsing.
+   * Collects all validation issues and returns them without throwing exceptions.
+   *
+   * @return ValidationResult containing any errors or warnings found
+   */
+  ValidationResult validate();
+
+  /**
    * Parses the module files and extracts metadata.
+   * Runs validation first according to ParserOptions.
+   * In strict mode, throws exception if validation errors found.
+   * In lenient mode, continues parsing and attaches validation result to metadata.
    *
    * @return A ModuleMetadata object containing standardized metadata.
-   * @throws ModuleParsingException if parsing fails or required files are missing.
+   * @throws ModuleParsingException if parsing fails or validation fails in strict mode.
    */
   ModuleMetadata<M> parse() throws ModuleParsingException;
+
+  /**
+   * Gets the parser options controlling validation behavior.
+   *
+   * @return ParserOptions for this parser
+   */
+  ParserOptions getOptions();
 }
