@@ -27,6 +27,7 @@ import dev.jcputney.elearning.parser.validators.rules.scorm12.ManifestIdentifier
 import dev.jcputney.elearning.parser.validators.rules.scorm12.OrganizationsRequiredRule;
 import dev.jcputney.elearning.parser.validators.rules.scorm12.ResourceHrefRequiredRule;
 import dev.jcputney.elearning.parser.validators.rules.scorm12.ResourceReferenceValidRule;
+import dev.jcputney.elearning.parser.validators.rules.scorm12.ResourcesRequiredRule;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Item;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organization;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organizations;
@@ -66,6 +67,7 @@ public class Scorm12ResourceValidator {
         new PathSecurityRule(),
         new OrphanedResourcesRule(),
         new ManifestIdentifierRequiredRule(),
+        new ResourcesRequiredRule(),
         new OrganizationsRequiredRule(),
         new DefaultOrganizationValidRule(),
         new ResourceReferenceValidRule(),
