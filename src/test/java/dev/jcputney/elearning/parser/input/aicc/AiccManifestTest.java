@@ -376,8 +376,9 @@ public class AiccManifestTest {
     ModuleParsingException exception = assertThrows(ModuleParsingException.class,
         () -> new AiccManifest(aiccCourse, assignableUnits, descriptors, courseStructures));
 
-    // Verify the exception message
-    assertEquals("No root assignable unit found.", exception.getMessage());
+    // Verify the exception message contains the validation error
+    assertTrue(exception.getMessage().contains("AICC_NO_ROOT_AU"));
+    assertTrue(exception.getMessage().contains("No root assignable unit found"));
   }
 
   /**
@@ -438,7 +439,8 @@ public class AiccManifestTest {
     ModuleParsingException exception = assertThrows(ModuleParsingException.class,
         () -> new AiccManifest(aiccCourse, assignableUnits, descriptors, courseStructures));
 
-    // Verify the exception message
-    assertEquals("No root assignable unit found.", exception.getMessage());
+    // Verify the exception message contains the validation error
+    assertTrue(exception.getMessage().contains("AICC_NO_ROOT_AU"));
+    assertTrue(exception.getMessage().contains("No root assignable unit found"));
   }
 }

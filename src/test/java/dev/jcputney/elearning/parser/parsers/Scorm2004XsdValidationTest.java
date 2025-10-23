@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import dev.jcputney.elearning.parser.api.ModuleParserFactory;
+import dev.jcputney.elearning.parser.exception.ManifestParseException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.impl.factory.DefaultModuleParserFactory;
@@ -49,7 +50,7 @@ class Scorm2004XsdValidationTest {
     LocalFileAccess access = new LocalFileAccess(path);
     ModuleParserFactory factory = new DefaultModuleParserFactory(access);
 
-    ModuleParsingException ex = assertThrows(ModuleParsingException.class, factory::parseModule);
+    ManifestParseException ex = assertThrows(ManifestParseException.class, factory::parseModule);
     assertThat(ex.getMessage()).contains("XSD validation failed");
   }
 }
