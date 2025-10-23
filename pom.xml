@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>dev.jcputney</groupId>
@@ -45,8 +47,8 @@
 
     <version.ascii-table>1.8.0</version.ascii-table>
     <version.assertj>3.27.6</version.assertj>
-    <version.aws.sdk.v1>1.12.791</version.aws.sdk.v1>
-    <version.aws.sdk.v2>2.34.5</version.aws.sdk.v2>
+    <version.aws.sdk.v1>1.12.792</version.aws.sdk.v1>
+    <version.aws.sdk.v2>2.35.11</version.aws.sdk.v2>
     <version.commons-configuration2>2.12.0</version.commons-configuration2>
     <version.commons.compress>1.28.0</version.commons.compress>
     <version.commons.lang3>3.19.0</version.commons.lang3>
@@ -54,17 +56,17 @@
     <version.jakarta.xml.bind>4.0.4</version.jakarta.xml.bind>
     <version.jmh>1.37</version.jmh>
     <version.jqwik>1.9.3</version.jqwik>
-    <version.junit>5.13.4</version.junit>
+    <version.junit>6.0.0</version.junit>
     <version.log4j-to-slf4j>2.25.2</version.log4j-to-slf4j>
-    <version.logback>1.5.18</version.logback>
+    <version.logback>1.5.20</version.logback>
     <version.mockito>5.20.0</version.mockito>
     <version.org.json>20250517</version.org.json>
     <version.plugin.central-publishing>0.9.0</version.plugin.central-publishing>
     <version.plugin.compiler>3.14.1</version.plugin.compiler>
-    <version.plugin.exec>3.5.1</version.plugin.exec>
+    <version.plugin.exec>3.6.2</version.plugin.exec>
     <version.plugin.failsafe>3.5.4</version.plugin.failsafe>
     <version.plugin.gpg>3.2.8</version.plugin.gpg>
-    <version.plugin.jacoco>0.8.13</version.plugin.jacoco>
+    <version.plugin.jacoco>0.8.14</version.plugin.jacoco>
     <version.plugin.javadoc>3.12.0</version.plugin.javadoc>
     <version.plugin.release>3.1.1</version.plugin.release>
     <version.plugin.shade>3.6.1</version.plugin.shade>
@@ -320,7 +322,7 @@
           <version>${version.plugin.release}</version>
           <configuration>
             <arguments>-ntp</arguments>
-            <scmCommentPrefix />
+            <scmCommentPrefix/>
             <tagNameFormat>v@{project.version}</tagNameFormat>
             <releaseProfiles>central</releaseProfiles>
           </configuration>
@@ -468,10 +470,12 @@
                 <configuration>
                   <finalName>benchmarks</finalName>
                   <transformers>
-                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                    <transformer
+                      implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                       <mainClass>org.openjdk.jmh.Main</mainClass>
                     </transformer>
-                    <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                    <transformer
+                      implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                   </transformers>
                   <filters>
                     <filter>
