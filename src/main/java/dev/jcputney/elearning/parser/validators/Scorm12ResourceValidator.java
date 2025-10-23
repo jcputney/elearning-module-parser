@@ -22,6 +22,7 @@ import dev.jcputney.elearning.parser.validators.rules.ValidationRule;
 import dev.jcputney.elearning.parser.validators.rules.common.DuplicateIdentifierRule;
 import dev.jcputney.elearning.parser.validators.rules.common.OrphanedResourcesRule;
 import dev.jcputney.elearning.parser.validators.rules.common.PathSecurityRule;
+import dev.jcputney.elearning.parser.validators.rules.scorm12.DefaultOrganizationValidRule;
 import dev.jcputney.elearning.parser.validators.rules.scorm12.OrganizationsRequiredRule;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Item;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organization;
@@ -61,7 +62,8 @@ public class Scorm12ResourceValidator {
         new DuplicateIdentifierRule(),
         new PathSecurityRule(),
         new OrphanedResourcesRule(),
-        new OrganizationsRequiredRule()
+        new OrganizationsRequiredRule(),
+        new DefaultOrganizationValidRule()
     );
   }
 
@@ -134,25 +136,9 @@ public class Scorm12ResourceValidator {
     Scorm12Organizations organizations = manifest.getOrganizations();
 
     // Organizations null check now handled by OrganizationsRequiredRule
+    // Default organization validity now handled by DefaultOrganizationValidRule
     if (organizations == null) {
       return;
-    }
-
-    // Validate default organization if specified
-    String defaultOrgId = organizations.getDefaultOrganization();
-    if (defaultOrgId != null && !defaultOrgId.isEmpty()) {
-      Scorm12Organization defaultOrg = organizations.getDefault();
-      if (defaultOrg == null) {
-        issues.add(ValidationIssue.error(
-            "SCORM12_INVALID_DEFAULT_ORG",
-            "Default organization '" + defaultOrgId + "' not found",
-            "organizations/@default",
-            "Ensure the default attribute references a valid organization identifier"
-        ));
-      } else {
-        // Validate the default organization's items
-        validateOrganization(defaultOrg, resourceIndex, issues);
-      }
     }
 
     // Validate all organizations
