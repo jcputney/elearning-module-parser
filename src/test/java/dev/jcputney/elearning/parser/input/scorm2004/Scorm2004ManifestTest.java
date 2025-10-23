@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.exception.ManifestParseException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.input.scorm2004.SequencingUsageDetector.SequencingLevel;
@@ -54,7 +55,7 @@ public class Scorm2004ManifestTest {
    */
   @Test
   void testUsesSequencingWithSequencing()
-      throws IOException, XMLStreamException, ModuleParsingException {
+      throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
     // Parse a SCORM 2004 manifest that uses sequencing
     String modulePath = "src/test/resources/modules/scorm2004/SequencingForcedSequential_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);
@@ -68,7 +69,7 @@ public class Scorm2004ManifestTest {
 
   @Test
   void testGetSequencingIndicatorsFromRealManifest()
-      throws IOException, XMLStreamException, ModuleParsingException {
+      throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
     String modulePath = "src/test/resources/modules/scorm2004/AdlAttributes_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);
     Scorm2004Parser parser = new Scorm2004Parser(fileAccess);
@@ -92,7 +93,7 @@ public class Scorm2004ManifestTest {
    */
   @Test
   void testUsesSequencingWithNamespaceOnlyReturnsFalse()
-      throws IOException, XMLStreamException, ModuleParsingException {
+      throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
     // Parse a SCORM 2004 manifest that declares sequencing namespaces but relies on implicit rules
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingOneFilePerSCO_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);
@@ -119,7 +120,7 @@ public class Scorm2004ManifestTest {
    * Tests the getGlobalObjectiveIds method with a manifest that contains global objectives.
    */
   @Test
-  void testGetGlobalObjectiveIds() throws IOException, XMLStreamException, ModuleParsingException {
+  void testGetGlobalObjectiveIds() throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
     // Parse a SCORM 2004 manifest that contains global objectives
     String modulePath = "src/test/resources/modules/scorm2004/SequencingForcedSequential_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);
@@ -145,7 +146,7 @@ public class Scorm2004ManifestTest {
    * Tests the getSCOIds method with a manifest that contains SCOs.
    */
   @Test
-  void testGetSCOIds() throws IOException, XMLStreamException, ModuleParsingException {
+  void testGetSCOIds() throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
     // Parse a SCORM 2004 manifest that contains SCOs
     String modulePath = "src/test/resources/modules/scorm2004/RuntimeMinimumCalls_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);
@@ -170,7 +171,7 @@ public class Scorm2004ManifestTest {
    * Tests the getTitle method with a manifest that contains a title.
    */
   @Test
-  void testGetTitle() throws IOException, XMLStreamException, ModuleParsingException {
+  void testGetTitle() throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
     // Parse a SCORM 2004 manifest that contains a title
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);
@@ -190,7 +191,7 @@ public class Scorm2004ManifestTest {
    * Tests the getDescription method with a manifest that contains a description.
    */
   @Test
-  void testGetDescription() throws IOException, XMLStreamException, ModuleParsingException {
+  void testGetDescription() throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
     // Parse a SCORM 2004 manifest that contains a description
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);
@@ -208,7 +209,7 @@ public class Scorm2004ManifestTest {
    * Tests the getLaunchUrl method with a manifest that contains a launch URL.
    */
   @Test
-  void testGetLaunchUrl() throws IOException, XMLStreamException, ModuleParsingException {
+  void testGetLaunchUrl() throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
     // Parse a SCORM 2004 manifest that contains a launch URL
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);
@@ -227,7 +228,7 @@ public class Scorm2004ManifestTest {
    * Tests the getLaunchUrlForItem method with a manifest that contains items with launch URLs.
    */
   @Test
-  void testGetLaunchUrlForItem() throws IOException, XMLStreamException, ModuleParsingException {
+  void testGetLaunchUrlForItem() throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
     // Parse a SCORM 2004 manifest that contains items with launch URLs
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);
@@ -246,7 +247,7 @@ public class Scorm2004ManifestTest {
    * Tests the buildActivityTree method with a manifest that contains an activity tree.
    */
   @Test
-  void testBuildActivityTree() throws IOException, XMLStreamException, ModuleParsingException {
+  void testBuildActivityTree() throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
     // Parse a SCORM 2004 manifest that contains an activity tree
     String modulePath = "src/test/resources/modules/scorm2004/SequencingForcedSequential_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);
@@ -271,7 +272,7 @@ public class Scorm2004ManifestTest {
    * Tests the getDuration method with a manifest that contains a duration.
    */
   @Test
-  void testGetDuration() throws IOException, XMLStreamException, ModuleParsingException {
+  void testGetDuration() throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
     // Parse a SCORM 2004 manifest
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);
@@ -291,7 +292,7 @@ public class Scorm2004ManifestTest {
    * Tests the getOrganizations method with a manifest that contains organizations.
    */
   @Test
-  void testGetOrganizations() throws IOException, XMLStreamException, ModuleParsingException {
+  void testGetOrganizations() throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
     // Parse a SCORM 2004 manifest that contains organizations
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);
@@ -338,7 +339,7 @@ public class Scorm2004ManifestTest {
    * Tests the getResources method with a manifest that contains resources.
    */
   @Test
-  void testGetResources() throws IOException, XMLStreamException, ModuleParsingException {
+  void testGetResources() throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
     // Parse a SCORM 2004 manifest that contains resources
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);
@@ -383,7 +384,7 @@ public class Scorm2004ManifestTest {
    * Tests the getIdentifier method with a manifest that contains an identifier.
    */
   @Test
-  void testGetIdentifier() throws IOException, XMLStreamException, ModuleParsingException {
+  void testGetIdentifier() throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
     // Parse a SCORM 2004 manifest that contains an identifier
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);
@@ -403,7 +404,7 @@ public class Scorm2004ManifestTest {
    * Tests the getVersion method with a manifest that contains a version.
    */
   @Test
-  void testGetVersion() throws IOException, XMLStreamException, ModuleParsingException {
+  void testGetVersion() throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
     // Parse a SCORM 2004 manifest that contains a version
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);

@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.enums.ModuleType;
-import dev.jcputney.elearning.parser.exception.ModuleParsingException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.input.common.serialization.DurationHHMMSSDeserializer;
 import dev.jcputney.elearning.parser.output.metadata.aicc.AiccMetadata;
@@ -56,7 +56,7 @@ public class AiccParserComprehensiveTest {
    * Tests parsing a standard AICC course from the example package.
    */
   @Test
-  void testParseStandardAiccPackage() throws ModuleParsingException {
+  void testParseStandardAiccPackage() throws ModuleException {
     String modulePath = BASE_MODULE_PATH + "/package";
     AiccParser parser = new AiccParser(new LocalFileAccess(modulePath));
     AiccMetadata metadata = parser.parse();
@@ -148,7 +148,7 @@ public class AiccParserComprehensiveTest {
    */
   @Test
   void testParseCompleteAiccPackage(@TempDir Path tempDir)
-      throws IOException, ModuleParsingException {
+      throws IOException, ModuleException {
     // Create a complete AICC package
     createCompleteAiccPackage(tempDir);
 
@@ -257,7 +257,7 @@ public class AiccParserComprehensiveTest {
    */
   @Test
   void testParseAiccPackageWithComplexStructure(@TempDir Path tempDir)
-      throws IOException, ModuleParsingException {
+      throws IOException, ModuleException {
     // Create a course structure file (.cst) with a complex structure
     Path cstPath = tempDir.resolve("course.cst");
     Files.writeString(cstPath,
@@ -388,7 +388,7 @@ public class AiccParserComprehensiveTest {
    */
   @Test
   void testParseAiccPackageWithSpecialCharacters(@TempDir Path tempDir)
-      throws IOException, ModuleParsingException {
+      throws IOException, ModuleException {
     // Create a course file (.crs) with special characters
     Path crsPath = tempDir.resolve("course.crs");
     Files.writeString(crsPath,
@@ -476,7 +476,7 @@ public class AiccParserComprehensiveTest {
    */
   @Test
   void testParseAiccPackageWithMissingOptionalFields(@TempDir Path tempDir)
-      throws IOException, ModuleParsingException {
+      throws IOException, ModuleException {
     // Create a course file (.crs) with minimal required fields
     Path crsPath = tempDir.resolve("course.crs");
     Files.writeString(crsPath,
@@ -610,7 +610,7 @@ public class AiccParserComprehensiveTest {
 
     // Create a parser and try to parse the package with invalid course file
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleParsingException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parse);
 
     // Create a valid course file but invalid CSV file
     Files.writeString(crsPath,
@@ -634,7 +634,7 @@ public class AiccParserComprehensiveTest {
 
     // Create a parser and try to parse the package with invalid CSV file
     parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleParsingException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parse);
   }
 
   /**
@@ -657,7 +657,7 @@ public class AiccParserComprehensiveTest {
 
     // Create a parser and try to parse the incomplete package
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleParsingException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parse);
   }
 
   /**
@@ -670,18 +670,18 @@ public class AiccParserComprehensiveTest {
 
     // Create a parser and try to parse the package with empty title
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleParsingException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parse);
 
     // Create a minimal AICC package with empty launch URL
     createMinimalAiccPackage(tempDir, "Test Title", "");
 
     // Create a parser and try to parse the package with empty launch URL
     parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleParsingException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parse);
   }
 
   @Test
-  void testParseComplexPrerequisitesAndObjectives() throws ModuleParsingException {
+  void testParseComplexPrerequisitesAndObjectives() throws ModuleException {
     String modulePath = BASE_MODULE_PATH + "/complex";
     AiccParser parser = new AiccParser(new LocalFileAccess(modulePath));
     AiccMetadata metadata = parser.parse();

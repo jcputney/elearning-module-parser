@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import dev.jcputney.elearning.parser.enums.ModuleType;
-import dev.jcputney.elearning.parser.exception.ModuleParsingException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.input.aicc.AiccManifest;
 import dev.jcputney.elearning.parser.output.metadata.aicc.AiccMetadata;
@@ -42,7 +42,7 @@ class AiccParserTest {
    * Tests parsing a standard AICC course.
    */
   @Test
-  void testParseAiccCourse() throws ModuleParsingException {
+  void testParseAiccCourse() throws ModuleException {
     String modulePath = BASE_MODULE_PATH + "/package";
     AiccParser parser = new AiccParser(new LocalFileAccess(modulePath));
     AiccMetadata metadata = parser.parse();
@@ -92,7 +92,7 @@ class AiccParserTest {
     Files.writeString(auPath, "course_id = Test Course\n");
 
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleParsingException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parse);
   }
 
   /**
@@ -109,7 +109,7 @@ class AiccParserTest {
     Files.writeString(auPath, "course_id = Test Course\n");
 
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleParsingException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parse);
   }
 
   /**
@@ -117,7 +117,7 @@ class AiccParserTest {
    */
   @Test
   void testParse_withMinimalValidPackage_succeeds(@TempDir Path tempDir) throws IOException,
-      ModuleParsingException {
+      ModuleException {
     // Create a minimal valid AICC package
     // Create course structure file (.cst)
     Path csPath = tempDir.resolve("course.cst");
@@ -198,7 +198,7 @@ class AiccParserTest {
 
   @Test
   void testParse_iniKeyWithoutValue_succeeds(@TempDir Path tempDir)
-      throws IOException, ModuleParsingException {
+      throws IOException, ModuleException {
     Path csPath = tempDir.resolve("course.cst");
     Files.writeString(csPath,
         """
@@ -259,7 +259,7 @@ class AiccParserTest {
    */
   @Test
   void testParse_withMultipleAssignableUnits_succeeds(@TempDir Path tempDir) throws IOException,
-      ModuleParsingException {
+      ModuleException {
     // Create an AICC package with multiple assignable units
     // Create course structure file (.cst)
     Path csPath = tempDir.resolve("course.cst");
@@ -340,7 +340,7 @@ class AiccParserTest {
    * This test verifies that the parser filters out null keys to prevent Jackson serialization errors.
    */
   @Test
-  void testParse_withBlankLinesInCourseDescription_succeeds() throws ModuleParsingException {
+  void testParse_withBlankLinesInCourseDescription_succeeds() throws ModuleException {
     String modulePath = BASE_MODULE_PATH + "/multiline-description";
     AiccParser parser = new AiccParser(new LocalFileAccess(modulePath));
     AiccMetadata metadata = parser.parse();
@@ -365,7 +365,7 @@ class AiccParserTest {
    */
   @Test
   void testParse_withUtf8BomInCrsFile_succeeds(@TempDir Path tempDir)
-      throws IOException, ModuleParsingException {
+      throws IOException, ModuleException {
     // Create a minimal valid AICC package with UTF-8 BOM in .crs file
     Path csPath = tempDir.resolve("course.cst");
     Files.writeString(csPath,
@@ -444,7 +444,7 @@ class AiccParserTest {
    */
   @Test
   void testParse_withMultiLineDescription_succeeds(@TempDir Path tempDir)
-      throws IOException, ModuleParsingException {
+      throws IOException, ModuleException {
     // Create a minimal valid AICC package with multi-line description
     Path csPath = tempDir.resolve("course.cst");
     Files.writeString(csPath,

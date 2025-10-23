@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
-import dev.jcputney.elearning.parser.exception.ModuleParsingException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.output.metadata.scorm12.Scorm12Metadata;
 import java.io.ByteArrayInputStream;
@@ -43,7 +43,7 @@ public class Scorm12ParserPropertyTest {
 
   /**
    * Tests that the parser correctly handles missing required fields. The parser should throw a
-   * ModuleParsingException when required fields are missing.
+   * ModuleException when required fields are missing.
    */
   @ParameterizedTest
   @ValueSource(strings = {
@@ -87,8 +87,8 @@ public class Scorm12ParserPropertyTest {
     // Create a parser with the mock FileAccess
     Scorm12Parser parser = new Scorm12Parser(mockFileAccess);
 
-    // The parser should throw a ModuleParsingException when parsing the manifest
-    assertThrows(ModuleParsingException.class, parser::parse);
+    // The parser should throw a ModuleException when parsing the manifest
+    assertThrows(ModuleException.class, parser::parse);
   }
 
   /**
@@ -189,7 +189,7 @@ public class Scorm12ParserPropertyTest {
           .length() > 100); // Very long title
       assertEquals("shared/launchpage.html", manifest
           .getLaunchUrl());
-    } catch (ModuleParsingException e) {
+    } catch (ModuleException e) {
       // If the parser throws an exception, it should be because of a validation error
       assertTrue(e
           .getMessage()
@@ -204,7 +204,7 @@ public class Scorm12ParserPropertyTest {
    * should successfully parse a minimal valid manifest.
    */
   @Test
-  void testMinimalValidManifest() throws ModuleParsingException {
+  void testMinimalValidManifest() throws ModuleException {
     // Minimal valid manifest with just the required fields
     // language=XML
     String manifestXml = """

@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dev.jcputney.elearning.parser.exception.ManifestParseException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
@@ -52,7 +53,7 @@ public class Scorm2004SequencingParserTest {
 
   @Test
   void testParseContentWrapperSequencing()
-      throws XMLStreamException, IOException, ModuleParsingException {
+      throws XMLStreamException, IOException, ModuleParsingException, ManifestParseException {
     // Parse the SequencingRandomTest_SCORM20043rdEdition manifest
     Scorm2004Parser parser = new Scorm2004Parser(new LocalFileAccess(PACKAGE_PATH));
     Scorm2004Manifest manifest = parser.parseManifest(Scorm2004Parser.MANIFEST_FILE);
@@ -108,7 +109,7 @@ public class Scorm2004SequencingParserTest {
 
   @Test
   void testParsePostTestSequencing()
-      throws XMLStreamException, IOException, ModuleParsingException {
+      throws XMLStreamException, IOException, ModuleParsingException, ManifestParseException {
     // Parse the SequencingRandomTest_SCORM20043rdEdition manifest
     Scorm2004Parser parser = new Scorm2004Parser(new LocalFileAccess(PACKAGE_PATH));
     Scorm2004Manifest manifest = parser.parseManifest(Scorm2004Parser.MANIFEST_FILE);
@@ -193,7 +194,7 @@ public class Scorm2004SequencingParserTest {
 
   @Test
   void testParseSequencingCollection()
-      throws XMLStreamException, IOException, ModuleParsingException {
+      throws XMLStreamException, IOException, ModuleParsingException, ManifestParseException {
     // Parse the SequencingRandomTest_SCORM20043rdEdition manifest
     Scorm2004Parser parser = new Scorm2004Parser(new LocalFileAccess(PACKAGE_PATH));
     Scorm2004Manifest manifest = parser.parseManifest(Scorm2004Parser.MANIFEST_FILE);

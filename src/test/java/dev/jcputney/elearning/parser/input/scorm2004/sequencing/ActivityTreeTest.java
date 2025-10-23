@@ -44,7 +44,7 @@ public class ActivityTreeTest {
    */
   @Test
   void testBuildActivityTree()
-      throws IOException, javax.xml.stream.XMLStreamException, dev.jcputney.elearning.parser.exception.ModuleParsingException {
+      throws IOException, javax.xml.stream.XMLStreamException, dev.jcputney.elearning.parser.exception.ModuleParsingException, dev.jcputney.elearning.parser.exception.ManifestParseException {
     // Parse a SCORM 2004 manifest
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingOneFilePerSCO_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);

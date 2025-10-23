@@ -19,7 +19,7 @@ package dev.jcputney.elearning.parser.parsers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import dev.jcputney.elearning.parser.exception.ModuleParsingException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.output.metadata.scorm12.Scorm12Metadata;
@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 class Scorm12ParserLaunchUrlTest {
 
   @Test
-  void testLaunchUrlFromNestedItem() throws ModuleParsingException {
+  void testLaunchUrlFromNestedItem() throws ModuleException {
     String modulePath = "src/test/resources/modules/scorm12/LaunchUrlFromNestedItem_SCORM12/";
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
     Scorm12Metadata metadata = parser.parse();
@@ -108,7 +108,7 @@ class Scorm12ParserLaunchUrlTest {
   }
 
   @Test
-  void testMultipleItemsWithIdentifierRef() throws ModuleParsingException {
+  void testMultipleItemsWithIdentifierRef() throws ModuleException {
     String modulePath = "src/test/resources/modules/scorm12/MultipleItemsWithIdentifierRef_SCORM12/";
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
     Scorm12Metadata metadata = parser.parse();
@@ -187,7 +187,7 @@ class Scorm12ParserLaunchUrlTest {
   }
 
   @Test
-  void testItemWithNonExistentResourceId() throws ModuleParsingException {
+  void testItemWithNonExistentResourceId() throws ModuleException {
     String modulePath = "src/test/resources/modules/scorm12/ItemWithNonExistentResourceId_SCORM12/";
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
 

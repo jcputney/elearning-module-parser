@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.jcputney.elearning.parser.exception.ModuleParsingException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.output.metadata.scorm12.Scorm12Metadata;
@@ -39,8 +39,8 @@ class Scorm12ParserEdgeCasesTest {
     String modulePath = "src/test/resources/modules/scorm12/MissingRequiredFields_SCORM12/";
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
 
-    // The parser should throw a ModuleParsingException because the title is missing
-    ModuleParsingException exception = assertThrows(ModuleParsingException.class, parser::parse);
+    // The parser should throw a ModuleException because the title is missing
+    ModuleException exception = assertThrows(ModuleException.class, parser::parse);
     assertTrue(exception
         .getMessage()
         .contains("missing required <title> element"));
@@ -51,8 +51,8 @@ class Scorm12ParserEdgeCasesTest {
     String modulePath = "src/test/resources/modules/scorm12/MissingLaunchUrl_SCORM12/";
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
 
-    // The parser should throw a ModuleParsingException because the launch URL is missing
-    ModuleParsingException exception = assertThrows(ModuleParsingException.class, parser::parse);
+    // The parser should throw a ModuleException because the launch URL is missing
+    ModuleException exception = assertThrows(ModuleException.class, parser::parse);
     assertTrue(exception
         .getMessage()
         .contains("missing required launch URL"));
@@ -65,13 +65,13 @@ class Scorm12ParserEdgeCasesTest {
 
     // The parser should throw an exception because the XML is malformed
     Exception exception = assertThrows(Exception.class, parser::parse);
-    // The exact exception type might be XMLStreamException or ModuleParsingException depending on the implementation
+    // The exact exception type might be XMLStreamException or ModuleException depending on the implementation
     assertTrue(
-        exception instanceof XMLStreamException || exception instanceof ModuleParsingException);
+        exception instanceof XMLStreamException || exception instanceof ModuleException);
   }
 
   @Test
-  void testParseScorm12Course_InvalidFileReferences() throws ModuleParsingException {
+  void testParseScorm12Course_InvalidFileReferences() throws ModuleException {
     String modulePath = "src/test/resources/modules/scorm12/InvalidFileReferences_SCORM12/";
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
 
@@ -123,7 +123,7 @@ class Scorm12ParserEdgeCasesTest {
   }
 
   @Test
-  void testParseScorm12Course_ComplexNestedOrganization() throws ModuleParsingException {
+  void testParseScorm12Course_ComplexNestedOrganization() throws ModuleException {
     String modulePath = "src/test/resources/modules/scorm12/ComplexNestedOrganization_SCORM12/";
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
 

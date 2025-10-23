@@ -36,6 +36,7 @@ import dev.jcputney.elearning.parser.validation.ValidationIssue;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
@@ -176,7 +177,7 @@ class DefaultModuleParserFactoryTest {
 
   @Test
   void parseModule_validModule_returnsMetadata()
-      throws ModuleDetectionException, ModuleParsingException {
+      throws ModuleException {
     // Register a mock parser that returns a predefined metadata object
     Function<FileAccess, ModuleParser<?>> parserFactory = (fa) -> new MockModuleParser();
     factory.unregisterParser(ModuleType.SCORM_12);

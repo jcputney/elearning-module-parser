@@ -16,8 +16,7 @@
 
 package dev.jcputney.elearning.parser.benchmark;
 
-import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
-import dev.jcputney.elearning.parser.exception.ModuleParsingException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -46,12 +45,11 @@ public class AiccBenchmark extends BaseBenchmark {
    * Benchmarks the parsing of an AICC module.
    *
    * @param blackhole a sink for benchmark results to prevent dead code elimination
-   * @throws ModuleDetectionException if the module type cannot be determined
-   * @throws ModuleParsingException if an error occurs during parsing
+   * @throws ModuleException if an error occurs during parsing or module detection
    */
   @Benchmark
   public void parseModule(Blackhole blackhole)
-      throws ModuleDetectionException, ModuleParsingException {
+      throws ModuleException {
     ModuleMetadata<?> metadata = parserFactory.parseModule();
     blackhole.consume(metadata);
   }
@@ -60,10 +58,10 @@ public class AiccBenchmark extends BaseBenchmark {
    * Benchmarks the detection of an AICC module type.
    *
    * @param blackhole a sink for benchmark results to prevent dead code elimination
-   * @throws ModuleDetectionException if the module type cannot be determined
+   * @throws ModuleException if the module type cannot be determined
    */
   @Benchmark
-  public void detectModuleType(Blackhole blackhole) throws ModuleDetectionException {
+  public void detectModuleType(Blackhole blackhole) throws ModuleException {
     blackhole.consume(parserFactory.getParser());
   }
 
