@@ -86,89 +86,44 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
     super(moduleFileProvider);
   }
 
-  /**
-   * Validates the SCORM 2004 module without fully parsing it.
-   * This method provides efficient validation by only parsing the manifest file
-   * and running structural validation checks.
-   *
-   * @return ValidationResult containing any errors or warnings found
-   */
   @Override
-  public ValidationResult validate() {
-    try {
-      // Parse manifest only (lightweight)
-      Scorm2004Manifest manifest = parseManifest(MANIFEST_FILE);
-
-      // Run validator
-      Scorm2004ResourceValidator validator = new Scorm2004ResourceValidator();
-      return validator.validate(manifest);
-    } catch (ManifestParseException | IOException | XMLStreamException e) {
-      return ValidationResult.of(
-          ValidationIssue.error(
-              "MANIFEST_PARSE_ERROR",
-              "Failed to parse manifest: " + e.getMessage(),
-              MANIFEST_FILE
-          )
-      );
-    }
+  protected ValidationResult validateManifest(Scorm2004Manifest manifest) {
+    Scorm2004ResourceValidator validator = new Scorm2004ResourceValidator();
+    return validator.validate(manifest);
   }
 
-  /**
-   * Parses the SCORM 2004 module located at the specified modulePath. Extracts metadata, including
-   * title, description, identifier, launch URL, version, sequencing information, custom data,
-   * prerequisites, mastery score, and additional metadata from external files.
-   *
-   * @return A populated ModuleMetadata object containing the extracted metadata.
-   * @throws ModuleParsingException if an error occurs during parsing.
-   */
   @Override
-  public Scorm2004Metadata parse() throws ModuleException {
-    try {
-      // Find the manifest file (case-insensitive)
-      var files = moduleFileProvider.listFiles("");
-      String manifestFile = FileUtils.findFileIgnoreCase(files, MANIFEST_FILE);
-
-      if (manifestFile == null) {
-        ValidationResult result = ValidationResult.of(
-            ValidationIssue.error("SCORM2004_MISSING_MANIFEST",
-                "SCORM 2004 manifest file not found at path: " + MANIFEST_FILE,
-                "package root")
-        );
-        throw result.toException("Failed to parse SCORM 2004 module");
-      }
-
-      var manifest = parseManifest(manifestFile);
-
-      String title = manifest.getTitle();
-      String launchUrl = manifest.getLaunchUrl();
-      if (title == null || title.isEmpty()) {
-        ValidationResult result = ValidationResult.of(
-            ValidationIssue.error("SCORM2004_MISSING_TITLE",
-                "SCORM 2004 manifest is missing a required <title> element at path: " + manifestFile,
-                "imsmanifest.xml")
-        );
-        throw result.toException("Failed to parse SCORM 2004 module");
-      }
-      if (launchUrl == null || launchUrl.isEmpty()) {
-        ValidationResult result = ValidationResult.of(
-            ValidationIssue.error("SCORM2004_MISSING_LAUNCH_URL",
-                "SCORM 2004 manifest is missing a required <launchUrl> in <resource> element at path: " + manifestFile,
-                "imsmanifest.xml")
-        );
-        throw result.toException("Failed to parse SCORM 2004 module");
-      }
-
-      Scorm2004Metadata metadata = Scorm2004Metadata.create(manifest, checkForXapi());
-
-      calculateAndSetModuleSize(metadata);
-
-      return metadata;
-    } catch (IOException | XMLStreamException e) {
-      throw new ManifestParseException(
-          "Error parsing SCORM 2004 module at path: " + this.moduleFileProvider.getRootPath(), e);
-    } catch (ModuleParsingException e) {
-      throw e;
+  protected Scorm2004Metadata extractMetadata(Scorm2004Manifest manifest,
+                                              ValidationResult validation)
+      throws ModuleException {
+    // Validate required fields
+    String title = manifest.getTitle();
+    String launchUrl = manifest.getLaunchUrl();
+    if (title == null || title.isEmpty()) {
+      ValidationResult result = ValidationResult.of(
+          ValidationIssue.error("SCORM2004_MISSING_TITLE",
+              "SCORM 2004 manifest is missing a required <title> element",
+              "imsmanifest.xml")
+      );
+      throw result.toException("Failed to parse SCORM 2004 module");
     }
+    if (launchUrl == null || launchUrl.isEmpty()) {
+      ValidationResult result = ValidationResult.of(
+          ValidationIssue.error("SCORM2004_MISSING_LAUNCH_URL",
+              "SCORM 2004 manifest is missing a required <launchUrl> in <resource> element",
+              "imsmanifest.xml")
+      );
+      throw result.toException("Failed to parse SCORM 2004 module");
+    }
+
+    Scorm2004Metadata metadata = Scorm2004Metadata.create(manifest, checkForXapi());
+    calculateAndSetModuleSize(metadata);
+    return metadata;
+  }
+
+  @Override
+  protected String getManifestFileName() {
+    return MANIFEST_FILE;
   }
 
   /**
