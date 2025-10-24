@@ -160,6 +160,32 @@ class Scorm2004ResourceValidatorTest {
     assertThat(result.getErrors().get(0).code()).isEqualTo("SCORM2004_MISSING_ORGANIZATIONS");
   }
 
+  @Test
+  void validate_withRuleBasedValidation_returnsAllIssues() {
+    // Create manifest with multiple violations:
+    // 1. No organizations
+    // 2. Invalid resource reference (if we add organizations)
+    // 3. Missing href (if resource is referenced)
+    Scorm2004Manifest manifest = new Scorm2004Manifest();
+    // No organizations set - violation 1
+    manifest.setOrganizations(null);
+
+    Scorm2004Resources resources = new Scorm2004Resources();
+    Scorm2004Resource resource = new Scorm2004Resource();
+    resource.setIdentifier("res1");
+    // No href - would be violation if referenced
+    resources.setResourceList(Collections.singletonList(resource));
+    manifest.setResources(resources);
+
+    ValidationResult result = validator.validate(manifest);
+
+    assertThat(result.isValid()).isFalse();
+    assertThat(result.hasErrors()).isTrue();
+    // Should have at least 1 error (missing organizations)
+    assertThat(result.getErrors().size()).isGreaterThanOrEqualTo(1);
+    assertThat(result.getErrors().get(0).code()).isEqualTo("SCORM2004_MISSING_ORGANIZATIONS");
+  }
+
   /**
    * Creates a valid SCORM 2004 manifest for testing.
    */
