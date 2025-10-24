@@ -116,93 +116,80 @@ public final class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
     super(moduleFileProvider);
   }
 
-  /**
-   * Validates the AICC module without fully parsing it.
-   * This method provides efficient validation by only parsing the manifest files
-   * and running structural validation checks.
-   *
-   * @return ValidationResult containing any errors or warnings found
-   */
   @Override
-  public ValidationResult validate() {
-    try {
-      // Parse AICC manifest (lightweight)
-      AiccManifest manifest = parseManifest();
+  protected ValidationResult validateManifest(AiccManifest manifest) {
+    AiccValidator validator = new AiccValidator();
+    return validator.validate(manifest);
+  }
 
-      // Run validator
-      AiccValidator validator = new AiccValidator();
-      return validator.validate(manifest);
-    } catch (ManifestParseException | IOException | ModuleParsingException e) {
-      return ValidationResult.of(
-          ValidationIssue.error(
-              "MANIFEST_PARSE_ERROR",
-              "Failed to parse AICC manifest: " + e.getMessage(),
-              ".crs file"
-          )
+  @Override
+  protected AiccMetadata extractMetadata(AiccManifest manifest,
+                                         ValidationResult validation)
+      throws ModuleException {
+    // Validate required fields
+    String title = manifest.getTitle();
+    String launchUrl = manifest.getLaunchUrl();
+    if (title == null || title.isEmpty()) {
+      ValidationResult result = ValidationResult.of(
+          ValidationIssue.error("AICC_MISSING_TITLE",
+              "AICC module has empty or missing title in course file (expected in [Course_Data] section)",
+              ".crs file")
       );
+      throw result.toException("Failed to parse AICC module");
+    }
+    if (launchUrl == null || launchUrl.isEmpty()) {
+      ValidationResult result = ValidationResult.of(
+          ValidationIssue.error("AICC_MISSING_LAUNCH_URL",
+              "AICC module has empty or missing launch URL in course file (expected in [Course_Data] section)",
+              ".crs file")
+      );
+      throw result.toException("Failed to parse AICC module");
+    }
+
+    // Find the .crs manifest filename
+    String manifestFilename = findFileByExtension(CRS_EXTENSION);
+    if (manifestFilename == null) {
+      ValidationResult result = ValidationResult.of(
+          ValidationIssue.error("AICC_MISSING_CRS_FILE",
+              "AICC .crs file not found in module",
+              "package root")
+      );
+      throw result.toException("Failed to parse AICC module");
+    }
+
+    // Build and return metadata
+    try {
+      return AiccMetadata.create(manifest, checkForXapi(), manifestFilename);
+    } catch (IOException e) {
+      throw new ManifestParseException(
+          "Error creating AICC metadata: " + e.getMessage(), e);
     }
   }
 
+  @Override
+  protected String getManifestFileName() {
+    // AICC uses multiple files, but .crs is the main course file
+    // The actual parsing is handled by the overridden parseManifest method
+    return CRS_EXTENSION;
+  }
+
   /**
-   * Parses the AICC module components and generates corresponding metadata. This method validates
-   * the presence of required data, such as title and launch URL, in the AICC module's course file,
-   * and constructs an {@code AiccMetadata} instance based on parsed information.
+   * Overrides base class parseManifest to ignore the filename parameter
+   * since AICC parsing requires multiple files (.crs, .des, .au, .cst).
    *
-   * @return An instance of {@code AiccMetadata} containing the parsed metadata for the AICC module.
-   * @throws ModuleParsingException If the module is missing required data, files, or an unexpected
-   * error occurs.
+   * @param manifestPath Ignored for AICC (uses multiple files)
+   * @return An instance of AiccManifest containing parsed data
+   * @throws IOException If an error occurs while reading files
+   * @throws javax.xml.stream.XMLStreamException Not thrown by AICC parser
+   * @throws ManifestParseException If an error occurs while parsing the manifest
    */
   @Override
-  public AiccMetadata parse() throws ModuleException {
+  public AiccManifest parseManifest(String manifestPath)
+      throws IOException, javax.xml.stream.XMLStreamException, ManifestParseException {
     try {
-      var aiccManifest = parseManifest();
-
-      String title = aiccManifest.getTitle();
-      String launchUrl = aiccManifest.getLaunchUrl();
-      if (title == null || title.isEmpty()) {
-        ValidationResult result = ValidationResult.of(
-            ValidationIssue.error("AICC_MISSING_TITLE",
-                "AICC module at '" + this.moduleFileProvider.getRootPath() + "' has empty or missing title in course file (expected in [Course_Data] section)",
-                ".crs file")
-        );
-        throw result.toException("Failed to parse AICC module");
-      }
-      if (launchUrl == null || launchUrl.isEmpty()) {
-        ValidationResult result = ValidationResult.of(
-            ValidationIssue.error("AICC_MISSING_LAUNCH_URL",
-                "AICC module at '" + this.moduleFileProvider.getRootPath() + "' has empty or missing launch URL in course file (expected in [Course_Data] section)",
-                ".crs file")
-        );
-        throw result.toException("Failed to parse AICC module");
-      }
-
-      // Find the .crs manifest filename
-      String manifestFilename = findFileByExtension(CRS_EXTENSION);
-      if (manifestFilename == null) {
-        ValidationResult result = ValidationResult.of(
-            ValidationIssue.error("AICC_MISSING_CRS_FILE",
-                "AICC .crs file not found in module at '" + this.moduleFileProvider.getRootPath() + "'",
-                "package root")
-        );
-        throw result.toException("Failed to parse AICC module");
-      }
-
-      // Build and return metadata
-      return AiccMetadata.create(aiccManifest, checkForXapi(), manifestFilename);
-    } catch (IOException e) {
-      throw new ManifestParseException(
-          "Error parsing AICC module at '" + this.moduleFileProvider.getRootPath()
-              + "' (requires .crs, .des, .au, and .cst files): " + e.getMessage(), e);
+      return parseManifest();
     } catch (ModuleParsingException e) {
-      // Re-throw ModuleParsingException directly without wrapping
-      throw e;
-    } catch (Exception e) {
-      // Catch any other unexpected exceptions
-      throw new ManifestParseException(
-          "Unexpected error parsing AICC module at '" + this.moduleFileProvider.getRootPath()
-              + "': " + e
-              .getClass()
-              .getSimpleName() + " - " + e.getMessage(), e);
+      throw new ManifestParseException("Failed to parse AICC manifest", e);
     }
   }
 
