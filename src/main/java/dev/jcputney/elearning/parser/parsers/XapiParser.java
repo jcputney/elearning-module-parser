@@ -65,83 +65,38 @@ public final class XapiParser extends BaseParser<XapiMetadata, TincanManifest> {
     super(fileAccess, options);
   }
 
-  /**
-   * Validates the xAPI/TinCan module without fully parsing it.
-   * This method provides efficient validation by only parsing the manifest file
-   * and running structural validation checks.
-   *
-   * @return ValidationResult containing any errors or warnings found
-   */
   @Override
-  public ValidationResult validate() {
-    try {
-      // Parse manifest only (lightweight)
-      TincanManifest manifest = parseManifest(TINCAN_XML);
-
-      // Run validator
-      XapiValidator validator = new XapiValidator();
-      return validator.validate(manifest);
-    } catch (ManifestParseException | IOException | XMLStreamException e) {
-      return ValidationResult.of(
-          ValidationIssue.error(
-              "MANIFEST_PARSE_ERROR",
-              "Failed to parse manifest: " + e.getMessage(),
-              TINCAN_XML
-          )
-      );
-    }
+  protected ValidationResult validateManifest(TincanManifest manifest) {
+    XapiValidator validator = new XapiValidator();
+    return validator.validate(manifest);
   }
 
-  /**
-   * Parses the xAPI/TinCan manifest.
-   *
-   * @return the parsed xAPI metadata
-   * @throws ModuleParsingException if parsing fails
-   */
   @Override
-  public XapiMetadata parse() throws ModuleException {
-    try {
-      // Find the tincan manifest file (case-insensitive)
-      var files = moduleFileProvider.listFiles("");
-      String tincanFile = FileUtils.findFileIgnoreCase(files, TINCAN_XML);
-
-      if (tincanFile == null) {
-        ValidationResult result = ValidationResult.of(
-            ValidationIssue.error("XAPI_MISSING_MANIFEST", "tincan.xml not found in the package at '" + moduleFileProvider.getRootPath() + "'", "package root")
-        );
-        throw result.toException("Failed to parse xAPI/TinCan module");
-      }
-
-      // Parse TinCan manifest from tincan.xml
-      var manifest = parseManifest(tincanFile);
-
-      // Validate required fields
-      String title = manifest.getTitle();
-      if (title == null || title.isEmpty()) {
-        ValidationResult result = ValidationResult.of(
-            ValidationIssue.error("XAPI_MISSING_TITLE", "TinCan module missing required title field", "tincan.xml")
-        );
-        throw result.toException("Failed to parse xAPI/TinCan module");
-      }
-      String launchUrl = manifest.getLaunchUrl();
-      if (launchUrl == null || launchUrl.isEmpty()) {
-        ValidationResult result = ValidationResult.of(
-            ValidationIssue.error("XAPI_MISSING_LAUNCH_URL", "TinCan module missing required launch URL field", "tincan.xml")
-        );
-        throw result.toException("Failed to parse xAPI/TinCan module");
-      }
-
-      return new XapiMetadata(manifest);
-    } catch (IOException e) {
-      throw new ManifestParseException(
-          "Error listing files in TinCan module at path: " + this.moduleFileProvider.getRootPath(),
-          e);
-    } catch (ModuleParsingException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new ManifestParseException(
-          "Error parsing TinCan module at path: " + this.moduleFileProvider.getRootPath(), e);
+  protected XapiMetadata extractMetadata(TincanManifest manifest,
+                                         ValidationResult validation)
+      throws ModuleException {
+    // Validate required fields
+    String title = manifest.getTitle();
+    if (title == null || title.isEmpty()) {
+      ValidationResult result = ValidationResult.of(
+          ValidationIssue.error("XAPI_MISSING_TITLE", "TinCan module missing required title field", "tincan.xml")
+      );
+      throw result.toException("Failed to parse xAPI/TinCan module");
     }
+    String launchUrl = manifest.getLaunchUrl();
+    if (launchUrl == null || launchUrl.isEmpty()) {
+      ValidationResult result = ValidationResult.of(
+          ValidationIssue.error("XAPI_MISSING_LAUNCH_URL", "TinCan module missing required launch URL field", "tincan.xml")
+      );
+      throw result.toException("Failed to parse xAPI/TinCan module");
+    }
+
+    return new XapiMetadata(manifest);
+  }
+
+  @Override
+  protected String getManifestFileName() {
+    return TINCAN_XML;
   }
 
   /**
