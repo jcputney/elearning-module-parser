@@ -21,6 +21,7 @@
 
 package dev.jcputney.elearning.parser.api;
 
+import dev.jcputney.elearning.parser.api.ParseResult;
 import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.PackageManifest;
@@ -40,23 +41,28 @@ import dev.jcputney.elearning.parser.validation.ValidationResult;
 public interface ModuleParser<M extends PackageManifest> {
 
   /**
-   * Validates the module without parsing.
-   * Collects all validation issues and returns them without throwing exceptions.
+   * Parses and validates the eLearning module in a single operation.
+   * <p>
+   * This is the recommended method for most use cases. It parses the manifest once
+   * and returns both validation results and extracted metadata.
+   * </p>
    *
-   * @return ValidationResult containing any errors or warnings found
+   * @return ParseResult containing validation results and module metadata
+   * @throws ModuleException if a fatal error occurs (file not found, XML corruption)
    */
-  ValidationResult validate();
+  ParseResult parseAndValidate() throws ModuleException;
 
   /**
-   * Parses the module files and extracts metadata.
-   * Runs validation first according to ParserOptions.
-   * In strict mode, throws exception if validation errors found.
-   * In lenient mode, continues parsing and attaches validation result to metadata.
+   * Parses the eLearning module without validation.
+   * <p>
+   * Use this method only in performance-critical scenarios where validation
+   * is handled separately. Skips all validation checks.
+   * </p>
    *
-   * @return A ModuleMetadata object containing standardized metadata.
-   * @throws ModuleException if parsing fails or validation fails in strict mode.
+   * @return ModuleMetadata containing the extracted module information
+   * @throws ModuleException if a fatal error occurs (file not found, XML corruption)
    */
-  ModuleMetadata<M> parse() throws ModuleException;
+  ModuleMetadata parseOnly() throws ModuleException;
 
   /**
    * Gets the parser options controlling validation behavior.
