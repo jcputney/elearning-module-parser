@@ -23,7 +23,9 @@ package dev.jcputney.elearning.parser.input.aicc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -229,5 +231,57 @@ public class AiccCourseTest {
 
     // Verify that the properties are null
     assertNull(courseBehavior.getMaxNormal());
+  }
+
+  /**
+   * Tests backward compatibility: deserializing legacy JSON where Course_Description
+   * was stored as a Map object instead of a String.
+   * This ensures data serialized with the old format can still be read.
+   */
+  @Test
+  void testDeserializeLegacyCourseDescriptionAsMap() throws Exception {
+    // JSON with old Map format for Course_Description (from pre-867d2d1 commits)
+    String legacyJson = "{"
+        + "\"Course\":{\"Course_ID\":\"test\",\"Course_Title\":\"Test\","
+        + "\"Course_Creator\":\"me\",\"Course_System\":\"sys\","
+        + "\"Level\":\"1\",\"Max_Fields_CST\":\"2\",\"Total_AUs\":\"1\","
+        + "\"Total_Blocks\":\"0\",\"Version\":\"1.0\"},"
+        + "\"Course_Behavior\":{\"Max_Normal\":\"99\"},"
+        + "\"Course_Description\":{"
+        + "\"This is a description\":\"\","
+        + "\"with multiple lines\":\"and some values\""
+        + "}}";
+
+    ObjectMapper mapper = new ObjectMapper();
+    AiccCourse course = mapper.readValue(legacyJson, AiccCourse.class);
+
+    assertNotNull(course);
+    assertNotNull(course.getCourseDescription());
+
+    // Should reconstruct the multi-line description from the map
+    String description = course.getCourseDescription();
+    assertEquals("This is a description\nwith multiple lines: and some values", description);
+  }
+
+  /**
+   * Tests that the current String format still works correctly.
+   */
+  @Test
+  void testDeserializeCurrentCourseDescriptionAsString() throws Exception {
+    // JSON with current String format for Course_Description
+    String currentJson = "{"
+        + "\"Course\":{\"Course_ID\":\"test\",\"Course_Title\":\"Test\","
+        + "\"Course_Creator\":\"me\",\"Course_System\":\"sys\","
+        + "\"Level\":\"1\",\"Max_Fields_CST\":\"2\",\"Total_AUs\":\"1\","
+        + "\"Total_Blocks\":\"0\",\"Version\":\"1.0\"},"
+        + "\"Course_Behavior\":{\"Max_Normal\":\"99\"},"
+        + "\"Course_Description\":\"This is a simple string description\""
+        + "}";
+
+    ObjectMapper mapper = new ObjectMapper();
+    AiccCourse course = mapper.readValue(currentJson, AiccCourse.class);
+
+    assertNotNull(course);
+    assertEquals("This is a simple string description", course.getCourseDescription());
   }
 }

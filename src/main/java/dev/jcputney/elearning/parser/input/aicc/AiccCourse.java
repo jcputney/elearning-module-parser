@@ -20,6 +20,7 @@ package dev.jcputney.elearning.parser.input.aicc;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.io.Serializable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -50,8 +51,15 @@ public final class AiccCourse implements Serializable {
 
   /**
    * Course description information for the AICC manifest.
+   *
+   * <p>Uses a custom deserializer to provide backward compatibility with legacy JSON data where
+   * this field was stored as a Map object (pre-867d2d1). The deserializer handles both the current
+   * String format and the legacy Map format.</p>
+   *
+   * @see CourseDescriptionDeserializer
    */
   @JsonProperty(value = "Course_Description", required = false)
+  @JsonDeserialize(using = CourseDescriptionDeserializer.class)
   private String courseDescription;
 
   /**
