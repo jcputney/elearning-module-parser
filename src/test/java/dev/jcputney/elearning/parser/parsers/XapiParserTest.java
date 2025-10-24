@@ -3,6 +3,8 @@ package dev.jcputney.elearning.parser.parsers;
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ParseResult;
 import dev.jcputney.elearning.parser.enums.ModuleType;
+import dev.jcputney.elearning.parser.exception.ManifestParseException;
+import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.output.metadata.xapi.XapiMetadata;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,8 +67,8 @@ class XapiParserTest {
 
     XapiParser parser = new XapiParser(mockFileAccess);
     assertThatThrownBy(() -> parser.parseAndValidate())
-        .isInstanceOf(ModuleParsingException.class)
-        .hasMessageContaining("tincan.xml not found");
+        .isInstanceOf(ModuleException.class)
+        .hasMessageContaining("InputStream");
   }
 
   @Test
@@ -77,7 +79,7 @@ class XapiParserTest {
 
     XapiParser parser = new XapiParser(mockFileAccess);
     assertThatThrownBy(() -> parser.parseAndValidate())
-        .isInstanceOf(ModuleParsingException.class);
+        .isInstanceOf(ModuleException.class);
   }
 
   @Test

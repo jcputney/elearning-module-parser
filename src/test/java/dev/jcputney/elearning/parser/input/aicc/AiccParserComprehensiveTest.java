@@ -610,7 +610,7 @@ public class AiccParserComprehensiveTest {
 
     // Create a parser and try to parse the package with invalid course file
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parseOnly);
 
     // Create a valid course file but invalid CSV file
     Files.writeString(crsPath,
@@ -634,7 +634,7 @@ public class AiccParserComprehensiveTest {
 
     // Create a parser and try to parse the package with invalid CSV file
     parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parseOnly);
   }
 
   /**
@@ -657,7 +657,7 @@ public class AiccParserComprehensiveTest {
 
     // Create a parser and try to parse the incomplete package
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parseOnly);
   }
 
   /**
@@ -670,14 +670,14 @@ public class AiccParserComprehensiveTest {
 
     // Create a parser and try to parse the package with empty title
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parseOnly);
 
     // Create a minimal AICC package with empty launch URL
     createMinimalAiccPackage(tempDir, "Test Title", "");
 
     // Create a parser and try to parse the package with empty launch URL
     parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parseOnly);
   }
 
   @Test

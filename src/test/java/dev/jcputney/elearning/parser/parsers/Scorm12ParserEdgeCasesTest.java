@@ -40,7 +40,7 @@ class Scorm12ParserEdgeCasesTest {
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
 
     // The parser should throw a ModuleException because the title is missing
-    ModuleException exception = assertThrows(ModuleException.class, parser::parse);
+    ModuleException exception = assertThrows(ModuleException.class, parser::parseOnly);
     assertTrue(exception
         .getMessage()
         .contains("missing required <title> element"));
@@ -52,7 +52,7 @@ class Scorm12ParserEdgeCasesTest {
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
 
     // The parser should throw a ModuleException because the launch URL is missing
-    ModuleException exception = assertThrows(ModuleException.class, parser::parse);
+    ModuleException exception = assertThrows(ModuleException.class, parser::parseOnly);
     assertTrue(exception
         .getMessage()
         .contains("missing required launch URL"));
@@ -64,7 +64,7 @@ class Scorm12ParserEdgeCasesTest {
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
 
     // The parser should throw an exception because the XML is malformed
-    Exception exception = assertThrows(Exception.class, parser::parse);
+    Exception exception = assertThrows(Exception.class, parser::parseOnly);
     // The exact exception type might be XMLStreamException or ModuleException depending on the implementation
     assertTrue(
         exception instanceof XMLStreamException || exception instanceof ModuleException);

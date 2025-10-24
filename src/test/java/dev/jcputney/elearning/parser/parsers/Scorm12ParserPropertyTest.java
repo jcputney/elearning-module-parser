@@ -89,7 +89,7 @@ public class Scorm12ParserPropertyTest {
     Scorm12Parser parser = new Scorm12Parser(mockFileAccess);
 
     // The parser should throw a ModuleException when parsing the manifest
-    assertThrows(ModuleException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parseOnly);
   }
 
   /**
@@ -141,7 +141,7 @@ public class Scorm12ParserPropertyTest {
     Scorm12Parser parser = new Scorm12Parser(mockFileAccess);
 
     // The parser should throw an exception when parsing the manifest
-    assertThrows(Exception.class, parser::parse);
+    assertThrows(Exception.class, parser::parseOnly);
   }
 
   /**

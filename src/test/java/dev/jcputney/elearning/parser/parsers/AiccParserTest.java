@@ -92,7 +92,7 @@ class AiccParserTest {
     Files.writeString(auPath, "course_id = Test Course\n");
 
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parseOnly);
   }
 
   /**
@@ -109,7 +109,7 @@ class AiccParserTest {
     Files.writeString(auPath, "course_id = Test Course\n");
 
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parseOnly);
   }
 
   /**

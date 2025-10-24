@@ -316,7 +316,7 @@ public class Cmi5ParserTest {
   void testParse_withMissingManifestFile_throwsException(@TempDir Path tempDir) {
     // Create an empty directory with no cmi5.xml file
     Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parseOnly);
   }
 
   /**
@@ -330,7 +330,7 @@ public class Cmi5ParserTest {
     Files.writeString(manifestPath, "<invalid>This is not a valid CMI5 manifest</invalid>");
 
     Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parseOnly);
   }
 
   /**
@@ -412,6 +412,6 @@ public class Cmi5ParserTest {
     Files.writeString(manifestPath, manifestXml);
 
     Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(tempDir.toString()));
-    assertThrows(ModuleException.class, parser::parse);
+    assertThrows(ModuleException.class, parser::parseOnly);
   }
 }

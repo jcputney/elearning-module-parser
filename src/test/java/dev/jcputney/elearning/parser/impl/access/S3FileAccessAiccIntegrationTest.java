@@ -99,7 +99,7 @@ class S3FileAccessAiccIntegrationTest {
 
     // Test that AICC parser can successfully parse the module
     AiccParser parser = new AiccParser(s3FileAccess);
-    var metadata = assertDoesNotThrow(parser::parse);
+    var metadata = assertDoesNotThrow(parser::parseOnly);
 
     assertNotNull(metadata);
     assertEquals("Test AICC Course", metadata.getTitle());
