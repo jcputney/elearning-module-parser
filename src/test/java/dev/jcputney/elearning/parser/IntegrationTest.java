@@ -21,7 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import dev.jcputney.elearning.parser.api.ModuleParser;
+import dev.jcputney.elearning.parser.api.ParseResult;
 import dev.jcputney.elearning.parser.api.ModuleParserFactory;
+import dev.jcputney.elearning.parser.api.ParseResult;
 import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
@@ -62,7 +64,7 @@ public class IntegrationTest {
     try (ZipFileAccess zipAccess = new ZipFileAccess(modulePath)) {
       ModuleParserFactory parserFactory = new DefaultModuleParserFactory(zipAccess);
       ModuleParser<?> parser = parserFactory.getParser();
-      ModuleMetadata<?> metadata = parser.parse();
+      ModuleMetadata<?> metadata = parser.parseOnly();
 
       // Assert
       assertNotNull(metadata);
@@ -90,7 +92,7 @@ public class IntegrationTest {
     try (ZipFileAccess zipAccess = new ZipFileAccess(modulePath)) {
       ModuleParserFactory parserFactory = new DefaultModuleParserFactory(zipAccess);
       ModuleParser<?> parser = parserFactory.getParser();
-      ModuleMetadata<?> metadata = parser.parse();
+      ModuleMetadata<?> metadata = parser.parseOnly();
 
       // Assert
       assertNotNull(metadata);
@@ -118,7 +120,7 @@ public class IntegrationTest {
     try (ZipFileAccess zipAccess = new ZipFileAccess(modulePath)) {
       ModuleParserFactory parserFactory = new DefaultModuleParserFactory(zipAccess);
       ModuleParser<?> parser = parserFactory.getParser();
-      ModuleMetadata<?> metadata = parser.parse();
+      ModuleMetadata<?> metadata = parser.parseOnly();
 
       // Assert
       assertNotNull(metadata);
@@ -146,7 +148,7 @@ public class IntegrationTest {
     try (ZipFileAccess zipAccess = new ZipFileAccess(modulePath)) {
       ModuleParserFactory parserFactory = new DefaultModuleParserFactory(zipAccess);
       ModuleParser<?> parser = parserFactory.getParser();
-      ModuleMetadata<?> metadata = parser.parse();
+      ModuleMetadata<?> metadata = parser.parseOnly();
 
       // Assert
       assertNotNull(metadata);
@@ -174,7 +176,7 @@ public class IntegrationTest {
     LocalFileAccess fileAccess = new LocalFileAccess(modulePath);
     ModuleParserFactory parserFactory = new DefaultModuleParserFactory(fileAccess);
     ModuleParser<?> parser = parserFactory.getParser();
-    ModuleMetadata<?> metadata = parser.parse();
+    ModuleMetadata<?> metadata = parser.parseOnly();
 
     // Assert
     assertNotNull(metadata);
@@ -220,7 +222,7 @@ public class IntegrationTest {
         "src/test/resources/modules/zips/scorm12.zip")) {
       ModuleParserFactory scorm12Factory = new DefaultModuleParserFactory(scorm12Zip);
       ModuleParser<?> scorm12Parser = scorm12Factory.getParser();
-      ModuleMetadata<?> scorm12Metadata = scorm12Parser.parse();
+      ModuleMetadata<?> scorm12Metadata = scorm12Parser.parseOnly();
       assertNotNull(scorm12Metadata);
       assertEquals(ModuleType.SCORM_12, scorm12Metadata.getModuleType());
     }
@@ -230,7 +232,7 @@ public class IntegrationTest {
         "src/test/resources/modules/zips/scorm2004.zip")) {
       ModuleParserFactory scorm2004Factory = new DefaultModuleParserFactory(scorm2004Zip);
       ModuleParser<?> scorm2004Parser = scorm2004Factory.getParser();
-      ModuleMetadata<?> scorm2004Metadata = scorm2004Parser.parse();
+      ModuleMetadata<?> scorm2004Metadata = scorm2004Parser.parseOnly();
       assertNotNull(scorm2004Metadata);
       assertEquals(ModuleType.SCORM_2004, scorm2004Metadata.getModuleType());
     }
@@ -239,7 +241,7 @@ public class IntegrationTest {
     try (ZipFileAccess aiccZip = new ZipFileAccess("src/test/resources/modules/zips/aicc.zip")) {
       ModuleParserFactory aiccFactory = new DefaultModuleParserFactory(aiccZip);
       ModuleParser<?> aiccParser = aiccFactory.getParser();
-      ModuleMetadata<?> aiccMetadata = aiccParser.parse();
+      ModuleMetadata<?> aiccMetadata = aiccParser.parseOnly();
       assertNotNull(aiccMetadata);
       assertEquals(ModuleType.AICC, aiccMetadata.getModuleType());
     }
@@ -248,7 +250,7 @@ public class IntegrationTest {
     try (ZipFileAccess cmi5Zip = new ZipFileAccess("src/test/resources/modules/zips/cmi5.zip")) {
       ModuleParserFactory cmi5Factory = new DefaultModuleParserFactory(cmi5Zip);
       ModuleParser<?> cmi5Parser = cmi5Factory.getParser();
-      ModuleMetadata<?> cmi5Metadata = cmi5Parser.parse();
+      ModuleMetadata<?> cmi5Metadata = cmi5Parser.parseOnly();
       assertNotNull(cmi5Metadata);
       assertEquals(ModuleType.CMI5, cmi5Metadata.getModuleType());
     }
@@ -258,7 +260,7 @@ public class IntegrationTest {
         "src/test/resources/modules/xapi/basic_course");
     ModuleParserFactory xapiFactory = new DefaultModuleParserFactory(xapiFileAccess);
     ModuleParser<?> xapiParser = xapiFactory.getParser();
-    ModuleMetadata<?> xapiMetadata = xapiParser.parse();
+    ModuleMetadata<?> xapiMetadata = xapiParser.parseOnly();
     assertNotNull(xapiMetadata);
     assertEquals(ModuleType.XAPI, xapiMetadata.getModuleType());
   }
@@ -276,7 +278,7 @@ public class IntegrationTest {
     ModuleParserFactory parserFactory = new DefaultModuleParserFactory(
         new LocalFileAccess(modulePath));
     ModuleParser<?> parser = parserFactory.getParser();
-    ModuleMetadata<?> metadata = parser.parse();
+    ModuleMetadata<?> metadata = parser.parseOnly();
 
     // Assert
     assertNotNull(metadata);
@@ -299,7 +301,7 @@ public class IntegrationTest {
     ModuleParserFactory parserFactory = new DefaultModuleParserFactory(
         new LocalFileAccess(modulePath));
     ModuleParser<?> parser = parserFactory.getParser();
-    ModuleMetadata<?> metadata = parser.parse();
+    ModuleMetadata<?> metadata = parser.parseOnly();
 
     // Assert
     assertNotNull(metadata);
@@ -322,7 +324,7 @@ public class IntegrationTest {
     ModuleParserFactory parserFactory = new DefaultModuleParserFactory(
         new LocalFileAccess(modulePath));
     ModuleParser<?> parser = parserFactory.getParser();
-    ModuleMetadata<?> metadata = parser.parse();
+    ModuleMetadata<?> metadata = parser.parseOnly();
 
     // Assert
     assertNotNull(metadata);
@@ -342,21 +344,21 @@ public class IntegrationTest {
     ModuleParserFactory scorm12Factory = new DefaultModuleParserFactory(
         new ZipFileAccess("src/test/resources/modules/zips/scorm12.zip"));
     ModuleParser<?> scorm12Parser = scorm12Factory.getParser();
-    ModuleMetadata<?> scorm12Metadata = scorm12Parser.parse();
+    ModuleMetadata<?> scorm12Metadata = scorm12Parser.parseOnly();
     assertEquals(ModuleEditionType.SCORM_12, scorm12Metadata.getModuleEditionType());
 
     // Test AICC
     ModuleParserFactory aiccFactory = new DefaultModuleParserFactory(
         new ZipFileAccess("src/test/resources/modules/zips/aicc.zip"));
     ModuleParser<?> aiccParser = aiccFactory.getParser();
-    ModuleMetadata<?> aiccMetadata = aiccParser.parse();
+    ModuleMetadata<?> aiccMetadata = aiccParser.parseOnly();
     assertEquals(ModuleEditionType.AICC, aiccMetadata.getModuleEditionType());
 
     // Test CMI5
     ModuleParserFactory cmi5Factory = new DefaultModuleParserFactory(
         new ZipFileAccess("src/test/resources/modules/zips/cmi5.zip"));
     ModuleParser<?> cmi5Parser = cmi5Factory.getParser();
-    ModuleMetadata<?> cmi5Metadata = cmi5Parser.parse();
+    ModuleMetadata<?> cmi5Metadata = cmi5Parser.parseOnly();
     assertEquals(ModuleEditionType.CMI5, cmi5Metadata.getModuleEditionType());
   }
 }

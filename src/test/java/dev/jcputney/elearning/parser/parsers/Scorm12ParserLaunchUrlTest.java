@@ -34,7 +34,7 @@ class Scorm12ParserLaunchUrlTest {
   void testLaunchUrlFromNestedItem() throws ModuleException {
     String modulePath = "src/test/resources/modules/scorm12/LaunchUrlFromNestedItem_SCORM12/";
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
-    Scorm12Metadata metadata = parser.parse();
+    Scorm12Metadata metadata = parser.parseOnly();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();
     assertNotNull(manifest);
@@ -111,7 +111,7 @@ class Scorm12ParserLaunchUrlTest {
   void testMultipleItemsWithIdentifierRef() throws ModuleException {
     String modulePath = "src/test/resources/modules/scorm12/MultipleItemsWithIdentifierRef_SCORM12/";
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
-    Scorm12Metadata metadata = parser.parse();
+    Scorm12Metadata metadata = parser.parseOnly();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();
     assertNotNull(manifest);
@@ -191,7 +191,7 @@ class Scorm12ParserLaunchUrlTest {
     String modulePath = "src/test/resources/modules/scorm12/ItemWithNonExistentResourceId_SCORM12/";
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
 
-    Scorm12Metadata metadata = parser.parse();
+    Scorm12Metadata metadata = parser.parseOnly();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();
     assertNotNull(manifest);

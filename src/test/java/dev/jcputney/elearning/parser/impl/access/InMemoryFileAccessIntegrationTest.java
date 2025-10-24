@@ -107,7 +107,7 @@ class InMemoryFileAccessIntegrationTest {
     // Parse using InMemoryFileAccess
     try (InMemoryFileAccess fileAccess = new InMemoryFileAccess(zipData)) {
       Scorm12Parser parser = new Scorm12Parser(fileAccess);
-      ModuleMetadata metadata = parser.parse();
+      ModuleMetadata metadata = parser.parseOnly();
 
       assertThat(metadata).isNotNull();
       assertThat(metadata.getTitle()).isEqualTo("Test Course");
@@ -172,7 +172,7 @@ class InMemoryFileAccessIntegrationTest {
     // Parse using InMemoryFileAccess
     try (InMemoryFileAccess fileAccess = new InMemoryFileAccess(zipData)) {
       Scorm2004Parser parser = new Scorm2004Parser(fileAccess);
-      ModuleMetadata metadata = parser.parse();
+      ModuleMetadata metadata = parser.parseOnly();
 
       assertThat(metadata).isNotNull();
       assertThat(metadata.getTitle()).isEqualTo("SCORM 2004 Test Course");

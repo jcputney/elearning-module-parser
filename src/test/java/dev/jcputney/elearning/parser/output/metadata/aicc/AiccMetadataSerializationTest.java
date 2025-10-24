@@ -68,7 +68,7 @@ class AiccMetadataSerializationTest {
   @Test
   void serializesDerivedAiccFields() throws Exception {
     var parser = new AiccParser(new LocalFileAccess(complexFixtureRoot().toString()));
-    AiccMetadata metadata = parser.parse();
+    AiccMetadata metadata = parser.parseOnly();
 
     String json = MAPPER.writeValueAsString(metadata);
     JsonNode root = MAPPER.readTree(json);

@@ -59,7 +59,7 @@ public class AiccParserComprehensiveTest {
   void testParseStandardAiccPackage() throws ModuleException {
     String modulePath = BASE_MODULE_PATH + "/package";
     AiccParser parser = new AiccParser(new LocalFileAccess(modulePath));
-    AiccMetadata metadata = parser.parse();
+    AiccMetadata metadata = parser.parseOnly();
 
     // Verify metadata
     assertNotNull(metadata);
@@ -154,7 +154,7 @@ public class AiccParserComprehensiveTest {
 
     // Create a parser and parse the package
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    AiccMetadata metadata = parser.parse();
+    AiccMetadata metadata = parser.parseOnly();
 
     // Verify metadata
     assertNotNull(metadata);
@@ -312,7 +312,7 @@ public class AiccParserComprehensiveTest {
 
     // Create a parser and parse the package
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    AiccMetadata metadata = parser.parse();
+    AiccMetadata metadata = parser.parseOnly();
 
     // Verify metadata
     assertNotNull(metadata);
@@ -435,7 +435,7 @@ public class AiccParserComprehensiveTest {
 
     // Create a parser and parse the package
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    AiccMetadata metadata = parser.parse();
+    AiccMetadata metadata = parser.parseOnly();
 
     // Verify metadata
     assertNotNull(metadata);
@@ -522,7 +522,7 @@ public class AiccParserComprehensiveTest {
 
     // Create a parser and parse the package
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    AiccMetadata metadata = parser.parse();
+    AiccMetadata metadata = parser.parseOnly();
 
     // Verify metadata
     assertNotNull(metadata);
@@ -684,7 +684,7 @@ public class AiccParserComprehensiveTest {
   void testParseComplexPrerequisitesAndObjectives() throws ModuleException {
     String modulePath = BASE_MODULE_PATH + "/complex";
     AiccParser parser = new AiccParser(new LocalFileAccess(modulePath));
-    AiccMetadata metadata = parser.parse();
+    AiccMetadata metadata = parser.parseOnly();
 
     assertNotNull(metadata);
     assertTrue(metadata.requiresLevel2());

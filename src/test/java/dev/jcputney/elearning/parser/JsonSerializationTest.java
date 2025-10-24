@@ -39,7 +39,7 @@ class JsonSerializationTest {
     assertThat(parser).isInstanceOf(Scorm2004Parser.class);
 
     // Parse metadata
-    ModuleMetadata<?> metadata = parser.parse();
+    ModuleMetadata<?> metadata = parser.parseOnly();
     assertThat(metadata).isInstanceOf(Scorm2004Metadata.class);
     assertThat(metadata.getModuleType()).isEqualTo(ModuleType.SCORM_2004);
 

@@ -24,7 +24,7 @@ class AiccParserPreOrtTest {
     var access = new LocalFileAccess(fixtureRoot().toString());
     var parser = new AiccParser(access);
 
-    AiccMetadata metadata = parser.parse();
+    AiccMetadata metadata = parser.parseOnly();
 
     // Basic validations
     assertEquals("AICC With PRE/ORT", metadata.getTitle());

@@ -6,6 +6,50 @@
         <option name="PATTERN" value="dev.jcputney.elearning.parser.api.*" />
         <option name="ENABLED" value="true" />
       </pattern>
+      <pattern>
+        <option name="PATTERN" value="dev.jcputney.elearning.parser.config.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="dev.jcputney.elearning.parser.enums.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="dev.jcputney.elearning.parser.exception.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="dev.jcputney.elearning.parser.impl.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="dev.jcputney.elearning.parser.input.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="dev.jcputney.elearning.parser.parsers.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="dev.jcputney.elearning.parser.output.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="dev.jcputney.elearning.parser.tools.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="dev.jcputney.elearning.parser.util.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="dev.jcputney.elearning.parser.validation.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+      <pattern>
+        <option name="PATTERN" value="dev.jcputney.elearning.parser.validators.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
     </extension>
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />

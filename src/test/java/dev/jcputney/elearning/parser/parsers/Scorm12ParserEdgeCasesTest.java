@@ -76,7 +76,7 @@ class Scorm12ParserEdgeCasesTest {
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
 
     // The parser should still parse the manifest even if the referenced files don't exist
-    Scorm12Metadata metadata = parser.parse();
+    Scorm12Metadata metadata = parser.parseOnly();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();
     assertNotNull(manifest);
@@ -128,7 +128,7 @@ class Scorm12ParserEdgeCasesTest {
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
 
     // The parser should parse the manifest with the complex nested organization
-    Scorm12Metadata metadata = parser.parse();
+    Scorm12Metadata metadata = parser.parseOnly();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();
     assertNotNull(manifest);

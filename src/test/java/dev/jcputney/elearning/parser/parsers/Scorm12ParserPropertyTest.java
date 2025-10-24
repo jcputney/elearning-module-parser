@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.api.ParseResult;
 import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
 import dev.jcputney.elearning.parser.output.metadata.scorm12.Scorm12Metadata;
@@ -178,7 +179,7 @@ public class Scorm12ParserPropertyTest {
 
     try {
       // The parser should handle unexpected values gracefully
-      Scorm12Metadata metadata = parser.parse();
+      Scorm12Metadata metadata = (Scorm12Metadata) parser.parseAndValidate().metadata();
       assertNotNull(metadata);
       Scorm12Manifest manifest = metadata.getManifest();
       assertNotNull(manifest);
@@ -235,7 +236,7 @@ public class Scorm12ParserPropertyTest {
     Scorm12Parser parser = new Scorm12Parser(mockFileAccess);
 
     // The parser should successfully parse the manifest
-    Scorm12Metadata metadata = parser.parse();
+    Scorm12Metadata metadata = (Scorm12Metadata) parser.parseAndValidate().metadata();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();
     assertNotNull(manifest);

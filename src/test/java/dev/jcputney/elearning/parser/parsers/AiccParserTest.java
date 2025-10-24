@@ -45,7 +45,7 @@ class AiccParserTest {
   void testParseAiccCourse() throws ModuleException {
     String modulePath = BASE_MODULE_PATH + "/package";
     AiccParser parser = new AiccParser(new LocalFileAccess(modulePath));
-    AiccMetadata metadata = parser.parse();
+    AiccMetadata metadata = (AiccMetadata) parser.parseAndValidate().metadata();
     assertNotNull(metadata);
     AiccManifest manifest = metadata.getManifest();
     assertNotNull(manifest);
@@ -166,7 +166,7 @@ class AiccParserTest {
             """);
 
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    AiccMetadata metadata = parser.parse();
+    AiccMetadata metadata = (AiccMetadata) parser.parseAndValidate().metadata();
 
     assertNotNull(metadata);
     assertEquals(ModuleType.AICC, metadata.getModuleType());
@@ -243,7 +243,7 @@ class AiccParserTest {
             """);
 
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    AiccMetadata metadata = parser.parse();
+    AiccMetadata metadata = (AiccMetadata) parser.parseAndValidate().metadata();
 
     assertNotNull(metadata);
     assertEquals("Minimal AICC Course", metadata
@@ -311,7 +311,7 @@ class AiccParserTest {
             """);
 
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    AiccMetadata metadata = parser.parse();
+    AiccMetadata metadata = (AiccMetadata) parser.parseAndValidate().metadata();
 
     assertNotNull(metadata);
     AiccManifest manifest = metadata.getManifest();
@@ -343,7 +343,7 @@ class AiccParserTest {
   void testParse_withBlankLinesInCourseDescription_succeeds() throws ModuleException {
     String modulePath = BASE_MODULE_PATH + "/multiline-description";
     AiccParser parser = new AiccParser(new LocalFileAccess(modulePath));
-    AiccMetadata metadata = parser.parse();
+    AiccMetadata metadata = (AiccMetadata) parser.parseAndValidate().metadata();
 
     assertNotNull(metadata);
     AiccManifest manifest = metadata.getManifest();
@@ -420,7 +420,7 @@ class AiccParserTest {
 
     // This should succeed even with BOM present
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    AiccMetadata metadata = parser.parse();
+    AiccMetadata metadata = (AiccMetadata) parser.parseAndValidate().metadata();
 
     assertNotNull(metadata);
     assertEquals(ModuleType.AICC, metadata.getModuleType());
@@ -495,7 +495,7 @@ class AiccParserTest {
             """);
 
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    AiccMetadata metadata = parser.parse();
+    AiccMetadata metadata = (AiccMetadata) parser.parseAndValidate().metadata();
 
     assertNotNull(metadata);
     AiccManifest manifest = metadata.getManifest();

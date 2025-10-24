@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.api.ParseResult;
 import dev.jcputney.elearning.parser.api.ModuleParser;
 import dev.jcputney.elearning.parser.api.ModuleTypeDetector;
 import dev.jcputney.elearning.parser.api.ModuleTypeDetectorPlugin;
@@ -339,17 +340,22 @@ class DefaultModuleParserFactoryTest {
     }
 
     @Override
-    public ValidationResult validate() {
-      return ValidationResult.valid();
-    }
-
-    @Override
     public ParserOptions getOptions() {
       return new ParserOptions();
     }
 
     @Override
-    public ModuleMetadata<PackageManifest> parse() throws ModuleParsingException {
+    public ParseResult<PackageManifest> parseAndValidate() throws ModuleParsingException {
+      if (throwException) {
+        throw ValidationResult.of(
+            ValidationIssue.error("MOCK_ERROR", "Mock parsing exception", "test")
+        ).toException("Mock parsing failed");
+      }
+      return new ParseResult<>(ValidationResult.valid(), new MockModuleMetadata(new MockPackageManifest()));
+    }
+
+    @Override
+    public ModuleMetadata<PackageManifest> parseOnly() throws ModuleParsingException {
       if (throwException) {
         throw ValidationResult.of(
             ValidationIssue.error("MOCK_ERROR", "Mock parsing exception", "test")

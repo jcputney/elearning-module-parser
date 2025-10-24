@@ -54,7 +54,7 @@ public class Cmi5ParserTest {
   void testParseCmi5CourseMasteryscoreFramed() throws ModuleException {
     String modulePath = BASE_MODULE_PATH + "/masteryscore_framed";
     Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(modulePath));
-    Cmi5Metadata metadata = parser.parse();
+    Cmi5Metadata metadata = (Cmi5Metadata) parser.parseAndValidate().metadata();
     assertNotNull(metadata);
     assertEquals(ModuleType.CMI5, metadata.getModuleType());
 
@@ -109,7 +109,7 @@ public class Cmi5ParserTest {
   void testParseCmi5CourseMasteryscoreResponsive() throws ModuleException {
     String modulePath = BASE_MODULE_PATH + "/masteryscore_responsive";
     Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(modulePath));
-    Cmi5Metadata metadata = parser.parse();
+    Cmi5Metadata metadata = (Cmi5Metadata) parser.parseAndValidate().metadata();
     assertNotNull(metadata);
     Cmi5Manifest manifest = metadata.getManifest();
     assertNotNull(manifest);
@@ -144,7 +144,7 @@ public class Cmi5ParserTest {
   void testParseCmi5CourseMultiAuFramed() throws ModuleException {
     String modulePath = BASE_MODULE_PATH + "/multi_au_framed";
     Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(modulePath));
-    Cmi5Metadata metadata = parser.parse();
+    Cmi5Metadata metadata = (Cmi5Metadata) parser.parseAndValidate().metadata();
     assertNotNull(metadata);
     Cmi5Manifest manifest = metadata.getManifest();
     assertNotNull(manifest);
@@ -209,7 +209,7 @@ public class Cmi5ParserTest {
   void testParseCmi5CoursePrePostTestFramed() throws ModuleException {
     String modulePath = BASE_MODULE_PATH + "/pre_post_test_framed";
     Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(modulePath));
-    Cmi5Metadata metadata = parser.parse();
+    Cmi5Metadata metadata = (Cmi5Metadata) parser.parseAndValidate().metadata();
     assertNotNull(metadata);
     Cmi5Manifest manifest = metadata.getManifest();
     assertNotNull(manifest);
@@ -365,7 +365,7 @@ public class Cmi5ParserTest {
     Files.writeString(indexPath, "<html><body>Minimal CMI5 Course</body></html>");
 
     Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(tempDir.toString()));
-    Cmi5Metadata metadata = parser.parse();
+    Cmi5Metadata metadata = (Cmi5Metadata) parser.parseAndValidate().metadata();
 
     assertNotNull(metadata);
     assertEquals(ModuleType.CMI5, metadata.getModuleType());

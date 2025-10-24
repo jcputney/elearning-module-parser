@@ -1,6 +1,7 @@
 package dev.jcputney.elearning.parser.parsers;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.api.ParseResult;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.output.metadata.xapi.XapiMetadata;
@@ -49,7 +50,7 @@ class XapiParserTest {
     when(mockFileAccess.getFileContents("tincan.xml")).thenReturn(inputStream);
 
     XapiParser parser = new XapiParser(mockFileAccess);
-    XapiMetadata metadata = parser.parse();
+    XapiMetadata metadata = (XapiMetadata) parser.parseAndValidate().metadata();
 
     assertThat(metadata).isNotNull();
     assertThat(metadata.getModuleType()).isEqualTo(ModuleType.XAPI);
@@ -63,7 +64,7 @@ class XapiParserTest {
     when(mockFileAccess.listFiles("")).thenReturn(List.of("index.html"));
 
     XapiParser parser = new XapiParser(mockFileAccess);
-    assertThatThrownBy(() -> parser.parse())
+    assertThatThrownBy(() -> parser.parseAndValidate())
         .isInstanceOf(ModuleParsingException.class)
         .hasMessageContaining("tincan.xml not found");
   }
@@ -75,7 +76,7 @@ class XapiParserTest {
     when(mockFileAccess.getFileContents("tincan.xml")).thenReturn(inputStream);
 
     XapiParser parser = new XapiParser(mockFileAccess);
-    assertThatThrownBy(() -> parser.parse())
+    assertThatThrownBy(() -> parser.parseAndValidate())
         .isInstanceOf(ModuleParsingException.class);
   }
 
@@ -101,7 +102,7 @@ class XapiParserTest {
     when(mockFileAccess.getFileContents("tincan.xml")).thenReturn(inputStream);
 
     XapiParser parser = new XapiParser(mockFileAccess);
-    XapiMetadata metadata = parser.parse();
+    XapiMetadata metadata = (XapiMetadata) parser.parseAndValidate().metadata();
 
     assertThat(metadata).isNotNull();
     assertThat(metadata.getModuleType()).isEqualTo(ModuleType.XAPI);
