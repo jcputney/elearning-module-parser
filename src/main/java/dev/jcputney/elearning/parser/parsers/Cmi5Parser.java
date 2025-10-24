@@ -64,91 +64,39 @@ public final class Cmi5Parser extends BaseParser<Cmi5Metadata, Cmi5Manifest> {
     super(fileAccess, options);
   }
 
-  /**
-   * Validates the cmi5 module without fully parsing it.
-   * This method provides efficient validation by only parsing the manifest file
-   * and running structural validation checks.
-   *
-   * @return ValidationResult containing any errors or warnings found
-   */
   @Override
-  public ValidationResult validate() {
-    try {
-      // Parse manifest only (lightweight)
-      Cmi5Manifest manifest = parseManifest(CMI5_XML);
-
-      // Run validator
-      Cmi5Validator validator = new Cmi5Validator();
-      return validator.validate(manifest);
-    } catch (ManifestParseException | IOException | XMLStreamException e) {
-      return ValidationResult.of(
-          ValidationIssue.error(
-              "MANIFEST_PARSE_ERROR",
-              "Failed to parse manifest: " + e.getMessage(),
-              CMI5_XML
-          )
-      );
-    }
+  protected ValidationResult validateManifest(Cmi5Manifest manifest) {
+    Cmi5Validator validator = new Cmi5Validator();
+    return validator.validate(manifest);
   }
 
-  /**
-   * Parses the cmi5 module located at the specified modulePath.
-   * <p>
-   * This method reads the cmi5.xml file to extract metadata such as the title, launch URL,
-   * prerequisites, dependencies, list of Assignable Units (AUs), and custom data for LMS tracking.
-   * Since cmi5 is always xAPI-enabled, the isXapiEnabled flag is set to true for all cmi5 modules.
-   * </p>
-   *
-   * @return A Cmi5Metadata object containing the parsed metadata.
-   * @throws ModuleParsingException If the module's manifest cannot be parsed or if required fields
-   * are missing.
-   */
   @Override
-  public Cmi5Metadata parse() throws ModuleException {
-    try {
-      // Find the cmi5 manifest file (case-insensitive)
-      var files = moduleFileProvider.listFiles("");
-      String cmi5File = FileUtils.findFileIgnoreCase(files, CMI5_XML);
-
-      if (cmi5File == null) {
-        ValidationResult result = ValidationResult.of(
-            ValidationIssue.error("CMI5_MISSING_MANIFEST",
-                "cmi5 manifest file not found: " + CMI5_XML + " in module at '" + moduleFileProvider.getRootPath() + "'",
-                "package root")
-        );
-        throw result.toException("Failed to parse cmi5 module");
-      }
-
-      // Parse cmi5-specific metadata from cmi5.xml
-      var manifest = parseManifest(cmi5File);
-
-      String title = manifest.getTitle();
-      if (title == null || title.isEmpty()) {
-        ValidationResult result = ValidationResult.of(
-            ValidationIssue.error("CMI5_MISSING_TITLE", "cmi5 module missing required title field", "cmi5.xml")
-        );
-        throw result.toException("Failed to parse cmi5 module");
-      }
-      String launchUrl = manifest.getLaunchUrl();
-      if (launchUrl == null || launchUrl.isEmpty()) {
-        ValidationResult result = ValidationResult.of(
-            ValidationIssue.error("CMI5_MISSING_LAUNCH_URL", "cmi5 module missing required launch URL field", "cmi5.xml")
-        );
-        throw result.toException("Failed to parse cmi5 module");
-      }
-
-      // Build and return the Cmi5Metadata
-      return Cmi5Metadata.create(manifest, true); // cmi5 modules are always xAPI-enabled
-
-    } catch (IOException e) {
-      throw new ManifestParseException(
-          "Error listing files in cmi5 module at path: " + this.moduleFileProvider.getRootPath(), e);
-    } catch (ModuleParsingException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new ManifestParseException(
-          "Error parsing cmi5 module at path: " + this.moduleFileProvider.getRootPath(), e);
+  protected Cmi5Metadata extractMetadata(Cmi5Manifest manifest,
+                                         ValidationResult validation)
+      throws ModuleException {
+    // Validate required fields
+    String title = manifest.getTitle();
+    if (title == null || title.isEmpty()) {
+      ValidationResult result = ValidationResult.of(
+          ValidationIssue.error("CMI5_MISSING_TITLE", "cmi5 module missing required title field", "cmi5.xml")
+      );
+      throw result.toException("Failed to parse cmi5 module");
     }
+    String launchUrl = manifest.getLaunchUrl();
+    if (launchUrl == null || launchUrl.isEmpty()) {
+      ValidationResult result = ValidationResult.of(
+          ValidationIssue.error("CMI5_MISSING_LAUNCH_URL", "cmi5 module missing required launch URL field", "cmi5.xml")
+      );
+      throw result.toException("Failed to parse cmi5 module");
+    }
+
+    // Build and return the Cmi5Metadata
+    return Cmi5Metadata.create(manifest, true); // cmi5 modules are always xAPI-enabled
+  }
+
+  @Override
+  protected String getManifestFileName() {
+    return CMI5_XML;
   }
 
   /**
