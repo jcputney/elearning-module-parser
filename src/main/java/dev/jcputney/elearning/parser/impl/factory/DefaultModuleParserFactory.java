@@ -176,7 +176,7 @@ public final class DefaultModuleParserFactory implements ModuleParserFactory {
    */
   @Override
   public ModuleMetadata<?> parseModule() throws ModuleDetectionException, ModuleException {
-    return getParser().parse();
+    return getParser().parseOnly();
   }
 
   /**

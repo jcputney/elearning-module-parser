@@ -126,43 +126,43 @@ public final class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
   protected AiccMetadata extractMetadata(AiccManifest manifest,
                                          ValidationResult validation)
       throws ModuleException {
-    // Validate required fields
-    String title = manifest.getTitle();
-    String launchUrl = manifest.getLaunchUrl();
-    if (title == null || title.isEmpty()) {
-      ValidationResult result = ValidationResult.of(
-          ValidationIssue.error("AICC_MISSING_TITLE",
-              "AICC module has empty or missing title in course file (expected in [Course_Data] section)",
-              ".crs file")
-      );
-      throw result.toException("Failed to parse AICC module");
-    }
-    if (launchUrl == null || launchUrl.isEmpty()) {
-      ValidationResult result = ValidationResult.of(
-          ValidationIssue.error("AICC_MISSING_LAUNCH_URL",
-              "AICC module has empty or missing launch URL in course file (expected in [Course_Data] section)",
-              ".crs file")
-      );
-      throw result.toException("Failed to parse AICC module");
-    }
-
-    // Find the .crs manifest filename
-    String manifestFilename = findFileByExtension(CRS_EXTENSION);
-    if (manifestFilename == null) {
-      ValidationResult result = ValidationResult.of(
-          ValidationIssue.error("AICC_MISSING_CRS_FILE",
-              "AICC .crs file not found in module",
-              "package root")
-      );
-      throw result.toException("Failed to parse AICC module");
-    }
-
-    // Build and return metadata
     try {
+      // Validate required fields
+      String title = manifest.getTitle();
+      String launchUrl = manifest.getLaunchUrl();
+      if (title == null || title.isEmpty()) {
+        ValidationResult result = ValidationResult.of(
+            ValidationIssue.error("AICC_MISSING_TITLE",
+                "AICC module has empty or missing title in course file (expected in [Course_Data] section)",
+                ".crs file")
+        );
+        throw result.toException("Failed to parse AICC module");
+      }
+      if (launchUrl == null || launchUrl.isEmpty()) {
+        ValidationResult result = ValidationResult.of(
+            ValidationIssue.error("AICC_MISSING_LAUNCH_URL",
+                "AICC module has empty or missing launch URL in course file (expected in [Course_Data] section)",
+                ".crs file")
+        );
+        throw result.toException("Failed to parse AICC module");
+      }
+
+      // Find the .crs manifest filename
+      String manifestFilename = findFileByExtension(CRS_EXTENSION);
+      if (manifestFilename == null) {
+        ValidationResult result = ValidationResult.of(
+            ValidationIssue.error("AICC_MISSING_CRS_FILE",
+                "AICC .crs file not found in module",
+                "package root")
+        );
+        throw result.toException("Failed to parse AICC module");
+      }
+
+      // Build and return metadata
       return AiccMetadata.create(manifest, checkForXapi(), manifestFilename);
     } catch (IOException e) {
       throw new ManifestParseException(
-          "Error creating AICC metadata: " + e.getMessage(), e);
+          "Error extracting AICC metadata: " + e.getMessage(), e);
     }
   }
 
