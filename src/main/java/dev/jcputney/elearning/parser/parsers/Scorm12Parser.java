@@ -86,72 +86,32 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
     super(moduleFileProvider);
   }
 
-  /**
-   * Validates the SCORM 1.2 module without fully parsing it.
-   * This method provides efficient validation by only parsing the manifest file
-   * and running structural validation checks.
-   *
-   * @return ValidationResult containing any errors or warnings found
-   */
   @Override
-  public ValidationResult validate() {
-    try {
-      // Parse manifest only (lightweight)
-      Scorm12Manifest manifest = parseManifest(MANIFEST_FILE);
+  protected ValidationResult validateManifest(Scorm12Manifest manifest) {
+    Scorm12ResourceValidator validator = new Scorm12ResourceValidator();
+    return validator.validate(manifest);
+  }
 
-      // Run validator
-      Scorm12ResourceValidator validator = new Scorm12ResourceValidator();
-      return validator.validate(manifest);
-    } catch (ManifestParseException | IOException | XMLStreamException e) {
-      return ValidationResult.of(
-          ValidationIssue.error(
-              "MANIFEST_PARSE_ERROR",
-              "Failed to parse manifest: " + e.getMessage(),
-              MANIFEST_FILE
-          )
-      );
+  @Override
+  protected Scorm12Metadata extractMetadata(Scorm12Manifest manifest,
+                                            ValidationResult validation)
+      throws ModuleException {
+    try {
+      // Existing extraction logic - unchanged
+      loadExternalMetadata(manifest);
+      validateRequiredFields(manifest);
+      boolean hasXapi = checkForXapi();
+      return createMetadata(manifest, hasXapi);
+    } catch (IOException e) {
+      throw new ManifestParseException("Failed to extract metadata", e);
+    } catch (XMLStreamException e) {
+      throw new ManifestParseException("Failed to extract metadata", e);
     }
   }
 
-  /**
-   * Parses the SCORM 1.2 module located at the specified modulePath. Extracts metadata, including
-   * title, description, identifier, launch URL, a default version string, and optional fields like
-   * mastery score and custom data.
-   *
-   * @return A populated ModuleMetadata object containing the extracted metadata.
-   * @throws ModuleParsingException if an error occurs during parsing.
-   */
   @Override
-  public Scorm12Metadata parse() throws ModuleException {
-    try {
-      // Parse and validate the manifest
-      var manifest = parseAndValidateManifest();
-
-      // Load external metadata
-      loadExternalMetadata(manifest);
-
-      // Validate required fields
-      validateRequiredFields(manifest);
-
-      // Check for xAPI support
-      boolean hasXapi = checkForXapi();
-
-      // Build and return ModuleMetadata
-      return createMetadata(manifest, hasXapi);
-    } catch (IOException | XMLStreamException e) {
-      throw new ManifestParseException(
-          String.format("Failed to parse SCORM 1.2 module at '%s': %s",
-              this.moduleFileProvider.getRootPath(), e.getMessage()), e);
-    } catch (ModuleParsingException e) {
-      // Re-throw ModuleParsingException directly without wrapping
-      throw e;
-    } catch (Exception e) {
-      // Catch any other unexpected exceptions
-      throw new ManifestParseException(
-          String.format("Unexpected error parsing SCORM 1.2 module at '%s': %s",
-              this.moduleFileProvider.getRootPath(),
-              e.getMessage()), e);
-    }
+  protected String getManifestFileName() {
+    return MANIFEST_FILE;
   }
 
   /**
@@ -184,33 +144,6 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
   @Override
   protected Class<Scorm12Manifest> getManifestClass() {
     return Scorm12Manifest.class;
-  }
-
-  /**
-   * Parses and validates the SCORM 1.2 manifest file.
-   *
-   * @return The parsed manifest object.
-   * @throws IOException If an error occurs while reading the file.
-   * @throws XMLStreamException If an error occurs while parsing the XML.
-   * @throws ModuleParsingException If the manifest file is not found.
-   */
-  private Scorm12Manifest parseAndValidateManifest()
-      throws IOException, XMLStreamException, ManifestParseException, ModuleParsingException {
-    // Find the manifest file (case-insensitive)
-    var files = moduleFileProvider.listFiles("");
-    String manifestFile = FileUtils.findFileIgnoreCase(files, MANIFEST_FILE);
-
-    if (manifestFile == null) {
-      ValidationResult result = ValidationResult.of(
-          ValidationIssue.error("SCORM12_MISSING_MANIFEST",
-              String.format("SCORM 1.2 manifest file not found: %s in module at '%s'", MANIFEST_FILE, moduleFileProvider.getRootPath()),
-              "package root")
-      );
-      throw result.toException("Failed to parse SCORM 1.2 module");
-    }
-
-    // Parse the manifest XML file using a secure parser from BaseParser
-    return parseManifest(manifestFile);
   }
 
   /**
