@@ -144,6 +144,34 @@ class AiccValidatorTest {
         .anyMatch(e -> e.code().equals("AICC_MISSING_LAUNCH_URL"))).isTrue();
   }
 
+  @Test
+  void validate_usesRuleBasedArchitecture() {
+    // This test verifies the validator uses the rule-based architecture
+    // by checking that all rules are applied
+    AiccManifest manifest = new AiccManifest();
+    AiccCourse aiccCourse = new AiccCourse();
+    AiccCourse.Course course = new AiccCourse.Course();
+    // Set course but leave title null and launch URL null
+    course.setCourseTitle(null);
+    aiccCourse.setCourse(course);
+    manifest.setCourse(aiccCourse);
+    manifest.setLaunchUrl(null);
+
+    ValidationResult result = validator.validate(manifest);
+
+    assertThat(result.isValid()).isFalse();
+    assertThat(result.hasErrors()).isTrue();
+    // Should have 2 errors (title, launch URL) - course exists but invalid fields
+    assertThat(result.getErrors()).hasSize(2);
+    assertThat(result.getErrors().stream()
+        .map(issue -> issue.code())
+        .toList())
+        .containsExactlyInAnyOrder(
+            "AICC_MISSING_TITLE",
+            "AICC_MISSING_LAUNCH_URL"
+        );
+  }
+
   /**
    * Creates a valid AICC manifest for testing.
    */

@@ -23,9 +23,12 @@
 package dev.jcputney.elearning.parser.validators;
 
 import dev.jcputney.elearning.parser.input.aicc.AiccManifest;
-import dev.jcputney.elearning.parser.validation.ValidationIssue;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
-import java.util.ArrayList;
+import dev.jcputney.elearning.parser.validators.rules.ValidationRule;
+import dev.jcputney.elearning.parser.validators.rules.aicc.CourseRequiredRule;
+import dev.jcputney.elearning.parser.validators.rules.aicc.LaunchUrlRequiredRule;
+import dev.jcputney.elearning.parser.validators.rules.aicc.TitleRequiredRule;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,42 +44,29 @@ import java.util.List;
  */
 public class AiccValidator {
 
+  private final List<ValidationRule<AiccManifest>> rules;
+
+  /**
+   * Constructs a new AiccValidator with default validation rules.
+   */
+  public AiccValidator() {
+    this.rules = Arrays.asList(
+        new CourseRequiredRule(),
+        new TitleRequiredRule(),
+        new LaunchUrlRequiredRule()
+    );
+  }
+
   /**
    * Validates an AICC manifest for structural integrity.
+   * Uses rule-based validation for better testability and maintainability.
    *
    * @param manifest The AICC manifest to validate
    * @return ValidationResult containing any issues found
    */
   public ValidationResult validate(AiccManifest manifest) {
-    List<ValidationIssue> issues = new ArrayList<>();
-
-    // Validate basic structure
-    if (manifest.getCourse() == null) {
-      issues.add(ValidationIssue.error(
-          "AICC_MISSING_COURSE",
-          "AICC manifest must contain course information",
-          "course.crs"
-      ));
-    }
-
-    if (manifest.getTitle() == null || manifest.getTitle().trim().isEmpty()) {
-      issues.add(ValidationIssue.error(
-          "AICC_MISSING_TITLE",
-          "AICC course must have a title",
-          "course.crs",
-          "Add a course_title field to the .crs file"
-      ));
-    }
-
-    if (manifest.getLaunchUrl() == null || manifest.getLaunchUrl().trim().isEmpty()) {
-      issues.add(ValidationIssue.error(
-          "AICC_MISSING_LAUNCH_URL",
-          "AICC course must have a launch URL",
-          "assignable_unit",
-          "Ensure at least one assignable unit has a file_name"
-      ));
-    }
-
-    return ValidationResult.of(issues.toArray(new ValidationIssue[0]));
+    return rules.stream()
+        .map(rule -> rule.validate(manifest))
+        .reduce(ValidationResult.valid(), ValidationResult::merge);
   }
 }
