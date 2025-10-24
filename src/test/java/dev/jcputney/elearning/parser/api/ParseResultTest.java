@@ -89,4 +89,91 @@ class ParseResultTest {
     assertThat(result.validation()).isEqualTo(validation);
     assertThat(result.metadata()).isEqualTo(metadata);
   }
+
+  @Test
+  void hasErrors_withNoErrors_returnsFalse() {
+    ValidationResult validation = ValidationResult.valid();
+    @SuppressWarnings("unchecked")
+    ModuleMetadata<PackageManifest> metadata = Mockito.mock(ModuleMetadata.class);
+
+    ParseResult<PackageManifest> result = new ParseResult<>(validation, metadata);
+
+    assertThat(result.hasErrors()).isFalse();
+  }
+
+  @Test
+  void hasWarnings_withNoWarnings_returnsFalse() {
+    ValidationResult validation = ValidationResult.valid();
+    @SuppressWarnings("unchecked")
+    ModuleMetadata<PackageManifest> metadata = Mockito.mock(ModuleMetadata.class);
+
+    ParseResult<PackageManifest> result = new ParseResult<>(validation, metadata);
+
+    assertThat(result.hasWarnings()).isFalse();
+  }
+
+  @Test
+  void isValid_withWarningsButNoErrors_returnsTrue() {
+    // Critical test: warnings don't invalidate a module
+    ValidationResult validation = ValidationResult.of(
+        ValidationIssue.warning("WARN1", "warning message", "location")
+    );
+    @SuppressWarnings("unchecked")
+    ModuleMetadata<PackageManifest> metadata = Mockito.mock(ModuleMetadata.class);
+
+    ParseResult<PackageManifest> result = new ParseResult<>(validation, metadata);
+
+    assertThat(result.isValid()).isTrue();
+    assertThat(result.hasWarnings()).isTrue();
+    assertThat(result.hasErrors()).isFalse();
+  }
+
+  @Test
+  void isValid_withMultipleErrors_returnsFalse() {
+    ValidationResult validation = ValidationResult.of(
+        ValidationIssue.error("ERR1", "first error", "location1"),
+        ValidationIssue.error("ERR2", "second error", "location2"),
+        ValidationIssue.error("ERR3", "third error", "location3")
+    );
+    @SuppressWarnings("unchecked")
+    ModuleMetadata<PackageManifest> metadata = Mockito.mock(ModuleMetadata.class);
+
+    ParseResult<PackageManifest> result = new ParseResult<>(validation, metadata);
+
+    assertThat(result.isValid()).isFalse();
+    assertThat(result.hasErrors()).isTrue();
+  }
+
+  @Test
+  void hasWarnings_withMultipleWarnings_returnsTrue() {
+    ValidationResult validation = ValidationResult.of(
+        ValidationIssue.warning("WARN1", "first warning", "location1"),
+        ValidationIssue.warning("WARN2", "second warning", "location2")
+    );
+    @SuppressWarnings("unchecked")
+    ModuleMetadata<PackageManifest> metadata = Mockito.mock(ModuleMetadata.class);
+
+    ParseResult<PackageManifest> result = new ParseResult<>(validation, metadata);
+
+    assertThat(result.hasWarnings()).isTrue();
+    assertThat(result.hasErrors()).isFalse();
+    assertThat(result.isValid()).isTrue();
+  }
+
+  @Test
+  void isValid_withBothErrorsAndWarnings_returnsFalse() {
+    ValidationResult validation = ValidationResult.of(
+        ValidationIssue.error("ERR1", "error message", "location1"),
+        ValidationIssue.warning("WARN1", "warning message", "location2"),
+        ValidationIssue.warning("WARN2", "another warning", "location3")
+    );
+    @SuppressWarnings("unchecked")
+    ModuleMetadata<PackageManifest> metadata = Mockito.mock(ModuleMetadata.class);
+
+    ParseResult<PackageManifest> result = new ParseResult<>(validation, metadata);
+
+    assertThat(result.isValid()).isFalse();
+    assertThat(result.hasErrors()).isTrue();
+    assertThat(result.hasWarnings()).isTrue();
+  }
 }
