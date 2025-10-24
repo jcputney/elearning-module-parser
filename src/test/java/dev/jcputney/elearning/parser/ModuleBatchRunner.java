@@ -8,15 +8,14 @@ import com.github.freva.asciitable.AsciiTable;
 import com.github.freva.asciitable.Column;
 import com.github.freva.asciitable.Styler;
 import dev.jcputney.elearning.parser.api.ModuleParserFactory;
+import dev.jcputney.elearning.parser.api.ParseResult;
+import dev.jcputney.elearning.parser.api.ParserOptions;
 import dev.jcputney.elearning.parser.enums.ModuleType;
-import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.exception.ModuleException;
-import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.impl.access.S3FileAccessV2;
 import dev.jcputney.elearning.parser.impl.access.ZipFileAccess;
 import dev.jcputney.elearning.parser.impl.factory.DefaultModuleParserFactory;
-import dev.jcputney.elearning.parser.api.ParserOptions;
 import dev.jcputney.elearning.parser.input.scorm2004.SequencingUsageDetector.SequencingLevel;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import dev.jcputney.elearning.parser.output.metadata.aicc.AiccMetadata;
@@ -596,7 +595,8 @@ public final class ModuleBatchRunner {
   private ModuleProcessingResult processS3Module(S3ModuleResources resources, S3ModuleJob job) {
     long startTime = System.currentTimeMillis();
     try {
-      ModuleMetadata<?> metadata = resources.parse(job);
+      var result = resources.parse(job);
+      var metadata = result.metadata();
       long elapsed = System.currentTimeMillis() - startTime;
       logger.info("S3: " + LOG_ELAPSED, job.modulePrefix, elapsed / 1000, elapsed % 1000);
       return successResult(SourceType.S3, job.modulePrefix, job.uuid, job.version, metadata);
@@ -613,7 +613,10 @@ public final class ModuleBatchRunner {
     long startTime = System.currentTimeMillis();
     try {
       ModuleParserFactory parserFactory = buildLocalFactory(job.modulePath);
-      ModuleMetadata<?> metadata = parserFactory.parseModule();
+      ParseResult<?> result = parserFactory
+          .getParser()
+          .parseAndValidate();
+      var metadata = result.metadata();
       long elapsed = System.currentTimeMillis() - startTime;
       logger.info("Local: " + LOG_ELAPSED, job.displayPath(), elapsed / 1000, elapsed % 1000);
       return successResult(SourceType.LOCAL, job.displayPath(), "-", "-", metadata);
@@ -629,12 +632,13 @@ public final class ModuleBatchRunner {
 
   private ModuleParserFactory buildLocalFactory(Path modulePath) throws IOException {
     // Use batch processing options (no file existence validation, no size calculation)
-    ParserOptions options = new ParserOptions();
 
     if (Files.isDirectory(modulePath)) {
-      return new DefaultModuleParserFactory(new LocalFileAccess(modulePath.toString()), options);
+      return new DefaultModuleParserFactory(new LocalFileAccess(modulePath.toString()),
+          ParserOptions.lenient());
     }
-    return new DefaultModuleParserFactory(new ZipFileAccess(modulePath.toString()), options);
+    return new DefaultModuleParserFactory(new ZipFileAccess(modulePath.toString()),
+        ParserOptions.lenient());
   }
 
   private ModuleProcessingResult successResult(SourceType source, String location, String uuid,
@@ -831,13 +835,15 @@ public final class ModuleBatchRunner {
       this.fileAccess = new S3FileAccessV2(client, bucket, "", false);
     }
 
-    ModuleMetadata<?> parse(S3ModuleJob job)
+    ParseResult<?> parse(S3ModuleJob job)
         throws ModuleException {
       fileAccess.prepareForModule(job.modulePrefix);
       // Use batch processing options (no file existence validation, no size calculation)
       ParserOptions options = new ParserOptions();
       ModuleParserFactory parserFactory = new DefaultModuleParserFactory(fileAccess, options);
-      return parserFactory.parseModule();
+      return parserFactory
+          .getParser()
+          .parseAndValidate();
     }
 
     void shutdown() {
@@ -1393,7 +1399,11 @@ public final class ModuleBatchRunner {
       if (!ctTable.isSetAutoFilter()) {
         ctTable.addNewAutoFilter();
       }
-      ctTable.getAutoFilter().setRef(table.getArea().formatAsString());
+      ctTable
+          .getAutoFilter()
+          .setRef(table
+              .getArea()
+              .formatAsString());
 
       return ctTable.isSetTableStyleInfo()
           ? ctTable.getTableStyleInfo()

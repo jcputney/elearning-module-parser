@@ -110,23 +110,45 @@ public final class ZipFileAccess implements FileAccess, AutoCloseable {
    *
    * @param directoryPath The directory to list files from, for example, "folder/" (guaranteed to be
    * non-null).
-   * @return A list of file paths within the directory.
+   * @return A list of file paths within the directory, relative to the root path.
    */
   @Override
   public List<String> listFilesInternal(String directoryPath) {
     List<String> fileList = new ArrayList<>();
     Enumeration<? extends ZipEntry> entries = zipFile.entries();
+    String searchPrefix = fullPath(directoryPath);
 
     while (entries.hasMoreElements()) {
       ZipEntry entry = entries.nextElement();
       String entryName = entry.getName();
 
       // Check if the entry is within the specified directory
-      if (entryName.startsWith(fullPath(directoryPath)) && !entry.isDirectory()) {
-        fileList.add(entryName);
+      if (entryName.startsWith(searchPrefix) && !entry.isDirectory()) {
+        // Strip the rootPath prefix to return paths relative to the detected root
+        String relativePath = stripRootPath(entryName);
+        fileList.add(relativePath);
       }
     }
     return fileList;
+  }
+
+  /**
+   * Strips the root path prefix from an entry name to return a path relative to the root.
+   *
+   * @param entryName The full entry name from the ZIP file.
+   * @return The entry name with the root path prefix removed.
+   */
+  private String stripRootPath(String entryName) {
+    if (rootPath.isEmpty()) {
+      return entryName;
+    }
+
+    String rootPrefix = rootPath + "/";
+    if (entryName.startsWith(rootPrefix)) {
+      return entryName.substring(rootPrefix.length());
+    }
+
+    return entryName;
   }
 
   /**

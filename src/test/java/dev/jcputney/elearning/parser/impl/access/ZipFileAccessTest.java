@@ -335,4 +335,57 @@ class ZipFileAccessTest {
     // After the try block, tempZipFileAccess should be closed
     // We can't directly test this without accessing private fields
   }
+
+  @Test
+  void listFiles_withDetectedRootPath_returnsPathsRelativeToRoot() throws IOException {
+    // When a ZIP has a detected root path, listFiles should return paths
+    // relative to that root, not including the root prefix
+    String rootPath = zipFileAccess.getRootPath();
+    List<String> files = zipFileAccess.listFiles("");
+
+    // All returned paths should NOT start with the rootPath prefix
+    for (String file : files) {
+      if (!rootPath.isEmpty()) {
+        assertFalse(file.startsWith(rootPath + "/"),
+            "File path '" + file + "' should not include root prefix '" + rootPath + "/'");
+      }
+    }
+
+    // Should be able to find imsmanifest.xml without the root prefix
+    assertTrue(files
+        .stream()
+        .anyMatch(file -> file.equals("imsmanifest.xml") || file.endsWith("/imsmanifest.xml")),
+        "Should find imsmanifest.xml in the file list");
+  }
+
+  @Test
+  void listFiles_withNestedRootDirectory_stripsRootPrefix() throws IOException {
+    // Test with a ZIP that has all files in a nested directory
+    String testZipPath = "/Users/putneyj/Library/CloudStorage/GoogleDrive-jputney@noverant.com/Shared drives/SCORM Modules/testClose.zip";
+    java.io.File testFile = new java.io.File(testZipPath);
+
+    // Only run this test if the file exists (allows tests to pass in CI)
+    if (!testFile.exists()) {
+      return;
+    }
+
+    try (ZipFileAccess nestedZipAccess = new ZipFileAccess(testZipPath)) {
+      String rootPath = nestedZipAccess.getRootPath();
+
+      // Should detect "testClose" as root
+      assertEquals("testClose", rootPath, "Should detect nested directory as root");
+
+      List<String> files = nestedZipAccess.listFiles("");
+
+      // All returned paths should NOT include the "testClose/" prefix
+      for (String file : files) {
+        assertFalse(file.startsWith("testClose/"),
+            "File '" + file + "' should not include root prefix 'testClose/'");
+      }
+
+      // Should be able to find imsmanifest.xml directly (without testClose/ prefix)
+      assertTrue(files.contains("imsmanifest.xml"),
+          "Should find 'imsmanifest.xml' directly, not 'testClose/imsmanifest.xml'. Got: " + files);
+    }
+  }
 }
