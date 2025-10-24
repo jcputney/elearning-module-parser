@@ -553,22 +553,22 @@ public final class ModuleBatchRunner {
       throws IOException {
     AtomicLong remaining = new AtomicLong(limit.orElse(Long.MAX_VALUE));
 
-    try (Stream<Path> children = Files.list(baseDir)) {
-      children
+    try (Stream<Path> paths = Files.walk(baseDir)) {
+      paths
+          .filter(Files::isRegularFile)
+          .filter(path -> path
+              .getFileName()
+              .toString()
+              .toLowerCase(Locale.ROOT)
+              .endsWith(".zip"))
           .sorted()
           .forEach(path -> {
             if (remaining.get() <= 0) {
               return;
             }
-            if (Files.isDirectory(path) || path
-                .getFileName()
-                .toString()
-                .toLowerCase(Locale.ROOT)
-                .endsWith(".zip")) {
-              submitter.submit(new LocalModuleJob(baseDir, path));
-              if (limit.isPresent()) {
-                remaining.decrementAndGet();
-              }
+            submitter.submit(new LocalModuleJob(baseDir, path));
+            if (limit.isPresent()) {
+              remaining.decrementAndGet();
             }
           });
     }
