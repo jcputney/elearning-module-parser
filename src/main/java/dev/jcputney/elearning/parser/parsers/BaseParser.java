@@ -21,6 +21,7 @@ import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.LoadableMetadata;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
 import dev.jcputney.elearning.parser.api.ModuleParser;
+import dev.jcputney.elearning.parser.api.ParseResult;
 import dev.jcputney.elearning.parser.api.ParserOptions;
 import dev.jcputney.elearning.parser.exception.ManifestParseException;
 import dev.jcputney.elearning.parser.exception.ModuleException;
@@ -29,6 +30,7 @@ import dev.jcputney.elearning.parser.impl.provider.DefaultModuleFileProvider;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import dev.jcputney.elearning.parser.util.XmlParsingUtils;
+import dev.jcputney.elearning.parser.validation.ValidationResult;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.xml.stream.XMLStreamException;
@@ -125,15 +127,6 @@ public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends P
   }
 
   /**
-   * Abstract method that parses the module and returns the corresponding metadata object. This must
-   * be implemented by the child parsers (for example, SCORM, cmi5, LTI).
-   *
-   * @return A ModuleMetadata object containing the parsed module metadata.
-   * @throws ModuleException If the module type can't be determined or there's an error parsing.
-   */
-  public abstract T parse() throws ModuleException;
-
-  /**
    * Gets the parser options controlling validation behavior.
    *
    * @return ParserOptions for this parser
@@ -144,35 +137,85 @@ public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends P
   }
 
   /**
-   * Validates the module without parsing. Returns validation result with errors/warnings. Default
-   * implementation parses the module and returns any validation errors. Subclasses can override for
-   * more specific validation logic.
+   * Validates a parsed manifest and returns validation results.
+   * Subclasses implement this to use their parser-specific validators.
    *
-   * @return ValidationResult containing errors and warnings
+   * @param manifest The parsed manifest to validate
+   * @return ValidationResult containing any errors or warnings
    */
+  protected abstract ValidationResult validateManifest(M manifest);
+
+  /**
+   * Extracts metadata from a parsed and validated manifest.
+   *
+   * @param manifest The parsed manifest
+   * @param validation The validation result (for reference during extraction)
+   * @return Module-specific metadata
+   * @throws ModuleException if metadata extraction fails
+   */
+  protected abstract T extractMetadata(M manifest, ValidationResult validation)
+      throws ModuleException;
+
+  /**
+   * Returns the module type name for error messages.
+   * Subclasses can override for more specific type names.
+   *
+   * @return The module type (e.g., "SCORM 1.2", "cmi5")
+   */
+  protected String getModuleType() {
+    return getClass().getSimpleName().replace("Parser", "");
+  }
+
   @Override
-  public dev.jcputney.elearning.parser.validation.ValidationResult validate() {
+  public ParseResult<M> parseAndValidate() throws ModuleException {
     try {
-      parse();
-      return dev.jcputney.elearning.parser.validation.ValidationResult.valid();
+      // 1. Parse manifest XML → Java objects (single parse)
+      M manifest = parseManifest(getManifestFileName());
+
+      // 2. Validate the parsed manifest
+      ValidationResult validation = validateManifest(manifest);
+
+      // 3. Extract metadata (even if validation has warnings/errors)
+      T metadata = extractMetadata(manifest, validation);
+
+      // 4. Return both validation and metadata
+      return new ParseResult<>(validation, metadata);
+
+    } catch (IOException | XMLStreamException e) {
+      // Fatal parsing errors throw ModuleException
+      throw new ManifestParseException(
+          String.format("Failed to parse %s manifest at '%s': %s",
+              getModuleType(), moduleFileProvider.getRootPath(), e.getMessage()), e);
     } catch (ModuleParsingException e) {
-      return e.getValidationResult() != null
-          ? e.getValidationResult()
-          : dev.jcputney.elearning.parser.validation.ValidationResult.of(
-              dev.jcputney.elearning.parser.validation.ValidationIssue.error(
-                  "PARSE_ERROR",
-                  e.getMessage(),
-                  "module"
-              )
-          );
-    } catch (ModuleException e) {
-      return dev.jcputney.elearning.parser.validation.ValidationResult.of(
-          dev.jcputney.elearning.parser.validation.ValidationIssue.error(
-              "MODULE_ERROR",
-              e.getMessage(),
-              "module"
-          )
-      );
+      // Re-throw ModuleParsingException directly
+      throw e;
+    } catch (Exception e) {
+      // Catch any other unexpected exceptions
+      throw new ManifestParseException(
+          String.format("Unexpected error parsing %s manifest: %s",
+              getModuleType(), e.getMessage()), e);
+    }
+  }
+
+  @Override
+  public T parseOnly() throws ModuleException {
+    try {
+      // Parse without validation
+      M manifest = parseManifest(getManifestFileName());
+
+      // Extract metadata with empty validation result
+      return extractMetadata(manifest, ValidationResult.valid());
+
+    } catch (IOException | XMLStreamException e) {
+      throw new ManifestParseException(
+          String.format("Failed to parse %s manifest at '%s': %s",
+              getModuleType(), moduleFileProvider.getRootPath(), e.getMessage()), e);
+    } catch (ModuleParsingException e) {
+      throw e;
+    } catch (Exception e) {
+      throw new ManifestParseException(
+          String.format("Unexpected error parsing %s manifest: %s",
+              getModuleType(), e.getMessage()), e);
     }
   }
 
@@ -226,6 +269,13 @@ public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends P
    * @return The class of the manifest object.
    */
   protected abstract Class<M> getManifestClass();
+
+  /**
+   * Abstract method to return the filename of the manifest for the specific parser.
+   *
+   * @return The manifest filename (e.g., "imsmanifest.xml", "cmi5.xml")
+   */
+  protected abstract String getManifestFileName();
 
   /**
    * Checks if the module contains xAPI-related files (for example, xAPI.js, sendStatement.js).
