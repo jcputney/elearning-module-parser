@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.api;
 
+import dev.jcputney.elearning.parser.input.PackageManifest;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
 
@@ -29,12 +30,13 @@ import dev.jcputney.elearning.parser.validation.ValidationResult;
  * the need to parse the manifest twice.
  * </p>
  *
+ * @param <M> The type of package manifest associated with the module
  * @param validation The validation result containing any errors or warnings found
  * @param metadata The extracted module metadata (always present, even if validation failed)
  */
-public record ParseResult(
+public record ParseResult<M extends PackageManifest>(
     ValidationResult validation,
-    ModuleMetadata metadata
+    ModuleMetadata<M> metadata
 ) {
   /**
    * Checks if the module passed validation without errors.

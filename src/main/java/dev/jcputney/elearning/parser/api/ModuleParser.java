@@ -50,7 +50,7 @@ public interface ModuleParser<M extends PackageManifest> {
    * @return ParseResult containing validation results and module metadata
    * @throws ModuleException if a fatal error occurs (file not found, XML corruption)
    */
-  ParseResult parseAndValidate() throws ModuleException;
+  ParseResult<M> parseAndValidate() throws ModuleException;
 
   /**
    * Parses the eLearning module without validation.
@@ -62,7 +62,7 @@ public interface ModuleParser<M extends PackageManifest> {
    * @return ModuleMetadata containing the extracted module information
    * @throws ModuleException if a fatal error occurs (file not found, XML corruption)
    */
-  ModuleMetadata parseOnly() throws ModuleException;
+  ModuleMetadata<M> parseOnly() throws ModuleException;
 
   /**
    * Gets the parser options controlling validation behavior.
