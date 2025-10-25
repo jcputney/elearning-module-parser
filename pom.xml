@@ -3,7 +3,7 @@
 
   <groupId>dev.jcputney</groupId>
   <artifactId>elearning-module-parser</artifactId>
-  <version>0.2.1-SNAPSHOT</version>
+  <version>0.2.2-SNAPSHOT</version>
   <name>elearning-module-parser</name>
 
   <description>A library for parsing eLearning module configuration files and packages</description>
