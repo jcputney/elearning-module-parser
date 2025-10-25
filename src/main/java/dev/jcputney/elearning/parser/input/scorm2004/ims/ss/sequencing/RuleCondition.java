@@ -21,10 +21,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.ConditionOperatorType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureTypeDeserializer;
+import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureTypeSerializer;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.SequencingRuleConditionType;
 import java.io.Serializable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -52,6 +54,7 @@ public final class RuleCondition implements Serializable {
    * required for the condition to be met, typically represented as a decimal.
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonSerialize(using = MeasureTypeSerializer.class)
   @JsonDeserialize(using = MeasureTypeDeserializer.class)
   @JsonProperty("measureThreshold")
   private MeasureType measureThreshold;

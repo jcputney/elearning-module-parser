@@ -21,11 +21,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.common.PercentType;
 import dev.jcputney.elearning.parser.input.common.PercentTypeDeserializer;
+import dev.jcputney.elearning.parser.input.common.PercentTypeSerializer;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureTypeDeserializer;
+import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.MeasureTypeSerializer;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -45,6 +48,7 @@ public final class CompletionThreshold implements Serializable {
    * between -1.0 and 1.0, representing the fraction of content that must be completed.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "minProgressMeasure")
+  @JsonSerialize(using = MeasureTypeSerializer.class)
   @JsonDeserialize(using = MeasureTypeDeserializer.class)
   @JsonProperty("minProgressMeasure")
   private MeasureType minProgressMeasure = new MeasureType(BigDecimal.ONE);
@@ -54,6 +58,7 @@ public final class CompletionThreshold implements Serializable {
    * between 0.0 and 1.0, where 1.0 indicates the full weight.
    */
   @JacksonXmlProperty(isAttribute = true, localName = "progressWeight")
+  @JsonSerialize(using = PercentTypeSerializer.class)
   @JsonDeserialize(using = PercentTypeDeserializer.class)
   @JsonProperty("progressWeight")
   private PercentType progressWeight = new PercentType(BigDecimal.ONE);

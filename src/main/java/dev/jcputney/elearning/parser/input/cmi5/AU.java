@@ -20,6 +20,7 @@ package dev.jcputney.elearning.parser.input.cmi5;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.cmi5.types.LaunchMethod;
 import dev.jcputney.elearning.parser.input.cmi5.types.MoveOn;
@@ -27,6 +28,7 @@ import dev.jcputney.elearning.parser.input.cmi5.types.ReferencesObjectives;
 import dev.jcputney.elearning.parser.input.xapi.types.TextType;
 import dev.jcputney.elearning.parser.input.common.PercentType;
 import dev.jcputney.elearning.parser.input.common.PercentTypeDeserializer;
+import dev.jcputney.elearning.parser.input.common.PercentTypeSerializer;
 import java.io.Serializable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -200,6 +202,7 @@ public final class AU implements Serializable {
    * }</pre>
    */
   @JacksonXmlProperty(isAttribute = true)
+  @JsonSerialize(using = PercentTypeSerializer.class)
   @JsonDeserialize(using = PercentTypeDeserializer.class)
   @JsonProperty("masteryScore")
   private PercentType masteryScore;
