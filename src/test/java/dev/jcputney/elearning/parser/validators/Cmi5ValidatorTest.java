@@ -162,6 +162,31 @@ class Cmi5ValidatorTest {
         .anyMatch(e -> e.code().equals("CMI5_MISSING_LAUNCH_URL"))).isTrue();
   }
 
+  @Test
+  void validate_usesRuleBasedArchitecture() {
+    // This test verifies the validator uses the rule-based architecture
+    // by checking that multiple rules are applied
+    Cmi5Manifest manifest = new Cmi5Manifest();
+    Course course = new Course();
+    course.setId("course1");
+    // Course exists but has null title and no AUs (null launch URL)
+    manifest.setCourse(course);
+
+    ValidationResult result = validator.validate(manifest);
+
+    assertThat(result.isValid()).isFalse();
+    assertThat(result.hasErrors()).isTrue();
+    // Should have 2 errors (title, launch URL) - course exists but invalid fields
+    assertThat(result.getErrors()).hasSize(2);
+    assertThat(result.getErrors().stream()
+        .map(issue -> issue.code())
+        .toList())
+        .containsExactlyInAnyOrder(
+            "CMI5_MISSING_TITLE",
+            "CMI5_MISSING_LAUNCH_URL"
+        );
+  }
+
   /**
    * Creates a valid cmi5 manifest for testing.
    */

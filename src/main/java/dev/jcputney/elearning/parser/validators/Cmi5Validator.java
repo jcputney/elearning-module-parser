@@ -18,9 +18,12 @@
 package dev.jcputney.elearning.parser.validators;
 
 import dev.jcputney.elearning.parser.input.cmi5.Cmi5Manifest;
-import dev.jcputney.elearning.parser.validation.ValidationIssue;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
-import java.util.ArrayList;
+import dev.jcputney.elearning.parser.validators.rules.ValidationRule;
+import dev.jcputney.elearning.parser.validators.rules.cmi5.CourseRequiredRule;
+import dev.jcputney.elearning.parser.validators.rules.cmi5.LaunchUrlRequiredRule;
+import dev.jcputney.elearning.parser.validators.rules.cmi5.TitleRequiredRule;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,42 +39,29 @@ import java.util.List;
  */
 public class Cmi5Validator {
 
+  private final List<ValidationRule<Cmi5Manifest>> rules;
+
+  /**
+   * Constructs a new Cmi5Validator with default validation rules.
+   */
+  public Cmi5Validator() {
+    this.rules = Arrays.asList(
+        new CourseRequiredRule(),
+        new TitleRequiredRule(),
+        new LaunchUrlRequiredRule()
+    );
+  }
+
   /**
    * Validates a cmi5 manifest for structural integrity.
+   * Uses rule-based validation for better testability and maintainability.
    *
    * @param manifest The cmi5 manifest to validate
    * @return ValidationResult containing any issues found
    */
   public ValidationResult validate(Cmi5Manifest manifest) {
-    List<ValidationIssue> issues = new ArrayList<>();
-
-    // Validate basic structure
-    if (manifest.getCourse() == null) {
-      issues.add(ValidationIssue.error(
-          "CMI5_MISSING_COURSE",
-          "cmi5 manifest must contain course element",
-          "cmi5.xml/course"
-      ));
-    }
-
-    if (manifest.getTitle() == null || manifest.getTitle().isEmpty()) {
-      issues.add(ValidationIssue.error(
-          "CMI5_MISSING_TITLE",
-          "cmi5 course must have a title",
-          "cmi5.xml/course/title",
-          "Add a <title> element to the course"
-      ));
-    }
-
-    if (manifest.getLaunchUrl() == null || manifest.getLaunchUrl().trim().isEmpty()) {
-      issues.add(ValidationIssue.error(
-          "CMI5_MISSING_LAUNCH_URL",
-          "cmi5 course must have at least one AU with a launch URL",
-          "cmi5.xml/course/au",
-          "Ensure at least one AU has a url attribute"
-      ));
-    }
-
-    return ValidationResult.of(issues.toArray(new ValidationIssue[0]));
+    return rules.stream()
+        .map(rule -> rule.validate(manifest))
+        .reduce(ValidationResult.valid(), ValidationResult::merge);
   }
 }
