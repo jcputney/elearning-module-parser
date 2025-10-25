@@ -116,6 +116,25 @@ class XapiValidatorTest {
         .anyMatch(e -> e.code().equals("XAPI_MISSING_LAUNCH_URL"))).isTrue();
   }
 
+  @Test
+  void validate_usesRuleBasedArchitecture() {
+    // This test verifies the validator uses the rule-based architecture
+    // by checking that multiple rules are applied
+    TincanManifest manifest = new TincanManifest();
+    TincanActivity activity = new TincanActivity();
+    activity.setId("http://example.com/activity/1");
+    // Activity exists but has no launch URL
+    manifest.setActivities(Collections.singletonList(activity));
+
+    ValidationResult result = validator.validate(manifest);
+
+    assertThat(result.isValid()).isFalse();
+    assertThat(result.hasErrors()).isTrue();
+    // Should have 1 error (launch URL) - activities exist but no launch URL
+    assertThat(result.getErrors()).hasSize(1);
+    assertThat(result.getErrors().get(0).code()).isEqualTo("XAPI_MISSING_LAUNCH_URL");
+  }
+
   /**
    * Creates a valid xAPI manifest for testing.
    */

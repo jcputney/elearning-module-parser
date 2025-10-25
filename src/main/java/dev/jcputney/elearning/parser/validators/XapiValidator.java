@@ -18,9 +18,11 @@
 package dev.jcputney.elearning.parser.validators;
 
 import dev.jcputney.elearning.parser.input.xapi.tincan.TincanManifest;
-import dev.jcputney.elearning.parser.validation.ValidationIssue;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
-import java.util.ArrayList;
+import dev.jcputney.elearning.parser.validators.rules.ValidationRule;
+import dev.jcputney.elearning.parser.validators.rules.xapi.ActivitiesRequiredRule;
+import dev.jcputney.elearning.parser.validators.rules.xapi.LaunchUrlRequiredRule;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,34 +38,28 @@ import java.util.List;
  */
 public class XapiValidator {
 
+  private final List<ValidationRule<TincanManifest>> rules;
+
+  /**
+   * Constructs a new XapiValidator with default validation rules.
+   */
+  public XapiValidator() {
+    this.rules = Arrays.asList(
+        new ActivitiesRequiredRule(),
+        new LaunchUrlRequiredRule()
+    );
+  }
+
   /**
    * Validates an xAPI/TinCan manifest for structural integrity.
+   * Uses rule-based validation for better testability and maintainability.
    *
    * @param manifest The xAPI manifest to validate
    * @return ValidationResult containing any issues found
    */
   public ValidationResult validate(TincanManifest manifest) {
-    List<ValidationIssue> issues = new ArrayList<>();
-
-    // Validate basic structure
-    if (manifest.getActivities() == null || manifest.getActivities().isEmpty()) {
-      issues.add(ValidationIssue.error(
-          "XAPI_MISSING_ACTIVITIES",
-          "xAPI manifest must contain at least one activity",
-          "tincan.xml/activities"
-      ));
-      return ValidationResult.of(issues.toArray(new ValidationIssue[0]));
-    }
-
-    if (manifest.getLaunchUrl() == null || manifest.getLaunchUrl().trim().isEmpty()) {
-      issues.add(ValidationIssue.error(
-          "XAPI_MISSING_LAUNCH_URL",
-          "xAPI package must have a launch URL",
-          "tincan.xml/activities/activity",
-          "Ensure at least one activity has a launch attribute"
-      ));
-    }
-
-    return ValidationResult.of(issues.toArray(new ValidationIssue[0]));
+    return rules.stream()
+        .map(rule -> rule.validate(manifest))
+        .reduce(ValidationResult.valid(), ValidationResult::merge);
   }
 }
