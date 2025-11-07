@@ -33,9 +33,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * An implementation of the {@link FileAccess} interface for accessing files within a ZIP archive.
- * This class allows file existence checks, file listing, and retrieving file contents from a ZIP
- * file.
+ * An implementation of the {@link dev.jcputney.elearning.parser.api.FileAccess} interface for
+ * accessing files within a ZIP archive. This class allows file existence checks, file listing, and
+ * retrieving file contents from a ZIP file.
  */
 public final class ZipFileAccess extends AbstractArchiveFileAccess {
 
