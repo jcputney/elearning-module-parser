@@ -22,12 +22,12 @@ import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
 
 /**
- * Result of parsing and validating an eLearning module.
- * Contains both the validation result and the extracted metadata.
+ * Result of parsing and validating an eLearning module. Contains both the validation result and the
+ * extracted metadata.
  * <p>
- * This record is returned by {@link ModuleParser#parseAndValidate()} to provide
- * both validation feedback and parsed content in a single operation, eliminating
- * the need to parse the manifest twice.
+ * This record is returned by {@link ModuleParser#parseAndValidate()} to provide both validation
+ * feedback and parsed content in a single operation, eliminating the need to parse the manifest
+ * twice.
  * </p>
  *
  * @param <M> The type of package manifest associated with the module
@@ -38,9 +38,9 @@ public record ParseResult<M extends PackageManifest>(
     ValidationResult validation,
     ModuleMetadata<M> metadata
 ) {
+
   /**
-   * Checks if the module passed validation without errors.
-   * Warnings are not considered failures.
+   * Checks if the module passed validation without errors. Warnings are not considered failures.
    *
    * @return true if validation passed (no errors), false otherwise
    */

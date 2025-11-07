@@ -71,20 +71,23 @@ public class ResourceReferenceValidRule implements ValidationRule<Scorm2004Manif
   }
 
   private void validateItems(List<Scorm2004Item> items, String orgId,
-                             Map<String, Scorm2004Resource> resourceIndex,
-                             List<ValidationIssue> issues) {
+      Map<String, Scorm2004Resource> resourceIndex,
+      List<ValidationIssue> issues) {
     for (Scorm2004Item item : items) {
       String identifierRef = item.getIdentifierRef();
 
-      if (identifierRef != null && !identifierRef.trim().isEmpty()) {
+      if (identifierRef != null && !identifierRef
+          .trim()
+          .isEmpty()) {
         if (!resourceIndex.containsKey(identifierRef)) {
           issues.add(ValidationIssue.error(
               "SCORM2004_MISSING_RESOURCE_REF",
               String.format("Item references non-existent resource '%s'", identifierRef),
               String.format("organization[@identifier='%s']/item[@identifier='%s']/@identifierref",
                   orgId, item.getIdentifier()),
-              String.format("Ensure the identifierref attribute references a valid resource identifier. " +
-                  "Referenced: '%s'", identifierRef)
+              String.format(
+                  "Ensure the identifierref attribute references a valid resource identifier. " +
+                      "Referenced: '%s'", identifierRef)
           ));
         }
       }

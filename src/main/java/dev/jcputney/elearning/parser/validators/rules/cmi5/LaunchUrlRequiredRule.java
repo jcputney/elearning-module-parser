@@ -11,7 +11,8 @@ import dev.jcputney.elearning.parser.validators.rules.ValidationRule;
  * <p>According to cmi5 specification, at least one assignable unit (AU) must have a url
  * attribute that serves as the entry point for the course.</p>
  *
- * @see <a href="https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md">cmi5 Specification</a>
+ * @see <a href="https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md">cmi5
+ * Specification</a>
  */
 public class LaunchUrlRequiredRule implements ValidationRule<Cmi5Manifest> {
 
@@ -29,7 +30,9 @@ public class LaunchUrlRequiredRule implements ValidationRule<Cmi5Manifest> {
     }
 
     String launchUrl = manifest.getLaunchUrl();
-    if (launchUrl == null || launchUrl.trim().isEmpty()) {
+    if (launchUrl == null || launchUrl
+        .trim()
+        .isEmpty()) {
       return ValidationResult.of(
           ValidationIssue.error(
               "CMI5_MISSING_LAUNCH_URL",

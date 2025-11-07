@@ -11,7 +11,8 @@ import dev.jcputney.elearning.parser.validators.rules.ValidationRule;
  * <p>According to cmi5 specification, every cmi5 package must have a course element
  * that defines the basic course structure.</p>
  *
- * @see <a href="https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md">cmi5 Specification</a>
+ * @see <a href="https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md">cmi5
+ * Specification</a>
  */
 public class CourseRequiredRule implements ValidationRule<Cmi5Manifest> {
 

@@ -31,7 +31,8 @@ import dev.jcputney.elearning.parser.validators.rules.ValidationRule;
  * <p>This rule defers validation when the activities list is null or empty, as that is
  * handled by {@link ActivitiesRequiredRule}.</p>
  *
- * @see <a href="https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-About.md">xAPI Specification</a>
+ * @see <a href="https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-About.md">xAPI
+ * Specification</a>
  */
 public class LaunchUrlRequiredRule implements ValidationRule<TincanManifest> {
 
@@ -49,12 +50,16 @@ public class LaunchUrlRequiredRule implements ValidationRule<TincanManifest> {
     }
 
     // Defer to ActivitiesRequiredRule for null/empty activities
-    if (manifest.getActivities() == null || manifest.getActivities().isEmpty()) {
+    if (manifest.getActivities() == null || manifest
+        .getActivities()
+        .isEmpty()) {
       return ValidationResult.valid();
     }
 
     String launchUrl = manifest.getLaunchUrl();
-    if (launchUrl == null || launchUrl.trim().isEmpty()) {
+    if (launchUrl == null || launchUrl
+        .trim()
+        .isEmpty()) {
       return ValidationResult.of(
           ValidationIssue.error(
               "XAPI_MISSING_LAUNCH_URL",

@@ -20,8 +20,8 @@ package dev.jcputney.elearning.parser.validators.rules;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
 
 /**
- * Interface for individual validation rules that can be composed together.
- * Each rule encapsulates a single validation concern with spec traceability.
+ * Interface for individual validation rules that can be composed together. Each rule encapsulates a
+ * single validation concern with spec traceability.
  *
  * <p>Rules are designed to be:</p>
  * <ul>
@@ -34,6 +34,7 @@ import dev.jcputney.elearning.parser.validation.ValidationResult;
  * @param <T> The manifest type this rule validates
  */
 public interface ValidationRule<T> {
+
   /**
    * Validates the manifest according to this rule.
    *
@@ -51,8 +52,8 @@ public interface ValidationRule<T> {
   String getRuleName();
 
   /**
-   * Specification reference for traceability and documentation.
-   * Used to trace validation back to spec requirements.
+   * Specification reference for traceability and documentation. Used to trace validation back to
+   * spec requirements.
    *
    * @return Spec reference (e.g., "SCORM 1.2 CAM Section 2.3.4")
    */

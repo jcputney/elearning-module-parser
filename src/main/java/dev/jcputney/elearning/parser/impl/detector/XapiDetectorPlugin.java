@@ -71,8 +71,7 @@ public class XapiDetectorPlugin implements ModuleTypeDetectorPlugin {
   }
 
   /**
-   * Returns the priority for this detector.
-   * Higher priority detectors run first.
+   * Returns the priority for this detector. Higher priority detectors run first.
    *
    * @return 40
    */

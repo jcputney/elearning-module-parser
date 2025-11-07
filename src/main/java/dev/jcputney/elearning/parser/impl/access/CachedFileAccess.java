@@ -192,7 +192,9 @@ public final class CachedFileAccess implements FileAccess {
         } catch (IOException e) {
           // Wrap the IOException in a FileAccessException to be compatible with computeIfAbsent
           throw new RuntimeFileAccessException(new FileAccessException(
-              String.format("Failed to list files in directory '%s' using %s", p, delegate.getClass().getSimpleName()), e));
+              String.format("Failed to list files in directory '%s' using %s", p, delegate
+                  .getClass()
+                  .getSimpleName()), e));
         }
       });
     } catch (RuntimeFileAccessException e) {
@@ -236,7 +238,9 @@ public final class CachedFileAccess implements FileAccess {
         } catch (IOException e) {
           // Wrap the IOException in a FileAccessException to be compatible with computeIfAbsent
           throw new RuntimeFileAccessException(new FileAccessException(
-              String.format("Failed to read file contents from '%s' using %s", p, delegate.getClass().getSimpleName()), e));
+              String.format("Failed to read file contents from '%s' using %s", p, delegate
+                  .getClass()
+                  .getSimpleName()), e));
         }
       });
 

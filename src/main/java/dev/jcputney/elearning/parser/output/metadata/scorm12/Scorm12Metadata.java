@@ -165,11 +165,16 @@ public class Scorm12Metadata extends BaseModuleMetadata<Scorm12Manifest> {
 
   @Override
   public boolean hasMultipleLaunchableUnits() {
-    if (manifest == null || manifest.getResources() == null || manifest.getResources().getResourceList() == null) {
+    if (manifest == null || manifest.getResources() == null || manifest
+        .getResources()
+        .getResourceList() == null) {
       return false;
     }
 
-    long scoCount = manifest.getResources().getResourceList().stream()
+    long scoCount = manifest
+        .getResources()
+        .getResourceList()
+        .stream()
         .filter(resource -> resource.getScormType() == ScormType.SCO)
         .count();
 

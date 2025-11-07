@@ -6,8 +6,8 @@ import dev.jcputney.elearning.parser.validation.ValidationResult;
 import dev.jcputney.elearning.parser.validators.rules.ValidationRule;
 
 /**
- * Validates that the manifest has a required resources element.
- * Required by SCORM 1.2 CAM specification.
+ * Validates that the manifest has a required resources element. Required by SCORM 1.2 CAM
+ * specification.
  */
 public class ResourcesRequiredRule implements ValidationRule<Scorm12Manifest> {
 

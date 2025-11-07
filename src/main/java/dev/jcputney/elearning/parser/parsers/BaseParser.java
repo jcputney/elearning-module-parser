@@ -136,36 +136,6 @@ public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends P
     return options;
   }
 
-  /**
-   * Validates a parsed manifest and returns validation results.
-   * Subclasses implement this to use their parser-specific validators.
-   *
-   * @param manifest The parsed manifest to validate
-   * @return ValidationResult containing any errors or warnings
-   */
-  protected abstract ValidationResult validateManifest(M manifest);
-
-  /**
-   * Extracts metadata from a parsed and validated manifest.
-   *
-   * @param manifest The parsed manifest
-   * @param validation The validation result (for reference during extraction)
-   * @return Module-specific metadata
-   * @throws ModuleException if metadata extraction fails
-   */
-  protected abstract T extractMetadata(M manifest, ValidationResult validation)
-      throws ModuleException;
-
-  /**
-   * Returns the module type name for error messages.
-   * Subclasses can override for more specific type names.
-   *
-   * @return The module type (e.g., "SCORM 1.2", "cmi5")
-   */
-  protected String getModuleType() {
-    return getClass().getSimpleName().replace("Parser", "");
-  }
-
   @Override
   public ParseResult<M> parseAndValidate() throws ModuleException {
     try {
@@ -262,6 +232,38 @@ public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends P
    * @throws IllegalArgumentException if manifest is null
    */
   abstract void loadExternalMetadata(M manifest) throws XMLStreamException, IOException;
+
+  /**
+   * Validates a parsed manifest and returns validation results. Subclasses implement this to use
+   * their parser-specific validators.
+   *
+   * @param manifest The parsed manifest to validate
+   * @return ValidationResult containing any errors or warnings
+   */
+  protected abstract ValidationResult validateManifest(M manifest);
+
+  /**
+   * Extracts metadata from a parsed and validated manifest.
+   *
+   * @param manifest The parsed manifest
+   * @param validation The validation result (for reference during extraction)
+   * @return Module-specific metadata
+   * @throws ModuleException if metadata extraction fails
+   */
+  protected abstract T extractMetadata(M manifest, ValidationResult validation)
+      throws ModuleException;
+
+  /**
+   * Returns the module type name for error messages. Subclasses can override for more specific type
+   * names.
+   *
+   * @return The module type (e.g., "SCORM 1.2", "cmi5")
+   */
+  protected String getModuleType() {
+    return getClass()
+        .getSimpleName()
+        .replace("Parser", "");
+  }
 
   /**
    * Abstract method to return the class of the manifest object for the specific parser.

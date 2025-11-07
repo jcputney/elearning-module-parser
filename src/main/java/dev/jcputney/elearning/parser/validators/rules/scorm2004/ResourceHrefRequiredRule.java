@@ -52,7 +52,9 @@ public class ResourceHrefRequiredRule implements ValidationRule<Scorm2004Manifes
       Scorm2004Resource resource = resourceIndex.get(resourceId);
       if (resource != null) {
         String href = resource.getHref();
-        if (href == null || href.trim().isEmpty()) {
+        if (href == null || href
+            .trim()
+            .isEmpty()) {
           issues.add(ValidationIssue.error(
               "SCORM2004_MISSING_LAUNCH_URL",
               String.format("Resource '%s' is missing href attribute (launch URL)", resourceId),
@@ -98,7 +100,10 @@ public class ResourceHrefRequiredRule implements ValidationRule<Scorm2004Manifes
 
   private void collectReferencedIds(List<Scorm2004Item> items, Set<String> referencedIds) {
     for (Scorm2004Item item : items) {
-      if (item.getIdentifierRef() != null && !item.getIdentifierRef().trim().isEmpty()) {
+      if (item.getIdentifierRef() != null && !item
+          .getIdentifierRef()
+          .trim()
+          .isEmpty()) {
         referencedIds.add(item.getIdentifierRef());
       }
       if (item.getItems() != null) {

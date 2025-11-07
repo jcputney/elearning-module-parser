@@ -58,14 +58,15 @@ public class AiccValidator {
   }
 
   /**
-   * Validates an AICC manifest for structural integrity.
-   * Uses rule-based validation for better testability and maintainability.
+   * Validates an AICC manifest for structural integrity. Uses rule-based validation for better
+   * testability and maintainability.
    *
    * @param manifest The AICC manifest to validate
    * @return ValidationResult containing any issues found
    */
   public ValidationResult validate(AiccManifest manifest) {
-    return rules.stream()
+    return rules
+        .stream()
         .map(rule -> rule.validate(manifest))
         .reduce(ValidationResult.valid(), ValidationResult::merge);
   }

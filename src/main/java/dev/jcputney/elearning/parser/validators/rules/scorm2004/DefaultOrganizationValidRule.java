@@ -1,7 +1,6 @@
 package dev.jcputney.elearning.parser.validators.rules.scorm2004;
 
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
-import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organization;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organizations;
 import dev.jcputney.elearning.parser.validation.ValidationIssue;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
@@ -36,13 +35,17 @@ public class DefaultOrganizationValidRule implements ValidationRule<Scorm2004Man
     }
 
     String defaultOrgId = organizations.getDefaultOrganization();
-    if (defaultOrgId == null || defaultOrgId.trim().isEmpty()) {
+    if (defaultOrgId == null || defaultOrgId
+        .trim()
+        .isEmpty()) {
       return ValidationResult.valid(); // Optional attribute
     }
 
     // Check if default organization exists
     if (organizations.getOrganizationList() != null) {
-      boolean found = organizations.getOrganizationList().stream()
+      boolean found = organizations
+          .getOrganizationList()
+          .stream()
           .anyMatch(org -> defaultOrgId.equals(org.getIdentifier()));
 
       if (!found) {
@@ -51,8 +54,9 @@ public class DefaultOrganizationValidRule implements ValidationRule<Scorm2004Man
                 "SCORM2004_INVALID_DEFAULT_ORG",
                 String.format("Default organization '%s' not found", defaultOrgId),
                 "organizations/@default",
-                String.format("Ensure the default attribute references a valid organization identifier. " +
-                    "Found: '%s'", defaultOrgId)
+                String.format(
+                    "Ensure the default attribute references a valid organization identifier. " +
+                        "Found: '%s'", defaultOrgId)
             )
         );
       }

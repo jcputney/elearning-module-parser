@@ -53,14 +53,15 @@ public class Cmi5Validator {
   }
 
   /**
-   * Validates a cmi5 manifest for structural integrity.
-   * Uses rule-based validation for better testability and maintainability.
+   * Validates a cmi5 manifest for structural integrity. Uses rule-based validation for better
+   * testability and maintainability.
    *
    * @param manifest The cmi5 manifest to validate
    * @return ValidationResult containing any issues found
    */
   public ValidationResult validate(Cmi5Manifest manifest) {
-    return rules.stream()
+    return rules
+        .stream()
         .map(rule -> rule.validate(manifest))
         .reduce(ValidationResult.valid(), ValidationResult::merge);
   }

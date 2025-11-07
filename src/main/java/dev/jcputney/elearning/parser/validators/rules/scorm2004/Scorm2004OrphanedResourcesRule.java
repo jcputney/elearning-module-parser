@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Validates that all resources in SCORM 2004 manifest are referenced by at least one item.
- * Orphaned resources waste space and may indicate errors in the manifest.
+ * Validates that all resources in SCORM 2004 manifest are referenced by at least one item. Orphaned
+ * resources waste space and may indicate errors in the manifest.
  *
  * <p>This is a SHOULD requirement (warning, not error) but helps identify
  * potential issues in content packages.</p>
@@ -58,8 +58,12 @@ public class Scorm2004OrphanedResourcesRule implements ValidationRule<Scorm2004M
 
     // Collect all referenced resource IDs
     Set<String> referencedResourceIds = new HashSet<>();
-    if (manifest.getOrganizations() != null && manifest.getOrganizations().getOrganizationList() != null) {
-      for (Scorm2004Organization org : manifest.getOrganizations().getOrganizationList()) {
+    if (manifest.getOrganizations() != null && manifest
+        .getOrganizations()
+        .getOrganizationList() != null) {
+      for (Scorm2004Organization org : manifest
+          .getOrganizations()
+          .getOrganizationList()) {
         if (org.getItems() != null) {
           collectReferencedResources(org.getItems(), referencedResourceIds);
         }
@@ -67,12 +71,18 @@ public class Scorm2004OrphanedResourcesRule implements ValidationRule<Scorm2004M
     }
 
     // Check for orphaned resources
-    if (manifest.getResources() != null && manifest.getResources().getResourceList() != null) {
-      for (Scorm2004Resource resource : manifest.getResources().getResourceList()) {
-        if (resource.getIdentifier() != null && !referencedResourceIds.contains(resource.getIdentifier())) {
+    if (manifest.getResources() != null && manifest
+        .getResources()
+        .getResourceList() != null) {
+      for (Scorm2004Resource resource : manifest
+          .getResources()
+          .getResourceList()) {
+        if (resource.getIdentifier() != null && !referencedResourceIds.contains(
+            resource.getIdentifier())) {
           issues.add(ValidationIssue.warning(
               "ORPHANED_RESOURCE",
-              String.format("Resource '%s' is not referenced by any item", resource.getIdentifier()),
+              String.format("Resource '%s' is not referenced by any item",
+                  resource.getIdentifier()),
               "resources/resource[@identifier='" + resource.getIdentifier() + "']",
               "Either reference this resource from an item or remove it to reduce package size"
           ));
@@ -83,7 +93,8 @@ public class Scorm2004OrphanedResourcesRule implements ValidationRule<Scorm2004M
     return ValidationResult.of(issues.toArray(new ValidationIssue[0]));
   }
 
-  private void collectReferencedResources(List<Scorm2004Item> items, Set<String> referencedResourceIds) {
+  private void collectReferencedResources(List<Scorm2004Item> items,
+      Set<String> referencedResourceIds) {
     for (Scorm2004Item item : items) {
       if (item.getIdentifierRef() != null) {
         referencedResourceIds.add(item.getIdentifierRef());

@@ -18,6 +18,7 @@
 package dev.jcputney.elearning.parser.validators;
 
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
+import dev.jcputney.elearning.parser.validation.ValidationResult;
 import dev.jcputney.elearning.parser.validators.rules.ValidationRule;
 import dev.jcputney.elearning.parser.validators.rules.common.DuplicateIdentifierRule;
 import dev.jcputney.elearning.parser.validators.rules.common.OrphanedResourcesRule;
@@ -29,7 +30,6 @@ import dev.jcputney.elearning.parser.validators.rules.scorm12.OrganizationsRequi
 import dev.jcputney.elearning.parser.validators.rules.scorm12.ResourceHrefRequiredRule;
 import dev.jcputney.elearning.parser.validators.rules.scorm12.ResourceReferenceValidRule;
 import dev.jcputney.elearning.parser.validators.rules.scorm12.ResourcesRequiredRule;
-import dev.jcputney.elearning.parser.validation.ValidationResult;
 import java.util.Arrays;
 import java.util.List;
 
@@ -68,14 +68,15 @@ public class Scorm12ResourceValidator {
   }
 
   /**
-   * Validates a SCORM 1.2 manifest for structural and reference integrity.
-   * Uses rule-based validation for better testability and maintainability.
+   * Validates a SCORM 1.2 manifest for structural and reference integrity. Uses rule-based
+   * validation for better testability and maintainability.
    *
    * @param manifest The SCORM 1.2 manifest to validate
    * @return ValidationResult containing any issues found
    */
   public ValidationResult validate(Scorm12Manifest manifest) {
-    return commonRules.stream()
+    return commonRules
+        .stream()
         .map(rule -> rule.validate(manifest))
         .reduce(ValidationResult.valid(), ValidationResult::merge);
   }

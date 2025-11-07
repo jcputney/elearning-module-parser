@@ -33,8 +33,8 @@ import java.io.IOException;
  * This serializer ensures that the {@code MeasureType} object is serialized as the string
  * representation of its value, while handling null values gracefully.
  * <p>
- * The intended use is to handle serialization of measure values represented as decimals between
- * -1 and 1 within a JSON structure.
+ * The intended use is to handle serialization of measure values represented as decimals between -1
+ * and 1 within a JSON structure.
  */
 public class MeasureTypeSerializer extends JsonSerializer<MeasureType> {
 

@@ -9,8 +9,8 @@ import dev.jcputney.elearning.parser.validators.rules.ValidationRule;
  * Validates that an AICC course has a launch URL.
  *
  * <p>According to AICC specification, at least one assignable unit must have a file_name
- * that serves as the entry point for the course. This is represented as the manifest's
- * launch URL.</p>
+ * that serves as the entry point for the course. This is represented as the manifest's launch
+ * URL.</p>
  *
  * @see <a href="https://www.aicc.org/aicc-cmi-guidelines">AICC CMI Guidelines</a>
  */
@@ -30,7 +30,9 @@ public class LaunchUrlRequiredRule implements ValidationRule<AiccManifest> {
     }
 
     String launchUrl = manifest.getLaunchUrl();
-    if (launchUrl == null || launchUrl.trim().isEmpty()) {
+    if (launchUrl == null || launchUrl
+        .trim()
+        .isEmpty()) {
       return ValidationResult.of(
           ValidationIssue.error(
               "AICC_MISSING_LAUNCH_URL",

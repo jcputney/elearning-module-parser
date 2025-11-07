@@ -49,5 +49,5 @@ public interface ModuleParserFactory {
    * @throws ModuleDetectionException if the module type cannot be determined.
    * @throws ModuleParsingException if an error occurs during parsing.
    */
-  ModuleMetadata<?> parseModule() throws ModuleDetectionException, ModuleException;
+  ModuleMetadata<?> parseModule() throws ModuleException;
 }

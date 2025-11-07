@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Validates that all file paths in the manifest are safe and don't contain
- * directory traversal patterns, absolute paths, or external references.
+ * Validates that all file paths in the manifest are safe and don't contain directory traversal
+ * patterns, absolute paths, or external references.
  *
  * <p>Security Requirements:</p>
  * <ul>
@@ -47,8 +47,12 @@ public class PathSecurityRule implements ValidationRule<Scorm12Manifest> {
 
     List<ValidationIssue> issues = new ArrayList<>();
 
-    if (manifest.getResources() != null && manifest.getResources().getResourceList() != null) {
-      for (Scorm12Resource resource : manifest.getResources().getResourceList()) {
+    if (manifest.getResources() != null && manifest
+        .getResources()
+        .getResourceList() != null) {
+      for (Scorm12Resource resource : manifest
+          .getResources()
+          .getResourceList()) {
         // Check resource href
         if (resource.getHref() != null) {
           validatePath(resource.getHref(),
@@ -73,28 +77,36 @@ public class PathSecurityRule implements ValidationRule<Scorm12Manifest> {
   }
 
   private void validatePath(String path, String location, List<ValidationIssue> issues) {
-    if (PATH_TRAVERSAL.matcher(path).find()) {
+    if (PATH_TRAVERSAL
+        .matcher(path)
+        .find()) {
       issues.add(ValidationIssue.error(
           "UNSAFE_PATH_TRAVERSAL",
           String.format("Path contains directory traversal pattern: '%s'", path),
           location,
-          "Remove '../' or '..\' from the path. All content should be within the package."
+          "Remove '../' or '..' from the path. All content should be within the package."
       ));
-    } else if (ABSOLUTE_PATH.matcher(path).find()) {
+    } else if (ABSOLUTE_PATH
+        .matcher(path)
+        .find()) {
       issues.add(ValidationIssue.error(
           "UNSAFE_ABSOLUTE_PATH",
           String.format("Path is absolute but should be relative: '%s'", path),
           location,
           "Use relative paths only. Remove leading '/' or drive letter."
       ));
-    } else if (EXTERNAL_URL.matcher(path).find()) {
+    } else if (EXTERNAL_URL
+        .matcher(path)
+        .find()) {
       issues.add(ValidationIssue.error(
           "UNSAFE_EXTERNAL_URL",
           String.format("Path references external URL: '%s'", path),
           location,
           "All resources must be packaged within the content. Remove external URL."
       ));
-    } else if (NULL_BYTE.matcher(path).find()) {
+    } else if (NULL_BYTE
+        .matcher(path)
+        .find()) {
       issues.add(ValidationIssue.error(
           "UNSAFE_NULL_BYTE",
           String.format("Path contains null byte: '%s'", path),

@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Validates that all item identifierref attributes reference existing resources.
- * Required by SCORM 1.2 CAM specification.
+ * Validates that all item identifierref attributes reference existing resources. Required by SCORM
+ * 1.2 CAM specification.
  */
 public class ResourceReferenceValidRule implements ValidationRule<Scorm12Manifest> {
 
@@ -40,8 +40,12 @@ public class ResourceReferenceValidRule implements ValidationRule<Scorm12Manifes
     Map<String, Scorm12Resource> resourceIndex = buildResourceIndex(manifest);
 
     // Validate all items in all organizations
-    if (manifest.getOrganizations() != null && manifest.getOrganizations().getOrganizationList() != null) {
-      for (Scorm12Organization org : manifest.getOrganizations().getOrganizationList()) {
+    if (manifest.getOrganizations() != null && manifest
+        .getOrganizations()
+        .getOrganizationList() != null) {
+      for (Scorm12Organization org : manifest
+          .getOrganizations()
+          .getOrganizationList()) {
         if (org.getItems() != null) {
           for (Scorm12Item item : org.getItems()) {
             validateItem(item, org.getIdentifier(), resourceIndex, issues);
@@ -55,8 +59,12 @@ public class ResourceReferenceValidRule implements ValidationRule<Scorm12Manifes
 
   private Map<String, Scorm12Resource> buildResourceIndex(Scorm12Manifest manifest) {
     Map<String, Scorm12Resource> index = new HashMap<>();
-    if (manifest.getResources() != null && manifest.getResources().getResourceList() != null) {
-      for (Scorm12Resource resource : manifest.getResources().getResourceList()) {
+    if (manifest.getResources() != null && manifest
+        .getResources()
+        .getResourceList() != null) {
+      for (Scorm12Resource resource : manifest
+          .getResources()
+          .getResourceList()) {
         if (resource.getIdentifier() != null) {
           index.put(resource.getIdentifier(), resource);
         }
@@ -66,8 +74,8 @@ public class ResourceReferenceValidRule implements ValidationRule<Scorm12Manifes
   }
 
   private void validateItem(Scorm12Item item, String orgId,
-                            Map<String, Scorm12Resource> resourceIndex,
-                            List<ValidationIssue> issues) {
+      Map<String, Scorm12Resource> resourceIndex,
+      List<ValidationIssue> issues) {
     String identifierRef = item.getIdentifierRef();
 
     // If item references a resource, validate it exists

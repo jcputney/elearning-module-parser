@@ -42,7 +42,7 @@ public final class FileUtils {
    * @param files The list of file paths to search.
    * @param targetName The target filename to search for (case-insensitive).
    * @return The actual filename from the list that matches the target (preserving original casing),
-   *         or null if no match is found.
+   * or null if no match is found.
    * @throws IllegalArgumentException if files is null or targetName is null or empty.
    */
   public static String findFileIgnoreCase(List<String> files, String targetName) {
@@ -53,7 +53,8 @@ public final class FileUtils {
       throw new IllegalArgumentException("Target name cannot be null or empty");
     }
 
-    return files.stream()
+    return files
+        .stream()
         .filter(file -> Strings.CI.equals(file, targetName))
         .findFirst()
         .orElse(null);

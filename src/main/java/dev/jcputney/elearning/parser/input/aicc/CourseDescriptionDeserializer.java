@@ -27,13 +27,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Custom deserializer for AICC course descriptions that provides backward compatibility with
- * legacy JSON data.
+ * Custom deserializer for AICC course descriptions that provides backward compatibility with legacy
+ * JSON data.
  *
  * <p>In earlier versions (pre-867d2d1), course descriptions were stored as {@code Map<String,
- * String>} to handle multi-line descriptions from AICC .crs files. Current versions use {@code
- * String} directly since the parser extracts raw text via {@link
- * dev.jcputney.elearning.parser.parsers.AiccParser#extractCourseDescription}.</p>
+ * String>} to handle multi-line descriptions from AICC .crs files. Current versions use
+ * {@code String} directly since the parser extracts raw text via
+ * {@link dev.jcputney.elearning.parser.parsers.AiccParser#extractCourseDescription}.</p>
  *
  * <p>This deserializer handles both formats:</p>
  * <ul>
@@ -131,7 +131,9 @@ public class CourseDescriptionDeserializer extends JsonDeserializer<String> {
         .map(entry -> {
           String key = entry.getKey();
           String value = entry.getValue();
-          if (value == null || value.trim().isEmpty()) {
+          if (value == null || value
+              .trim()
+              .isEmpty()) {
             // Plain text line (no key=value separator found by parser)
             return key;
           } else {

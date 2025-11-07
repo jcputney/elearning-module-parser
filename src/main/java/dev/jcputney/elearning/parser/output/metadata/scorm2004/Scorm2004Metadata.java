@@ -451,20 +451,29 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
   @Override
   public boolean hasMultipleLaunchableUnits() {
     if (manifest == null || manifest.getOrganizations() == null
-        || manifest.getOrganizations().getDefault() == null) {
+        || manifest
+        .getOrganizations()
+        .getDefault() == null) {
       return false;
     }
 
     // Build a map of resource identifiers to their SCO type
     Map<String, ScormType> resourceTypes = new LinkedHashMap<>();
-    if (manifest.getResources() != null && manifest.getResources().getResourceList() != null) {
-      for (Scorm2004Resource resource : manifest.getResources().getResourceList()) {
+    if (manifest.getResources() != null && manifest
+        .getResources()
+        .getResourceList() != null) {
+      for (Scorm2004Resource resource : manifest
+          .getResources()
+          .getResourceList()) {
         resourceTypes.put(resource.getIdentifier(), resource.getScormType());
       }
     }
 
     // Count items that reference SCO resources
-    List<Scorm2004Item> items = manifest.getOrganizations().getDefault().getItems();
+    List<Scorm2004Item> items = manifest
+        .getOrganizations()
+        .getDefault()
+        .getItems();
     long scoCount = countScoItems(items, resourceTypes);
 
     return scoCount > 1;
@@ -498,7 +507,9 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
       }
 
       // Recursively count child items
-      if (item.getItems() != null && !item.getItems().isEmpty()) {
+      if (item.getItems() != null && !item
+          .getItems()
+          .isEmpty()) {
         count += countScoItems(item.getItems(), resourceTypes);
       }
     }

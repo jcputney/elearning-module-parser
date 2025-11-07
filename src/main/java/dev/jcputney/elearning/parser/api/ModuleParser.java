@@ -21,12 +21,9 @@
 
 package dev.jcputney.elearning.parser.api;
 
-import dev.jcputney.elearning.parser.api.ParseResult;
 import dev.jcputney.elearning.parser.exception.ModuleException;
-import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
-import dev.jcputney.elearning.parser.validation.ValidationResult;
 
 /**
  * Interface for parsing module files and extracting metadata.
@@ -43,8 +40,8 @@ public interface ModuleParser<M extends PackageManifest> {
   /**
    * Parses and validates the eLearning module in a single operation.
    * <p>
-   * This is the recommended method for most use cases. It parses the manifest once
-   * and returns both validation results and extracted metadata.
+   * This is the recommended method for most use cases. It parses the manifest once and returns both
+   * validation results and extracted metadata.
    * </p>
    *
    * @return ParseResult containing validation results and module metadata
@@ -55,8 +52,8 @@ public interface ModuleParser<M extends PackageManifest> {
   /**
    * Parses the eLearning module without validation.
    * <p>
-   * Use this method only in performance-critical scenarios where validation
-   * is handled separately. Skips all validation checks.
+   * Use this method only in performance-critical scenarios where validation is handled separately.
+   * Skips all validation checks.
    * </p>
    *
    * @return ModuleMetadata containing the extracted module information

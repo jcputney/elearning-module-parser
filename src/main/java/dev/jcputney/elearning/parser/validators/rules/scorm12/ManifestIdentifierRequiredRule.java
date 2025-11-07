@@ -6,8 +6,8 @@ import dev.jcputney.elearning.parser.validation.ValidationResult;
 import dev.jcputney.elearning.parser.validators.rules.ValidationRule;
 
 /**
- * Validates that the manifest has a required identifier attribute.
- * Required by SCORM 1.2 CAM specification.
+ * Validates that the manifest has a required identifier attribute. Required by SCORM 1.2 CAM
+ * specification.
  */
 public class ManifestIdentifierRequiredRule implements ValidationRule<Scorm12Manifest> {
 
@@ -29,7 +29,9 @@ public class ManifestIdentifierRequiredRule implements ValidationRule<Scorm12Man
 
     String identifier = manifest.getIdentifier();
 
-    if (identifier == null || identifier.trim().isEmpty()) {
+    if (identifier == null || identifier
+        .trim()
+        .isEmpty()) {
       return ValidationResult.of(
           ValidationIssue.error(
               "SCORM12_MISSING_MANIFEST_IDENTIFIER",

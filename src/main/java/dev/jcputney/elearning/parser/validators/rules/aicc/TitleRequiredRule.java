@@ -37,7 +37,9 @@ public class TitleRequiredRule implements ValidationRule<AiccManifest> {
     }
 
     String title = manifest.getTitle();
-    if (title == null || title.trim().isEmpty()) {
+    if (title == null || title
+        .trim()
+        .isEmpty()) {
       return ValidationResult.of(
           ValidationIssue.error(
               "AICC_MISSING_TITLE",

@@ -14,7 +14,8 @@ import dev.jcputney.elearning.parser.validators.rules.ValidationRule;
  * <p>This rule defers validation when the course is null, as that is handled by
  * {@link CourseRequiredRule}.</p>
  *
- * @see <a href="https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md">cmi5 Specification</a>
+ * @see <a href="https://github.com/AICC/CMI-5_Spec_Current/blob/quartz/cmi5_spec.md">cmi5
+ * Specification</a>
  */
 public class TitleRequiredRule implements ValidationRule<Cmi5Manifest> {
 

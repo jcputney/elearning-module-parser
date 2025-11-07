@@ -52,31 +52,29 @@ public class TincanActivity {
   private String id;
 
   /**
-   * The activity type URI (optional).
-   * Common value: "http://adlnet.gov/expapi/activities/course"
+   * The activity type URI (optional). Common value: "http://adlnet.gov/expapi/activities/course"
    */
   @JacksonXmlProperty(isAttribute = true, localName = "type")
   private String type;
 
   /**
-   * The name/title of the activity (required).
-   * May appear multiple times for different languages.
+   * The name/title of the activity (required). May appear multiple times for different languages.
    */
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "name")
   private List<SimpleLangString> names;
 
   /**
-   * The description of the activity with language support (optional).
-   * May appear multiple times for different languages.
+   * The description of the activity with language support (optional). May appear multiple times for
+   * different languages.
    */
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "description")
   private List<SimpleLangString> descriptions;
 
   /**
-   * The launch URL with language support (required).
-   * May appear multiple times for different languages.
+   * The launch URL with language support (required). May appear multiple times for different
+   * languages.
    */
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "launch")
@@ -168,7 +166,9 @@ public class TincanActivity {
   @JsonIgnore
   public String getName() {
     return names != null && !names.isEmpty() && names.get(0) != null
-        ? names.get(0).getValue()
+        ? names
+        .get(0)
+        .getValue()
         : null;
   }
 
@@ -198,7 +198,9 @@ public class TincanActivity {
   @JsonIgnore
   public String getDescription() {
     return descriptions != null && !descriptions.isEmpty() && descriptions.get(0) != null
-        ? descriptions.get(0).getValue()
+        ? descriptions
+        .get(0)
+        .getValue()
         : null;
   }
 
@@ -228,7 +230,9 @@ public class TincanActivity {
   @JsonIgnore
   public String getLaunch() {
     return launches != null && !launches.isEmpty() && launches.get(0) != null
-        ? launches.get(0).getValue()
+        ? launches
+        .get(0)
+        .getValue()
         : null;
   }
 

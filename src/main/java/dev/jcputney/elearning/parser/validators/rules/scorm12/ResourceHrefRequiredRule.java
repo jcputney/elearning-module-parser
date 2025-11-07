@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Validates that resources referenced by items have valid href attributes (launch URLs).
- * Required by SCORM 1.2 CAM specification.
+ * Validates that resources referenced by items have valid href attributes (launch URLs). Required
+ * by SCORM 1.2 CAM specification.
  */
 public class ResourceHrefRequiredRule implements ValidationRule<Scorm12Manifest> {
 
@@ -40,8 +40,12 @@ public class ResourceHrefRequiredRule implements ValidationRule<Scorm12Manifest>
     Map<String, Scorm12Resource> resourceIndex = buildResourceIndex(manifest);
 
     // Validate all items in all organizations
-    if (manifest.getOrganizations() != null && manifest.getOrganizations().getOrganizationList() != null) {
-      for (Scorm12Organization org : manifest.getOrganizations().getOrganizationList()) {
+    if (manifest.getOrganizations() != null && manifest
+        .getOrganizations()
+        .getOrganizationList() != null) {
+      for (Scorm12Organization org : manifest
+          .getOrganizations()
+          .getOrganizationList()) {
         if (org.getItems() != null) {
           for (Scorm12Item item : org.getItems()) {
             validateItem(item, resourceIndex, issues);
@@ -55,8 +59,12 @@ public class ResourceHrefRequiredRule implements ValidationRule<Scorm12Manifest>
 
   private Map<String, Scorm12Resource> buildResourceIndex(Scorm12Manifest manifest) {
     Map<String, Scorm12Resource> index = new HashMap<>();
-    if (manifest.getResources() != null && manifest.getResources().getResourceList() != null) {
-      for (Scorm12Resource resource : manifest.getResources().getResourceList()) {
+    if (manifest.getResources() != null && manifest
+        .getResources()
+        .getResourceList() != null) {
+      for (Scorm12Resource resource : manifest
+          .getResources()
+          .getResourceList()) {
         if (resource.getIdentifier() != null) {
           index.put(resource.getIdentifier(), resource);
         }
@@ -66,8 +74,8 @@ public class ResourceHrefRequiredRule implements ValidationRule<Scorm12Manifest>
   }
 
   private void validateItem(Scorm12Item item,
-                            Map<String, Scorm12Resource> resourceIndex,
-                            List<ValidationIssue> issues) {
+      Map<String, Scorm12Resource> resourceIndex,
+      List<ValidationIssue> issues) {
     String identifierRef = item.getIdentifierRef();
 
     // If item references a resource, validate the resource has a valid href
@@ -89,7 +97,9 @@ public class ResourceHrefRequiredRule implements ValidationRule<Scorm12Manifest>
   private void validateResourceHref(Scorm12Resource resource, List<ValidationIssue> issues) {
     String href = resource.getHref();
 
-    if (href == null || href.trim().isEmpty()) {
+    if (href == null || href
+        .trim()
+        .isEmpty()) {
       issues.add(ValidationIssue.error(
           "SCORM12_MISSING_LAUNCH_URL",
           "Resource '" + resource.getIdentifier() + "' is missing href attribute (launch URL)",

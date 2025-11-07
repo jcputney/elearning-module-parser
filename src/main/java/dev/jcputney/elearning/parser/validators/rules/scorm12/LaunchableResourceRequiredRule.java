@@ -10,9 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Validates that every organization has at least one launchable resource.
- * A launchable resource is an item with a non-null, non-empty identifierref.
- * Required by SCORM 1.2 CAM specification.
+ * Validates that every organization has at least one launchable resource. A launchable resource is
+ * an item with a non-null, non-empty identifierref. Required by SCORM 1.2 CAM specification.
  */
 public class LaunchableResourceRequiredRule implements ValidationRule<Scorm12Manifest> {
 
@@ -35,8 +34,12 @@ public class LaunchableResourceRequiredRule implements ValidationRule<Scorm12Man
     List<ValidationIssue> issues = new ArrayList<>();
 
     // Check each organization for at least one launchable resource
-    if (manifest.getOrganizations() != null && manifest.getOrganizations().getOrganizationList() != null) {
-      for (Scorm12Organization org : manifest.getOrganizations().getOrganizationList()) {
+    if (manifest.getOrganizations() != null && manifest
+        .getOrganizations()
+        .getOrganizationList() != null) {
+      for (Scorm12Organization org : manifest
+          .getOrganizations()
+          .getOrganizationList()) {
         if (!hasLaunchableResource(org)) {
           issues.add(ValidationIssue.error(
               "SCORM12_NO_LAUNCHABLE_RESOURCE",
@@ -52,8 +55,8 @@ public class LaunchableResourceRequiredRule implements ValidationRule<Scorm12Man
   }
 
   /**
-   * Checks if an organization has at least one launchable resource.
-   * Recursively checks all items and their children.
+   * Checks if an organization has at least one launchable resource. Recursively checks all items
+   * and their children.
    */
   private boolean hasLaunchableResource(Scorm12Organization org) {
     if (org.getItems() == null) {

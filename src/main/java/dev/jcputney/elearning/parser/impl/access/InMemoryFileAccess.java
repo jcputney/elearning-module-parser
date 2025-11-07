@@ -21,7 +21,7 @@
 
 package dev.jcputney.elearning.parser.impl.access;
 
-import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.api.AbstractArchiveFileAccess;
 import dev.jcputney.elearning.parser.api.StreamingProgressListener;
 import dev.jcputney.elearning.parser.util.StreamingUtils;
 import java.io.ByteArrayInputStream;
@@ -36,9 +36,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * An implementation of the {@link FileAccess} interface for accessing files from an in-memory ZIP
- * archive. This class allows file existence checks, file listing, and retrieving file contents from
- * a ZIP file that is loaded into memory.
+ * An implementation of the {@link dev.jcputney.elearning.parser.api.FileAccess} interface for
+ * accessing files from an in-memory ZIP archive. This class allows file existence checks, file
+ * listing, and retrieving file contents from a ZIP file that is loaded into memory.
  *
  * <p>This implementation is useful for serverless environments or situations where file system
  * access is restricted or not available. The ZIP content is read once during construction and
@@ -53,20 +53,7 @@ import java.util.zip.ZipInputStream;
  * }
  * }</pre>
  */
-public final class InMemoryFileAccess implements FileAccess, AutoCloseable {
-
-  /**
-   * Represents the root path of the detected directory structure within the ZIP data.
-   * <p>
-   * The root path is determined by analyzing the file entries from the input ZIP data. If all files
-   * are contained within a single top-level directory, the root path will be set to that
-   * directory's name. If the files are distributed across multiple directories or at the root of
-   * the ZIP, the root path will be an empty string.
-   * <p>
-   * This variable is final and is initialized during the loading process of the in-memory file
-   * system.
-   */
-  private final String rootPath;
+public final class InMemoryFileAccess extends AbstractArchiveFileAccess {
 
   /**
    * A list of file entries representing the in-memory files loaded from a ZIP file. Each entry
@@ -105,9 +92,10 @@ public final class InMemoryFileAccess implements FileAccess, AutoCloseable {
 
     this.fileEntries = new ArrayList<>();
     this.directories = new HashSet<>();
-
     this.totalSize = loadZipData(zipData);
-    this.rootPath = detectRootPath();
+
+    // Initialize root path after loading file entries
+    initializeRootPath();
   }
 
   /**
@@ -132,21 +120,10 @@ public final class InMemoryFileAccess implements FileAccess, AutoCloseable {
 
     this.fileEntries = new ArrayList<>();
     this.directories = new HashSet<>();
-
     this.totalSize = loadZipData(baos.toByteArray());
-    this.rootPath = detectRootPath();
-  }
 
-  /**
-   * Retrieves the root path for the in-memory file system. The root path is typically determined
-   * during the initialization of the instance and provides the base directory for all file
-   * operations within the system.
-   *
-   * @return The root path as a string.
-   */
-  @Override
-  public String getRootPath() {
-    return rootPath;
+    // Initialize root path after loading file entries
+    initializeRootPath();
   }
 
   /**
@@ -184,7 +161,8 @@ public final class InMemoryFileAccess implements FileAccess, AutoCloseable {
       String entryPath = entry.getPath();
       // For empty directory path, return all files
       if (normalizedDir.isEmpty() || entryPath.startsWith(normalizedDir)) {
-        files.add(entryPath);
+        // Strip the rootPath prefix to return paths relative to the detected root
+        files.add(stripRootPath(entryPath));
       }
     }
 
@@ -245,6 +223,7 @@ public final class InMemoryFileAccess implements FileAccess, AutoCloseable {
     return fileEntries
         .stream()
         .map(FileEntry::getPath)
+        .map(this::stripRootPath)
         .toList();
   }
 
@@ -285,6 +264,19 @@ public final class InMemoryFileAccess implements FileAccess, AutoCloseable {
    */
   public int getDirectoryCount() {
     return directories.size();
+  }
+
+  /**
+   * Provides all file paths from storage for root path detection.
+   *
+   * @return An iterable of all file paths in storage format
+   */
+  @Override
+  protected Iterable<String> getStorageFilePaths() {
+    return fileEntries
+        .stream()
+        .map(FileEntry::getPath)
+        .toList();
   }
 
   /**
@@ -335,19 +327,6 @@ public final class InMemoryFileAccess implements FileAccess, AutoCloseable {
   }
 
   /**
-   * Normalizes a directory path by ensuring it ends with a slash.
-   *
-   * @param dir The directory path to normalize.
-   * @return The normalized directory path.
-   */
-  private String normalizeDirectory(String dir) {
-    if (!dir.endsWith("/")) {
-      return dir + "/";
-    }
-    return dir;
-  }
-
-  /**
    * Adds all parent directories of a file path to the directories set.
    *
    * @param filePath The file path to extract parent directories from.
@@ -361,30 +340,6 @@ public final class InMemoryFileAccess implements FileAccess, AutoCloseable {
       // Recursively add parent directories
       addParentDirectories(parentPath.substring(0, parentPath.length() - 1));
     }
-  }
-
-  /**
-   * Detects the root path within the ZIP structure.
-   *
-   * <p>This method analyzes the file entries to determine if all files are contained
-   * within a single top-level directory. If so, it returns that directory name as the root path.
-   * Otherwise, it returns an empty string, indicating that files are at the root of the ZIP.</p>
-   *
-   * @return The detected internal root directory or an empty string if files are at the root.
-   */
-  private String detectRootPath() {
-    Set<String> topLevelDirs = new HashSet<>();
-
-    for (FileEntry entry : fileEntries) {
-      String entryName = entry.getPath();
-      if (checkForRootPath(topLevelDirs, entryName)) {
-        return "";
-      }
-    }
-
-    return topLevelDirs.size() == 1 ? topLevelDirs
-        .iterator()
-        .next() : "";
   }
 
   /**

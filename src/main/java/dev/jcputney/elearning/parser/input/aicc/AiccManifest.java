@@ -20,9 +20,9 @@ package dev.jcputney.elearning.parser.input.aicc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.PackageManifest;
+import dev.jcputney.elearning.parser.input.common.serialization.DurationHHMMSSDeserializer;
 import dev.jcputney.elearning.parser.validation.ValidationIssue;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
-import dev.jcputney.elearning.parser.input.common.serialization.DurationHHMMSSDeserializer;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -190,7 +190,8 @@ public final class AiccManifest implements PackageManifest {
     String rootAssignableUnitId = root.getMember();
     if (rootAssignableUnitId == null || rootAssignableUnitId.isEmpty()) {
       ValidationResult result = ValidationResult.of(
-          ValidationIssue.error("AICC_NO_ROOT_AU", "No root assignable unit found", "CourseStructure")
+          ValidationIssue.error("AICC_NO_ROOT_AU", "No root assignable unit found",
+              "CourseStructure")
       );
       throw result.toException("Failed to build AICC manifest");
     }

@@ -265,6 +265,110 @@ class InMemoryFileAccessTest {
   }
 
   @Test
+  void testSubRootPathHandling() throws IOException {
+    byte[] zipData = createZipWithRootDirectory();
+
+    try (InMemoryFileAccess fileAccess = new InMemoryFileAccess(zipData)) {
+      // Root path should be detected
+      assertThat(fileAccess.getRootPath()).isEqualTo("module-root");
+
+      // getAllFiles() should return paths relative to root (without root prefix)
+      List<String> allFiles = fileAccess.getAllFiles();
+      assertThat(allFiles).containsExactlyInAnyOrder(
+          "manifest.xml",
+          "content/page1.html",
+          "resources/style.css"
+      );
+      // Should NOT contain paths with root prefix
+      assertThat(allFiles).doesNotContain("module-root/manifest.xml");
+
+      // listFiles() should also return relative paths
+      List<String> rootFiles = fileAccess.listFiles("");
+      assertThat(rootFiles).containsExactlyInAnyOrder(
+          "manifest.xml",
+          "content/page1.html",
+          "resources/style.css"
+      );
+
+      List<String> contentFiles = fileAccess.listFiles("content");
+      assertThat(contentFiles).containsExactly("content/page1.html");
+
+      // File operations should work with relative paths
+      assertThat(fileAccess.fileExists("manifest.xml")).isTrue();
+      assertThat(fileAccess.fileExists("content/page1.html")).isTrue();
+      assertThat(fileAccess.fileExists("resources/style.css")).isTrue();
+
+      // Should NOT find files when using double-prefixed paths (the bug)
+      assertThat(fileAccess.fileExists("module-root/manifest.xml")).isFalse();
+      assertThat(fileAccess.fileExists("module-root/content/page1.html")).isFalse();
+
+      // getFileContents should work with relative paths
+      try (InputStream is = fileAccess.getFileContents("manifest.xml")) {
+        String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        assertThat(content).isEqualTo("<manifest>test</manifest>");
+      }
+
+      try (InputStream is = fileAccess.getFileContents("content/page1.html")) {
+        String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        assertThat(content).isEqualTo("<html>Page 1</html>");
+      }
+    }
+  }
+
+  @Test
+  void testConsistencyWithZipFileAccess() throws IOException {
+    // Create a temporary ZIP file with sub-root structure
+    java.nio.file.Path tempZipPath = java.nio.file.Files.createTempFile("test-module", ".zip");
+    try {
+      // Write ZIP data to temp file
+      byte[] zipData = createZipWithRootDirectory();
+      java.nio.file.Files.write(tempZipPath, zipData);
+
+      // Compare InMemoryFileAccess and ZipFileAccess behavior
+      try (InMemoryFileAccess memAccess = new InMemoryFileAccess(zipData);
+          ZipFileAccess zipAccess = new ZipFileAccess(tempZipPath.toString())) {
+
+        // Root paths should match
+        assertThat(memAccess.getRootPath()).isEqualTo(zipAccess.getRootPath());
+
+        // getAllFiles() should return identical results
+        List<String> memFiles = memAccess.getAllFiles();
+        List<String> zipFiles = zipAccess.getAllFiles();
+        assertThat(memFiles).containsExactlyInAnyOrderElementsOf(zipFiles);
+
+        // listFiles("") should return identical results
+        List<String> memRootFiles = memAccess.listFiles("");
+        List<String> zipRootFiles = zipAccess.listFiles("");
+        assertThat(memRootFiles).containsExactlyInAnyOrderElementsOf(zipRootFiles);
+
+        // listFiles("content") should return identical results
+        List<String> memContentFiles = memAccess.listFiles("content");
+        List<String> zipContentFiles = zipAccess.listFiles("content");
+        assertThat(memContentFiles).containsExactlyInAnyOrderElementsOf(zipContentFiles);
+
+        // fileExists() should return identical results
+        assertThat(memAccess.fileExists("manifest.xml"))
+            .isEqualTo(zipAccess.fileExists("manifest.xml"));
+        assertThat(memAccess.fileExists("content/page1.html"))
+            .isEqualTo(zipAccess.fileExists("content/page1.html"));
+        assertThat(memAccess.fileExists("nonexistent.txt"))
+            .isEqualTo(zipAccess.fileExists("nonexistent.txt"));
+
+        // File contents should be identical
+        try (InputStream memStream = memAccess.getFileContents("manifest.xml");
+            InputStream zipStream = zipAccess.getFileContents("manifest.xml")) {
+          String memContent = new String(memStream.readAllBytes(), StandardCharsets.UTF_8);
+          String zipContent = new String(zipStream.readAllBytes(), StandardCharsets.UTF_8);
+          assertThat(memContent).isEqualTo(zipContent);
+        }
+      }
+    } finally {
+      // Clean up temp file
+      java.nio.file.Files.deleteIfExists(tempZipPath);
+    }
+  }
+
+  @Test
   void testEmptyZip() throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     try (ZipOutputStream zos = new ZipOutputStream(baos)) {

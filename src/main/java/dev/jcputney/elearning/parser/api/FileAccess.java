@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -98,37 +97,20 @@ public interface FileAccess {
     return listFilesInternal(directoryPath);
   }
 
-  /**
-   * Checks if a file entry represents a root-level directory or if multiple top-level directories
-   * are present in the provided set.
-   *
-   * @param topLevelDirs A set of strings representing the top-level directories encountered so far.
-   * This set is modified by the method to add new entries if applicable.
-   * @param entryName The name of the file entry to evaluate, potentially containing a directory
-   * path.
-   * @return True if the file entry is at the root level or if more than one top-level directory is
-   * present; false otherwise.
-   */
-  default boolean checkForRootPath(Set<String> topLevelDirs, String entryName) {
-    int slashIndex = entryName.indexOf('/');
-
-    if (slashIndex > 0) {
-      String topLevel = entryName.substring(0, slashIndex);
-      topLevelDirs.add(topLevel);
-
-      return topLevelDirs.size() > 1;
-    } else {
-      // File at root level
-      return true;
-    }
-  }
 
   /**
    * Internal method to list all files within a specified directory path. This method is called by
    * the default implementation of {@link #listFiles(String)}.
    *
+   * <p><b>IMPORTANT CONTRACT:</b> All returned paths MUST be relative to {@link #getRootPath()}.
+   * For example, if rootPath="module-root" and storage contains "module-root/page.html", this
+   * method must return ["page.html"], NOT ["module-root/page.html"].
+   *
+   * <p>The {@link #fullPath(String)} method will prepend the root path when needed for
+   * internal storage access.
+   *
    * @param directoryPath The directory to list files from (guaranteed to be non-null).
-   * @return A list of file paths within the directory.
+   * @return A list of file paths relative to rootPath.
    * @throws IOException if there's an error accessing the directory or listing its contents.
    */
   List<String> listFilesInternal(String directoryPath) throws IOException;
@@ -160,7 +142,14 @@ public interface FileAccess {
 
 
   /**
-   * Constructs the full path for the given relative or absolute path.
+   * Constructs the full storage path for the given relative or absolute path.
+   *
+   * <p><b>IMPORTANT:</b> This method is for internal use by FileAccess implementations only.
+   * External callers should never need to call this method.
+   *
+   * <p>Implementations use this to convert caller-provided relative paths into internal
+   * storage paths. For example, when a caller requests "page.html" and the rootPath is
+   * "module-root", this method returns "module-root/page.html" for storage access.
    *
    * <p>This method handles path normalization according to the following rules:
    * <ul>
@@ -170,10 +159,8 @@ public interface FileAccess {
    *   <li>If rootPath is empty, the relative path is returned as-is without any prefix.</li>
    * </ul>
    *
-   * <p>This method is used internally by implementations to normalize paths before accessing files.
-   *
    * @param path The relative or absolute path for which the full path is to be generated.
-   * @return The constructed full path as a string.
+   * @return The constructed full storage path as a string.
    * @throws IllegalArgumentException if a path is null
    */
   default String fullPath(String path) {
@@ -227,7 +214,10 @@ public interface FileAccess {
    * <p>This method should return a cached list of all files available in the module.
    * Implementations should scan the module once and cache the results for efficiency.
    *
-   * @return List of all file paths in the module
+   * <p><b>IMPORTANT CONTRACT:</b> All returned paths MUST be relative to {@link #getRootPath()}.
+   * See {@link #listFilesInternal(String)} for details on the path format requirements.
+   *
+   * @return List of all file paths relative to rootPath
    * @throws IOException if there's an error accessing the module contents
    */
   default List<String> getAllFiles() throws IOException {

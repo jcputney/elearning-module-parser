@@ -21,16 +21,14 @@
 
 package dev.jcputney.elearning.parser.impl.access;
 
-import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.api.AbstractArchiveFileAccess;
 import dev.jcputney.elearning.parser.api.StreamingProgressListener;
 import dev.jcputney.elearning.parser.util.StreamingUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -39,19 +37,7 @@ import java.util.zip.ZipFile;
  * This class allows file existence checks, file listing, and retrieving file contents from a ZIP
  * file.
  */
-public final class ZipFileAccess implements FileAccess, AutoCloseable {
-
-  /**
-   * The root path inside the ZIP archive.
-   * <p>
-   * This variable stores the common root directory of all files within the ZIP file, determined
-   * during initialization. If the files in the ZIP are located at the top level without a shared
-   * parent directory, this value will be an empty string. Otherwise, it holds the name of the
-   * directory representing the root.
-   * <p>
-   * This value is used internally to resolve file paths within the archive.
-   */
-  private final String rootPath;
+public final class ZipFileAccess extends AbstractArchiveFileAccess {
 
   /**
    * Represents the ZIP file being accessed and processed by the {@code ZipFileAccess} class. This
@@ -91,7 +77,8 @@ public final class ZipFileAccess implements FileAccess, AutoCloseable {
       throw new IOException(
           "Failed to open ZIP file: '" + zipFilePath + "' (" + e.getMessage() + ")", e);
     }
-    this.rootPath = getInternalRootDirectory();
+    // Initialize root path after opening ZIP file
+    initializeRootPath();
   }
 
   /**
@@ -130,25 +117,6 @@ public final class ZipFileAccess implements FileAccess, AutoCloseable {
       }
     }
     return fileList;
-  }
-
-  /**
-   * Strips the root path prefix from an entry name to return a path relative to the root.
-   *
-   * @param entryName The full entry name from the ZIP file.
-   * @return The entry name with the root path prefix removed.
-   */
-  private String stripRootPath(String entryName) {
-    if (rootPath.isEmpty()) {
-      return entryName;
-    }
-
-    String rootPrefix = rootPath + "/";
-    if (entryName.startsWith(rootPrefix)) {
-      return entryName.substring(rootPrefix.length());
-    }
-
-    return entryName;
   }
 
   /**
@@ -235,40 +203,22 @@ public final class ZipFileAccess implements FileAccess, AutoCloseable {
     return totalSize;
   }
 
-  public String getRootPath() {
-    return this.rootPath;
-  }
-
   /**
-   * Determines the internal root directory within the ZIP file.
+   * Provides all file paths from storage for root path detection.
    *
-   * <p>This method analyzes the ZIP entries to determine if all files are contained
-   * within a single top-level directory. If so, it returns that directory name as the root path.
-   * Otherwise, it returns an empty string, indicating that files are at the root of the ZIP.</p>
-   *
-   * @return The detected internal root directory or an empty string if files are at the root.
+   * @return An iterable of all file paths in storage format
    */
-  private String getInternalRootDirectory() {
-    // Keep track of all distinct top-level folders encountered.
-    Set<String> topLevelDirs = new HashSet<>();
-
-    Enumeration<? extends ZipEntry> entries = this.zipFile.entries();
+  @Override
+  protected Iterable<String> getStorageFilePaths() {
+    List<String> paths = new ArrayList<>();
+    Enumeration<? extends ZipEntry> entries = zipFile.entries();
     while (entries.hasMoreElements()) {
       ZipEntry entry = entries.nextElement();
-      String entryName = entry.getName();
-
-      // Split on '/', the first part is the top-level "directory"
-      // unless the file is directly in the root and has no slash.
-      if (checkForRootPath(topLevelDirs, entryName)) {
-        return "";
+      if (!entry.isDirectory()) {
+        paths.add(entry.getName());
       }
     }
-
-    // If it gets here, either have exactly one top-level directory or none.
-    // "None" shouldn't happen in a typical ZIP but handle the edge case.
-    return topLevelDirs.size() == 1 ? topLevelDirs
-        .iterator()
-        .next() : "";
+    return paths;
   }
 
   /**

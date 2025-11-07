@@ -28,7 +28,8 @@ import dev.jcputney.elearning.parser.validators.rules.ValidationRule;
  * <p>According to xAPI specification, every xAPI package must have at least one activity
  * that defines the learning experience.</p>
  *
- * @see <a href="https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-About.md">xAPI Specification</a>
+ * @see <a href="https://github.com/adlnet/xAPI-Spec/blob/master/xAPI-About.md">xAPI
+ * Specification</a>
  */
 public class ActivitiesRequiredRule implements ValidationRule<TincanManifest> {
 
@@ -45,7 +46,9 @@ public class ActivitiesRequiredRule implements ValidationRule<TincanManifest> {
       throw new IllegalArgumentException("manifest must not be null");
     }
 
-    if (manifest.getActivities() == null || manifest.getActivities().isEmpty()) {
+    if (manifest.getActivities() == null || manifest
+        .getActivities()
+        .isEmpty()) {
       return ValidationResult.of(
           ValidationIssue.error(
               "XAPI_MISSING_ACTIVITIES",

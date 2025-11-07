@@ -33,8 +33,8 @@ import java.util.List;
 /**
  * Validator for SCORM 2004 manifests and their resource references.
  * <p>
- * This validator uses a rule-based architecture for better testability
- * and maintainability. Each validation concern is encapsulated in a discrete rule.
+ * This validator uses a rule-based architecture for better testability and maintainability. Each
+ * validation concern is encapsulated in a discrete rule.
  * </p>
  * <p>
  * This validator checks that:
@@ -72,14 +72,15 @@ public class Scorm2004ResourceValidator {
   }
 
   /**
-   * Validates a SCORM 2004 manifest for structural and reference integrity.
-   * Uses rule-based validation for better testability and maintainability.
+   * Validates a SCORM 2004 manifest for structural and reference integrity. Uses rule-based
+   * validation for better testability and maintainability.
    *
    * @param manifest The SCORM 2004 manifest to validate
    * @return ValidationResult containing any issues found
    */
   public ValidationResult validate(Scorm2004Manifest manifest) {
-    return rules.stream()
+    return rules
+        .stream()
         .map(rule -> rule.validate(manifest))
         .reduce(ValidationResult.valid(), ValidationResult::merge);
   }

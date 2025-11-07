@@ -18,17 +18,12 @@
 package dev.jcputney.elearning.parser.parsers;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
-import dev.jcputney.elearning.parser.exception.ManifestParseException;
 import dev.jcputney.elearning.parser.exception.ModuleException;
-import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.xapi.tincan.TincanManifest;
 import dev.jcputney.elearning.parser.output.metadata.xapi.XapiMetadata;
-import dev.jcputney.elearning.parser.util.FileUtils;
 import dev.jcputney.elearning.parser.validation.ValidationIssue;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
 import dev.jcputney.elearning.parser.validators.XapiValidator;
-import java.io.IOException;
-import javax.xml.stream.XMLStreamException;
 
 /**
  * Parser for xAPI/TinCan packages.
@@ -61,8 +56,21 @@ public final class XapiParser extends BaseParser<XapiMetadata, TincanManifest> {
    * @param fileAccess an instance of FileAccess for reading files in the module package
    * @param options the parser options to control validation and calculation behavior
    */
-  public XapiParser(FileAccess fileAccess, dev.jcputney.elearning.parser.api.ParserOptions options) {
+  public XapiParser(FileAccess fileAccess,
+      dev.jcputney.elearning.parser.api.ParserOptions options) {
     super(fileAccess, options);
+  }
+
+  /**
+   * Loads external metadata for the given TincanManifest. This method is overridden in the context
+   * of TinCan but does not perform any operations because TinCan does not require external metadata
+   * loading.
+   *
+   * @param manifest The TincanManifest object containing data for the TinCan module.
+   */
+  @Override
+  void loadExternalMetadata(TincanManifest manifest) {
+    // No external metadata loading is required for TinCan
   }
 
   @Override
@@ -73,20 +81,22 @@ public final class XapiParser extends BaseParser<XapiMetadata, TincanManifest> {
 
   @Override
   protected XapiMetadata extractMetadata(TincanManifest manifest,
-                                         ValidationResult validation)
+      ValidationResult validation)
       throws ModuleException {
     // Validate required fields
     String title = manifest.getTitle();
     if (title == null || title.isEmpty()) {
       ValidationResult result = ValidationResult.of(
-          ValidationIssue.error("XAPI_MISSING_TITLE", "TinCan module missing required title field", "tincan.xml")
+          ValidationIssue.error("XAPI_MISSING_TITLE", "TinCan module missing required title field",
+              "tincan.xml")
       );
       throw result.toException("Failed to parse xAPI/TinCan module");
     }
     String launchUrl = manifest.getLaunchUrl();
     if (launchUrl == null || launchUrl.isEmpty()) {
       ValidationResult result = ValidationResult.of(
-          ValidationIssue.error("XAPI_MISSING_LAUNCH_URL", "TinCan module missing required launch URL field", "tincan.xml")
+          ValidationIssue.error("XAPI_MISSING_LAUNCH_URL",
+              "TinCan module missing required launch URL field", "tincan.xml")
       );
       throw result.toException("Failed to parse xAPI/TinCan module");
     }
@@ -97,18 +107,6 @@ public final class XapiParser extends BaseParser<XapiMetadata, TincanManifest> {
   @Override
   protected String getManifestFileName() {
     return TINCAN_XML;
-  }
-
-  /**
-   * Loads external metadata for the given TincanManifest. This method is overridden in the
-   * context of TinCan but does not perform any operations because TinCan does not require
-   * external metadata loading.
-   *
-   * @param manifest The TincanManifest object containing data for the TinCan module.
-   */
-  @Override
-  void loadExternalMetadata(TincanManifest manifest) {
-    // No external metadata loading is required for TinCan
   }
 
   /**

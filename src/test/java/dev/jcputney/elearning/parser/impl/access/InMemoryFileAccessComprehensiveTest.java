@@ -98,16 +98,16 @@ class InMemoryFileAccessComprehensiveTest {
       assertThat(fileAccess.fileExists("b/c/other.txt")).isTrue();
       assertThat(fileAccess.fileExists("root.txt")).isTrue();
 
-      // List all files (empty path since we have root directory)
+      // List all files should return paths relative to root (without "a/" prefix)
       List<String> allFiles = fileAccess.listFiles("");
       assertThat(allFiles).containsExactlyInAnyOrder(
-          "a/b/c/d/e/f/deep.txt",
-          "a/b/c/other.txt",
-          "a/root.txt"
+          "b/c/d/e/f/deep.txt",
+          "b/c/other.txt",
+          "root.txt"
       );
 
       List<String> filesInDeep = fileAccess.listFiles("b/c/d/e/f");
-      assertThat(filesInDeep).containsExactly("a/b/c/d/e/f/deep.txt");
+      assertThat(filesInDeep).containsExactly("b/c/d/e/f/deep.txt");
     }
   }
 
@@ -552,11 +552,11 @@ class InMemoryFileAccessComprehensiveTest {
       assertThat(fileAccess.fileExists("manifest.xml")).isTrue();
       assertThat(fileAccess.fileExists("content/page1.html")).isTrue();
 
-      // List files should work with relative paths
+      // List files should return paths relative to root (without "package-v1.0/" prefix)
       List<String> contentFiles = fileAccess.listFiles("content");
       assertThat(contentFiles).containsExactlyInAnyOrder(
-          "package-v1.0/content/page1.html",
-          "package-v1.0/content/page2.html"
+          "content/page1.html",
+          "content/page2.html"
       );
     }
   }

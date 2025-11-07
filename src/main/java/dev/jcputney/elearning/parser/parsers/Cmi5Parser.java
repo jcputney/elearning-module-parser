@@ -18,17 +18,12 @@
 package dev.jcputney.elearning.parser.parsers;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
-import dev.jcputney.elearning.parser.exception.ManifestParseException;
 import dev.jcputney.elearning.parser.exception.ModuleException;
-import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.cmi5.Cmi5Manifest;
 import dev.jcputney.elearning.parser.output.metadata.cmi5.Cmi5Metadata;
-import dev.jcputney.elearning.parser.util.FileUtils;
 import dev.jcputney.elearning.parser.validation.ValidationIssue;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
 import dev.jcputney.elearning.parser.validators.Cmi5Validator;
-import java.io.IOException;
-import javax.xml.stream.XMLStreamException;
 
 /**
  * Cmi5Parser is responsible for parsing cmi5-specific metadata from the cmi5.xml file.
@@ -60,43 +55,9 @@ public final class Cmi5Parser extends BaseParser<Cmi5Metadata, Cmi5Manifest> {
    * @param fileAccess An instance of FileAccess for reading files in the module package.
    * @param options The parser options to control validation and calculation behavior.
    */
-  public Cmi5Parser(FileAccess fileAccess, dev.jcputney.elearning.parser.api.ParserOptions options) {
+  public Cmi5Parser(FileAccess fileAccess,
+      dev.jcputney.elearning.parser.api.ParserOptions options) {
     super(fileAccess, options);
-  }
-
-  @Override
-  protected ValidationResult validateManifest(Cmi5Manifest manifest) {
-    Cmi5Validator validator = new Cmi5Validator();
-    return validator.validate(manifest);
-  }
-
-  @Override
-  protected Cmi5Metadata extractMetadata(Cmi5Manifest manifest,
-                                         ValidationResult validation)
-      throws ModuleException {
-    // Validate required fields
-    String title = manifest.getTitle();
-    if (title == null || title.isEmpty()) {
-      ValidationResult result = ValidationResult.of(
-          ValidationIssue.error("CMI5_MISSING_TITLE", "cmi5 module missing required title field", "cmi5.xml")
-      );
-      throw result.toException("Failed to parse cmi5 module");
-    }
-    String launchUrl = manifest.getLaunchUrl();
-    if (launchUrl == null || launchUrl.isEmpty()) {
-      ValidationResult result = ValidationResult.of(
-          ValidationIssue.error("CMI5_MISSING_LAUNCH_URL", "cmi5 module missing required launch URL field", "cmi5.xml")
-      );
-      throw result.toException("Failed to parse cmi5 module");
-    }
-
-    // Build and return the Cmi5Metadata
-    return Cmi5Metadata.create(manifest, true); // cmi5 modules are always xAPI-enabled
-  }
-
-  @Override
-  protected String getManifestFileName() {
-    return CMI5_XML;
   }
 
   /**
@@ -109,6 +70,43 @@ public final class Cmi5Parser extends BaseParser<Cmi5Metadata, Cmi5Manifest> {
   @Override
   void loadExternalMetadata(Cmi5Manifest manifest) {
     // No external metadata loading is required for cmi5
+  }
+
+  @Override
+  protected ValidationResult validateManifest(Cmi5Manifest manifest) {
+    Cmi5Validator validator = new Cmi5Validator();
+    return validator.validate(manifest);
+  }
+
+  @Override
+  protected Cmi5Metadata extractMetadata(Cmi5Manifest manifest,
+      ValidationResult validation)
+      throws ModuleException {
+    // Validate required fields
+    String title = manifest.getTitle();
+    if (title == null || title.isEmpty()) {
+      ValidationResult result = ValidationResult.of(
+          ValidationIssue.error("CMI5_MISSING_TITLE", "cmi5 module missing required title field",
+              "cmi5.xml")
+      );
+      throw result.toException("Failed to parse cmi5 module");
+    }
+    String launchUrl = manifest.getLaunchUrl();
+    if (launchUrl == null || launchUrl.isEmpty()) {
+      ValidationResult result = ValidationResult.of(
+          ValidationIssue.error("CMI5_MISSING_LAUNCH_URL",
+              "cmi5 module missing required launch URL field", "cmi5.xml")
+      );
+      throw result.toException("Failed to parse cmi5 module");
+    }
+
+    // Build and return the Cmi5Metadata
+    return Cmi5Metadata.create(manifest, true); // cmi5 modules are always xAPI-enabled
+  }
+
+  @Override
+  protected String getManifestFileName() {
+    return CMI5_XML;
   }
 
   /**

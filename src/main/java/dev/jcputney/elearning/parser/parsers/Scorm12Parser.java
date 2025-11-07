@@ -20,20 +20,18 @@ package dev.jcputney.elearning.parser.parsers;
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
 import dev.jcputney.elearning.parser.config.FileExistenceValidator;
-import dev.jcputney.elearning.parser.config.ModuleSizeCalculator;
 import dev.jcputney.elearning.parser.exception.ManifestParseException;
 import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
-import dev.jcputney.elearning.parser.validation.ValidationIssue;
-import dev.jcputney.elearning.parser.validation.ValidationResult;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12File;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Item;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organization;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resource;
 import dev.jcputney.elearning.parser.output.ModuleMetadata;
 import dev.jcputney.elearning.parser.output.metadata.scorm12.Scorm12Metadata;
-import dev.jcputney.elearning.parser.util.FileUtils;
+import dev.jcputney.elearning.parser.validation.ValidationIssue;
+import dev.jcputney.elearning.parser.validation.ValidationResult;
 import dev.jcputney.elearning.parser.validators.Scorm12ResourceValidator;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -86,34 +84,6 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
     super(moduleFileProvider);
   }
 
-  @Override
-  protected ValidationResult validateManifest(Scorm12Manifest manifest) {
-    Scorm12ResourceValidator validator = new Scorm12ResourceValidator();
-    return validator.validate(manifest);
-  }
-
-  @Override
-  protected Scorm12Metadata extractMetadata(Scorm12Manifest manifest,
-                                            ValidationResult validation)
-      throws ModuleException {
-    try {
-      // Existing extraction logic - unchanged
-      loadExternalMetadata(manifest);
-      validateRequiredFields(manifest);
-      boolean hasXapi = checkForXapi();
-      return createMetadata(manifest, hasXapi);
-    } catch (IOException e) {
-      throw new ManifestParseException("Failed to extract metadata", e);
-    } catch (XMLStreamException e) {
-      throw new ManifestParseException("Failed to extract metadata", e);
-    }
-  }
-
-  @Override
-  protected String getManifestFileName() {
-    return MANIFEST_FILE;
-  }
-
   /**
    * Loads external metadata files referenced in the manifest into the metadata object.
    *
@@ -134,6 +104,34 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
     loadOrganizationsMetadata(manifest
         .getOrganizations()
         .getOrganizationList());
+  }
+
+  @Override
+  protected ValidationResult validateManifest(Scorm12Manifest manifest) {
+    Scorm12ResourceValidator validator = new Scorm12ResourceValidator();
+    return validator.validate(manifest);
+  }
+
+  @Override
+  protected Scorm12Metadata extractMetadata(Scorm12Manifest manifest,
+      ValidationResult validation)
+      throws ModuleException {
+    try {
+      // Existing extraction logic - unchanged
+      loadExternalMetadata(manifest);
+      validateRequiredFields(manifest);
+      boolean hasXapi = checkForXapi();
+      return createMetadata(manifest, hasXapi);
+    } catch (IOException e) {
+      throw new ManifestParseException("Failed to extract metadata", e);
+    } catch (XMLStreamException e) {
+      throw new ManifestParseException("Failed to extract metadata", e);
+    }
+  }
+
+  @Override
+  protected String getManifestFileName() {
+    return MANIFEST_FILE;
   }
 
   /**
@@ -159,7 +157,8 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
     if (title == null || title.isEmpty()) {
       ValidationResult result = ValidationResult.of(
           ValidationIssue.error("SCORM12_MISSING_TITLE",
-              String.format("SCORM 1.2 manifest at '%s' is missing required <title> element", moduleFileProvider.getRootPath()),
+              String.format("SCORM 1.2 manifest at '%s' is missing required <title> element",
+                  moduleFileProvider.getRootPath()),
               "imsmanifest.xml")
       );
       throw result.toException("Failed to parse SCORM 1.2 module");
@@ -167,7 +166,9 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
     if (launchUrl == null || launchUrl.isEmpty()) {
       ValidationResult result = ValidationResult.of(
           ValidationIssue.error("SCORM12_MISSING_LAUNCH_URL",
-              String.format("SCORM 1.2 manifest at '%s' is missing required launch URL in <resource> element", moduleFileProvider.getRootPath()),
+              String.format(
+                  "SCORM 1.2 manifest at '%s' is missing required launch URL in <resource> element",
+                  moduleFileProvider.getRootPath()),
               "imsmanifest.xml")
       );
       throw result.toException("Failed to parse SCORM 1.2 module");

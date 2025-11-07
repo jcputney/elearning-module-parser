@@ -55,8 +55,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class TincanManifest implements PackageManifest {
 
   /**
-   * The list of activities in the manifest.
-   * TinCan packages typically contain a single activity.
+   * The list of activities in the manifest. TinCan packages typically contain a single activity.
    */
   @JacksonXmlElementWrapper(localName = "activities")
   @JacksonXmlProperty(localName = "activity")
@@ -85,7 +84,8 @@ public class TincanManifest implements PackageManifest {
   @Override
   @JsonIgnore
   public String getTitle() {
-    return Optional.ofNullable(activities)
+    return Optional
+        .ofNullable(activities)
         .filter(list -> !list.isEmpty())
         .map(list -> list.get(0))
         .map(TincanActivity::getName)
@@ -100,7 +100,8 @@ public class TincanManifest implements PackageManifest {
   @Override
   @JsonIgnore
   public String getDescription() {
-    return Optional.ofNullable(activities)
+    return Optional
+        .ofNullable(activities)
         .filter(list -> !list.isEmpty())
         .map(list -> list.get(0))
         .map(TincanActivity::getDescription)
@@ -115,7 +116,8 @@ public class TincanManifest implements PackageManifest {
   @Override
   @JsonIgnore
   public String getLaunchUrl() {
-    return Optional.ofNullable(activities)
+    return Optional
+        .ofNullable(activities)
         .filter(list -> !list.isEmpty())
         .map(list -> list.get(0))
         .map(TincanActivity::getLaunch)
@@ -130,7 +132,8 @@ public class TincanManifest implements PackageManifest {
   @Override
   @JsonIgnore
   public String getIdentifier() {
-    return Optional.ofNullable(activities)
+    return Optional
+        .ofNullable(activities)
         .filter(list -> !list.isEmpty())
         .map(list -> list.get(0))
         .map(TincanActivity::getId)
