@@ -127,7 +127,8 @@ public final class ModuleBatchRunner {
       "DESCRIPTION",
       "DURATION",
       "JSON PARSED",
-      "SEQUENCING"
+      "SEQUENCING",
+      "MULTI-SCO"
   };
   Logger logger = LoggerFactory.getLogger(ModuleBatchRunner.class);
 
@@ -586,8 +587,7 @@ public final class ModuleBatchRunner {
     }
     String[] segments = relative.split("/");
     if (segments.length < 2) {
-      throw new IllegalStateException(
-          "Module prefix must include learner UUID and version: " + moduleRoot);
+      return new S3ModuleJob(config.bucket(), moduleRoot, segments[0], null);
     }
     return new S3ModuleJob(config.bucket(), moduleRoot, segments[0], segments[1]);
   }
@@ -663,6 +663,11 @@ public final class ModuleBatchRunner {
       sequencingInfo = formatSequencingLevel(scorm2004.getSequencingLevel());
     }
 
+    String multiScoInfo = "N/A";
+    if (moduleType == ModuleType.SCORM_12 || moduleType == ModuleType.SCORM_2004) {
+      multiScoInfo = metadata.hasMultipleLaunchableUnits() ? "YES" : "NO";
+    }
+
     return ModuleProcessingResult.success(
         source,
         location,
@@ -673,7 +678,8 @@ public final class ModuleBatchRunner {
         metadata.getDescription(),
         metadata.getDuration(),
         jsonMatches,
-        sequencingInfo
+        sequencingInfo,
+        multiScoInfo
     );
   }
 
@@ -1081,19 +1087,19 @@ public final class ModuleBatchRunner {
                                         String location, String uuid, String version,
                                         String moduleTypeOrError, String title, String description,
                                         Duration duration, boolean jsonMatches,
-                                        String sequencingInfo) {
+                                        String sequencingInfo, String multiSco) {
 
     static ModuleProcessingResult success(SourceType source, String location, String uuid,
         String version, String moduleType, String title, String description, Duration duration,
-        boolean jsonMatches, String sequencingInfo) {
+        boolean jsonMatches, String sequencingInfo, String multiSco) {
       return new ModuleProcessingResult(source, true, "PASS", location, uuid, version,
-          moduleType, title, description, duration, jsonMatches, sequencingInfo);
+          moduleType, title, description, duration, jsonMatches, sequencingInfo, multiSco);
     }
 
     static ModuleProcessingResult failure(SourceType source, String location, String uuid,
         String version, String errorMessage) {
       return new ModuleProcessingResult(source, false, "FAIL", location, uuid, version,
-          errorMessage, "", "", Duration.ZERO, false, "N/A");
+          errorMessage, "", "", Duration.ZERO, false, "N/A", "N/A");
     }
   }
 
@@ -1164,7 +1170,10 @@ public final class ModuleBatchRunner {
                   .with(r -> r.jsonMatches ? "YES" : "NO"),
               new Column()
                   .header("SEQUENCING")
-                  .with(r -> r.sequencingInfo)
+                  .with(r -> r.sequencingInfo),
+              new Column()
+                  .header("MULTI-SCO")
+                  .with(r -> r.multiSco)
           ))
           .writeTo(System.out);
     }
@@ -1213,7 +1222,8 @@ public final class ModuleBatchRunner {
           escape(result.description),
           escape(result.duration.toString()),
           escape(result.jsonMatches ? "YES" : "NO"),
-          escape(result.sequencingInfo)));
+          escape(result.sequencingInfo),
+          escape(result.multiSco)));
       writer.newLine();
     }
 
@@ -1341,6 +1351,10 @@ public final class ModuleBatchRunner {
       Cell sequencingCell = row.createCell(10);
       sequencingCell.setCellStyle(defaultCellStyle);
       sequencingCell.setCellValue(result.sequencingInfo);
+
+      Cell multiScoCell = row.createCell(11);
+      multiScoCell.setCellStyle(defaultCellStyle);
+      multiScoCell.setCellValue(result.multiSco);
     }
 
     @Override
