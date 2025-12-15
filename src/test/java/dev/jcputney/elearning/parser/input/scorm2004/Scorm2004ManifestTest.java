@@ -23,7 +23,9 @@ package dev.jcputney.elearning.parser.input.scorm2004;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
@@ -41,6 +43,9 @@ import dev.jcputney.elearning.parser.input.scorm2004.sequencing.ActivityTree;
 import dev.jcputney.elearning.parser.parsers.Scorm2004Parser;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 import org.junit.jupiter.api.Test;
@@ -417,6 +422,69 @@ public class Scorm2004ManifestTest {
     // Verify that the version is correct
     assertNotNull(version, "Version should not be null");
     assertEquals("1", version, "Version should match the expected value");
+  }
+
+  /**
+   * Tests that getSubManifests() returns null when no sub-manifests are set.
+   */
+  @Test
+  void testGetSubManifestsReturnsNullWhenNotSet() {
+    // Arrange
+    Scorm2004Manifest manifest = new Scorm2004Manifest();
+    manifest.setIdentifier("test-id");
+
+    // Act & Assert
+    assertNull(manifest.getSubManifests());
+  }
+
+  /**
+   * Tests that setSubManifests() and getSubManifests() work correctly.
+   */
+  @Test
+  void testSetAndGetSubManifestsWorkCorrectly() {
+    // Arrange
+    Scorm2004Manifest subManifest1 = new Scorm2004Manifest();
+    subManifest1.setIdentifier("sub-manifest-1");
+    Scorm2004Manifest subManifest2 = new Scorm2004Manifest();
+    subManifest2.setIdentifier("sub-manifest-2");
+    List<Scorm2004Manifest> subManifests = Arrays.asList(subManifest1, subManifest2);
+
+    Scorm2004Manifest manifest = new Scorm2004Manifest();
+    manifest.setIdentifier("test-id");
+
+    // Act
+    manifest.setSubManifests(subManifests);
+
+    // Assert
+    assertEquals(2, manifest.getSubManifests().size());
+    assertEquals("sub-manifest-1", manifest.getSubManifests().get(0).getIdentifier());
+    assertEquals("sub-manifest-2", manifest.getSubManifests().get(1).getIdentifier());
+  }
+
+  /**
+   * Tests that equals() considers sub-manifests.
+   */
+  @Test
+  void testEqualsConsidersSubManifests() {
+    // Arrange
+    Scorm2004Manifest subManifest = new Scorm2004Manifest();
+    subManifest.setIdentifier("sub-manifest");
+
+    Scorm2004Manifest manifest1 = new Scorm2004Manifest();
+    manifest1.setIdentifier("test-id");
+    manifest1.setSubManifests(Collections.singletonList(subManifest));
+
+    Scorm2004Manifest manifest2 = new Scorm2004Manifest();
+    manifest2.setIdentifier("test-id");
+    manifest2.setSubManifests(Collections.singletonList(subManifest));
+
+    Scorm2004Manifest manifest3 = new Scorm2004Manifest();
+    manifest3.setIdentifier("test-id");
+    // No sub-manifests
+
+    // Act & Assert
+    assertEquals(manifest1, manifest2);
+    assertNotEquals(manifest1, manifest3);
   }
 
 }

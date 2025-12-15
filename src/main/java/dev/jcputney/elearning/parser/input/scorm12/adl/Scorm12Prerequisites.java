@@ -18,9 +18,12 @@
 package dev.jcputney.elearning.parser.input.scorm12.adl;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
+import dev.jcputney.elearning.parser.input.scorm12.adl.prerequisite.PrerequisiteExpression;
+import dev.jcputney.elearning.parser.input.scorm12.adl.prerequisite.PrerequisiteParser;
 import java.io.Serializable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -92,6 +95,36 @@ public final class Scorm12Prerequisites implements Serializable {
    */
   public void setType(String type) {
     this.type = type;
+  }
+
+  /**
+   * Parses the prerequisite value and returns a structured expression tree.
+   *
+   * <p>This method parses the AICC script format used in SCORM 1.2 prerequisites.
+   * The AICC script supports:
+   * <ul>
+   *   <li>{@code &} - AND operator</li>
+   *   <li>{@code |} - OR operator</li>
+   *   <li>{@code ~} - NOT operator</li>
+   *   <li>Parentheses for grouping</li>
+   * </ul>
+   *
+   * <p>If the value is null or empty, or if the type is not "aicc_script", this method
+   * returns null. For malformed expressions, it returns a
+   * {@link dev.jcputney.elearning.parser.input.scorm12.adl.prerequisite.ParseError ParseError}
+   * instead of throwing an exception.</p>
+   *
+   * @return the parsed expression tree, a ParseError for invalid expressions, or null if
+   *         no parsing is needed
+   */
+  @JsonIgnore
+  public PrerequisiteExpression getParsedExpression() {
+    if (value == null || value.isBlank()) {
+      return null;
+    }
+    // Parse regardless of type attribute - the type attribute is optional and
+    // many SCORM 1.2 packages omit it even when using AICC script format
+    return PrerequisiteParser.parse(value);
   }
 
   @Override

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import dev.jcputney.elearning.parser.input.PackageManifest;
@@ -357,6 +358,18 @@ public final class Scorm12Manifest implements PackageManifest {
   private Scorm12Resources resources;
 
   /**
+   * Contains nested sub-manifests within this content package. Sub-manifests allow for the
+   * aggregation of multiple content packages into a single distributable unit. Each sub-manifest
+   * has its own organizations and resources.
+   *
+   * <p>According to the IMS Content Packaging specification, a manifest may contain zero or more
+   * nested manifest elements.</p>
+   */
+  @JacksonXmlElementWrapper(useWrapping = false)
+  @JacksonXmlProperty(localName = "manifest", namespace = NAMESPACE_URI)
+  private List<Scorm12Manifest> subManifests;
+
+  /**
    * Default constructor for the Scorm12Manifest class. This constructor initializes an instance of
    * the Scorm12Manifest class without performing any operations. Designed primarily for scenarios
    * where explicit initialization of fields is not required.
@@ -602,6 +615,24 @@ public final class Scorm12Manifest implements PackageManifest {
     this.resources = resources;
   }
 
+  /**
+   * Retrieves the list of nested sub-manifests within this content package.
+   *
+   * @return a list of Scorm12Manifest objects representing the sub-manifests, or null if none exist
+   */
+  public List<Scorm12Manifest> getSubManifests() {
+    return this.subManifests;
+  }
+
+  /**
+   * Sets the list of nested sub-manifests within this content package.
+   *
+   * @param subManifests a list of Scorm12Manifest objects to be set as sub-manifests
+   */
+  public void setSubManifests(List<Scorm12Manifest> subManifests) {
+    this.subManifests = subManifests;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -619,6 +650,7 @@ public final class Scorm12Manifest implements PackageManifest {
         .append(getMetadata(), that.getMetadata())
         .append(getOrganizations(), that.getOrganizations())
         .append(getResources(), that.getResources())
+        .append(getSubManifests(), that.getSubManifests())
         .isEquals();
   }
 
@@ -631,6 +663,7 @@ public final class Scorm12Manifest implements PackageManifest {
         .append(getMetadata())
         .append(getOrganizations())
         .append(getResources())
+        .append(getSubManifests())
         .toHashCode();
   }
 

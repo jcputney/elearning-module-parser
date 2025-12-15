@@ -37,7 +37,9 @@ import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organizations;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resource;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resources;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -219,6 +221,69 @@ class Scorm12ManifestTest {
     // Act & Assert
     assertNotEquals(manifest1, manifest2);
     assertNotEquals(manifest1.hashCode(), manifest2.hashCode());
+  }
+
+  /**
+   * Tests that getSubManifests() returns null when no sub-manifests are set.
+   */
+  @Test
+  void getSubManifestsReturnsNullWhenNotSet() {
+    // Arrange
+    Scorm12Manifest manifest = new Scorm12Manifest();
+    manifest.setIdentifier(TEST_ID);
+
+    // Act & Assert
+    assertEquals(null, manifest.getSubManifests());
+  }
+
+  /**
+   * Tests that setSubManifests() and getSubManifests() work correctly.
+   */
+  @Test
+  void setAndGetSubManifestsWorkCorrectly() {
+    // Arrange
+    Scorm12Manifest subManifest1 = new Scorm12Manifest();
+    subManifest1.setIdentifier("sub-manifest-1");
+    Scorm12Manifest subManifest2 = new Scorm12Manifest();
+    subManifest2.setIdentifier("sub-manifest-2");
+    List<Scorm12Manifest> subManifests = Arrays.asList(subManifest1, subManifest2);
+
+    Scorm12Manifest manifest = new Scorm12Manifest();
+    manifest.setIdentifier(TEST_ID);
+
+    // Act
+    manifest.setSubManifests(subManifests);
+
+    // Assert
+    assertEquals(2, manifest.getSubManifests().size());
+    assertEquals("sub-manifest-1", manifest.getSubManifests().get(0).getIdentifier());
+    assertEquals("sub-manifest-2", manifest.getSubManifests().get(1).getIdentifier());
+  }
+
+  /**
+   * Tests that equals() considers sub-manifests.
+   */
+  @Test
+  void equalsConsidersSubManifests() {
+    // Arrange
+    Scorm12Manifest subManifest = new Scorm12Manifest();
+    subManifest.setIdentifier("sub-manifest");
+
+    Scorm12Manifest manifest1 = new Scorm12Manifest();
+    manifest1.setIdentifier(TEST_ID);
+    manifest1.setSubManifests(Collections.singletonList(subManifest));
+
+    Scorm12Manifest manifest2 = new Scorm12Manifest();
+    manifest2.setIdentifier(TEST_ID);
+    manifest2.setSubManifests(Collections.singletonList(subManifest));
+
+    Scorm12Manifest manifest3 = new Scorm12Manifest();
+    manifest3.setIdentifier(TEST_ID);
+    // No sub-manifests
+
+    // Act & Assert
+    assertEquals(manifest1, manifest2);
+    assertNotEquals(manifest1, manifest3);
   }
 
   /**
