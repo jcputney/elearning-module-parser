@@ -74,7 +74,7 @@
     <version.poi.ooxml>5.5.1</version.poi.ooxml>
     <version.slf4j>2.0.17</version.slf4j>
     <version.testcontainers>2.0.2</version.testcontainers>
-    <version.testcontainers.junit>1.21.3</version.testcontainers.junit>
+    <version.testcontainers.junit>1.21.4</version.testcontainers.junit>
     <version.testcontainers.localstack>1.21.3</version.testcontainers.localstack>
     <version.threeten>1.8.0</version.threeten>
   </properties>
