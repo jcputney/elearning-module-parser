@@ -211,7 +211,28 @@ public final class AiccManifest implements PackageManifest {
           return result.toException("Failed to build AICC manifest");
         });
 
-    this.launchUrl = rootAssignableUnit.getFileName();
+    this.launchUrl = buildLaunchUrl(rootAssignableUnit);
+  }
+
+  /**
+   * Builds the launch URL for an assignable unit by combining its {@code file_name} with any
+   * {@code web_launch} parameters, per the AICC CMI001 specification (Section 6.3.1).
+   * <p>
+   * If {@code web_launch} is non-empty, it is appended as query parameters to the base URL. The
+   * method handles the case where the base URL may already contain a query string.
+   * </p>
+   *
+   * @param au the assignable unit to build the launch URL for
+   * @return the constructed launch URL
+   */
+  private static String buildLaunchUrl(AssignableUnit au) {
+    String baseUrl = au.getFileName();
+    String webLaunch = au.getWebLaunch();
+    if (StringUtils.isBlank(webLaunch)) {
+      return baseUrl;
+    }
+    String separator = baseUrl.contains("?") ? "&" : "?";
+    return baseUrl + separator + webLaunch;
   }
 
   /**
@@ -605,12 +626,11 @@ public final class AiccManifest implements PackageManifest {
   public String getDescription() {
     // Try to get description from root AU's descriptor first (.des file)
     if (assignableUnits != null && !assignableUnits.isEmpty()) {
-      // Find the root assignable unit (the one that matches launchUrl)
+      // Find the root assignable unit (the one whose constructed launch URL matches)
       AssignableUnit rootAU = assignableUnits
           .stream()
           .filter(au -> au != null && au.getFileName() != null &&
-              au
-                  .getFileName()
+              buildLaunchUrl(au)
                   .equals(this.launchUrl))
           .findFirst()
           .orElse(assignableUnits.get(0)); // Fallback to first AU if no match

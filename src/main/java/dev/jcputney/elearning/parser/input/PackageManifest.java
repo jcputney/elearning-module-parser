@@ -17,6 +17,7 @@
 
 package dev.jcputney.elearning.parser.input;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.time.Duration;
 
@@ -67,4 +68,21 @@ public interface PackageManifest extends Serializable {
    * @return the duration of the package
    */
   Duration getDuration();
+
+  /**
+   * Determines whether this package launches content from an external URL rather than from files
+   * contained within the package itself.
+   * <p>
+   * When {@code true}, the launch URL points to a remote server (e.g., an externally hosted AICC
+   * course), and the LMS should navigate directly to it rather than resolving a relative path
+   * within the package contents.
+   * </p>
+   *
+   * @return {@code true} if the launch URL is an absolute HTTP/HTTPS URL, {@code false} otherwise
+   */
+  @JsonIgnore
+  default boolean isExternalLaunch() {
+    String url = getLaunchUrl();
+    return url != null && (url.startsWith("http://") || url.startsWith("https://"));
+  }
 }

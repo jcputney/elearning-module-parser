@@ -22,6 +22,7 @@
 package dev.jcputney.elearning.parser.input.aicc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -442,5 +443,267 @@ public class AiccManifestTest {
     // Verify the exception message contains the validation error
     assertTrue(exception.getMessage().contains("AICC_NO_ROOT_AU"));
     assertTrue(exception.getMessage().contains("No root assignable unit found"));
+  }
+
+  /**
+   * Tests that the launch URL includes web_launch parameters when present.
+   */
+  @Test
+  void testAiccManifestConstructor_withWebLaunchParams() throws ModuleParsingException {
+    AiccCourse aiccCourse = createMinimalCourse();
+
+    AssignableUnit assignableUnit = new AssignableUnit();
+    assignableUnit.setSystemId("A1");
+    assignableUnit.setCommandLine("");
+    assignableUnit.setFileName("https://lms.example.com/aicc/aicc.php");
+    assignableUnit.setWebLaunch("foo=bar&baz=123");
+    assignableUnit.setCoreVendor("");
+
+    Descriptor descriptor = new Descriptor();
+    descriptor.setSystemId("A1");
+    descriptor.setTitle("Test AU");
+
+    List<AssignableUnit> assignableUnits = new ArrayList<>();
+    assignableUnits.add(assignableUnit);
+
+    List<Descriptor> descriptors = new ArrayList<>();
+    descriptors.add(descriptor);
+
+    List<CourseStructure> courseStructures = new ArrayList<>();
+    courseStructures.add(new CourseStructure("ROOT", "A1"));
+
+    AiccManifest manifest = new AiccManifest(aiccCourse, assignableUnits, descriptors,
+        courseStructures);
+
+    assertEquals("https://lms.example.com/aicc/aicc.php?foo=bar&baz=123",
+        manifest.getLaunchUrl());
+  }
+
+  /**
+   * Tests that the launch URL uses ampersand when file_name already contains a query string.
+   */
+  @Test
+  void testAiccManifestConstructor_withWebLaunchAndExistingQueryString()
+      throws ModuleParsingException {
+    AiccCourse aiccCourse = createMinimalCourse();
+
+    AssignableUnit assignableUnit = new AssignableUnit();
+    assignableUnit.setSystemId("A1");
+    assignableUnit.setCommandLine("");
+    assignableUnit.setFileName("https://lms.example.com/aicc/aicc.php?mode=normal");
+    assignableUnit.setWebLaunch("foo=bar");
+    assignableUnit.setCoreVendor("");
+
+    Descriptor descriptor = new Descriptor();
+    descriptor.setSystemId("A1");
+    descriptor.setTitle("Test AU");
+
+    List<AssignableUnit> assignableUnits = new ArrayList<>();
+    assignableUnits.add(assignableUnit);
+
+    List<Descriptor> descriptors = new ArrayList<>();
+    descriptors.add(descriptor);
+
+    List<CourseStructure> courseStructures = new ArrayList<>();
+    courseStructures.add(new CourseStructure("ROOT", "A1"));
+
+    AiccManifest manifest = new AiccManifest(aiccCourse, assignableUnits, descriptors,
+        courseStructures);
+
+    assertEquals("https://lms.example.com/aicc/aicc.php?mode=normal&foo=bar",
+        manifest.getLaunchUrl());
+  }
+
+  /**
+   * Tests that the launch URL is just file_name when web_launch is empty.
+   */
+  @Test
+  void testAiccManifestConstructor_withEmptyWebLaunch() throws ModuleParsingException {
+    AiccCourse aiccCourse = createMinimalCourse();
+
+    AssignableUnit assignableUnit = new AssignableUnit();
+    assignableUnit.setSystemId("A1");
+    assignableUnit.setCommandLine("");
+    assignableUnit.setFileName("default.htm");
+    assignableUnit.setWebLaunch("");
+    assignableUnit.setCoreVendor("");
+
+    Descriptor descriptor = new Descriptor();
+    descriptor.setSystemId("A1");
+    descriptor.setTitle("Test AU");
+
+    List<AssignableUnit> assignableUnits = new ArrayList<>();
+    assignableUnits.add(assignableUnit);
+
+    List<Descriptor> descriptors = new ArrayList<>();
+    descriptors.add(descriptor);
+
+    List<CourseStructure> courseStructures = new ArrayList<>();
+    courseStructures.add(new CourseStructure("ROOT", "A1"));
+
+    AiccManifest manifest = new AiccManifest(aiccCourse, assignableUnits, descriptors,
+        courseStructures);
+
+    assertEquals("default.htm", manifest.getLaunchUrl());
+  }
+
+  /**
+   * Tests that isExternalLaunch returns true for an absolute HTTP URL.
+   */
+  @Test
+  void testIsExternalLaunch_withHttpsUrl() throws ModuleParsingException {
+    AiccCourse aiccCourse = createMinimalCourse();
+
+    AssignableUnit assignableUnit = new AssignableUnit();
+    assignableUnit.setSystemId("A1");
+    assignableUnit.setCommandLine("");
+    assignableUnit.setFileName("https://lms.example.com/aicc/aicc.php");
+    assignableUnit.setCoreVendor("");
+
+    Descriptor descriptor = new Descriptor();
+    descriptor.setSystemId("A1");
+    descriptor.setTitle("Test AU");
+
+    List<AssignableUnit> assignableUnits = new ArrayList<>();
+    assignableUnits.add(assignableUnit);
+
+    List<Descriptor> descriptors = new ArrayList<>();
+    descriptors.add(descriptor);
+
+    List<CourseStructure> courseStructures = new ArrayList<>();
+    courseStructures.add(new CourseStructure("ROOT", "A1"));
+
+    AiccManifest manifest = new AiccManifest(aiccCourse, assignableUnits, descriptors,
+        courseStructures);
+
+    assertTrue(manifest.isExternalLaunch());
+  }
+
+  /**
+   * Tests that isExternalLaunch returns false for a relative file path.
+   */
+  @Test
+  void testIsExternalLaunch_withRelativePath() throws ModuleParsingException {
+    AiccCourse aiccCourse = createMinimalCourse();
+
+    AssignableUnit assignableUnit = new AssignableUnit();
+    assignableUnit.setSystemId("A1");
+    assignableUnit.setCommandLine("");
+    assignableUnit.setFileName("default.htm");
+    assignableUnit.setCoreVendor("");
+
+    Descriptor descriptor = new Descriptor();
+    descriptor.setSystemId("A1");
+    descriptor.setTitle("Test AU");
+
+    List<AssignableUnit> assignableUnits = new ArrayList<>();
+    assignableUnits.add(assignableUnit);
+
+    List<Descriptor> descriptors = new ArrayList<>();
+    descriptors.add(descriptor);
+
+    List<CourseStructure> courseStructures = new ArrayList<>();
+    courseStructures.add(new CourseStructure("ROOT", "A1"));
+
+    AiccManifest manifest = new AiccManifest(aiccCourse, assignableUnits, descriptors,
+        courseStructures);
+
+    assertFalse(manifest.isExternalLaunch());
+  }
+
+  /**
+   * Tests that isExternalLaunch returns true when web_launch params make the URL absolute.
+   */
+  @Test
+  void testIsExternalLaunch_withExternalUrlAndWebLaunch() throws ModuleParsingException {
+    AiccCourse aiccCourse = createMinimalCourse();
+
+    AssignableUnit assignableUnit = new AssignableUnit();
+    assignableUnit.setSystemId("A1");
+    assignableUnit.setCommandLine("");
+    assignableUnit.setFileName("https://lms.example.com/aicc/aicc.php");
+    assignableUnit.setWebLaunch("foo=bar&baz=123");
+    assignableUnit.setCoreVendor("");
+
+    Descriptor descriptor = new Descriptor();
+    descriptor.setSystemId("A1");
+    descriptor.setTitle("Test AU");
+
+    List<AssignableUnit> assignableUnits = new ArrayList<>();
+    assignableUnits.add(assignableUnit);
+
+    List<Descriptor> descriptors = new ArrayList<>();
+    descriptors.add(descriptor);
+
+    List<CourseStructure> courseStructures = new ArrayList<>();
+    courseStructures.add(new CourseStructure("ROOT", "A1"));
+
+    AiccManifest manifest = new AiccManifest(aiccCourse, assignableUnits, descriptors,
+        courseStructures);
+
+    assertTrue(manifest.isExternalLaunch());
+    assertEquals("https://lms.example.com/aicc/aicc.php?foo=bar&baz=123",
+        manifest.getLaunchUrl());
+  }
+
+  /**
+   * Tests that getDescription correctly finds the root AU when launch URL includes web_launch.
+   */
+  @Test
+  void testGetDescription_withWebLaunchParams() throws ModuleParsingException {
+    AiccCourse aiccCourse = createMinimalCourse();
+    aiccCourse.setCourseDescription("Course level description");
+
+    AssignableUnit assignableUnit = new AssignableUnit();
+    assignableUnit.setSystemId("A1");
+    assignableUnit.setCommandLine("");
+    assignableUnit.setFileName("https://lms.example.com/aicc/aicc.php");
+    assignableUnit.setWebLaunch("foo=bar");
+    assignableUnit.setCoreVendor("");
+
+    Descriptor descriptor = new Descriptor();
+    descriptor.setSystemId("A1");
+    descriptor.setTitle("Test AU");
+    descriptor.setDescription("AU level description from descriptor");
+
+    List<AssignableUnit> assignableUnits = new ArrayList<>();
+    assignableUnits.add(assignableUnit);
+
+    List<Descriptor> descriptors = new ArrayList<>();
+    descriptors.add(descriptor);
+
+    List<CourseStructure> courseStructures = new ArrayList<>();
+    courseStructures.add(new CourseStructure("ROOT", "A1"));
+
+    AiccManifest manifest = new AiccManifest(aiccCourse, assignableUnits, descriptors,
+        courseStructures);
+
+    // Should find the root AU's descriptor description, not fall back to course description
+    assertEquals("AU level description from descriptor", manifest.getDescription());
+  }
+
+  /**
+   * Creates a minimal AiccCourse for use in tests.
+   */
+  private AiccCourse createMinimalCourse() {
+    AiccCourse.Course course = new AiccCourse.Course();
+    course.setCourseCreator("Test Creator");
+    course.setCourseId("TEST-001");
+    course.setCourseTitle("Test Course");
+    course.setCourseSystem("HTML");
+    course.setLevel("1");
+    course.setMaxFieldsCst("100");
+    course.setMaxFieldsOrt("50");
+    course.setTotalAus("1");
+    course.setTotalBlocks("0");
+    course.setVersion("1.0");
+
+    AiccCourse.CourseBehavior courseBehavior = new AiccCourse.CourseBehavior();
+    courseBehavior.setMaxNormal("1");
+
+    AiccCourse aiccCourse = new AiccCourse();
+    aiccCourse.setCourse(course);
+    aiccCourse.setCourseBehavior(courseBehavior);
+    return aiccCourse;
   }
 }
