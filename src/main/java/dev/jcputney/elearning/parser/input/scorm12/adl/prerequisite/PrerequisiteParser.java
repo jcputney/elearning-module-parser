@@ -26,7 +26,7 @@ import java.util.List;
  * <p>The parser implements a recursive descent parser for the following grammar:
  * <pre>
  * expression  → term (('|') term)*
- * term        → factor (('&') factor)*
+ * term        → factor (('&amp;') factor)*
  * factor      → '~'? atom
  * atom        → IDENTIFIER | '(' expression ')'
  * IDENTIFIER  → [A-Za-z0-9_-]+
