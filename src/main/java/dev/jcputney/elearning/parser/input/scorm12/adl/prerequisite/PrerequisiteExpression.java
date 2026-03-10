@@ -51,19 +51,6 @@ public sealed interface PrerequisiteExpression
     permits AndExpression, OrExpression, NotExpression, ItemReference, ParseError {
 
   /**
-   * Visitor pattern for processing prerequisite expressions.
-   *
-   * @param <T> the return type of the visitor methods
-   */
-  interface Visitor<T> {
-    T visitAnd(AndExpression and);
-    T visitOr(OrExpression or);
-    T visitNot(NotExpression not);
-    T visitItemReference(ItemReference itemRef);
-    T visitParseError(ParseError error);
-  }
-
-  /**
    * Accepts a visitor to process this expression.
    *
    * @param visitor the visitor to accept
@@ -71,4 +58,54 @@ public sealed interface PrerequisiteExpression
    * @return the result of the visitor processing this expression
    */
   <T> T accept(Visitor<T> visitor);
+
+  /**
+   * Visitor pattern for processing prerequisite expressions.
+   *
+   * @param <T> the return type of the visitor methods
+   */
+  interface Visitor<T> {
+
+    /**
+     * Visits an AND expression and processes it using the logic defined by the visitor.
+     *
+     * @param and the AND expression to be visited
+     * @return the result of applying the visitor's logic to the given AND expression
+     */
+    T visitAnd(AndExpression and);
+
+    /**
+     * Visits an OR expression and processes it using the logic defined by the visitor.
+     *
+     * @param or the OR expression to be visited
+     * @return the result of applying the visitor's logic to the given OR expression
+     */
+    T visitOr(OrExpression or);
+
+    /**
+     * Visits a NOT expression and processes it using the logic defined by the visitor.
+     *
+     * @param not the NOT expression to be visited
+     * @return the result of applying the visitor's logic to the given NOT expression
+     */
+    T visitNot(NotExpression not);
+
+    /**
+     * Processes an {@link ItemReference} in the context of the visitor pattern.
+     *
+     * @param itemRef the {@link ItemReference} to be visited, representing a reference to a
+     * specific item in a SCORM prerequisite script.
+     * @return the result of applying the visitor's logic to the given {@link ItemReference}.
+     */
+    T visitItemReference(ItemReference itemRef);
+
+    /**
+     * Visits a {@link ParseError} and processes it using the logic defined by the visitor.
+     *
+     * @param error the {@link ParseError} instance representing a parsing error in a prerequisite
+     * expression
+     * @return the result of applying the visitor's logic to the given {@link ParseError}
+     */
+    T visitParseError(ParseError error);
+  }
 }
