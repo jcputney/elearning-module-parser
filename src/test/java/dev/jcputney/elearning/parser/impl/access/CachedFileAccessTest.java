@@ -413,6 +413,50 @@ class CachedFileAccessTest {
   }
 
   @Test
+  void testConcurrentCacheAccessCountsAreAccurate() throws InterruptedException {
+    final int threadCount = 10;
+    final int operationsPerThread = 100;
+    final int totalOperations = threadCount * operationsPerThread;
+
+    // Set up a single file that all threads will access
+    mockFileAccess.setFileExistsResponse("concurrent-file.txt", true);
+
+    final CountDownLatch startLatch = new CountDownLatch(1);
+    final CountDownLatch finishLatch = new CountDownLatch(threadCount);
+    final AtomicInteger exceptionCount = new AtomicInteger(0);
+
+    ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+
+    for (int i = 0; i < threadCount; i++) {
+      executor.submit(() -> {
+        try {
+          startLatch.await();
+          for (int j = 0; j < operationsPerThread; j++) {
+            cachedFileAccess.fileExists("concurrent-file.txt");
+          }
+        } catch (Exception e) {
+          exceptionCount.incrementAndGet();
+        } finally {
+          finishLatch.countDown();
+        }
+      });
+    }
+
+    startLatch.countDown();
+    boolean completed = finishLatch.await(30, TimeUnit.SECONDS);
+    executor.shutdown();
+
+    assertTrue(completed, "Not all threads completed in time");
+    assertEquals(0, exceptionCount.get(), "Exceptions occurred during concurrent access");
+
+    Map<String, Object> stats = cachedFileAccess.getCacheStatistics();
+    long hits = (long) stats.get("hits");
+    long misses = (long) stats.get("misses");
+    assertEquals(totalOperations, hits + misses,
+        "Total hits + misses should equal total operations");
+  }
+
+  @Test
   void largeFileHandlingCachesContentCorrectly() throws IOException {
     // Create a large file content (1MB)
     byte[] largeContent = new byte[1024 * 1024];

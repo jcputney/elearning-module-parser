@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * A decorator implementation of {@link FileAccess} that adds caching capability to any
@@ -112,7 +113,7 @@ public final class CachedFileAccess implements FileAccess {
    * <p>
    * This metric can be used to monitor cache performance and efficiency.
    */
-  private long cacheHits = 0;
+  private final AtomicLong cacheHits = new AtomicLong(0);
 
   /**
    * Tracks the number of cache misses encountered during operations that utilize caching.
@@ -121,7 +122,7 @@ public final class CachedFileAccess implements FileAccess {
    * retrieve it from the underlying data source. This variable is incremented each time such an
    * event occurs.
    */
-  private long cacheMisses = 0;
+  private final AtomicLong cacheMisses = new AtomicLong(0);
 
   /**
    * Constructs a new {@link CachedFileAccess} instance that wraps the specified {@link FileAccess}
@@ -157,11 +158,11 @@ public final class CachedFileAccess implements FileAccess {
   public boolean fileExistsInternal(String path) {
     Boolean cached = fileExistsCache.get(path);
     if (cached != null) {
-      cacheHits++;
+      cacheHits.incrementAndGet();
       return cached;
     }
 
-    cacheMisses++;
+    cacheMisses.incrementAndGet();
     boolean exists = delegate.fileExists(path);
     fileExistsCache.put(path, exists);
     return exists;
@@ -179,11 +180,11 @@ public final class CachedFileAccess implements FileAccess {
     try {
       List<String> cached = listFilesCache.get(directoryPath);
       if (cached != null) {
-        cacheHits++;
+        cacheHits.incrementAndGet();
         return cached;
       }
 
-      cacheMisses++;
+      cacheMisses.incrementAndGet();
       return listFilesCache.computeIfAbsent(directoryPath, p -> {
         try {
           // Get the file listing from the delegate
@@ -220,11 +221,11 @@ public final class CachedFileAccess implements FileAccess {
     try {
       byte[] cached = fileContentsCache.get(path);
       if (cached != null) {
-        cacheHits++;
+        cacheHits.incrementAndGet();
         return new ByteArrayInputStream(cached);
       }
 
-      cacheMisses++;
+      cacheMisses.incrementAndGet();
       byte[] contents = fileContentsCache.computeIfAbsent(path, p -> {
         try (InputStream is = delegate.getFileContents(p);
             ByteArrayOutputStream os = new ByteArrayOutputStream()) {
@@ -261,8 +262,8 @@ public final class CachedFileAccess implements FileAccess {
     fileExistsCache.clear();
     listFilesCache.clear();
     fileContentsCache.clear();
-    cacheHits = 0;
-    cacheMisses = 0;
+    cacheHits.set(0);
+    cacheMisses.set(0);
   }
 
   /**
@@ -301,10 +302,10 @@ public final class CachedFileAccess implements FileAccess {
    */
   public Map<String, Object> getCacheStatistics() {
     Map<String, Object> stats = new HashMap<>();
-    stats.put("hits", cacheHits);
-    stats.put("misses", cacheMisses);
-    long total = cacheHits + cacheMisses;
-    double hitRatio = total > 0 ? (double) cacheHits / total : 0.0;
+    stats.put("hits", cacheHits.get());
+    stats.put("misses", cacheMisses.get());
+    long total = cacheHits.get() + cacheMisses.get();
+    double hitRatio = total > 0 ? (double) cacheHits.get() / total : 0.0;
     stats.put("hitRatio", hitRatio);
     stats.put("fileExistsCacheSize", fileExistsCache.size());
     stats.put("listFilesCacheSize", listFilesCache.size());
