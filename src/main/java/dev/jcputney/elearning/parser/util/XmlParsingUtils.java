@@ -46,6 +46,17 @@ import javax.xml.stream.XMLStreamReader;
 public final class XmlParsingUtils {
 
   /**
+   * Default maximum allowed XML size in bytes (50 MB). XML content exceeding this limit will be
+   * rejected to prevent denial-of-service attacks via oversized payloads.
+   */
+  public static final long DEFAULT_MAX_XML_SIZE = 50L * 1024 * 1024;
+
+  /**
+   * System property key for overriding the maximum allowed XML size.
+   */
+  private static final String MAX_XML_SIZE_PROPERTY = "elearning.parser.maxXmlSize";
+
+  /**
    * A precompiled {@link Pattern} designed to match unescaped ampersand characters in a string.
    * <p>
    * This pattern identifies ampersands that are not part of a valid HTML or XML entity. Unescaped
@@ -81,6 +92,25 @@ public final class XmlParsingUtils {
    */
   private XmlParsingUtils() {
     throw new AssertionError("Utility class should not be instantiated");
+  }
+
+  /**
+   * Returns the maximum allowed XML size in bytes. The value can be overridden via the system
+   * property {@code elearning.parser.maxXmlSize}. If the property is not set or is not a valid
+   * long, the {@link #DEFAULT_MAX_XML_SIZE} is returned.
+   *
+   * @return the maximum allowed XML size in bytes
+   */
+  public static long getMaxXmlSize() {
+    String override = System.getProperty(MAX_XML_SIZE_PROPERTY);
+    if (override != null) {
+      try {
+        return Long.parseLong(override);
+      } catch (NumberFormatException e) {
+        // fall through to default
+      }
+    }
+    return DEFAULT_MAX_XML_SIZE;
   }
 
   /**
@@ -154,6 +184,7 @@ public final class XmlParsingUtils {
       factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, true);
       factory.setProperty(XMLInputFactory.IS_VALIDATING, false);
       factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+      factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
 
       XmlMapper xmlMapper = createConfiguredXmlMapper();
       try (StringReader stringReader = new StringReader(sanitizedXml)) {
@@ -300,10 +331,17 @@ public final class XmlParsingUtils {
    * @throws IOException If an I/O error occurs while reading from the InputStream.
    */
   private static String readStreamToString(InputStream stream, Charset charset) throws IOException {
+    long maxSize = getMaxXmlSize();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     byte[] buffer = new byte[8192];
+    long totalBytesRead = 0;
     int bytesRead;
     while ((bytesRead = stream.read(buffer)) != -1) {
+      totalBytesRead += bytesRead;
+      if (totalBytesRead > maxSize) {
+        throw new IOException(
+            "XML content exceeds maximum allowed size of " + maxSize + " bytes");
+      }
       outputStream.write(buffer, 0, bytesRead);
     }
     return outputStream.toString(charset);

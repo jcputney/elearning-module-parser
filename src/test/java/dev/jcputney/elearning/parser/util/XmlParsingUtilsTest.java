@@ -16,6 +16,9 @@
 
 package dev.jcputney.elearning.parser.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -32,6 +35,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.stream.XMLStreamException;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -134,6 +138,53 @@ class XmlParsingUtilsTest {
     XmlParsingUtils.loadExternalMetadataIntoMetadata(metadata, moduleFileProvider);
 
     assertNotNull(metadata.getLom());
+  }
+
+  @Test
+  void testOversizedXmlRejected() {
+    // Set a very small limit so we don't need to allocate megabytes in a test
+    String previousValue = System.getProperty("elearning.parser.maxXmlSize");
+    try {
+      System.setProperty("elearning.parser.maxXmlSize", "100");
+      // Create an InputStream larger than 100 bytes
+      byte[] oversized = new byte[200];
+      java.util.Arrays.fill(oversized, (byte) 'x');
+      InputStream stream = new ByteArrayInputStream(oversized);
+
+      assertThatThrownBy(() -> XmlParsingUtils.parseXmlToObject(stream, TestXmlClass.class))
+          .isInstanceOf(IOException.class)
+          .hasMessageContaining("exceeds maximum allowed size");
+    } finally {
+      if (previousValue == null) {
+        System.clearProperty("elearning.parser.maxXmlSize");
+      } else {
+        System.setProperty("elearning.parser.maxXmlSize", previousValue);
+      }
+    }
+  }
+
+  @Test
+  void testNormalSizedXmlNotRejected() {
+    String xml = "<TestXmlClass><name>Test</name><value>42</value></TestXmlClass>";
+    InputStream stream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+
+    assertThatCode(() -> XmlParsingUtils.parseXmlToObject(stream, TestXmlClass.class))
+        .doesNotThrowAnyException();
+  }
+
+  @Test
+  void testManifestWithDoctypeRejected() {
+    String xml = "<?xml version=\"1.0\"?>\n"
+        + "<!DOCTYPE foo [\n"
+        + "  <!ENTITY xxe \"test\">\n"
+        + "]>\n"
+        + "<TestXmlClass><name>&xxe;</name><value>1</value></TestXmlClass>";
+    InputStream stream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+
+    // DTD processing is disabled, so the entity reference will fail. The StAX
+    // XMLStreamException may be wrapped as an IOException by Jackson/the error handler.
+    assertThatThrownBy(() -> XmlParsingUtils.parseXmlToObject(stream, TestXmlClass.class))
+        .isInstanceOfAny(XMLStreamException.class, IOException.class);
   }
 
   /**
