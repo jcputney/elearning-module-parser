@@ -8,7 +8,6 @@ import dev.jcputney.elearning.parser.validation.ValidationResult;
 import dev.jcputney.elearning.parser.validators.rules.ValidationRule;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Validates that all file paths in the manifest are safe and don't contain directory traversal
@@ -23,11 +22,6 @@ import java.util.regex.Pattern;
  * </ul>
  */
 public class PathSecurityRule implements ValidationRule<Scorm12Manifest> {
-
-  private static final Pattern PATH_TRAVERSAL = Pattern.compile("\\.\\./|\\.\\\\");
-  private static final Pattern ABSOLUTE_PATH = Pattern.compile("^[/\\\\]|^[a-zA-Z]:");
-  private static final Pattern EXTERNAL_URL = Pattern.compile("^(https?:)?//");
-  private static final Pattern NULL_BYTE = Pattern.compile("\\x00");
 
   @Override
   public String getRuleName() {
@@ -55,7 +49,7 @@ public class PathSecurityRule implements ValidationRule<Scorm12Manifest> {
           .getResourceList()) {
         // Check resource href
         if (resource.getHref() != null) {
-          validatePath(resource.getHref(),
+          PathValidationUtils.validatePath(resource.getHref(),
               "resources/resource[@identifier='" + resource.getIdentifier() + "']/@href",
               issues);
         }
@@ -64,7 +58,7 @@ public class PathSecurityRule implements ValidationRule<Scorm12Manifest> {
         if (resource.getFiles() != null) {
           for (Scorm12File file : resource.getFiles()) {
             if (file.getHref() != null) {
-              validatePath(file.getHref(),
+              PathValidationUtils.validatePath(file.getHref(),
                   "resources/resource[@identifier='" + resource.getIdentifier() + "']/file/@href",
                   issues);
             }
@@ -76,43 +70,4 @@ public class PathSecurityRule implements ValidationRule<Scorm12Manifest> {
     return ValidationResult.of(issues.toArray(new ValidationIssue[0]));
   }
 
-  private void validatePath(String path, String location, List<ValidationIssue> issues) {
-    if (PATH_TRAVERSAL
-        .matcher(path)
-        .find()) {
-      issues.add(ValidationIssue.error(
-          "UNSAFE_PATH_TRAVERSAL",
-          String.format("Path contains directory traversal pattern: '%s'", path),
-          location,
-          "Remove '../' or '..' from the path. All content should be within the package."
-      ));
-    } else if (ABSOLUTE_PATH
-        .matcher(path)
-        .find()) {
-      issues.add(ValidationIssue.error(
-          "UNSAFE_ABSOLUTE_PATH",
-          String.format("Path is absolute but should be relative: '%s'", path),
-          location,
-          "Use relative paths only. Remove leading '/' or drive letter."
-      ));
-    } else if (EXTERNAL_URL
-        .matcher(path)
-        .find()) {
-      issues.add(ValidationIssue.error(
-          "UNSAFE_EXTERNAL_URL",
-          String.format("Path references external URL: '%s'", path),
-          location,
-          "All resources must be packaged within the content. Remove external URL."
-      ));
-    } else if (NULL_BYTE
-        .matcher(path)
-        .find()) {
-      issues.add(ValidationIssue.error(
-          "UNSAFE_NULL_BYTE",
-          String.format("Path contains null byte: '%s'", path),
-          location,
-          "Remove null bytes from path."
-      ));
-    }
-  }
 }
