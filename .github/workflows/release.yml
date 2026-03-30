@@ -37,13 +37,31 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           mvn -B -ntp -Dstyle.color=always release:prepare
           cat release.properties
-          VERSION=`cat release.properties | grep scm.tag= | cut -d'=' -f2`
-          # Update version in README.md
-          sed -i "s/<version>.*<\/version>/<version>${VERSION}<\/version>/" README.md
-          sed -i "s/dev\.jcputney:elearning-module-parser:.*\")/dev.jcputney:elearning-module-parser:${VERSION}\")/" README.md
+          TAG=$(grep 'scm.tag=' release.properties | cut -d'=' -f2)
+          VERSION=${TAG#v}
           mvn -B -ntp -Dstyle.color=always release:perform -DconnectionUrl=scm:git:https://github.com/${{ github.repository }}.git
-          echo "Released ${VERSION} 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "Released ${TAG} 🚀" >> $GITHUB_STEP_SUMMARY
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+      - name: Update documentation with released version
+        run: |
+          TAG=$(grep 'scm.tag=' release.properties | cut -d'=' -f2)
+          VERSION=${TAG#v}
+
+          # Update Maven dependency version (only the line after the library artifactId)
+          sed -i '/<artifactId>elearning-module-parser<\/artifactId>/{n;s/<version>.*<\/version>/<version>'"${VERSION}"'<\/version>/}' README.md
+
+          # Update Gradle dependency version
+          sed -i "s/dev\.jcputney:elearning-module-parser:.*\")/dev.jcputney:elearning-module-parser:${VERSION}\")/" README.md
+
+          # Update example version in bug report template
+          sed -i "s/Library version: (e.g., .*)/Library version: (e.g., ${VERSION})/" .github/ISSUE_TEMPLATE/bug_report.md
+
+          git add README.md .github/ISSUE_TEMPLATE/bug_report.md
+          git commit -m "docs: update version references to ${VERSION}"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -8,7 +8,7 @@ labels: bug
 Clear, concise description of the bug.
 
 ## Environment
-- Library version: (e.g., 0.0.17)
+- Library version: (e.g., 0.3.0)
 - Java version: (e.g., 17.0.11)
 - OS: (e.g., macOS 14, Ubuntu 22.04, Windows 11)
 - File access backend: (ZipFileAccess, LocalFileAccess, S3 v1/v2, custom)
