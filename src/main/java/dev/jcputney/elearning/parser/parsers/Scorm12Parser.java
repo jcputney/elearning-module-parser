@@ -20,7 +20,6 @@ package dev.jcputney.elearning.parser.parsers;
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
 import dev.jcputney.elearning.parser.config.FileExistenceValidator;
-import dev.jcputney.elearning.parser.exception.ManifestParseException;
 import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
 import dev.jcputney.elearning.parser.input.scorm12.Scorm12Manifest;
@@ -116,17 +115,9 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
   protected Scorm12Metadata extractMetadata(Scorm12Manifest manifest,
       ValidationResult validation)
       throws ModuleException {
-    try {
-      // Existing extraction logic - unchanged
-      loadExternalMetadata(manifest);
-      validateRequiredFields(manifest);
-      boolean hasXapi = checkForXapi();
-      return createMetadata(manifest, hasXapi);
-    } catch (IOException e) {
-      throw new ManifestParseException("Failed to extract metadata", e);
-    } catch (XMLStreamException e) {
-      throw new ManifestParseException("Failed to extract metadata", e);
-    }
+    validateRequiredFields(manifest);
+    boolean hasXapi = checkForXapi();
+    return createMetadata(manifest, hasXapi);
   }
 
   @Override

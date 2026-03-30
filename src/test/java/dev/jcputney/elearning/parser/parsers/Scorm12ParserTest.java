@@ -16,6 +16,7 @@
 
 package dev.jcputney.elearning.parser.parsers;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -320,6 +321,17 @@ public class Scorm12ParserTest {
     assertNotNull(customDataMap);
     assertEquals(1, customDataMap.size()); // only module2 has custom data
     assertEquals("custom_data_for_module2", customDataMap.get("module2"));
+  }
+
+  @Test
+  void testParseAndValidateStillLoadsMetadata() throws Exception {
+    var fileAccess = new LocalFileAccess(
+        "src/test/resources/modules/scorm12/ContentPackagingOneFilePerSCO_SCORM12");
+    var parser = new Scorm12Parser(fileAccess);
+    var result = parser.parseAndValidate();
+    assertThat(result.metadata()).isNotNull();
+    assertThat(result.metadata().getTitle()).isNotBlank();
+    assertThat(result.metadata().getLaunchUrl()).isNotBlank();
   }
 
   private void assertCommonFields(Scorm12Manifest manifest) {
