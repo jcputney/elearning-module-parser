@@ -72,6 +72,12 @@ public final class InMemoryFileAccess extends AbstractArchiveFileAccess {
   private final Set<String> directories;
 
   /**
+   * A set containing all file paths for O(1) existence lookups. Built after loading ZIP data
+   * from the file entries list.
+   */
+  private final Set<String> filePathIndex;
+
+  /**
    * Represents the total size of all files stored in the in-memory file system. This value is
    * calculated during the loading of ZIP data and reflects the combined size of all files,
    * excluding additional metadata or directory structures.
@@ -93,6 +99,11 @@ public final class InMemoryFileAccess extends AbstractArchiveFileAccess {
     this.fileEntries = new ArrayList<>();
     this.directories = new HashSet<>();
     this.totalSize = loadZipData(zipData);
+
+    this.filePathIndex = new HashSet<>();
+    for (FileEntry entry : fileEntries) {
+      filePathIndex.add(entry.getPath());
+    }
 
     // Initialize root path after loading file entries
     initializeRootPath();
@@ -122,6 +133,11 @@ public final class InMemoryFileAccess extends AbstractArchiveFileAccess {
     this.directories = new HashSet<>();
     this.totalSize = loadZipData(baos.toByteArray());
 
+    this.filePathIndex = new HashSet<>();
+    for (FileEntry entry : fileEntries) {
+      filePathIndex.add(entry.getPath());
+    }
+
     // Initialize root path after loading file entries
     initializeRootPath();
   }
@@ -134,12 +150,7 @@ public final class InMemoryFileAccess extends AbstractArchiveFileAccess {
    */
   @Override
   public boolean fileExistsInternal(String path) {
-    String fullPath = fullPath(path);
-    return fileEntries
-        .stream()
-        .anyMatch(entry -> entry
-            .getPath()
-            .equals(fullPath));
+    return filePathIndex.contains(fullPath(path));
   }
 
   /**
