@@ -73,6 +73,12 @@ public final class XmlParsingUtils {
       "&(?!(?:#\\d+|#x[0-9A-Fa-f]+|[A-Za-z][A-Za-z0-9._-]*);)");
 
   /**
+   * A shared, thread-safe XmlMapper instance configured with custom deserializers.
+   * Constructed once at class load time to avoid the overhead of repeated XmlMapper creation.
+   */
+  private static final XmlMapper XML_MAPPER = createConfiguredXmlMapper();
+
+  /**
    * Utility class containing methods and logic for processing and parsing XML data. This class is
    * not intended to be instantiated.
    *
@@ -186,7 +192,7 @@ public final class XmlParsingUtils {
       factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
       factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
 
-      XmlMapper xmlMapper = createConfiguredXmlMapper();
+      XmlMapper xmlMapper = XML_MAPPER;
       try (StringReader stringReader = new StringReader(sanitizedXml)) {
         XMLStreamReader reader = factory.createXMLStreamReader(stringReader);
         try {

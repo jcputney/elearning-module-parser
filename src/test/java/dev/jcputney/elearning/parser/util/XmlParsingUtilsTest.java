@@ -32,6 +32,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -170,6 +173,27 @@ class XmlParsingUtilsTest {
 
     assertThatCode(() -> XmlParsingUtils.parseXmlToObject(stream, TestXmlClass.class))
         .doesNotThrowAnyException();
+  }
+
+  @Test
+  void testConcurrentXmlParsing() throws Exception {
+    String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><root><child>value</child></root>";
+    int threadCount = 10;
+    CountDownLatch latch = new CountDownLatch(threadCount);
+    AtomicInteger errors = new AtomicInteger(0);
+    for (int i = 0; i < threadCount; i++) {
+      new Thread(() -> {
+        try {
+          XmlParsingUtils.parseXmlToObject(new ByteArrayInputStream(xml.getBytes()), Object.class, "test.xml");
+        } catch (Exception e) {
+          errors.incrementAndGet();
+        } finally {
+          latch.countDown();
+        }
+      }).start();
+    }
+    latch.await(10, TimeUnit.SECONDS);
+    assertThat(errors.get()).isZero();
   }
 
   @Test
