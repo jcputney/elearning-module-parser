@@ -55,7 +55,7 @@
     <version.jmh>1.37</version.jmh>
     <version.jqwik>1.9.3</version.jqwik>
     <version.junit>6.0.3</version.junit>
-    <version.log4j-to-slf4j>2.25.3</version.log4j-to-slf4j>
+    <version.log4j-to-slf4j>2.25.4</version.log4j-to-slf4j>
     <version.logback>1.5.32</version.logback>
     <version.mockito>5.22.0</version.mockito>
     <version.org.json>20251224</version.org.json>
