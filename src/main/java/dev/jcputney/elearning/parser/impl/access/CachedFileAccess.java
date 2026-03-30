@@ -50,6 +50,13 @@ import java.util.concurrent.atomic.AtomicLong;
 public final class CachedFileAccess implements FileAccess {
 
   /**
+   * The default maximum number of entries allowed in the file contents cache before eviction
+   * occurs. When the cache exceeds this limit, entries are evicted in iteration order to make room
+   * for new entries.
+   */
+  private static final int DEFAULT_MAX_CACHE_ENTRIES = 500;
+
+  /**
    * The {@code delegate} field is the primary {@link FileAccess} implementation that this
    * {@link CachedFileAccess} instance wraps. The delegate is responsible for performing actual file
    * access operations such as reading or writing to the filesystem.
@@ -61,6 +68,12 @@ public final class CachedFileAccess implements FileAccess {
    * ensure valid file access delegation.
    */
   private final FileAccess delegate;
+
+  /**
+   * The maximum number of entries allowed in the file contents cache. When the cache exceeds this
+   * limit, entries are evicted in iteration order to prevent unbounded memory growth.
+   */
+  private final int maxCacheEntries;
 
   /**
    * A thread-safe cache that maps file paths to their existence status. Used to improve performance
@@ -126,16 +139,32 @@ public final class CachedFileAccess implements FileAccess {
 
   /**
    * Constructs a new {@link CachedFileAccess} instance that wraps the specified {@link FileAccess}
-   * implementation.
+   * implementation, using the default maximum cache entries limit.
    *
    * @param delegate The {@link FileAccess} implementation to delegate to.
    * @throws IllegalArgumentException if the delegate is null
    */
   public CachedFileAccess(FileAccess delegate) {
+    this(delegate, DEFAULT_MAX_CACHE_ENTRIES);
+  }
+
+  /**
+   * Constructs a new {@link CachedFileAccess} instance that wraps the specified {@link FileAccess}
+   * implementation, with a configurable maximum number of cached file content entries.
+   *
+   * @param delegate        The {@link FileAccess} implementation to delegate to.
+   * @param maxCacheEntries The maximum number of entries allowed in the file contents cache.
+   * @throws IllegalArgumentException if the delegate is null or maxCacheEntries is less than 1
+   */
+  public CachedFileAccess(FileAccess delegate, int maxCacheEntries) {
     if (delegate == null) {
       throw new IllegalArgumentException("FileAccess delegate cannot be null");
     }
+    if (maxCacheEntries < 1) {
+      throw new IllegalArgumentException("maxCacheEntries must be at least 1");
+    }
     this.delegate = delegate;
+    this.maxCacheEntries = maxCacheEntries;
   }
 
   /**
@@ -244,6 +273,15 @@ public final class CachedFileAccess implements FileAccess {
                   .getSimpleName()), e));
         }
       });
+
+      // Evict entries if the cache exceeds the maximum size
+      while (fileContentsCache.size() > maxCacheEntries) {
+        var iterator = fileContentsCache.keySet().iterator();
+        if (iterator.hasNext()) {
+          iterator.next();
+          iterator.remove();
+        }
+      }
 
       return new ByteArrayInputStream(contents);
     } catch (RuntimeFileAccessException e) {

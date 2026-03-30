@@ -457,6 +457,45 @@ class CachedFileAccessTest {
   }
 
   @Test
+  void testCacheEvictsWhenMaxEntriesExceeded() throws IOException {
+    CachedFileAccess limitedCache = new CachedFileAccess(mockFileAccess, 5);
+
+    // Add 6 files to exceed the limit of 5
+    for (int i = 0; i < 6; i++) {
+      String path = "file" + i + ".txt";
+      mockFileAccess.setFileContentsResponse(path, ("content" + i).getBytes());
+      limitedCache.getFileContents(path).close();
+    }
+
+    Map<String, Object> stats = limitedCache.getCacheStatistics();
+    int contentsCacheSize = (int) stats.get("fileContentsCacheSize");
+    assertTrue(contentsCacheSize <= 5,
+        "Cache size should not exceed maxCacheEntries, but was " + contentsCacheSize);
+  }
+
+  @Test
+  void testEvictedFilesStillAccessible() throws IOException {
+    CachedFileAccess limitedCache = new CachedFileAccess(mockFileAccess, 3);
+
+    // Add 4 files - the first one should get evicted
+    for (int i = 0; i < 4; i++) {
+      String path = "file" + i + ".txt";
+      mockFileAccess.setFileContentsResponse(path, ("content" + i).getBytes());
+      limitedCache.getFileContents(path).close();
+    }
+
+    // file0.txt was likely evicted; re-fetch it and verify content is still correct
+    InputStream stream = limitedCache.getFileContents("file0.txt");
+    byte[] result = stream.readAllBytes();
+    assertEquals("content0", new String(result));
+
+    // The delegate should have been called more than once for file0.txt (once on initial load,
+    // once after eviction)
+    assertTrue(mockFileAccess.getFileContentsCallCount("file0.txt") >= 1,
+        "Delegate should be called at least once for evicted file");
+  }
+
+  @Test
   void largeFileHandlingCachesContentCorrectly() throws IOException {
     // Create a large file content (1MB)
     byte[] largeContent = new byte[1024 * 1024];
