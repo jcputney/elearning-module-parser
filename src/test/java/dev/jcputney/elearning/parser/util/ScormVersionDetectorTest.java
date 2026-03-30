@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
+import org.xml.sax.SAXException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -130,6 +131,51 @@ class ScormVersionDetectorTest {
     void setFileContents(byte[] contents) {
       fileContents.put(Scorm12Parser.MANIFEST_FILE, contents);
     }
+  }
+
+  @Test
+  void testXxeAttackBlocked() {
+    String xxeManifest = """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>
+        <manifest>
+          <metadata>
+            <schema>ADL SCORM</schema>
+            <schemaversion>1.2</schemaversion>
+            <description>&xxe;</description>
+          </metadata>
+        </manifest>
+        """;
+    MockFileAccess fileAccess = new MockFileAccess("root/path");
+    fileAccess.setFileContents(xxeManifest);
+
+    assertThrows(SAXException.class,
+        () -> ScormVersionDetector.detectScormVersion(fileAccess));
+  }
+
+  @Test
+  void testBillionLaughsBlocked() {
+    String billionLaughsManifest = """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE lolz [
+          <!ENTITY lol "lol">
+          <!ENTITY lol2 "&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;">
+          <!ENTITY lol3 "&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;">
+          <!ENTITY lol4 "&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;">
+        ]>
+        <manifest>
+          <metadata>
+            <schema>ADL SCORM</schema>
+            <schemaversion>1.2</schemaversion>
+            <description>&lol4;</description>
+          </metadata>
+        </manifest>
+        """;
+    MockFileAccess fileAccess = new MockFileAccess("root/path");
+    fileAccess.setFileContents(billionLaughsManifest);
+
+    assertThrows(SAXException.class,
+        () -> ScormVersionDetector.detectScormVersion(fileAccess));
   }
 
   @Test

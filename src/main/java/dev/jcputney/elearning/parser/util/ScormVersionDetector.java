@@ -83,6 +83,10 @@ public final class ScormVersionDetector {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware(true);
     factory.setExpandEntityReferences(false);
+    factory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, true);
+    factory.setAttribute(javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD, "");
+    factory.setAttribute(javax.xml.XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+    factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
     byte[] manifestBytes = readManifestBytes(fileAccess);
     Document document = parseManifest(factory, manifestBytes);
 
