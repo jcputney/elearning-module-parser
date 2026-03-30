@@ -76,14 +76,41 @@ class InMemoryFileAccessTest {
   }
 
   @Test
-  void testConstructorWithInvalidZipData() throws IOException {
+  void testConstructorWithInvalidZipData() {
     byte[] invalidData = "This is not a ZIP file".getBytes(StandardCharsets.UTF_8);
 
-    // Invalid ZIP data should create an empty file access (no files)
-    try (InMemoryFileAccess fileAccess = new InMemoryFileAccess(invalidData)) {
-      assertThat(fileAccess.getFileCount()).isEqualTo(0);
-      assertThat(fileAccess.getAllFiles()).isEmpty();
-    }
+    // Invalid ZIP data should throw IOException
+    assertThatThrownBy(() -> new InMemoryFileAccess(invalidData))
+        .isInstanceOf(IOException.class)
+        .hasMessageContaining("Invalid ZIP data");
+  }
+
+  @Test
+  void testCorruptZipDataThrowsException() {
+    // Random bytes with ZIP magic header (PK\x03\x04)
+    byte[] corruptData = new byte[100];
+    corruptData[0] = 0x50; // P
+    corruptData[1] = 0x4B; // K
+    corruptData[2] = 0x03;
+    corruptData[3] = 0x04;
+    // Fill rest with random data
+    new java.util.Random(42).nextBytes(corruptData);
+    corruptData[0] = 0x50;
+    corruptData[1] = 0x4B;
+    corruptData[2] = 0x03;
+    corruptData[3] = 0x04;
+
+    assertThatThrownBy(() -> new InMemoryFileAccess(corruptData))
+        .isInstanceOf(IOException.class);
+  }
+
+  @Test
+  void testTotallyRandomBytesThrowsException() {
+    byte[] garbage = new byte[200];
+    new java.util.Random(99).nextBytes(garbage);
+
+    assertThatThrownBy(() -> new InMemoryFileAccess(garbage))
+        .isInstanceOf(IOException.class);
   }
 
   @Test

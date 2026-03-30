@@ -438,19 +438,40 @@ class InMemoryFileAccessComprehensiveTest {
   // ========== Input Stream Tests ==========
 
   @Test
-  void testConstructorWithInterruptedInputStream() throws IOException {
+  void testConstructorWithSeverelyTruncatedInputStream() {
+    Map<String, String> files = new HashMap<>();
+    files.put("test.txt", "content");
+    byte[] zipData;
+    try {
+      zipData = createZipWithFiles(files);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    // Truncate to just the first few bytes (enough to have ZIP signature but not a valid entry)
+    ByteArrayInputStream severelyTruncated = new ByteArrayInputStream(
+        java.util.Arrays.copyOf(zipData, Math.min(20, zipData.length / 4))
+    );
+
+    // Severely truncated ZIP data should throw IOException
+    assertThatThrownBy(() -> new InMemoryFileAccess(severelyTruncated))
+        .isInstanceOf(IOException.class);
+  }
+
+  @Test
+  void testConstructorWithMildlyTruncatedInputStream() throws IOException {
     Map<String, String> files = new HashMap<>();
     files.put("test.txt", "content");
     byte[] zipData = createZipWithFiles(files);
 
-    // Create stream that only provides partial data
+    // Truncate at half length — entry data may still be intact (only central directory missing)
     ByteArrayInputStream partialStream = new ByteArrayInputStream(
         java.util.Arrays.copyOf(zipData, zipData.length / 2)
     );
 
-    // Should handle truncated ZIP gracefully
+    // Mildly truncated ZIP may still load entries successfully since ZipInputStream
+    // is a streaming parser and doesn't need the central directory
     try (InMemoryFileAccess fileAccess = new InMemoryFileAccess(partialStream)) {
-      // May have loaded some files or none depending on where it was truncated
       assertThat(fileAccess.getFileCount()).isGreaterThanOrEqualTo(0);
     }
   }

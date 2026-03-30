@@ -317,10 +317,16 @@ public final class InMemoryFileAccess extends AbstractArchiveFileAccess {
 
         zis.closeEntry();
       }
-    } catch (Exception e) {
-      // Invalid ZIP data - silently create empty archive for compatibility
-      // This matches the behavior of java.util.zip.ZipFile which accepts invalid data
-      return 0;
+    } catch (java.util.zip.ZipException e) {
+      throw new IOException("Invalid ZIP data: " + e.getMessage(), e);
+    } catch (IOException e) {
+      throw e;
+    }
+
+    // If no entries were found and the data is not a valid empty ZIP, throw
+    if (fileEntries.isEmpty() && directories.isEmpty() && zipData.length > 0
+        && !isValidEmptyZip(zipData)) {
+      throw new IOException("Invalid ZIP data: no valid entries found");
     }
 
     return totalBytes;
@@ -340,6 +346,20 @@ public final class InMemoryFileAccess extends AbstractArchiveFileAccess {
       // Recursively add parent directories
       addParentDirectories(parentPath.substring(0, parentPath.length() - 1));
     }
+  }
+
+  /**
+   * Checks if the given data represents a valid empty ZIP file. A valid empty ZIP starts with the
+   * end-of-central-directory signature (PK\x05\x06), not a local file header (PK\x03\x04).
+   *
+   * @param data The data to check.
+   * @return {@code true} if the data appears to be a valid empty ZIP; {@code false} otherwise.
+   */
+  private boolean isValidEmptyZip(byte[] data) {
+    // Valid empty ZIP: starts with end-of-central-directory record (PK\x05\x06)
+    return data.length >= 4
+        && data[0] == 0x50 && data[1] == 0x4B
+        && data[2] == 0x05 && data[3] == 0x06;
   }
 
   /**
