@@ -168,13 +168,32 @@ public final class XmlParsingUtils {
    */
   public static <C> C parseXmlToObject(InputStream stream, Class<C> clazz, String filePath)
       throws IOException, XMLStreamException {
+    return parseXmlToObject(stream, clazz, filePath, getMaxXmlSize());
+  }
+
+  /**
+   * Parses an XML file into an object of the specified class using Jackson's XmlMapper, with a
+   * caller-specified maximum size limit.
+   *
+   * @param <C> The type of the class to parse the XML into.
+   * @param stream The InputStream for the XML file.
+   * @param clazz The class to parse the XML into.
+   * @param filePath The path of the file being parsed for error context.
+   * @param maxSize The maximum allowed size in bytes for the XML content.
+   * @return A new instance of the specified class with the parsed XML data.
+   * @throws IOException If an error occurs while reading the file or the content exceeds maxSize.
+   * @throws XMLStreamException If an error occurs while parsing the XML.
+   * @throws IllegalArgumentException if stream or clazz is null
+   */
+  public static <C> C parseXmlToObject(InputStream stream, Class<C> clazz, String filePath,
+      long maxSize)
+      throws IOException, XMLStreamException {
     if (stream == null) {
       throw new IllegalArgumentException("InputStream cannot be null");
     }
     if (clazz == null) {
       throw new IllegalArgumentException("Class cannot be null");
     }
-    // Debug logging removed - parsing is a normal operation
 
     // Detect encoding
     EncodingDetector.EncodingAwareInputStream encodingAwareStream =
@@ -182,7 +201,7 @@ public final class XmlParsingUtils {
 
     String xmlContent = readStreamToString(encodingAwareStream.inputStream(),
         encodingAwareStream
-            .charset());
+            .charset(), maxSize);
     String sanitizedXml = sanitizeXmlContent(xmlContent);
 
     try {
@@ -336,8 +355,8 @@ public final class XmlParsingUtils {
    * @return A String containing the content of the InputStream decoded with the specified Charset.
    * @throws IOException If an I/O error occurs while reading from the InputStream.
    */
-  private static String readStreamToString(InputStream stream, Charset charset) throws IOException {
-    long maxSize = getMaxXmlSize();
+  private static String readStreamToString(InputStream stream, Charset charset, long maxSize)
+      throws IOException {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     byte[] buffer = new byte[8192];
     long totalBytesRead = 0;

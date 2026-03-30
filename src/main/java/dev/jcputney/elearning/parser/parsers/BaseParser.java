@@ -206,7 +206,8 @@ public abstract sealed class BaseParser<T extends ModuleMetadata<M>, M extends P
       throw new IllegalArgumentException("Manifest path cannot be null");
     }
     try (InputStream manifestStream = moduleFileProvider.getFileContents(manifestPath)) {
-      M manifest = parseXmlToObject(manifestStream, getManifestClass());
+      M manifest = XmlParsingUtils.parseXmlToObject(manifestStream, getManifestClass(),
+          manifestPath, options.getResolvedMaxManifestSize());
       loadExternalMetadata(manifest);
       return manifest;
     } catch (IOException e) {
