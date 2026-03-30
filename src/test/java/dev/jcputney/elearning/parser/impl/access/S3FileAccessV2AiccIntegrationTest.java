@@ -93,9 +93,9 @@ class S3FileAccessV2AiccIntegrationTest {
   }
 
   @AfterEach
-  void tearDown() {
+  void tearDown() throws Exception {
     if (s3FileAccess != null) {
-      s3FileAccess.shutdown();
+      s3FileAccess.close();
     }
   }
 

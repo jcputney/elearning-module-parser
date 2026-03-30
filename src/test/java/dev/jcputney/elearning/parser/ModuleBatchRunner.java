@@ -853,7 +853,11 @@ public final class ModuleBatchRunner {
     }
 
     void shutdown() {
-      fileAccess.shutdown();
+      try {
+        fileAccess.close();
+      } catch (Exception e) {
+        throw new RuntimeException("Failed to close S3 file access", e);
+      }
     }
   }
 

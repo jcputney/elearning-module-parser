@@ -177,7 +177,7 @@ class S3FileAccessV2Test {
   }
 
   @Test
-  void listFiles_withOverlappingModulePrefixes_isolatedToSelectedModule() throws IOException {
+  void listFiles_withOverlappingModulePrefixes_isolatedToSelectedModule() throws Exception {
     uploadTestFile("modules/shared/1/imsmanifest.xml", TEST_MANIFEST_CONTENT);
     uploadTestFile("modules/shared/10/imsmanifest.xml", TEST_MANIFEST_CONTENT);
 
@@ -191,7 +191,7 @@ class S3FileAccessV2Test {
         .stream()
         .anyMatch(key -> key.startsWith("modules/shared/10")));
 
-    moduleScopedAccess.shutdown();
+    moduleScopedAccess.close();
   }
 
   @Test

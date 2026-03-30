@@ -34,6 +34,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -53,6 +54,11 @@ public abstract class AbstractS3FileAccess implements FileAccess, AutoCloseable 
    * STREAMING_THRESHOLD) that can be cached in memory.
    */
   protected static final int MAX_CACHE_SIZE = 1000;
+
+  /**
+   * Default number of threads in the executor service thread pool.
+   */
+  protected static final int DEFAULT_THREAD_POOL_SIZE = 10;
 
   /**
    * Common module files that are frequently accessed and should be prefetched. This set contains
@@ -120,14 +126,25 @@ public abstract class AbstractS3FileAccess implements FileAccess, AutoCloseable 
   protected volatile String rootPath;
 
   /**
-   * Constructs an abstract S3FileAccess instance.
+   * Constructs an abstract S3FileAccess instance with the default thread pool size.
    *
    * @param bucketName The name of the S3 bucket to access.
    * @param rootPath The root path of the S3 bucket to access.
    */
   protected AbstractS3FileAccess(String bucketName, String rootPath) {
+    this(bucketName, rootPath, DEFAULT_THREAD_POOL_SIZE);
+  }
+
+  /**
+   * Constructs an abstract S3FileAccess instance with a configurable thread pool size.
+   *
+   * @param bucketName The name of the S3 bucket to access.
+   * @param rootPath The root path of the S3 bucket to access.
+   * @param threadPoolSize The number of threads in the executor service thread pool.
+   */
+  protected AbstractS3FileAccess(String bucketName, String rootPath, int threadPoolSize) {
     this.bucketName = bucketName;
-    this.executorService = Executors.newFixedThreadPool(10);
+    this.executorService = Executors.newFixedThreadPool(threadPoolSize);
     initializeRootPath(rootPath);
   }
 
@@ -140,8 +157,16 @@ public abstract class AbstractS3FileAccess implements FileAccess, AutoCloseable 
    */
   @Override
   public void close() throws Exception {
-    if (executorService != null) {
+    if (executorService != null && !executorService.isShutdown()) {
       executorService.shutdown();
+      try {
+        if (!executorService.awaitTermination(30, TimeUnit.SECONDS)) {
+          executorService.shutdownNow();
+        }
+      } catch (InterruptedException e) {
+        executorService.shutdownNow();
+        Thread.currentThread().interrupt();
+      }
     }
   }
 
@@ -427,13 +452,6 @@ public abstract class AbstractS3FileAccess implements FileAccess, AutoCloseable 
 
     // Total module size calculated
     return totalSize;
-  }
-
-  /**
-   * Shutdown the executor service when the instance is no longer needed.
-   */
-  public void shutdown() {
-    executorService.shutdown();
   }
 
   /**
