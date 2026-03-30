@@ -65,4 +65,14 @@ class Scorm2004ParserTest {
     assertThat(metadata).isInstanceOf(Scorm2004Metadata.class);
     assertThat(metadata.getModuleEditionType()).isEqualTo(ModuleEditionType.SCORM_2004_2ND_EDITION);
   }
+
+  @Test
+  void testNormalScorm2004ManifestParsesSuccessfully() throws Exception {
+    LocalFileAccess fileAccess = new LocalFileAccess(
+        "src/test/resources/modules/scorm2004/ContentPackagingSingleSCO_SCORM20043rdEdition");
+    Scorm2004Parser parser = new Scorm2004Parser(fileAccess);
+    var result = parser.parseAndValidate();
+    assertThat(result.metadata()).isNotNull();
+    assertThat(result.metadata().getTitle()).isNotBlank();
+  }
 }

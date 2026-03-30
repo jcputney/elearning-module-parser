@@ -104,7 +104,12 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
       throw new IllegalArgumentException("Manifest path cannot be null");
     }
     try (InputStream manifestStream = moduleFileProvider.getFileContents(manifestPath)) {
-      byte[] bytes = manifestStream.readAllBytes();
+      long maxSize = XmlParsingUtils.getMaxXmlSize();
+      byte[] bytes = manifestStream.readNBytes((int) Math.min(maxSize + 1, Integer.MAX_VALUE));
+      if (bytes.length > maxSize) {
+        throw new ManifestParseException(
+            String.format("SCORM 2004 manifest exceeds maximum allowed size of %d bytes", maxSize));
+      }
 
       try {
         if (Scorm2004SchemaValidator.isEnabled()) {
