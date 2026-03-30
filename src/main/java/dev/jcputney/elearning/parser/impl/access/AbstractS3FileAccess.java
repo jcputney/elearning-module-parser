@@ -532,7 +532,8 @@ public abstract class AbstractS3FileAccess implements FileAccess, AutoCloseable 
 
       // Implement simple cache size management
       if (smallFileCache.size() >= MAX_CACHE_SIZE) {
-        // Remove the oldest entry (simple FIFO)
+        // Remove an arbitrary entry to keep cache bounded
+        // ConcurrentHashMap has no ordering guarantees
         String oldestKey = smallFileCache
             .keySet()
             .iterator()
