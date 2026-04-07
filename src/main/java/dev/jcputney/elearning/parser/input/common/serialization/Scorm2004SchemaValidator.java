@@ -143,11 +143,17 @@ public final class Scorm2004SchemaValidator {
     } catch (Exception ignored) {
     }
 
-    // Load schemas from classpath with proper systemId so relative includes resolve
+    // Load schemas from classpath with proper systemId so relative includes resolve.
+    // Prefer the thread context class loader so consumers can supply custom classloaders
+    // (e.g. OSGi, app servers), but fall back to this class's own loader when the TCCL
+    // is null (can happen in ForkJoinPool threads, GraalVM native images, etc.).
     List<Source> sources = new ArrayList<>();
     ClassLoader cl = Thread
         .currentThread()
         .getContextClassLoader();
+    if (cl == null) {
+      cl = Scorm2004SchemaValidator.class.getClassLoader();
+    }
     for (String path : SCHEMA_RESOURCE_PATHS) {
       URL url = cl.getResource(path);
       if (url == null) {
