@@ -33,11 +33,11 @@ import org.threeten.extra.PeriodDuration;
 
 /**
  * Custom deserializer for {@link Duration} objects, allowing ISO 8601 duration strings to be parsed
- * into {@link java.time.Duration} instances.
+ * into {@link Duration} instances.
  *
  * <p>This deserializer supports durations in the format PnDTnHnMnS, where n represents
  * days, hours, minutes, or seconds. It doesn't support months or years, as these aren't compatible
- * with {@link java.time.Duration}.</p>
+ * with {@link Duration}.</p>
  */
 public class DurationIso8601Deserializer extends JsonDeserializer<Duration> {
 

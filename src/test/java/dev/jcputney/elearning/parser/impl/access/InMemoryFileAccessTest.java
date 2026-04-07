@@ -29,7 +29,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import org.junit.jupiter.api.Test;
@@ -94,7 +97,7 @@ class InMemoryFileAccessTest {
     corruptData[2] = 0x03;
     corruptData[3] = 0x04;
     // Fill rest with random data
-    new java.util.Random(42).nextBytes(corruptData);
+    new Random(42).nextBytes(corruptData);
     corruptData[0] = 0x50;
     corruptData[1] = 0x4B;
     corruptData[2] = 0x03;
@@ -107,7 +110,7 @@ class InMemoryFileAccessTest {
   @Test
   void testTotallyRandomBytesThrowsException() {
     byte[] garbage = new byte[200];
-    new java.util.Random(99).nextBytes(garbage);
+    new Random(99).nextBytes(garbage);
 
     assertThatThrownBy(() -> new InMemoryFileAccess(garbage))
         .isInstanceOf(IOException.class);
@@ -345,11 +348,11 @@ class InMemoryFileAccessTest {
   @Test
   void testConsistencyWithZipFileAccess() throws IOException {
     // Create a temporary ZIP file with sub-root structure
-    java.nio.file.Path tempZipPath = java.nio.file.Files.createTempFile("test-module", ".zip");
+    Path tempZipPath = Files.createTempFile("test-module", ".zip");
     try {
       // Write ZIP data to temp file
       byte[] zipData = createZipWithRootDirectory();
-      java.nio.file.Files.write(tempZipPath, zipData);
+      Files.write(tempZipPath, zipData);
 
       // Compare InMemoryFileAccess and ZipFileAccess behavior
       try (InMemoryFileAccess memAccess = new InMemoryFileAccess(zipData);
@@ -391,7 +394,7 @@ class InMemoryFileAccessTest {
       }
     } finally {
       // Clean up temp file
-      java.nio.file.Files.deleteIfExists(tempZipPath);
+      Files.deleteIfExists(tempZipPath);
     }
   }
 

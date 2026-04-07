@@ -18,6 +18,7 @@
 package dev.jcputney.elearning.parser.parsers;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.api.ParserOptions;
 import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.input.xapi.tincan.TincanManifest;
 import dev.jcputney.elearning.parser.output.metadata.xapi.XapiMetadata;
@@ -56,8 +57,7 @@ public final class XapiParser extends BaseParser<XapiMetadata, TincanManifest> {
    * @param fileAccess an instance of FileAccess for reading files in the module package
    * @param options the parser options to control validation and calculation behavior
    */
-  public XapiParser(FileAccess fileAccess,
-      dev.jcputney.elearning.parser.api.ParserOptions options) {
+  public XapiParser(FileAccess fileAccess, ParserOptions options) {
     super(fileAccess, options);
   }
 

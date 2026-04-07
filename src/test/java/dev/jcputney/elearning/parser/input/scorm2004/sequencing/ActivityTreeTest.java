@@ -27,11 +27,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.exception.ManifestParseException;
 import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import dev.jcputney.elearning.parser.parsers.Scorm2004Parser;
 import java.io.IOException;
 import java.util.List;
+import javax.xml.stream.XMLStreamException;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -44,7 +46,7 @@ public class ActivityTreeTest {
    */
   @Test
   void testBuildActivityTree()
-      throws IOException, javax.xml.stream.XMLStreamException, dev.jcputney.elearning.parser.exception.ModuleParsingException, dev.jcputney.elearning.parser.exception.ManifestParseException {
+      throws IOException, XMLStreamException, ManifestParseException {
     // Parse a SCORM 2004 manifest
     String modulePath = "src/test/resources/modules/scorm2004/ContentPackagingOneFilePerSCO_SCORM20043rdEdition";
     FileAccess fileAccess = new LocalFileAccess(modulePath);

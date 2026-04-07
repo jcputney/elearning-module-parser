@@ -10,6 +10,7 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resource;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resources;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
 import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -82,8 +83,14 @@ class ResourceHrefRequiredRuleTest {
 
     assertThat(result.isValid()).isFalse();
     assertThat(result.getErrors()).hasSize(1);
-    assertThat(result.getErrors().get(0).code()).isEqualTo("SCORM2004_MISSING_LAUNCH_URL");
-    assertThat(result.getErrors().get(0).message()).contains("res1");
+    assertThat(result
+        .getErrors()
+        .get(0)
+        .code()).isEqualTo("SCORM2004_MISSING_LAUNCH_URL");
+    assertThat(result
+        .getErrors()
+        .get(0)
+        .message()).contains("res1");
   }
 
   @Test
@@ -131,7 +138,7 @@ class ResourceHrefRequiredRuleTest {
     res2.setIdentifier("unreferenced");
     // No href, but also not referenced - should be OK for this rule
 
-    resources.setResourceList(java.util.List.of(res1, res2));
+    resources.setResourceList(List.of(res1, res2));
     manifest.setResources(resources);
 
     // Create item only referencing res1

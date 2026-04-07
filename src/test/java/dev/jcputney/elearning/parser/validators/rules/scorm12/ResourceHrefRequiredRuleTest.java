@@ -9,6 +9,7 @@ import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organizations;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resource;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resources;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
+import java.util.Arrays;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,8 +78,14 @@ class ResourceHrefRequiredRuleTest {
 
     assertThat(result.isValid()).isFalse();
     assertThat(result.getErrors()).hasSize(1);
-    assertThat(result.getErrors().get(0).code()).isEqualTo("SCORM12_MISSING_LAUNCH_URL");
-    assertThat(result.getErrors().get(0).message()).contains("res1");
+    assertThat(result
+        .getErrors()
+        .get(0)
+        .code()).isEqualTo("SCORM12_MISSING_LAUNCH_URL");
+    assertThat(result
+        .getErrors()
+        .get(0)
+        .message()).contains("res1");
   }
 
   @Test
@@ -108,7 +115,10 @@ class ResourceHrefRequiredRuleTest {
 
     assertThat(result.isValid()).isFalse();
     assertThat(result.getErrors()).hasSize(1);
-    assertThat(result.getErrors().get(0).code()).isEqualTo("SCORM12_MISSING_LAUNCH_URL");
+    assertThat(result
+        .getErrors()
+        .get(0)
+        .code()).isEqualTo("SCORM12_MISSING_LAUNCH_URL");
   }
 
   @Test
@@ -138,7 +148,10 @@ class ResourceHrefRequiredRuleTest {
 
     assertThat(result.isValid()).isFalse();
     assertThat(result.getErrors()).hasSize(1);
-    assertThat(result.getErrors().get(0).code()).isEqualTo("SCORM12_MISSING_LAUNCH_URL");
+    assertThat(result
+        .getErrors()
+        .get(0)
+        .code()).isEqualTo("SCORM12_MISSING_LAUNCH_URL");
   }
 
   @Test
@@ -167,7 +180,7 @@ class ResourceHrefRequiredRuleTest {
     res2.setIdentifier("res2");
     // No href - but this resource is not referenced by any item
 
-    resources.setResourceList(java.util.Arrays.asList(res1, res2));
+    resources.setResourceList(Arrays.asList(res1, res2));
     manifest.setResources(resources);
 
     ValidationResult result = rule.validate(manifest);
@@ -208,13 +221,16 @@ class ResourceHrefRequiredRuleTest {
     res2.setIdentifier("res2");
     // No href
 
-    resources.setResourceList(java.util.Arrays.asList(res1, res2));
+    resources.setResourceList(Arrays.asList(res1, res2));
     manifest.setResources(resources);
 
     ValidationResult result = rule.validate(manifest);
 
     assertThat(result.isValid()).isFalse();
     assertThat(result.getErrors()).hasSize(1);
-    assertThat(result.getErrors().get(0).message()).contains("res2");
+    assertThat(result
+        .getErrors()
+        .get(0)
+        .message()).contains("res2");
   }
 }

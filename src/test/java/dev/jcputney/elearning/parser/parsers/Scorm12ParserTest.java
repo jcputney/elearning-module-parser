@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.jcputney.elearning.parser.api.ParseResult;
+import dev.jcputney.elearning.parser.api.ParserOptions;
 import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.input.lom.LOM;
@@ -42,10 +42,11 @@ public class Scorm12ParserTest {
       throws ModuleException {
     String modulePath = "src/test/resources/modules/scorm12/ContentPackagingOneFilePerSCO_SCORM12/";
     // Use parser options with size calculation enabled
-    dev.jcputney.elearning.parser.api.ParserOptions options = new dev.jcputney.elearning.parser.api.ParserOptions()
-        .setCalculateModuleSize(true);
+    ParserOptions options = new ParserOptions().setCalculateModuleSize(true);
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath), options);
-    Scorm12Metadata metadata = (Scorm12Metadata) parser.parseAndValidate().metadata();
+    Scorm12Metadata metadata = (Scorm12Metadata) parser
+        .parseAndValidate()
+        .metadata();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();
     assertCommonFields(manifest);
@@ -89,7 +90,9 @@ public class Scorm12ParserTest {
       throws ModuleException {
     String modulePath = "src/test/resources/modules/scorm12/ContentPackagingSingleSCO_SCORM12";
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
-    Scorm12Metadata metadata = (Scorm12Metadata) parser.parseAndValidate().metadata();
+    Scorm12Metadata metadata = (Scorm12Metadata) parser
+        .parseAndValidate()
+        .metadata();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();
     assertCommonFields(manifest);
@@ -121,7 +124,9 @@ public class Scorm12ParserTest {
   void testParseScorm12Course_RuntimeBasicCalls_SCORM12() throws ModuleException {
     String modulePath = "src/test/resources/modules/scorm12/RuntimeBasicCalls_SCORM12";
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
-    Scorm12Metadata metadata = (Scorm12Metadata) parser.parseAndValidate().metadata();
+    Scorm12Metadata metadata = (Scorm12Metadata) parser
+        .parseAndValidate()
+        .metadata();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();
     assertCommonFields(manifest);
@@ -153,7 +158,9 @@ public class Scorm12ParserTest {
   void testParseScorm12Course_RuntimeMinimumCalls_SCORM12() throws ModuleException {
     String modulePath = "src/test/resources/modules/scorm12/RuntimeMinimumCalls_SCORM12";
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
-    Scorm12Metadata metadata = (Scorm12Metadata) parser.parseAndValidate().metadata();
+    Scorm12Metadata metadata = (Scorm12Metadata) parser
+        .parseAndValidate()
+        .metadata();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();
     assertCommonFields(manifest);
@@ -193,7 +200,9 @@ public class Scorm12ParserTest {
   void testParseScorm12Course_ContentPackagingWithMetadata_SCORM12() throws ModuleException {
     String modulePath = "src/test/resources/modules/scorm12/ContentPackagingWithMetadata_SCORM12";
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
-    Scorm12Metadata metadata = (Scorm12Metadata) parser.parseAndValidate().metadata();
+    Scorm12Metadata metadata = (Scorm12Metadata) parser
+        .parseAndValidate()
+        .metadata();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();
     assertCommonFields(manifest);
@@ -231,7 +240,9 @@ public class Scorm12ParserTest {
   void testParseScorm12Course_Prerequisites_SCORM12() throws ModuleException {
     String modulePath = "src/test/resources/modules/scorm12/PrerequisitesTest_SCORM12";
     Scorm12Parser parser = new Scorm12Parser(new LocalFileAccess(modulePath));
-    Scorm12Metadata metadata = (Scorm12Metadata) parser.parseAndValidate().metadata();
+    Scorm12Metadata metadata = (Scorm12Metadata) parser
+        .parseAndValidate()
+        .metadata();
     assertNotNull(metadata);
     Scorm12Manifest manifest = metadata.getManifest();
     assertCommonFields(manifest);
@@ -330,8 +341,12 @@ public class Scorm12ParserTest {
     var parser = new Scorm12Parser(fileAccess);
     var result = parser.parseAndValidate();
     assertThat(result.metadata()).isNotNull();
-    assertThat(result.metadata().getTitle()).isNotBlank();
-    assertThat(result.metadata().getLaunchUrl()).isNotBlank();
+    assertThat(result
+        .metadata()
+        .getTitle()).isNotBlank();
+    assertThat(result
+        .metadata()
+        .getLaunchUrl()).isNotBlank();
   }
 
   private void assertCommonFields(Scorm12Manifest manifest) {

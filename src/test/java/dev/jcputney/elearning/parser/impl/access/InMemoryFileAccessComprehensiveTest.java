@@ -34,6 +34,7 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -450,7 +451,7 @@ class InMemoryFileAccessComprehensiveTest {
 
     // Truncate to just the first few bytes (enough to have ZIP signature but not a valid entry)
     ByteArrayInputStream severelyTruncated = new ByteArrayInputStream(
-        java.util.Arrays.copyOf(zipData, Math.min(20, zipData.length / 4))
+        Arrays.copyOf(zipData, Math.min(20, zipData.length / 4))
     );
 
     // Severely truncated ZIP data should throw IOException
@@ -466,7 +467,7 @@ class InMemoryFileAccessComprehensiveTest {
 
     // Truncate at half length — entry data may still be intact (only central directory missing)
     ByteArrayInputStream partialStream = new ByteArrayInputStream(
-        java.util.Arrays.copyOf(zipData, zipData.length / 2)
+        Arrays.copyOf(zipData, zipData.length / 2)
     );
 
     // Mildly truncated ZIP may still load entries successfully since ZipInputStream

@@ -31,13 +31,14 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.xml.stream.XMLStreamException;
 import org.junit.jupiter.api.Test;
 
@@ -151,7 +152,7 @@ class XmlParsingUtilsTest {
       System.setProperty("elearning.parser.maxXmlSize", "100");
       // Create an InputStream larger than 100 bytes
       byte[] oversized = new byte[200];
-      java.util.Arrays.fill(oversized, (byte) 'x');
+      Arrays.fill(oversized, (byte) 'x');
       InputStream stream = new ByteArrayInputStream(oversized);
 
       assertThatThrownBy(() -> XmlParsingUtils.parseXmlToObject(stream, TestXmlClass.class))
@@ -184,7 +185,8 @@ class XmlParsingUtilsTest {
     for (int i = 0; i < threadCount; i++) {
       new Thread(() -> {
         try {
-          XmlParsingUtils.parseXmlToObject(new ByteArrayInputStream(xml.getBytes()), Object.class, "test.xml");
+          XmlParsingUtils.parseXmlToObject(new ByteArrayInputStream(xml.getBytes()), Object.class,
+              "test.xml");
         } catch (Exception e) {
           errors.incrementAndGet();
         } finally {

@@ -26,6 +26,7 @@ import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.input.aicc.AiccManifest;
 import dev.jcputney.elearning.parser.output.metadata.aicc.AiccMetadata;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
@@ -45,7 +46,9 @@ class AiccParserTest {
   void testParseAiccCourse() throws ModuleException {
     String modulePath = BASE_MODULE_PATH + "/package";
     AiccParser parser = new AiccParser(new LocalFileAccess(modulePath));
-    AiccMetadata metadata = (AiccMetadata) parser.parseAndValidate().metadata();
+    AiccMetadata metadata = (AiccMetadata) parser
+        .parseAndValidate()
+        .metadata();
     assertNotNull(metadata);
     AiccManifest manifest = metadata.getManifest();
     assertNotNull(manifest);
@@ -144,7 +147,7 @@ class AiccParserTest {
             
             [COURSE_BEHAVIOR]
             MAX_NORMAL = 1
-
+            
             [COURSE_DESCRIPTION]
             A minimal AICC course for testing
             """);
@@ -166,7 +169,9 @@ class AiccParserTest {
             """);
 
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    AiccMetadata metadata = (AiccMetadata) parser.parseAndValidate().metadata();
+    AiccMetadata metadata = (AiccMetadata) parser
+        .parseAndValidate()
+        .metadata();
 
     assertNotNull(metadata);
     assertEquals(ModuleType.AICC, metadata.getModuleType());
@@ -243,7 +248,9 @@ class AiccParserTest {
             """);
 
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    AiccMetadata metadata = (AiccMetadata) parser.parseAndValidate().metadata();
+    AiccMetadata metadata = (AiccMetadata) parser
+        .parseAndValidate()
+        .metadata();
 
     assertNotNull(metadata);
     assertEquals("Minimal AICC Course", metadata
@@ -311,7 +318,9 @@ class AiccParserTest {
             """);
 
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    AiccMetadata metadata = (AiccMetadata) parser.parseAndValidate().metadata();
+    AiccMetadata metadata = (AiccMetadata) parser
+        .parseAndValidate()
+        .metadata();
 
     assertNotNull(metadata);
     AiccManifest manifest = metadata.getManifest();
@@ -335,15 +344,17 @@ class AiccParserTest {
   }
 
   /**
-   * Tests that the parser correctly handles Course_Description sections with blank lines
-   * between paragraphs, which can cause Apache Commons Configuration to return null keys.
-   * This test verifies that the parser filters out null keys to prevent Jackson serialization errors.
+   * Tests that the parser correctly handles Course_Description sections with blank lines between
+   * paragraphs, which can cause Apache Commons Configuration to return null keys. This test
+   * verifies that the parser filters out null keys to prevent Jackson serialization errors.
    */
   @Test
   void testParse_withBlankLinesInCourseDescription_succeeds() throws ModuleException {
     String modulePath = BASE_MODULE_PATH + "/multiline-description";
     AiccParser parser = new AiccParser(new LocalFileAccess(modulePath));
-    AiccMetadata metadata = (AiccMetadata) parser.parseAndValidate().metadata();
+    AiccMetadata metadata = (AiccMetadata) parser
+        .parseAndValidate()
+        .metadata();
 
     assertNotNull(metadata);
     AiccManifest manifest = metadata.getManifest();
@@ -351,7 +362,9 @@ class AiccParserTest {
     assertEquals("Achieving Work-Life Balance", manifest.getTitle());
 
     // Verify that the description was parsed despite blank lines and null keys
-    String description = manifest.getCourse().getCourseDescription();
+    String description = manifest
+        .getCourse()
+        .getCourseDescription();
     assertNotNull(description);
     // Verify the description contains the expected content
     assert description.contains("Web APIs") : "Description should contain 'Web APIs'";
@@ -360,8 +373,8 @@ class AiccParserTest {
 
   /**
    * Tests that the parser correctly handles .crs files with UTF-8 BOM before the section headers.
-   * Some authoring tools (e.g., Notepad on Windows) add a BOM to UTF-8 files, which can cause
-   * INI parsing to fail if not properly handled.
+   * Some authoring tools (e.g., Notepad on Windows) add a BOM to UTF-8 files, which can cause INI
+   * parsing to fail if not properly handled.
    */
   @Test
   void testParse_withUtf8BomInCrsFile_succeeds(@TempDir Path tempDir)
@@ -389,14 +402,14 @@ class AiccParserTest {
             Total_AUs = 1
             Total_Blocks = 0
             Max_Fields_CST = 100
-
+            
             [COURSE_BEHAVIOR]
             MAX_NORMAL = 1
-
+            
             [COURSE_DESCRIPTION]
             A course with UTF-8 BOM for testing encoding handling
             """;
-    byte[] contentBytes = crsContent.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+    byte[] contentBytes = crsContent.getBytes(StandardCharsets.UTF_8);
     byte[] combined = new byte[utf8Bom.length + contentBytes.length];
     System.arraycopy(utf8Bom, 0, combined, 0, utf8Bom.length);
     System.arraycopy(contentBytes, 0, combined, utf8Bom.length, contentBytes.length);
@@ -420,7 +433,9 @@ class AiccParserTest {
 
     // This should succeed even with BOM present
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    AiccMetadata metadata = (AiccMetadata) parser.parseAndValidate().metadata();
+    AiccMetadata metadata = (AiccMetadata) parser
+        .parseAndValidate()
+        .metadata();
 
     assertNotNull(metadata);
     assertEquals(ModuleType.AICC, metadata.getModuleType());
@@ -433,9 +448,12 @@ class AiccParserTest {
     assertEquals("test.html", manifest.getLaunchUrl());
 
     // Verify that the COURSE_DESCRIPTION section from .crs was also parsed correctly despite BOM
-    String courseDescription = manifest.getCourse().getCourseDescription();
+    String courseDescription = manifest
+        .getCourse()
+        .getCourseDescription();
     assertNotNull(courseDescription);
-    assert courseDescription.contains("UTF-8 BOM") : "Course description should contain 'UTF-8 BOM'";
+    assert courseDescription.contains(
+        "UTF-8 BOM") : "Course description should contain 'UTF-8 BOM'";
   }
 
   /**
@@ -466,10 +484,10 @@ class AiccParserTest {
             Total_AUs = 1
             Total_Blocks = 0
             Max_Fields_CST = 2
-
+            
             [COURSE_BEHAVIOR]
             MAX_NORMAL = 99
-
+            
             [COURSE_DESCRIPTION]
             Publishing Standard: AICC
             Slides: 3
@@ -495,7 +513,9 @@ class AiccParserTest {
             """);
 
     AiccParser parser = new AiccParser(new LocalFileAccess(tempDir.toString()));
-    AiccMetadata metadata = (AiccMetadata) parser.parseAndValidate().metadata();
+    AiccMetadata metadata = (AiccMetadata) parser
+        .parseAndValidate()
+        .metadata();
 
     assertNotNull(metadata);
     AiccManifest manifest = metadata.getManifest();

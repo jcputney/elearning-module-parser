@@ -19,6 +19,7 @@ package dev.jcputney.elearning.parser.parsers;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
+import dev.jcputney.elearning.parser.api.ParserOptions;
 import dev.jcputney.elearning.parser.config.FileExistenceValidator;
 import dev.jcputney.elearning.parser.exception.ManifestParseException;
 import dev.jcputney.elearning.parser.exception.ModuleException;
@@ -34,6 +35,7 @@ import dev.jcputney.elearning.parser.util.XmlParsingUtils;
 import dev.jcputney.elearning.parser.validation.ValidationIssue;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
 import dev.jcputney.elearning.parser.validators.Scorm2004ResourceValidator;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -69,8 +71,7 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
    * @param fileAccess An instance of FileAccess for reading files in the module package.
    * @param options The parser options to control validation and calculation behavior.
    */
-  public Scorm2004Parser(FileAccess fileAccess,
-      dev.jcputney.elearning.parser.api.ParserOptions options) {
+  public Scorm2004Parser(FileAccess fileAccess, ParserOptions options) {
     super(fileAccess, options);
   }
 
@@ -120,7 +121,7 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
       }
 
       Scorm2004Manifest manifest = XmlParsingUtils
-          .parseXmlToObject(new java.io.ByteArrayInputStream(bytes), getManifestClass(),
+          .parseXmlToObject(new ByteArrayInputStream(bytes), getManifestClass(),
               manifestPath);
       loadExternalMetadata(manifest);
       return manifest;
@@ -229,8 +230,8 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
       Scorm2004SchemaValidator.validate(bytes);
     } catch (SAXException e) {
       throw new ModuleParsingException("SCORM 2004 XSD validation failed: " + e.getMessage(),
-          dev.jcputney.elearning.parser.validation.ValidationResult.of(
-              dev.jcputney.elearning.parser.validation.ValidationIssue.error(
+          ValidationResult.of(
+              ValidationIssue.error(
                   "SCORM2004_XSD_VALIDATION_FAILED",
                   "SCORM 2004 XSD validation failed: " + e.getMessage(),
                   "imsmanifest.xml"

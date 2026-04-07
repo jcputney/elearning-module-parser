@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -353,8 +354,8 @@ class ZipFileAccessTest {
 
     // Should be able to find imsmanifest.xml without the root prefix
     assertTrue(files
-        .stream()
-        .anyMatch(file -> file.equals("imsmanifest.xml") || file.endsWith("/imsmanifest.xml")),
+            .stream()
+            .anyMatch(file -> file.equals("imsmanifest.xml") || file.endsWith("/imsmanifest.xml")),
         "Should find imsmanifest.xml in the file list");
   }
 
@@ -362,7 +363,7 @@ class ZipFileAccessTest {
   void listFiles_withNestedRootDirectory_stripsRootPrefix() throws IOException {
     // Test with a ZIP that has all files in a nested directory
     String testZipPath = "/Users/putneyj/Library/CloudStorage/GoogleDrive-jputney@noverant.com/Shared drives/SCORM Modules/testClose.zip";
-    java.io.File testFile = new java.io.File(testZipPath);
+    File testFile = new File(testZipPath);
 
     // Only run this test if the file exists (allows tests to pass in CI)
     if (!testFile.exists()) {

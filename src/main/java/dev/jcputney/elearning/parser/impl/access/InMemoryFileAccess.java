@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -72,8 +73,8 @@ public final class InMemoryFileAccess extends AbstractArchiveFileAccess {
   private final Set<String> directories;
 
   /**
-   * A set containing all file paths for O(1) existence lookups. Built after loading ZIP data
-   * from the file entries list.
+   * A set containing all file paths for O(1) existence lookups. Built after loading ZIP data from
+   * the file entries list.
    */
   private final Set<String> filePathIndex;
 
@@ -328,10 +329,8 @@ public final class InMemoryFileAccess extends AbstractArchiveFileAccess {
 
         zis.closeEntry();
       }
-    } catch (java.util.zip.ZipException e) {
+    } catch (ZipException e) {
       throw new IOException("Invalid ZIP data: " + e.getMessage(), e);
-    } catch (IOException e) {
-      throw e;
     }
 
     // If no entries were found and the data is not a valid empty ZIP, throw

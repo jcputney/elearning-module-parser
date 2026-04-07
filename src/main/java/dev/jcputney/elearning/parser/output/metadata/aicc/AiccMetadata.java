@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -874,7 +875,7 @@ public class AiccMetadata extends BaseModuleMetadata<AiccManifest> {
    * @param consumer the consumer to apply to the value if it is present and not blank
    */
   private static void applyIfPresent(Map<String, String> row, String key,
-      java.util.function.Consumer<String> consumer) {
+      Consumer<String> consumer) {
     if (key == null) {
       return;
     }

@@ -30,7 +30,7 @@ import java.time.format.DateTimeParseException;
 
 /**
  * Custom deserializer for {@link Instant} objects, allowing ISO 8601 date-time strings to be parsed
- * into {@link java.time.Instant} instances.
+ * into {@link Instant} instances.
  *
  * <p>This deserializer supports date-time formats with timezone information (e.g.,
  * "2023-05-01T10:15:30Z").</p>

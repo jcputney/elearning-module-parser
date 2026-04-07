@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import dev.jcputney.elearning.parser.input.scorm12.adl.prerequisite.AndExpression;
 import dev.jcputney.elearning.parser.input.scorm12.adl.prerequisite.ItemReference;
+import dev.jcputney.elearning.parser.input.scorm12.adl.prerequisite.OrExpression;
 import dev.jcputney.elearning.parser.input.scorm12.adl.prerequisite.ParseError;
 import dev.jcputney.elearning.parser.input.scorm12.adl.prerequisite.PrerequisiteExpression;
 import org.junit.jupiter.api.Test;
@@ -88,8 +89,8 @@ class Scorm12PrerequisitesTest {
   }
 
   /**
-   * Tests that getParsedExpression() parses without type attribute.
-   * Many SCORM 1.2 packages omit the type attribute even when using AICC script format.
+   * Tests that getParsedExpression() parses without type attribute. Many SCORM 1.2 packages omit
+   * the type attribute even when using AICC script format.
    */
   @Test
   void getParsedExpressionParsesWithoutTypeAttribute() {
@@ -101,7 +102,9 @@ class Scorm12PrerequisitesTest {
 
     assertInstanceOf(AndExpression.class, result);
     AndExpression and = (AndExpression) result;
-    assertEquals(2, and.operands().size());
+    assertEquals(2, and
+        .operands()
+        .size());
   }
 
   /**
@@ -131,7 +134,7 @@ class Scorm12PrerequisitesTest {
 
     assertNotNull(result);
     // Should be an OR expression with AND and ItemReference as operands
-    assertInstanceOf(dev.jcputney.elearning.parser.input.scorm12.adl.prerequisite.OrExpression.class, result);
+    assertInstanceOf(OrExpression.class, result);
   }
 
   /**

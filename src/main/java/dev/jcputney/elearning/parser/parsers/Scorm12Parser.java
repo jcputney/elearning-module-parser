@@ -19,6 +19,7 @@ package dev.jcputney.elearning.parser.parsers;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
+import dev.jcputney.elearning.parser.api.ParserOptions;
 import dev.jcputney.elearning.parser.config.FileExistenceValidator;
 import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
@@ -68,8 +69,7 @@ public final class Scorm12Parser extends BaseParser<Scorm12Metadata, Scorm12Mani
    * @param fileAccess An instance of FileAccess for reading files in the module package.
    * @param options The parser options to control validation and calculation behavior.
    */
-  public Scorm12Parser(FileAccess fileAccess,
-      dev.jcputney.elearning.parser.api.ParserOptions options) {
+  public Scorm12Parser(FileAccess fileAccess, ParserOptions options) {
     super(fileAccess, options);
   }
 

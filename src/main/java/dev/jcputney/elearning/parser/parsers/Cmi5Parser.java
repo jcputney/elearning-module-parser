@@ -18,6 +18,7 @@
 package dev.jcputney.elearning.parser.parsers;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
+import dev.jcputney.elearning.parser.api.ParserOptions;
 import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.input.cmi5.Cmi5Manifest;
 import dev.jcputney.elearning.parser.output.metadata.cmi5.Cmi5Metadata;
@@ -55,8 +56,7 @@ public final class Cmi5Parser extends BaseParser<Cmi5Metadata, Cmi5Manifest> {
    * @param fileAccess An instance of FileAccess for reading files in the module package.
    * @param options The parser options to control validation and calculation behavior.
    */
-  public Cmi5Parser(FileAccess fileAccess,
-      dev.jcputney.elearning.parser.api.ParserOptions options) {
+  public Cmi5Parser(FileAccess fileAccess, ParserOptions options) {
     super(fileAccess, options);
   }
 

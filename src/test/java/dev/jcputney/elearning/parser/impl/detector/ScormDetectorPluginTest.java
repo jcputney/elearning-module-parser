@@ -106,7 +106,8 @@ class ScormDetectorPluginTest {
   @Test
   void testDetect_ManifestExistsScorm12_ReturnsScorm12() throws Exception {
     // Arrange
-    when(mockFileAccess.listFiles("")).thenReturn(List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
+    when(mockFileAccess.listFiles("")).thenReturn(
+        List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
 
     try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
         ScormVersionDetector.class)) {
@@ -127,7 +128,8 @@ class ScormDetectorPluginTest {
   @Test
   void testDetect_ManifestExistsScorm2004_ReturnsScorm2004() throws Exception {
     // Arrange
-    when(mockFileAccess.listFiles("")).thenReturn(List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
+    when(mockFileAccess.listFiles("")).thenReturn(
+        List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
 
     try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
         ScormVersionDetector.class)) {
@@ -148,7 +150,8 @@ class ScormDetectorPluginTest {
   @Test
   void testDetect_VersionDetectorThrowsException_ThrowsModuleDetectionException() throws Exception {
     // Arrange
-    when(mockFileAccess.listFiles("")).thenReturn(List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
+    when(mockFileAccess.listFiles("")).thenReturn(
+        List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
 
     try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
         ScormVersionDetector.class)) {
@@ -199,7 +202,8 @@ class ScormDetectorPluginTest {
   @Test
   void testDetect_VersionDetectorReturnsNull_ReturnsNull() throws Exception {
     // Arrange
-    when(mockFileAccess.listFiles("")).thenReturn(List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
+    when(mockFileAccess.listFiles("")).thenReturn(
+        List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
 
     try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
         ScormVersionDetector.class)) {
@@ -220,7 +224,8 @@ class ScormDetectorPluginTest {
   @Test
   void testDetect_MultipleCallsSameFileAccess_ConsistentResults() throws Exception {
     // Arrange
-    when(mockFileAccess.listFiles("")).thenReturn(List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
+    when(mockFileAccess.listFiles("")).thenReturn(
+        List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
 
     try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
         ScormVersionDetector.class)) {
@@ -246,7 +251,8 @@ class ScormDetectorPluginTest {
   void testDetect_DifferentFileAccessInstances_IndependentResults() throws Exception {
     // Arrange
     FileAccess mockFileAccess2 = mock(FileAccess.class);
-    when(mockFileAccess.listFiles("")).thenReturn(List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
+    when(mockFileAccess.listFiles("")).thenReturn(
+        List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
     when(mockFileAccess2.listFiles("")).thenReturn(List.of("index.html"));
 
     try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
@@ -274,12 +280,12 @@ class ScormDetectorPluginTest {
   void testDetect_VersionDetectorThrowsIOException_WrapsInModuleDetectionException()
       throws Exception {
     // Arrange
-    when(mockFileAccess.listFiles("")).thenReturn(List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
+    when(mockFileAccess.listFiles("")).thenReturn(
+        List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
 
     try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
         ScormVersionDetector.class)) {
-      java.io.IOException ioException = new java.io.IOException(
-          "IO error during version detection");
+      IOException ioException = new IOException("IO error during version detection");
       mockedDetector
           .when(() -> ScormVersionDetector.detectScormVersion(mockFileAccess))
           .thenThrow(ioException);
@@ -314,7 +320,8 @@ class ScormDetectorPluginTest {
   void testDetect_EdgeCase_ManifestExistsButVersionDetectionReturnsUnexpectedType()
       throws Exception {
     // Arrange
-    when(mockFileAccess.listFiles("")).thenReturn(List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
+    when(mockFileAccess.listFiles("")).thenReturn(
+        List.of(Scorm12Parser.MANIFEST_FILE, "index.html"));
 
     try (MockedStatic<ScormVersionDetector> mockedDetector = mockStatic(
         ScormVersionDetector.class)) {

@@ -23,6 +23,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import dev.jcputney.elearning.parser.api.FileAccess;
 import dev.jcputney.elearning.parser.api.ModuleFileProvider;
+import dev.jcputney.elearning.parser.api.ParserOptions;
 import dev.jcputney.elearning.parser.exception.ManifestParseException;
 import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
@@ -36,6 +37,7 @@ import dev.jcputney.elearning.parser.util.EncodingDetector;
 import dev.jcputney.elearning.parser.validation.ValidationIssue;
 import dev.jcputney.elearning.parser.validation.ValidationResult;
 import dev.jcputney.elearning.parser.validators.AiccValidator;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,6 +47,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.xml.stream.XMLStreamException;
 import org.apache.commons.configuration2.INIConfiguration;
 import org.apache.commons.configuration2.SubnodeConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -101,8 +104,7 @@ public final class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
    * @param fileAccess An instance of FileAccess for reading files.
    * @param options The parser options to control validation and calculation behavior.
    */
-  public AiccParser(FileAccess fileAccess,
-      dev.jcputney.elearning.parser.api.ParserOptions options) {
+  public AiccParser(FileAccess fileAccess, ParserOptions options) {
     super(fileAccess, options);
   }
 
@@ -123,12 +125,12 @@ public final class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
    * @param manifestPath Ignored for AICC (uses multiple files)
    * @return An instance of AiccManifest containing parsed data
    * @throws IOException If an error occurs while reading files
-   * @throws javax.xml.stream.XMLStreamException Not thrown by AICC parser
+   * @throws XMLStreamException Not thrown by AICC parser
    * @throws ManifestParseException If an error occurs while parsing the manifest
    */
   @Override
   public AiccManifest parseManifest(String manifestPath)
-      throws IOException, javax.xml.stream.XMLStreamException, ManifestParseException {
+      throws IOException, XMLStreamException, ManifestParseException {
     try {
       return parseManifest();
     } catch (ModuleParsingException e) {
@@ -359,7 +361,7 @@ public final class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
           EncodingDetector.detectEncoding(inputStream);
 
       // First, extract the raw Course_Description text before INI parsing mangles it
-      String rawCourseDescription = extractCourseDescription(encodingAwareStream, fileName);
+      String rawCourseDescription = extractCourseDescription(encodingAwareStream);
 
       // Reset stream for INI parsing
       encodingAwareStream = EncodingDetector.detectEncoding(
@@ -416,19 +418,17 @@ public final class AiccParser extends BaseParser<AiccMetadata, AiccManifest> {
    * [Course_Description] section contains plain text that should not be parsed as key-value pairs.
    *
    * @param encodingAwareStream the input stream with detected encoding
-   * @param fileName the name of the file being parsed (for error messages)
    * @return the raw description text, or null if the section is not found
    * @throws IOException if an error occurs reading the file
    */
   private String extractCourseDescription(
-      EncodingDetector.EncodingAwareInputStream encodingAwareStream,
-      String fileName) throws IOException {
+      EncodingDetector.EncodingAwareInputStream encodingAwareStream) throws IOException {
     try (InputStreamReader reader = new InputStreamReader(
         encodingAwareStream.inputStream(), encodingAwareStream.charset())) {
       StringBuilder description = new StringBuilder();
       String line;
       boolean inDescriptionSection = false;
-      java.io.BufferedReader bufferedReader = new java.io.BufferedReader(reader);
+      BufferedReader bufferedReader = new BufferedReader(reader);
 
       while ((line = bufferedReader.readLine()) != null) {
         String trimmedLine = line.trim();

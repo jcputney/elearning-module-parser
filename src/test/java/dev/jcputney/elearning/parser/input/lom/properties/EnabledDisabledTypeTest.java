@@ -18,6 +18,8 @@ package dev.jcputney.elearning.parser.input.lom.properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
@@ -27,12 +29,12 @@ import org.junit.jupiter.api.Test;
 class EnabledDisabledTypeTest {
 
   private final ObjectMapper objectMapper = new ObjectMapper()
-      .configure(com.fasterxml.jackson.databind.DeserializationFeature.READ_ENUMS_USING_TO_STRING,
+      .configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING,
           false)
       .configure(
-          com.fasterxml.jackson.databind.DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL,
+          DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL,
           false)
-      .configure(com.fasterxml.jackson.databind.MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true);
+      .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true);
 
   @Test
   void deserialize_enabled_returnsEnabled() throws Exception {

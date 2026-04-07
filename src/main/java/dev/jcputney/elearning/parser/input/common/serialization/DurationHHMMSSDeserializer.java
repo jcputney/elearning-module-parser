@@ -36,11 +36,11 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 /**
  * Custom deserializer for {@link Duration} objects, allowing HH:MM:SS duration strings to be parsed
- * into {@link java.time.Duration} instances.
+ * into {@link Duration} instances.
  *
  * <p>This deserializer supports durations in the format HH:MM:SS, where HH represents
  * hours, MM represents minutes, and SS represents seconds. It doesn't support days, months, or
- * years, as these aren't compatible with {@link java.time.Duration}.</p>
+ * years, as these aren't compatible with {@link Duration}.</p>
  */
 public class DurationHHMMSSDeserializer extends JsonDeserializer<Duration> {
 

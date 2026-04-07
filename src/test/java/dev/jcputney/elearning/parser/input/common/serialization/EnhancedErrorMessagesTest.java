@@ -27,7 +27,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
 import dev.jcputney.elearning.parser.impl.access.ZipFileAccess;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -37,7 +39,7 @@ import org.junit.jupiter.api.io.TempDir;
 class EnhancedErrorMessagesTest {
 
   @Test
-  void testLocalFileAccessEnhancedErrors(@TempDir java.nio.file.Path tempDir) {
+  void testLocalFileAccessEnhancedErrors(@TempDir Path tempDir) {
     LocalFileAccess fileAccess = new LocalFileAccess(tempDir.toString());
 
     // Test file not found error
@@ -58,7 +60,7 @@ class EnhancedErrorMessagesTest {
   }
 
   @Test
-  void testLocalFileAccessDirectoryNotFound(@TempDir java.nio.file.Path tempDir) {
+  void testLocalFileAccessDirectoryNotFound(@TempDir Path tempDir) {
     LocalFileAccess fileAccess = new LocalFileAccess(tempDir.toString());
 
     // Test directory not found error
@@ -98,10 +100,10 @@ class EnhancedErrorMessagesTest {
   }
 
   @Test
-  void testInvalidRootDirectoryError(@TempDir java.nio.file.Path tempDir) throws IOException {
+  void testInvalidRootDirectoryError(@TempDir Path tempDir) throws IOException {
     // Create a regular file
-    java.nio.file.Path regularFile = tempDir.resolve("regular-file.txt");
-    java.nio.file.Files.createFile(regularFile);
+    Path regularFile = tempDir.resolve("regular-file.txt");
+    Files.createFile(regularFile);
 
     // Try to use the regular file as a root directory
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {

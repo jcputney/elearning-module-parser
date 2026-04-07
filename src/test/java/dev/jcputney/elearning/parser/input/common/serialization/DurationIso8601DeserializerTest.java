@@ -24,6 +24,7 @@ package dev.jcputney.elearning.parser.input.common.serialization;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.core.Base64Variant;
 import com.fasterxml.jackson.core.JsonLocation;
@@ -34,6 +35,8 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.Duration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -349,7 +352,7 @@ class DurationIso8601DeserializerTest {
         () -> deserializer.deserialize(parser, context));
 
     // Verify the exception message
-    org.junit.jupiter.api.Assertions.assertTrue(
+    assertTrue(
         exception
             .getMessage()
             .contains("Invalid ISO 8601 duration format"));
@@ -569,7 +572,7 @@ class DurationIso8601DeserializerTest {
     }
 
     @Override
-    public java.math.BigInteger getBigIntegerValue() {
+    public BigInteger getBigIntegerValue() {
       return null;
     }
 
@@ -584,7 +587,7 @@ class DurationIso8601DeserializerTest {
     }
 
     @Override
-    public java.math.BigDecimal getDecimalValue() {
+    public BigDecimal getDecimalValue() {
       return null;
     }
 

@@ -34,6 +34,7 @@ import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Organizations;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resource;
 import dev.jcputney.elearning.parser.input.scorm12.ims.cp.Scorm12Resources;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -679,7 +680,7 @@ public final class Scorm12Manifest implements PackageManifest {
       return List.of();
     }
 
-    List<String> result = new java.util.ArrayList<>();
+    List<String> result = new ArrayList<>();
 
     // First, check if any top-level items have an identifierRef
     for (Scorm12Item item : items) {

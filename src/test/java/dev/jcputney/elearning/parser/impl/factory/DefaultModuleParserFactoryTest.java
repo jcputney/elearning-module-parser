@@ -28,13 +28,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.api.FileAccess;
-import dev.jcputney.elearning.parser.api.ParseResult;
 import dev.jcputney.elearning.parser.api.ModuleParser;
 import dev.jcputney.elearning.parser.api.ModuleTypeDetector;
 import dev.jcputney.elearning.parser.api.ModuleTypeDetectorPlugin;
+import dev.jcputney.elearning.parser.api.ParseResult;
 import dev.jcputney.elearning.parser.api.ParserOptions;
-import dev.jcputney.elearning.parser.validation.ValidationIssue;
-import dev.jcputney.elearning.parser.validation.ValidationResult;
+import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleDetectionException;
 import dev.jcputney.elearning.parser.exception.ModuleException;
@@ -45,6 +44,8 @@ import dev.jcputney.elearning.parser.parsers.AiccParser;
 import dev.jcputney.elearning.parser.parsers.Cmi5Parser;
 import dev.jcputney.elearning.parser.parsers.Scorm12Parser;
 import dev.jcputney.elearning.parser.parsers.Scorm2004Parser;
+import dev.jcputney.elearning.parser.validation.ValidationIssue;
+import dev.jcputney.elearning.parser.validation.ValidationResult;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.time.Duration;
@@ -80,7 +81,7 @@ class DefaultModuleParserFactoryTest {
   @Test
   void constructor_withNullModuleTypeDetector_throwsIllegalArgumentException() {
     assertThrows(IllegalArgumentException.class,
-        () -> new DefaultModuleParserFactory(fileAccess, (dev.jcputney.elearning.parser.api.ModuleTypeDetector) null));
+        () -> new DefaultModuleParserFactory(fileAccess, (ModuleTypeDetector) null));
   }
 
   @Test
@@ -317,7 +318,7 @@ class DefaultModuleParserFactoryTest {
 
     public MockModuleMetadata(PackageManifest manifest) {
       super(manifest, ModuleType.SCORM_12,
-          dev.jcputney.elearning.parser.enums.ModuleEditionType.SCORM_12, false);
+          ModuleEditionType.SCORM_12, false);
     }
 
     @Override
@@ -347,19 +348,24 @@ class DefaultModuleParserFactoryTest {
     @Override
     public ParseResult<PackageManifest> parseAndValidate() throws ModuleParsingException {
       if (throwException) {
-        throw ValidationResult.of(
-            ValidationIssue.error("MOCK_ERROR", "Mock parsing exception", "test")
-        ).toException("Mock parsing failed");
+        throw ValidationResult
+            .of(
+                ValidationIssue.error("MOCK_ERROR", "Mock parsing exception", "test")
+            )
+            .toException("Mock parsing failed");
       }
-      return new ParseResult<>(ValidationResult.valid(), new MockModuleMetadata(new MockPackageManifest()));
+      return new ParseResult<>(ValidationResult.valid(),
+          new MockModuleMetadata(new MockPackageManifest()));
     }
 
     @Override
     public ModuleMetadata<PackageManifest> parseOnly() throws ModuleParsingException {
       if (throwException) {
-        throw ValidationResult.of(
-            ValidationIssue.error("MOCK_ERROR", "Mock parsing exception", "test")
-        ).toException("Mock parsing failed");
+        throw ValidationResult
+            .of(
+                ValidationIssue.error("MOCK_ERROR", "Mock parsing exception", "test")
+            )
+            .toException("Mock parsing failed");
       }
       return new MockModuleMetadata(new MockPackageManifest());
     }

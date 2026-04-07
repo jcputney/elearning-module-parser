@@ -19,6 +19,7 @@ package dev.jcputney.elearning.parser.api;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -94,7 +95,7 @@ public interface ModuleFileProvider {
       throw new IllegalArgumentException("Paths list cannot be null");
     }
 
-    Map<String, Boolean> results = new java.util.HashMap<>();
+    Map<String, Boolean> results = new HashMap<>();
     for (String path : paths) {
       if (path != null) {
         results.put(path, fileExists(path));

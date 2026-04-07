@@ -39,6 +39,7 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004O
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.SequencingCollection;
 import dev.jcputney.elearning.parser.input.scorm2004.sequencing.ActivityTree;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -725,7 +726,8 @@ public final class Scorm2004Manifest implements PackageManifest {
   /**
    * Retrieves the list of nested sub-manifests within this content package.
    *
-   * @return a list of Scorm2004Manifest objects representing the sub-manifests, or null if none exist
+   * @return a list of Scorm2004Manifest objects representing the sub-manifests, or null if none
+   * exist
    */
   public List<Scorm2004Manifest> getSubManifests() {
     return this.subManifests;
@@ -905,7 +907,7 @@ public final class Scorm2004Manifest implements PackageManifest {
       return List.of();
     }
 
-    List<String> result = new java.util.ArrayList<>();
+    List<String> result = new ArrayList<>();
 
     // First, collect identifierRefs at this level
     for (Scorm2004Item item : items) {
