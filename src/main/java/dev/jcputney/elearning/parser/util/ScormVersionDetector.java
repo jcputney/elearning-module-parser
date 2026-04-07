@@ -27,9 +27,11 @@ import java.io.ByteArrayInputStream;
 import java.io.CharConversionException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -83,9 +85,9 @@ public final class ScormVersionDetector {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware(true);
     factory.setExpandEntityReferences(false);
-    factory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, true);
-    factory.setAttribute(javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD, "");
-    factory.setAttribute(javax.xml.XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+    factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+    trySetAttribute(factory, XMLConstants.ACCESS_EXTERNAL_DTD, "");
+    trySetAttribute(factory, XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
     factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
     byte[] manifestBytes = readManifestBytes(fileAccess);
     Document document = parseManifest(factory, manifestBytes);
@@ -217,7 +219,7 @@ public final class ScormVersionDetector {
     DocumentBuilder builder = createDocumentBuilder(factory);
     InputSource source = new InputSource();
     source.setEncoding(charset.name());
-    source.setCharacterStream(new java.io.StringReader(new String(manifestBytes, charset)));
+    source.setCharacterStream(new StringReader(new String(manifestBytes, charset)));
     return builder.parse(source);
   }
 
@@ -266,6 +268,34 @@ public final class ScormVersionDetector {
    */
   private static List<Charset> fallbackCharsets() {
     return List.of(StandardCharsets.ISO_8859_1, Charset.forName("windows-1252"));
+  }
+
+  /**
+   * Attempts to set a JAXP attribute on the given {@link DocumentBuilderFactory}, silently ignoring
+   * {@link IllegalArgumentException} if the underlying XML implementation does not recognize the
+   * attribute.
+   *
+   * <p>The {@code ACCESS_EXTERNAL_DTD} and {@code ACCESS_EXTERNAL_SCHEMA} properties are defined
+   * by JAXP 1.5 but were only required on {@code SAXParserFactory} and {@code SchemaFactory}.
+   * Support for them on {@code DocumentBuilderFactory} is implementation-dependent — stock JDK
+   * Xerces honors them, but some runtimes (e.g. an older Apache Xerces pulled in transitively, some
+   * Android runtimes) throw {@link IllegalArgumentException} when these attributes are set.
+   *
+   * <p>These attributes are defense-in-depth here. The primary XXE mitigation is
+   * {@code disallow-doctype-decl}, which is universally supported on JAXP parsers and is set
+   * alongside this call, so silently degrading when the attributes are unsupported is safe.
+   *
+   * @param factory the {@link DocumentBuilderFactory} to configure
+   * @param name the attribute name
+   * @param value the attribute value
+   */
+  private static void trySetAttribute(DocumentBuilderFactory factory, String name, Object value) {
+    try {
+      factory.setAttribute(name, value);
+    } catch (IllegalArgumentException ignored) {
+      // Attribute not recognized by this XML implementation — disallow-doctype-decl
+      // already blocks external entity resolution, so this is safe to ignore.
+    }
   }
 
   /**
