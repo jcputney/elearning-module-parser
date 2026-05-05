@@ -114,4 +114,4 @@ jobs:
           path: |
             target/elearning-module-parser-*-cyclonedx.json
             target/elearning-module-parser-*-cyclonedx.xml
-          if-no-files-found: warn
+          if-no-files-found: error

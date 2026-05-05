@@ -64,13 +64,26 @@ jobs:
           sbom-path: target/checkout/target/elearning-module-parser-*-cyclonedx.json
 
       - name: Upload SBOM to GitHub Release
+        # Maven Central publish above is irreversible; do not fail the job if a
+        # transient gh API error or a rerun on an existing release prevents
+        # this step from completing. The step is still idempotent: on a rerun
+        # we upload to the existing release with --clobber, so a successful
+        # retry replaces any prior assets cleanly.
+        continue-on-error: true
         run: |
           TAG=$(grep 'scm.tag=' release.properties | cut -d'=' -f2)
-          gh release create "${TAG}" \
-            target/checkout/target/elearning-module-parser-*-cyclonedx.json \
-            target/checkout/target/elearning-module-parser-*-cyclonedx.xml \
-            --title "${TAG}" \
-            --generate-notes
+          if gh release view "${TAG}" >/dev/null 2>&1; then
+            gh release upload "${TAG}" \
+              target/checkout/target/elearning-module-parser-*-cyclonedx.json \
+              target/checkout/target/elearning-module-parser-*-cyclonedx.xml \
+              --clobber
+          else
+            gh release create "${TAG}" \
+              target/checkout/target/elearning-module-parser-*-cyclonedx.json \
+              target/checkout/target/elearning-module-parser-*-cyclonedx.xml \
+              --title "${TAG}" \
+              --generate-notes
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
