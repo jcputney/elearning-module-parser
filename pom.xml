@@ -61,6 +61,7 @@
     <version.org.json>20251224</version.org.json>
     <version.plugin.central-publishing>0.10.0</version.plugin.central-publishing>
     <version.plugin.compiler>3.15.0</version.plugin.compiler>
+    <version.plugin.cyclonedx>2.9.1</version.plugin.cyclonedx>
     <version.plugin.exec>3.6.3</version.plugin.exec>
     <version.plugin.failsafe>3.5.5</version.plugin.failsafe>
     <version.plugin.gpg>3.2.8</version.plugin.gpg>
@@ -400,6 +401,28 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.cyclonedx</groupId>
+        <artifactId>cyclonedx-maven-plugin</artifactId>
+        <version>${version.plugin.cyclonedx}</version>
+        <executions>
+          <execution>
+            <id>make-bom</id>
+            <phase>package</phase>
+            <goals>
+              <goal>makeAggregateBom</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <projectType>library</projectType>
+          <schemaVersion>1.6</schemaVersion>
+          <outputFormat>all</outputFormat>
+          <outputName>${project.artifactId}-${project.version}-cyclonedx</outputName>
+          <includeBomSerialNumber>true</includeBomSerialNumber>
+          <includeTestScope>false</includeTestScope>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>

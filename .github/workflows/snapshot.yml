@@ -22,6 +22,8 @@ jobs:
       packages: write
       statuses: write
       checks: write
+      id-token: write
+      attestations: write
 
     steps:
       - uses: actions/checkout@v6
@@ -38,6 +40,28 @@ jobs:
         run: mvn -B package --file pom.xml
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+      - name: Attest build provenance for snapshot artifacts
+        if: github.event_name != 'pull_request'
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: target/elearning-module-parser-*.jar
+
+      - name: Attest SBOM for snapshot artifacts
+        if: github.event_name != 'pull_request'
+        uses: actions/attest-sbom@v2
+        with:
+          subject-path: target/elearning-module-parser-*.jar
+          sbom-path: target/elearning-module-parser-*-cyclonedx.json
+
+      - name: Upload SBOM as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: |
+            target/elearning-module-parser-*-cyclonedx.json
+            target/elearning-module-parser-*-cyclonedx.xml
+          if-no-files-found: warn
 
       - name: Test Summary
         id: test_summary

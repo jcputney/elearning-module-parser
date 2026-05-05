@@ -14,6 +14,8 @@ jobs:
   release:
     permissions:
       contents: write
+      id-token: write
+      attestations: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -45,6 +47,28 @@ jobs:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+      - name: Attest build provenance for release artifacts
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            target/checkout/target/elearning-module-parser-*.jar
+
+      - name: Attest SBOM for release artifacts
+        uses: actions/attest-sbom@v2
+        with:
+          subject-path: target/checkout/target/elearning-module-parser-*.jar
+          sbom-path: target/checkout/target/elearning-module-parser-*-cyclonedx.json
+
+      - name: Upload SBOM and provenance to GitHub Release
+        run: |
+          TAG=$(grep 'scm.tag=' release.properties | cut -d'=' -f2)
+          gh release upload "${TAG}" \
+            target/checkout/target/elearning-module-parser-*-cyclonedx.json \
+            target/checkout/target/elearning-module-parser-*-cyclonedx.xml \
+            --clobber || echo "Release ${TAG} not found yet; skipping SBOM upload"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update documentation with released version
         run: |
