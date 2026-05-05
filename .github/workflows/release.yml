@@ -60,13 +60,14 @@ jobs:
           subject-path: target/checkout/target/elearning-module-parser-*.jar
           sbom-path: target/checkout/target/elearning-module-parser-*-cyclonedx.json
 
-      - name: Upload SBOM and provenance to GitHub Release
+      - name: Upload SBOM to GitHub Release
         run: |
           TAG=$(grep 'scm.tag=' release.properties | cut -d'=' -f2)
-          gh release upload "${TAG}" \
+          gh release create "${TAG}" \
             target/checkout/target/elearning-module-parser-*-cyclonedx.json \
             target/checkout/target/elearning-module-parser-*-cyclonedx.xml \
-            --clobber || echo "Release ${TAG} not found yet; skipping SBOM upload"
+            --title "${TAG}" \
+            --generate-notes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
