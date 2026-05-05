@@ -100,7 +100,10 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: actions/attest-sbom@v2
         with:
-          subject-path: target/elearning-module-parser-*.jar
+          subject-path: |
+            target/elearning-module-parser-*.jar
+            !target/elearning-module-parser-*-sources.jar
+            !target/elearning-module-parser-*-javadoc.jar
           sbom-path: target/elearning-module-parser-*-cyclonedx.json
 
       - name: Upload SBOM as workflow artifact

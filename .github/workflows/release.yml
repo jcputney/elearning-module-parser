@@ -57,7 +57,10 @@ jobs:
       - name: Attest SBOM for release artifacts
         uses: actions/attest-sbom@v2
         with:
-          subject-path: target/checkout/target/elearning-module-parser-*.jar
+          subject-path: |
+            target/checkout/target/elearning-module-parser-*.jar
+            !target/checkout/target/elearning-module-parser-*-sources.jar
+            !target/checkout/target/elearning-module-parser-*-javadoc.jar
           sbom-path: target/checkout/target/elearning-module-parser-*-cyclonedx.json
 
       - name: Upload SBOM to GitHub Release
