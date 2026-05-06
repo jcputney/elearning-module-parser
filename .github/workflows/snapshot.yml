@@ -22,8 +22,6 @@ jobs:
       packages: write
       statuses: write
       checks: write
-      id-token: write
-      attestations: write
 
     steps:
       - uses: actions/checkout@v6
@@ -87,31 +85,61 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
-      # Attestations must run AFTER deploy: `mvn deploy` re-runs the package
-      # phase and overwrites target/, so only the post-deploy files match what
-      # was actually published to GitHub Packages.
-      - name: Attest build provenance for snapshot artifacts
+      # Stage post-deploy artifacts (these are exactly what GitHub Packages
+      # received, since `mvn deploy` re-runs the package phase and overwrites
+      # target/) for the separate attest job to consume.
+      - name: Stage snapshot artifacts for attestation
         if: github.event_name != 'pull_request'
+        run: |
+          mkdir -p snapshot-artifacts
+          cp target/elearning-module-parser-*.jar snapshot-artifacts/
+          cp target/elearning-module-parser-*-cyclonedx.json snapshot-artifacts/
+          cp target/elearning-module-parser-*-cyclonedx.xml snapshot-artifacts/
+
+      - name: Upload snapshot artifacts for attestation job
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-artifacts
+          path: snapshot-artifacts/
+          if-no-files-found: error
+
+  # Attestations run in a separate job so id-token: write and
+  # attestations: write are not available to the preceding Maven build,
+  # which executes repository-controlled plugin code.
+  attest:
+    needs: test-build
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      attestations: write
+    steps:
+      - name: Download snapshot artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: snapshot-artifacts
+          path: artifacts
+
+      - name: Attest build provenance for snapshot artifacts
         uses: actions/attest-build-provenance@v2
         with:
-          subject-path: target/elearning-module-parser-*.jar
+          subject-path: artifacts/elearning-module-parser-*.jar
 
       - name: Attest SBOM for snapshot artifacts
-        if: github.event_name != 'pull_request'
         uses: actions/attest-sbom@v2
         with:
           subject-path: |
-            target/elearning-module-parser-*.jar
-            !target/elearning-module-parser-*-sources.jar
-            !target/elearning-module-parser-*-javadoc.jar
-          sbom-path: target/elearning-module-parser-*-cyclonedx.json
+            artifacts/elearning-module-parser-*.jar
+            !artifacts/elearning-module-parser-*-sources.jar
+            !artifacts/elearning-module-parser-*-javadoc.jar
+          sbom-path: artifacts/elearning-module-parser-*-cyclonedx.json
 
       - name: Upload SBOM as workflow artifact
-        if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: sbom
           path: |
-            target/elearning-module-parser-*-cyclonedx.json
-            target/elearning-module-parser-*-cyclonedx.xml
+            artifacts/elearning-module-parser-*-cyclonedx.json
+            artifacts/elearning-module-parser-*-cyclonedx.xml
           if-no-files-found: error
