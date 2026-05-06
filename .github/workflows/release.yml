@@ -2,10 +2,7 @@
 name: Release
 
 permissions:
-  contents: write
-  packages: write
-  statuses: write
-  checks: write
+  contents: read
 
 on:
   workflow_dispatch:
@@ -14,7 +11,11 @@ jobs:
   release:
     permissions:
       contents: write
+      packages: write
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.publish.outputs.tag }}
+      version: ${{ steps.publish.outputs.version }}
     steps:
       - uses: actions/checkout@v6
       - uses: webfactory/ssh-agent@v0.10.0
@@ -32,6 +33,7 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Publish package to Maven Central
+        id: publish
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -39,12 +41,29 @@ jobs:
           cat release.properties
           TAG=$(grep 'scm.tag=' release.properties | cut -d'=' -f2)
           VERSION=${TAG#v}
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           mvn -B -ntp -Dstyle.color=always release:perform -DconnectionUrl=scm:git:https://github.com/${{ github.repository }}.git
           echo "Released ${TAG} 🚀" >> $GITHUB_STEP_SUMMARY
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+      - name: Stage release artifacts for attestation
+        run: |
+          mkdir -p release-artifacts
+          cp target/checkout/target/elearning-module-parser-*.jar release-artifacts/
+          cp target/checkout/target/elearning-module-parser-*-cyclonedx.json release-artifacts/
+          cp target/checkout/target/elearning-module-parser-*-cyclonedx.xml release-artifacts/
+
+      - name: Upload release artifacts for attestation job
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts
+          path: release-artifacts/
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Update documentation with released version
         run: |
@@ -65,3 +84,57 @@ jobs:
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Attestations and the GitHub Release SBOM upload run in a separate job so
+  # the OIDC token (id-token: write) and attestations: write permission are
+  # never available to the preceding `mvn release:*` steps, which execute
+  # repository-controlled plugin code. If this job fails after Maven Central
+  # has accepted the version, the release job stays green (the publish did
+  # succeed), this job is visibly red, and "Re-run failed jobs" reruns only
+  # the attestation/Release steps without retrying the Central publish.
+  attest:
+    needs: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-artifacts
+          path: artifacts
+
+      - name: Attest build provenance for release artifacts
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            artifacts/elearning-module-parser-*.jar
+
+      - name: Attest SBOM for release artifacts
+        uses: actions/attest-sbom@v2
+        with:
+          subject-path: |
+            artifacts/elearning-module-parser-*.jar
+            !artifacts/elearning-module-parser-*-sources.jar
+            !artifacts/elearning-module-parser-*-javadoc.jar
+          sbom-path: artifacts/elearning-module-parser-*-cyclonedx.json
+
+      - name: Upload SBOM to GitHub Release
+        run: |
+          TAG="${{ needs.release.outputs.tag }}"
+          if gh release view "${TAG}" >/dev/null 2>&1; then
+            gh release upload "${TAG}" \
+              artifacts/elearning-module-parser-*-cyclonedx.json \
+              artifacts/elearning-module-parser-*-cyclonedx.xml \
+              --clobber
+          else
+            gh release create "${TAG}" \
+              artifacts/elearning-module-parser-*-cyclonedx.json \
+              artifacts/elearning-module-parser-*-cyclonedx.xml \
+              --title "${TAG}" \
+              --generate-notes
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
