@@ -144,7 +144,7 @@ jobs:
           echo "path=${sboms[0]}" >> "$GITHUB_OUTPUT"
 
       - name: Attest SBOM for snapshot artifacts
-        uses: actions/attest-sbom@v2
+        uses: actions/attest-sbom@v4
         with:
           subject-path: |
             artifacts/elearning-module-parser-*.jar
