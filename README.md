@@ -1,5 +1,20 @@
 # eLearning Module Parser
 
+---
+<details>
+<summary><b>Audits & consulting →</b></summary>
+
+I do one-week, fixed-price code audits for B2B SaaS companies on AWS:
+
+- Multi-Tenant SaaS on AWS: architecture, cost, and SOC 2 alignment
+- AI-on-AWS for Regulated SaaS: Bedrock, RAG, and guardrails under SOC 2, HIPAA, or 21 CFR Part 11
+
+Fixed price, written report, walkthrough call. Details at [audits.putney.io](https://audits.putney.io).
+
+</details>
+
+---
+
 [![Build][build-badge]][build-link]
 [![License][license-badge]][license-link]
 [![Maven Central][maven-badge]][maven-link]
