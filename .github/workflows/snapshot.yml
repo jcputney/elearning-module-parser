@@ -126,6 +126,23 @@ jobs:
         with:
           subject-path: artifacts/elearning-module-parser-*.jar
 
+      - name: Locate snapshot SBOM
+        id: sbom
+        shell: bash
+        run: |
+          set -euo pipefail
+          pattern='elearning-module-parser-*-cyclonedx.json'
+          sboms=()
+          while IFS= read -r sbom; do
+            sboms+=("${sbom}")
+          done < <(find artifacts -maxdepth 1 -type f -name "${pattern}" -print | sort)
+          if [[ "${#sboms[@]}" -ne 1 ]]; then
+            printf 'Expected exactly one CycloneDX JSON SBOM, found %s:\n' "${#sboms[@]}" >&2
+            printf '%s\n' "${sboms[@]}" >&2
+            exit 1
+          fi
+          echo "path=${sboms[0]}" >> "$GITHUB_OUTPUT"
+
       - name: Attest SBOM for snapshot artifacts
         uses: actions/attest-sbom@v2
         with:
@@ -133,7 +150,7 @@ jobs:
             artifacts/elearning-module-parser-*.jar
             !artifacts/elearning-module-parser-*-sources.jar
             !artifacts/elearning-module-parser-*-javadoc.jar
-          sbom-path: artifacts/elearning-module-parser-*-cyclonedx.json
+          sbom-path: ${{ steps.sbom.outputs.path }}
 
       - name: Upload SBOM as workflow artifact
         uses: actions/upload-artifact@v4

@@ -111,6 +111,23 @@ jobs:
             !target/elearning-module-parser-*-sources.jar
             !target/elearning-module-parser-*-javadoc.jar
 
+      - name: Locate release SBOM
+        id: sbom
+        shell: bash
+        run: |
+          set -euo pipefail
+          pattern='elearning-module-parser-*-cyclonedx.json'
+          sboms=()
+          while IFS= read -r sbom; do
+            sboms+=("${sbom}")
+          done < <(find target -maxdepth 1 -type f -name "${pattern}" -print | sort)
+          if [[ "${#sboms[@]}" -ne 1 ]]; then
+            printf 'Expected exactly one CycloneDX JSON SBOM, found %s:\n' "${#sboms[@]}" >&2
+            printf '%s\n' "${sboms[@]}" >&2
+            exit 1
+          fi
+          echo "path=${sboms[0]}" >> "$GITHUB_OUTPUT"
+
       - name: Attest SBOM for release artifacts
         uses: actions/attest-sbom@v2
         with:
@@ -118,7 +135,7 @@ jobs:
             target/elearning-module-parser-*.jar
             !target/elearning-module-parser-*-sources.jar
             !target/elearning-module-parser-*-javadoc.jar
-          sbom-path: target/elearning-module-parser-*-cyclonedx.json
+          sbom-path: ${{ steps.sbom.outputs.path }}
 
       - name: Upload SBOM to GitHub Release
         run: |
