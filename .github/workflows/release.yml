@@ -104,7 +104,7 @@ jobs:
         run: mvn -B -ntp package -DskipTests -Dgpg.skip=true
 
       - name: Attest build provenance for release artifacts
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: |
             target/elearning-module-parser-*.jar
