@@ -112,7 +112,7 @@ jobs:
             !target/elearning-module-parser-*-javadoc.jar
 
       - name: Attest SBOM for release artifacts
-        uses: actions/attest-sbom@v2
+        uses: actions/attest-sbom@v4
         with:
           subject-path: |
             target/elearning-module-parser-*.jar
