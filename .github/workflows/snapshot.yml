@@ -40,13 +40,70 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
       - name: Test Summary
-        id: test_summary
-        uses: test-summary/action@v2
-        with:
-          paths: |
-            target/surefire-reports/TEST-*.xml
-            target/surefire-reports/**/TEST-*.xml
         if: always()
+        shell: bash
+        run: |
+          python3 <<'PY'
+          import os
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+
+          reports = sorted(Path("target/surefire-reports").rglob("TEST-*.xml"))
+          lines = ["### Test Summary", ""]
+
+          if not reports:
+              lines.append("No Surefire XML reports found.")
+          else:
+              total = failures = errors = skipped = 0
+              failed_cases = []
+
+              for report in reports:
+                  root = ET.parse(report).getroot()
+                  suites = [root] if root.tag == "testsuite" else root.findall("testsuite")
+
+                  for suite in suites:
+                      total += int(suite.get("tests", 0))
+                      failures += int(suite.get("failures", 0))
+                      errors += int(suite.get("errors", 0))
+                      skipped += int(suite.get("skipped", 0))
+
+                      for case in suite.findall("testcase"):
+                          if case.find("failure") is None and case.find("error") is None:
+                              continue
+
+                          class_name = case.get("classname", "")
+                          test_name = case.get("name", "")
+                          failed_cases.append(f"`{class_name}.{test_name}`".strip("."))
+
+              passed = total - failures - errors - skipped
+              lines.extend(
+                  [
+                      "| Outcome | Count |",
+                      "| --- | ---: |",
+                      f"| Passed | {passed} |",
+                      f"| Failed | {failures} |",
+                      f"| Errors | {errors} |",
+                      f"| Skipped | {skipped} |",
+                      f"| Total | {total} |",
+                  ]
+              )
+
+              if failed_cases:
+                  lines.extend(["", "#### Failed Tests"])
+                  lines.extend(f"- {test}" for test in failed_cases[:20])
+                  if len(failed_cases) > 20:
+                      remaining = len(failed_cases) - 20
+                      lines.append(f"- ... and {remaining} more")
+
+          summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+          output = "\n".join(lines) + "\n"
+
+          if summary_path:
+              with open(summary_path, "a", encoding="utf-8") as summary:
+                  summary.write(output)
+          else:
+              print(output)
+          PY
 
       - uses: qltysh/qlty-action/coverage@main
         if: github.event_name != 'pull_request'
