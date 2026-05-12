@@ -258,16 +258,20 @@ Guidelines:
 
 ## License
 
-This project is licensed under the GNU Lesser General Public License v3.0. See [LICENSE](LICENSE)
-for full details.
+This project is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) and
+[NOTICE](NOTICE) for full details.
+
+Versions 0.4.x and earlier were released under the GNU Lesser General Public License v3.0. Those
+releases remain available under their original LGPL-3.0 terms via Maven Central; relicensing applies
+to version 1.0.0 and later.
 
 [build-badge]: https://img.shields.io/badge/build-GitHub%20Actions-blue
 
 [build-link]: https://github.com/jcputney/elearning-module-parser/actions
 
-[license-badge]: https://img.shields.io/badge/license-LGPL%203.0-blue.svg
+[license-badge]: https://img.shields.io/badge/license-Apache%202.0-blue.svg
 
-[license-link]: https://opensource.org/license/lgpl-3-0
+[license-link]: https://opensource.org/license/apache-2-0
 
 [maven-badge]: https://img.shields.io/maven-central/v/dev.jcputney/elearning-module-parser
 

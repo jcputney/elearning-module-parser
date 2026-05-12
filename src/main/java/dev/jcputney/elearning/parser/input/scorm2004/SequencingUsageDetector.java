@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2024-2026 Jonathan Putney
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at the project root LICENSE file
+ * or at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package dev.jcputney.elearning.parser.input.scorm2004;
 
 import dev.jcputney.elearning.parser.input.scorm2004.adl.cp.CompletionThreshold;
