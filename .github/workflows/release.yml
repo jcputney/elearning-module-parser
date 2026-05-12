@@ -51,9 +51,16 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
       - name: Update documentation with released version
+        env:
+          # Consume the version exported by the publish step. release.properties
+          # is unreliable here because release:perform deletes it during cleanup.
+          VERSION: ${{ steps.publish.outputs.version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG=$(grep 'scm.tag=' release.properties | cut -d'=' -f2)
-          VERSION=${TAG#v}
+          if [[ -z "$VERSION" ]]; then
+            echo "::error::Empty version output from publish step; refusing to strip doc versions"
+            exit 1
+          fi
 
           # Update Maven dependency version (only the line after the library artifactId)
           sed -i '/<artifactId>elearning-module-parser<\/artifactId>/{n;s/<version>.*<\/version>/<version>'"${VERSION}"'<\/version>/}' README.md
@@ -67,8 +74,6 @@ jobs:
           git add README.md .github/ISSUE_TEMPLATE/bug_report.md
           git commit -m "docs: update version references to ${VERSION}"
           git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # Attestations and the GitHub Release SBOM upload run in a separate job so
   # the OIDC token (id-token: write) and attestations: write permission are

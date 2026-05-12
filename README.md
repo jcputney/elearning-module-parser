@@ -49,14 +49,14 @@ The library is published to Maven Central.
 <dependency>
    <groupId>dev.jcputney</groupId>
    <artifactId>elearning-module-parser</artifactId>
-   <version></version>
+   <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
 ### Gradle (Kotlin DSL)
 
 ```kotlin
-implementation("dev.jcputney:elearning-module-parser:")
+implementation("dev.jcputney:elearning-module-parser:1.0.0-SNAPSHOT")
 ```
 
 ### Optional dependencies
