@@ -5,8 +5,26 @@ updates:
     schedule:
       interval: "daily"
     open-pull-requests-limit: 20
+    groups:
+      aws-sdk:
+        patterns:
+          - "software.amazon.awssdk:*"
+      jackson:
+        patterns:
+          - "com.fasterxml.jackson.core:*"
+          - "com.fasterxml.jackson.dataformat:*"
+          - "com.fasterxml.jackson.datatype:*"
+          - "com.fasterxml.jackson.module:*"
+      mockito:
+        patterns:
+          - "org.mockito:*"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 20
+    groups:
+      actions-attest:
+        patterns:
+          - "actions/attest-*"
