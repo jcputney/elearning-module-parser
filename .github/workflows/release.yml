@@ -39,7 +39,7 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           mvn -B -ntp -Dstyle.color=always release:prepare
           cat release.properties
-          TAG=$(grep 'scm.tag=' release.properties | cut -d'=' -f2)
+          TAG=$(grep '^scm.tag=' release.properties | cut -d'=' -f2)
           VERSION=${TAG#v}
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
@@ -71,9 +71,13 @@ jobs:
           # Update example version in bug report template
           sed -i "s/Library version: (e.g., .*)/Library version: (e.g., ${VERSION})/" .github/ISSUE_TEMPLATE/bug_report.md
 
-          git add README.md .github/ISSUE_TEMPLATE/bug_report.md
-          git commit -m "docs: update version references to ${VERSION}"
-          git push
+          if git diff --quiet; then
+            echo "No documentation version changes needed"
+          else
+            git add README.md .github/ISSUE_TEMPLATE/bug_report.md
+            git commit -m "docs: update version references to ${VERSION}"
+            git push
+          fi
 
   # Attestations and the GitHub Release SBOM upload run in a separate job so
   # the OIDC token (id-token: write) and attestations: write permission are

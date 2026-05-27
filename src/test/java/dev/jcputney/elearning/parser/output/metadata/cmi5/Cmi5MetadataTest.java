@@ -15,6 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.cmi5.AU;
 import dev.jcputney.elearning.parser.input.cmi5.Block;
@@ -33,6 +35,8 @@ import org.junit.jupiter.api.Test;
  * manifests.
  */
 class Cmi5MetadataTest {
+
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   /**
    * Tests creating a Cmi5Metadata instance with a manifest that has assignable units.
@@ -181,6 +185,51 @@ class Cmi5MetadataTest {
         .isEmpty());
     assertTrue(metadata
         .getObjectiveIds()
+        .isEmpty());
+  }
+
+  @Test
+  void create_withContextTemplatesAndEntitlementKey_preservesScope() throws Exception {
+    Course course = createCourse("course-id", "Test Course", "Test Description");
+    JsonNode courseTemplate = OBJECT_MAPPER.readTree("""
+        {"contextActivities":{"grouping":{"id":"course-grouping"}}}
+        """);
+    course.setContextTemplate(courseTemplate);
+    AU au = createAU("au1", "url1");
+    JsonNode auTemplate = OBJECT_MAPPER.readTree("""
+        {"contextActivities":{"category":{"id":"au-category"}}}
+        """);
+    au.setContextTemplate(auTemplate);
+    au.setEntitlementKey("entitlement-key");
+    Cmi5Manifest manifest = new Cmi5Manifest();
+    manifest.setCourse(course);
+    manifest.setAssignableUnits(List.of(au));
+
+    Cmi5Metadata metadata = Cmi5Metadata.create(manifest, true);
+
+    assertEquals("course-grouping", metadata
+        .getCourseContextTemplate()
+        .at("/contextActivities/grouping/id")
+        .asText());
+    assertEquals("au-category", metadata
+        .getAssignableUnitContextTemplates()
+        .get("au1")
+        .at("/contextActivities/category/id")
+        .asText());
+    assertEquals("entitlement-key", metadata
+        .getEntitlementKeys()
+        .get("au1"));
+  }
+
+  @Test
+  void defaultMetadata_hasEmptyAdditiveLaunchInputCollections() {
+    Cmi5Metadata metadata = new Cmi5Metadata();
+
+    assertTrue(metadata
+        .getAssignableUnitContextTemplates()
+        .isEmpty());
+    assertTrue(metadata
+        .getEntitlementKeys()
         .isEmpty());
   }
 

@@ -10,6 +10,7 @@
  */
 package dev.jcputney.elearning.parser.output.metadata.cmi5;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import dev.jcputney.elearning.parser.enums.ModuleEditionType;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.cmi5.AU;
@@ -130,6 +131,30 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
   private final Map<String, String> launchParameters = new HashMap<>();
 
   /**
+   * Course-scoped context template extension data, if present in the cmi5 manifest.
+   * <p>
+   * cmi5 defines {@code contextTemplate} as part of the runtime {@code LMS.LaunchData} state
+   * document. This field preserves any course-scoped manifest extension with that name without
+   * flattening it into AU data, so an LMS can merge it with AU-scoped overrides at launch time.
+   * </p>
+   */
+  private JsonNode courseContextTemplate;
+
+  /**
+   * AU-scoped context template extension data keyed by AU id.
+   * <p>
+   * Values are kept separate from {@link #courseContextTemplate} to preserve source/scope for
+   * downstream LMS merge logic.
+   * </p>
+   */
+  private final Map<String, JsonNode> assignableUnitContextTemplates = new HashMap<>();
+
+  /**
+   * AU entitlement keys keyed by AU id.
+   */
+  private final Map<String, String> entitlementKeys = new HashMap<>();
+
+  /**
    * Holds a list of unique identifiers for blocks associated with the metadata. Block IDs are used
    * to identify and organize blocks defined within the metadata structure. This list is immutable
    * once initialized.
@@ -162,6 +187,10 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
     metadata.moduleType = ModuleType.CMI5;
     metadata.moduleEditionType = ModuleEditionType.CMI5;
     metadata.xapiEnabled = xapiEnabled;
+    metadata.courseContextTemplate = Optional
+        .ofNullable(manifest.getCourse())
+        .map(course -> copyJsonNode(course.getContextTemplate()))
+        .orElse(null);
 
     // Extract all AUs (from root level and blocks)
     List<AU> allAssignableUnits = getAllAssignableUnits(manifest);
@@ -243,6 +272,26 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
     if (au.getLaunchParameters() != null) {
       metadata.launchParameters.put(auId, au.getLaunchParameters());
     }
+    if (au.getContextTemplate() != null) {
+      metadata.assignableUnitContextTemplates.put(auId, copyJsonNode(au.getContextTemplate()));
+    }
+    if (au.getEntitlementKey() != null) {
+      metadata.entitlementKeys.put(auId, au.getEntitlementKey());
+    }
+  }
+
+  private static JsonNode copyJsonNode(JsonNode node) {
+    return node == null ? null : node.deepCopy();
+  }
+
+  private static Map<String, JsonNode> copyJsonNodeMap(Map<String, JsonNode> source) {
+    Map<String, JsonNode> copy = new HashMap<>();
+    source.forEach((key, value) -> {
+      if (key != null && value != null) {
+        copy.put(key, copyJsonNode(value));
+      }
+    });
+    return Map.copyOf(copy);
   }
 
   /**
@@ -353,6 +402,9 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
         .append(getLaunchMethods(), that.getLaunchMethods())
         .append(getActivityTypes(), that.getActivityTypes())
         .append(getLaunchParameters(), that.getLaunchParameters())
+        .append(getCourseContextTemplate(), that.getCourseContextTemplate())
+        .append(getAssignableUnitContextTemplates(), that.getAssignableUnitContextTemplates())
+        .append(getEntitlementKeys(), that.getEntitlementKeys())
         .append(getBlockIds(), that.getBlockIds())
         .append(getObjectiveIds(), that.getObjectiveIds())
         .isEquals();
@@ -370,6 +422,9 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
         .append(getLaunchMethods())
         .append(getActivityTypes())
         .append(getLaunchParameters())
+        .append(getCourseContextTemplate())
+        .append(getAssignableUnitContextTemplates())
+        .append(getEntitlementKeys())
         .append(getBlockIds())
         .append(getObjectiveIds())
         .toHashCode();
@@ -464,6 +519,71 @@ public class Cmi5Metadata extends BaseModuleMetadata<Cmi5Manifest> {
    */
   public Map<String, String> getLaunchParameters() {
     return Map.copyOf(launchParameters);
+  }
+
+  /**
+   * Retrieves the course-scoped context template extension data, if present.
+   *
+   * @return a defensive copy of the course context template, or {@code null} if absent
+   */
+  public JsonNode getCourseContextTemplate() {
+    return copyJsonNode(courseContextTemplate);
+  }
+
+  /**
+   * Sets the course-scoped context template extension data.
+   *
+   * @param courseContextTemplate the structured course context template
+   */
+  public void setCourseContextTemplate(JsonNode courseContextTemplate) {
+    this.courseContextTemplate = copyJsonNode(courseContextTemplate);
+  }
+
+  /**
+   * Retrieves AU-scoped context template extension data keyed by AU id.
+   *
+   * @return an unmodifiable map from AU id to structured context template data
+   */
+  public Map<String, JsonNode> getAssignableUnitContextTemplates() {
+    return copyJsonNodeMap(assignableUnitContextTemplates);
+  }
+
+  /**
+   * Sets AU-scoped context template extension data keyed by AU id.
+   *
+   * @param assignableUnitContextTemplates map from AU id to structured context template data
+   */
+  public void setAssignableUnitContextTemplates(
+      Map<String, JsonNode> assignableUnitContextTemplates) {
+    this.assignableUnitContextTemplates.clear();
+    if (assignableUnitContextTemplates != null) {
+      assignableUnitContextTemplates.forEach((key, value) -> {
+        if (key != null && value != null) {
+          this.assignableUnitContextTemplates.put(key, copyJsonNode(value));
+        }
+      });
+    }
+  }
+
+  /**
+   * Retrieves AU entitlement keys keyed by AU id.
+   *
+   * @return an unmodifiable map from AU id to entitlement key
+   */
+  public Map<String, String> getEntitlementKeys() {
+    return Map.copyOf(entitlementKeys);
+  }
+
+  /**
+   * Sets AU entitlement keys keyed by AU id.
+   *
+   * @param entitlementKeys map from AU id to entitlement key
+   */
+  public void setEntitlementKeys(Map<String, String> entitlementKeys) {
+    this.entitlementKeys.clear();
+    if (entitlementKeys != null) {
+      this.entitlementKeys.putAll(entitlementKeys);
+    }
   }
 
   /**

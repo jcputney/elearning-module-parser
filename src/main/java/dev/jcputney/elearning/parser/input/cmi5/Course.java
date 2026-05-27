@@ -12,6 +12,7 @@ package dev.jcputney.elearning.parser.input.cmi5;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.xapi.types.TextType;
@@ -62,6 +63,18 @@ public final class Course implements Serializable {
    */
   @JacksonXmlProperty(localName = "description")
   private TextType description;
+
+  /**
+   * Optional manifest-provided context template for this course.
+   * <p>
+   * The cmi5 Quartz Course Structure schema does not define {@code contextTemplate} as a standard
+   * course element, but some packages may include it as extension data. It is preserved as structured
+   * JSON so an LMS can merge course-scoped template data with AU-scoped overrides when constructing
+   * runtime {@code LMS.LaunchData}.
+   * </p>
+   */
+  @JacksonXmlProperty(localName = "contextTemplate")
+  private JsonNode contextTemplate;
 
   /**
    * A list of additional custom elements (extensions) included in the course definition.
@@ -146,6 +159,24 @@ public final class Course implements Serializable {
   }
 
   /**
+   * Retrieves the course-level context template extension, if present.
+   *
+   * @return the course-level context template as structured JSON, or {@code null} if absent
+   */
+  public JsonNode getContextTemplate() {
+    return this.contextTemplate;
+  }
+
+  /**
+   * Sets the course-level context template extension.
+   *
+   * @param contextTemplate the structured context template extension
+   */
+  public void setContextTemplate(JsonNode contextTemplate) {
+    this.contextTemplate = contextTemplate;
+  }
+
+  /**
    * Retrieves the custom extensions associated with the course.
    *
    * @return a list of objects representing the custom extensions of the course
@@ -194,6 +225,7 @@ public final class Course implements Serializable {
     return new EqualsBuilder()
         .append(getTitle(), course.getTitle())
         .append(getDescription(), course.getDescription())
+        .append(getContextTemplate(), course.getContextTemplate())
         .append(getCustomExtensions(), course.getCustomExtensions())
         .append(getId(), course.getId())
         .isEquals();
@@ -204,6 +236,7 @@ public final class Course implements Serializable {
     return new HashCodeBuilder(17, 37)
         .append(getTitle())
         .append(getDescription())
+        .append(getContextTemplate())
         .append(getCustomExtensions())
         .append(getId())
         .toHashCode();

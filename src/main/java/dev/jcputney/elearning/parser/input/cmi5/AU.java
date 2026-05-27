@@ -12,6 +12,7 @@ package dev.jcputney.elearning.parser.input.cmi5;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -149,6 +150,17 @@ public final class AU implements Serializable {
    */
   @JacksonXmlProperty(localName = "entitlementKey")
   private String entitlementKey;
+
+  /**
+   * Optional manifest-provided context template for the AU.
+   * <p>
+   * This is extension data rather than a standard cmi5 Course Structure element. It is preserved as
+   * structured JSON so an LMS can merge it with course-scoped context template data while
+   * constructing runtime {@code LMS.LaunchData}.
+   * </p>
+   */
+  @JacksonXmlProperty(localName = "contextTemplate")
+  private JsonNode contextTemplate;
 
   /**
    * The ID of the Assignable Unit, represented as an anyURI.
@@ -389,6 +401,24 @@ public final class AU implements Serializable {
   }
 
   /**
+   * Retrieves the AU-level context template extension, if present.
+   *
+   * @return the AU-level context template as structured JSON, or {@code null} if absent
+   */
+  public JsonNode getContextTemplate() {
+    return this.contextTemplate;
+  }
+
+  /**
+   * Sets the AU-level context template extension.
+   *
+   * @param contextTemplate the structured context template extension
+   */
+  public void setContextTemplate(JsonNode contextTemplate) {
+    this.contextTemplate = contextTemplate;
+  }
+
+  /**
    * Retrieves the unique identifier associated with the current instance.
    *
    * @return a {@link String} representing the unique identifier.
@@ -501,6 +531,7 @@ public final class AU implements Serializable {
         .append(getUrl(), au.getUrl())
         .append(getLaunchParameters(), au.getLaunchParameters())
         .append(getEntitlementKey(), au.getEntitlementKey())
+        .append(getContextTemplate(), au.getContextTemplate())
         .append(getId(), au.getId())
         .append(getMoveOn(), au.getMoveOn())
         .append(getMasteryScore(), au.getMasteryScore())
@@ -518,6 +549,7 @@ public final class AU implements Serializable {
         .append(getUrl())
         .append(getLaunchParameters())
         .append(getEntitlementKey())
+        .append(getContextTemplate())
         .append(getId())
         .append(getMoveOn())
         .append(getMasteryScore())

@@ -70,6 +70,11 @@ class XapiParserTest {
     assertThat(metadata.getTitle()).isEqualTo("Test Course");
     assertThat(metadata.getIdentifier()).isEqualTo("http://example.com/activity/1");
     assertThat(metadata.getLaunchUrl()).isEqualTo("index.html");
+    assertThat(metadata.getLaunchActivityId()).isEqualTo("http://example.com/activity/1");
+    assertThat(metadata.getLaunchActivityUrl()).isEqualTo("index.html");
+    assertThat(metadata.getActivityType()).isEqualTo("http://adlnet.gov/expapi/activities/course");
+    assertThat(metadata.getLocalizedNames()).containsEntry("en-US", "Test Course");
+    assertThat(metadata.getLocalizedDescriptions()).containsEntry("en-US", "A test course");
   }
 
   @Test
@@ -122,5 +127,49 @@ class XapiParserTest {
     assertThat(metadata.getTitle()).isEqualTo("Arctic Wolf Managed Security Awareness");
     assertThat(metadata.getIdentifier()).isEqualTo("http://5c0JPCccFz1_course_id");
     assertThat(metadata.getLaunchUrl()).isEqualTo("index_lms.html");
+  }
+
+  @Test
+  void shouldExposeFirstActivityLaunchDetailsAndLocalizedText() throws Exception {
+    String xml = """
+        <?xml version="1.0" encoding="utf-8"?>
+        <tincan xmlns="http://projecttincan.com/tincan.xsd">
+          <activities>
+            <activity id="http://example.com/activity/launch"
+                      type="http://adlnet.gov/expapi/activities/course">
+              <name lang="en-US">Launch Course</name>
+              <name lang="fr-FR">Cours de lancement</name>
+              <description lang="en-US">Launch description</description>
+              <description lang="fr-FR">Description de lancement</description>
+              <launch lang="en-US">launch.html</launch>
+            </activity>
+            <activity id="http://example.com/activity/secondary"
+                      type="http://adlnet.gov/expapi/activities/module">
+              <name lang="en-US">Secondary Activity</name>
+              <launch lang="en-US">secondary.html</launch>
+            </activity>
+          </activities>
+        </tincan>
+        """;
+
+    when(mockFileAccess.listFiles("")).thenReturn(List.of("tincan.xml", "launch.html"));
+    InputStream inputStream = new ByteArrayInputStream(xml.getBytes());
+    when(mockFileAccess.getFileContents("tincan.xml")).thenReturn(inputStream);
+
+    XapiParser parser = new XapiParser(mockFileAccess);
+    XapiMetadata metadata = (XapiMetadata) parser.parseAndValidate().metadata();
+
+    assertThat(metadata.getIdentifier()).isEqualTo("http://example.com/activity/launch");
+    assertThat(metadata.getLaunchUrl()).isEqualTo("launch.html");
+    assertThat(metadata.getLaunchActivityId()).isEqualTo("http://example.com/activity/launch");
+    assertThat(metadata.getLaunchActivityUrl()).isEqualTo("launch.html");
+    assertThat(metadata.getActivityType()).isEqualTo("http://adlnet.gov/expapi/activities/course");
+    assertThat(metadata.getLocalizedNames())
+        .containsEntry("en-US", "Launch Course")
+        .containsEntry("fr-FR", "Cours de lancement");
+    assertThat(metadata.getLocalizedDescriptions())
+        .containsEntry("en-US", "Launch description")
+        .containsEntry("fr-FR", "Description de lancement");
+    assertThat(metadata.getActivities()).hasSize(2);
   }
 }

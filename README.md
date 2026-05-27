@@ -49,14 +49,14 @@ The library is published to Maven Central.
 <dependency>
    <groupId>dev.jcputney</groupId>
    <artifactId>elearning-module-parser</artifactId>
-   <version>1.0.0</version>
+   <version>1.1.0-SNAPSHOT</version>
 </dependency>
 ```
 
 ### Gradle (Kotlin DSL)
 
 ```kotlin
-implementation("dev.jcputney:elearning-module-parser:1.0.0")
+implementation("dev.jcputney:elearning-module-parser:1.1.0-SNAPSHOT")
 ```
 
 ### Optional dependencies
@@ -100,10 +100,12 @@ try(ZipFileAccess access = new ZipFileAccess("path/to/module.zip")) {
   details, sequencing, rollup rules, and delivery controls.
 - **AICC**: detected by a `.crs` descriptor containing a `[Course]` section; parses assignable units
   and prerequisite graphs.
-- **cmi5**: detected by the presence of `cmi5.xml`; provides AU metadata, move-on criteria, and
-  launch parameters.
+- **cmi5**: detected by the presence of `cmi5.xml`; provides AU metadata, move-on criteria,
+  mastery scores, launch methods, activity types, launch parameters, AU entitlement keys, and
+  any course/AU-scoped `contextTemplate` extension data present in the manifest.
 - **xAPI/TinCan**: detected by the presence of `tincan.xml`; parses activity definitions, launch
-  URLs, and metadata for Tin Can API packages.
+  activity ids, launch URLs, activity types, and localized name/description metadata for Tin Can
+  API packages.
 
 ## Usage
 
@@ -150,7 +152,11 @@ switch(metadata.getModuleType()) {
     }
     case CMI5 ->{
        Cmi5Metadata cmi5 = (Cmi5Metadata) metadata;
-       cmi5.getAuDetails().forEach(au -> System.out.println(au.getLaunchMethod()));
+       cmi5.getAuDetails().forEach((auId, details) -> System.out.println(details.get("url")));
+       cmi5.getEntitlementKeys().forEach((auId, key) -> System.out.println(key));
+       cmi5.getAssignableUnitContextTemplates().forEach((auId, template) -> {
+          // Merge with cmi5.getCourseContextTemplate() when building LMS.LaunchData
+       });
     }
     case SCORM_12 ->{
        Scorm12Metadata scorm12 = (Scorm12Metadata) metadata;
@@ -158,10 +164,21 @@ switch(metadata.getModuleType()) {
     }
     case XAPI ->{
        XapiMetadata xapi = (XapiMetadata) metadata;
-       xapi.getActivities().forEach(activity -> System.out.println(activity.getName()));
+       System.out.println(xapi.getLaunchActivityId());
+       System.out.println(xapi.getLaunchActivityUrl());
+       System.out.println(xapi.getActivityType());
+       System.out.println(xapi.getLocalizedNames());
     }
 }
 ```
+
+For cmi5, `LMS.LaunchData` and learner preferences are runtime xAPI State/Profile documents, not
+Course Structure manifest elements. This parser exposes the manifest inputs needed to construct
+`LMS.LaunchData` (`launchParameters`, `masteryScore`, `moveOn`, `launchMethod`,
+`entitlementKey`, and optional scoped `contextTemplate` extension data), but it does not construct
+or parse runtime State/Profile documents. TinCan manifests do not define package-level completion
+defaults comparable to cmi5 `moveOn` or `masteryScore`; completion/pass/fail is determined from
+runtime xAPI statements.
 
 ### Enhanced metadata features
 
@@ -178,7 +195,7 @@ String manifestFile = metadata.getManifestFile();
 
 // Module type and edition information
 ModuleType type = metadata.getModuleType();
-ModuleEditionType edition = metadata.getEditionType();
+ModuleEditionType edition = metadata.getModuleEditionType();
 ```
 
 The `hasMultipleLaunchableUnits()` method is particularly useful for LMS player configuration, as it

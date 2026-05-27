@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.impl.access.LocalFileAccess;
@@ -381,6 +382,119 @@ public class Cmi5ParserTest {
         .getAssignableUnits()
         .get(0)
         .getMoveOn());
+  }
+
+  /**
+   * Tests that parser metadata keeps course-level and AU-level context templates separate, while
+   * also exposing entitlement keys and existing cmi5 launch/completion inputs by AU id.
+   */
+  @Test
+  void testParse_withContextTemplatesAndEntitlementKey_exposesScopedLaunchInputs(
+      @TempDir Path tempDir)
+      throws IOException, ModuleException {
+    String auId = "https://example.com/context-course/au1";
+    String secondAuId = "https://example.com/context-course/au2";
+    String manifestXml = """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <courseStructure xmlns="https://w3id.org/xapi/profiles/cmi5/v1/CourseStructure.xsd">
+          <course id="https://example.com/context-course">
+            <title>
+              <langstring lang="en-US">Context Course</langstring>
+            </title>
+            <description>
+              <langstring lang="en-US">Course with context template data.</langstring>
+            </description>
+            <contextTemplate>
+              <contextActivities>
+                <grouping>
+                  <activity id="https://example.com/context-course/grouping"/>
+                </grouping>
+              </contextActivities>
+              <extensions>
+                <extension id="https://example.com/extensions/course">course-value</extension>
+              </extensions>
+            </contextTemplate>
+          </course>
+          <au id="https://example.com/context-course/au1"
+              moveOn="CompletedOrPassed"
+              masteryScore="0.75"
+              launchMethod="OwnWindow"
+              activityType="http://adlnet.gov/expapi/activities/course">
+            <title>
+              <langstring lang="en-US">Context AU</langstring>
+            </title>
+            <description>
+              <langstring lang="en-US">AU with override context.</langstring>
+            </description>
+            <url>au1.html</url>
+            <launchParameters>{"mode":"review"}</launchParameters>
+            <entitlementKey>course-structure-entitlement</entitlementKey>
+            <contextTemplate>
+              <contextActivities>
+                <category>
+                  <activity id="https://example.com/context-course/au1/category"/>
+                </category>
+              </contextActivities>
+              <extensions>
+                <extension id="https://example.com/extensions/au">au-value</extension>
+              </extensions>
+            </contextTemplate>
+          </au>
+          <au id="https://example.com/context-course/au2" moveOn="Completed">
+            <title>
+              <langstring lang="en-US">Plain AU</langstring>
+            </title>
+            <description>
+              <langstring lang="en-US">AU without context template.</langstring>
+            </description>
+            <url>au2.html</url>
+          </au>
+        </courseStructure>""";
+
+    Files.writeString(tempDir.resolve("cmi5.xml"), manifestXml);
+    Files.writeString(tempDir.resolve("au1.html"), "<html><body>AU 1</body></html>");
+    Files.writeString(tempDir.resolve("au2.html"), "<html><body>AU 2</body></html>");
+
+    Cmi5Parser parser = new Cmi5Parser(new LocalFileAccess(tempDir.toString()));
+    Cmi5Metadata metadata = (Cmi5Metadata) parser.parseAndValidate().metadata();
+
+    JsonNode courseContextTemplate = metadata.getCourseContextTemplate();
+    assertNotNull(courseContextTemplate);
+    assertEquals("https://example.com/context-course/grouping",
+        courseContextTemplate.at("/contextActivities/grouping/activity/id").asText());
+
+    Map<String, JsonNode> auContextTemplates = metadata.getAssignableUnitContextTemplates();
+    assertEquals(1, auContextTemplates.size());
+    assertEquals("https://example.com/context-course/au1/category",
+        auContextTemplates
+            .get(auId)
+            .at("/contextActivities/category/activity/id")
+            .asText());
+
+    assertEquals("course-structure-entitlement", metadata
+        .getEntitlementKeys()
+        .get(auId));
+    assertEquals(0.75, metadata
+        .getMasteryScores()
+        .get(auId));
+    assertEquals("COMPLETED_OR_PASSED", metadata
+        .getMoveOnCriteria()
+        .get(auId));
+    assertEquals("COMPLETED", metadata
+        .getMoveOnCriteria()
+        .get(secondAuId));
+    assertEquals("OWN_WINDOW", metadata
+        .getLaunchMethods()
+        .get(auId));
+    assertEquals("http://adlnet.gov/expapi/activities/course", metadata
+        .getActivityTypes()
+        .get(auId));
+    assertEquals("{\"mode\":\"review\"}", metadata
+        .getLaunchParameters()
+        .get(auId));
+    assertEquals("au1.html", metadata
+        .getAssignableUnitUrls()
+        .get(0));
   }
 
   /**
