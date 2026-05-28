@@ -70,7 +70,7 @@
     <version.plugin.release>3.3.1</version.plugin.release>
     <version.plugin.shade>3.6.2</version.plugin.shade>
     <version.plugin.source>3.4.0</version.plugin.source>
-    <version.plugin.surefire>3.5.5</version.plugin.surefire>
+    <version.plugin.surefire>3.5.6</version.plugin.surefire>
     <version.plugin.wrapper>3.3.4</version.plugin.wrapper>
     <version.poi.ooxml>5.5.1</version.poi.ooxml>
     <version.slf4j>2.0.18</version.slf4j>
