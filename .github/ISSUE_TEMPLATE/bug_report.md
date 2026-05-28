@@ -8,7 +8,7 @@ labels: bug
 Clear, concise description of the bug.
 
 ## Environment
-- Library version: (e.g., 1.0.0)
+- Library version: (e.g., 1.1.0)
 - Java version: (e.g., 17.0.11)
 - OS: (e.g., macOS 14, Ubuntu 22.04, Windows 11)
 - File access backend: (ZipFileAccess, LocalFileAccess, S3 v1/v2, custom)
@@ -43,4 +43,3 @@ What actually happened (include stack trace and logs if available).
 
 ## Additional Context
 Any other context, configuration, or recent changes that might be relevant.
-

@@ -17,10 +17,14 @@ jobs:
       tag: ${{ steps.publish.outputs.tag }}
       version: ${{ steps.publish.outputs.version }}
     steps:
+      # Checkout with RELEASE_TOKEN, a fine-grained PAT owned by a repo admin
+      # with Contents and Workflows write access. actions/checkout configures
+      # git's HTTPS credential header, so release commits and the post-release
+      # docs commit can bypass the protected-branch required-check gate.
       - uses: actions/checkout@v6
-      - uses: webfactory/ssh-agent@v0.10.0
         with:
-          ssh-private-key: ${{ secrets.MAVEN_RELEASE_SSH_KEY }}
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN }}
       - uses: actions/setup-java@v5
         with:
           java-version: "17"
@@ -37,18 +41,23 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # pom.xml keeps an SSH developerConnection for local release runs.
+          # In CI, rewrite that URL to HTTPS so maven-release-plugin pushes
+          # with the RELEASE_TOKEN credential installed by actions/checkout.
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
           mvn -B -ntp -Dstyle.color=always release:prepare
           cat release.properties
           TAG=$(grep '^scm.tag=' release.properties | cut -d'=' -f2)
           VERSION=${TAG#v}
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-          mvn -B -ntp -Dstyle.color=always release:perform -DconnectionUrl=scm:git:https://github.com/${{ github.repository }}.git
+          mvn -B -ntp -Dstyle.color=always release:perform -DconnectionUrl=scm:git:https://github.com/${REPO}.git
           echo "Released ${TAG} 🚀" >> $GITHUB_STEP_SUMMARY
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          REPO: ${{ github.repository }}
 
       - name: Update documentation with released version
         env:
