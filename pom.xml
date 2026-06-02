@@ -56,7 +56,7 @@
     <version.jqwik>1.10.1</version.jqwik>
     <version.junit>6.1.0</version.junit>
     <version.log4j-to-slf4j>2.26.0</version.log4j-to-slf4j>
-    <version.logback>1.5.33</version.logback>
+    <version.logback>1.5.34</version.logback>
     <version.mockito>5.23.0</version.mockito>
     <version.org.json>20251224</version.org.json>
     <version.plugin.central-publishing>0.10.0</version.plugin.central-publishing>
