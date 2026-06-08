@@ -65,7 +65,7 @@
     <version.plugin.exec>3.6.3</version.plugin.exec>
     <version.plugin.failsafe>3.5.6</version.plugin.failsafe>
     <version.plugin.gpg>3.2.8</version.plugin.gpg>
-    <version.plugin.jacoco>0.8.14</version.plugin.jacoco>
+    <version.plugin.jacoco>0.8.15</version.plugin.jacoco>
     <version.plugin.javadoc>3.12.0</version.plugin.javadoc>
     <version.plugin.release>3.3.1</version.plugin.release>
     <version.plugin.shade>3.6.2</version.plugin.shade>
