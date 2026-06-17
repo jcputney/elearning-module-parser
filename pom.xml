@@ -59,7 +59,7 @@
     <version.logback>1.5.34</version.logback>
     <version.mockito>5.23.0</version.mockito>
     <version.org.json>20251224</version.org.json>
-    <version.plugin.central-publishing>0.10.0</version.plugin.central-publishing>
+    <version.plugin.central-publishing>0.11.0</version.plugin.central-publishing>
     <version.plugin.compiler>3.15.0</version.plugin.compiler>
     <version.plugin.cyclonedx>2.9.1</version.plugin.cyclonedx>
     <version.plugin.exec>3.6.3</version.plugin.exec>
