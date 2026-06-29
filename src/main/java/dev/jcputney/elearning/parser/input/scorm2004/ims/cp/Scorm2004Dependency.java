@@ -13,7 +13,9 @@ package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import dev.jcputney.elearning.parser.input.common.serialization.NormalizedIdDeserializer;
 import java.io.Serializable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -32,6 +34,7 @@ public final class Scorm2004Dependency implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "identifierref")
   @JsonProperty("identifierref")
+  @JsonDeserialize(using = NormalizedIdDeserializer.class)
   private String identifierRef;
 
   /**

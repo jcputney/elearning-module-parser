@@ -13,8 +13,10 @@ package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import dev.jcputney.elearning.parser.input.common.serialization.NormalizedIdDeserializer;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLCP;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLSeq;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
@@ -39,6 +41,7 @@ public final class Scorm2004Organization implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true)
   @JsonProperty("identifier")
+  @JsonDeserialize(using = NormalizedIdDeserializer.class)
   private String identifier;
 
   /**

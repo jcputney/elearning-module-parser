@@ -14,8 +14,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import dev.jcputney.elearning.parser.input.common.serialization.NormalizedIdDeserializer;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import java.io.Serializable;
 import java.util.List;
@@ -36,6 +38,7 @@ public final class Scorm2004Organizations implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "default")
   @JsonProperty("default")
+  @JsonDeserialize(using = NormalizedIdDeserializer.class)
   private String defaultOrganization;
 
   /**
