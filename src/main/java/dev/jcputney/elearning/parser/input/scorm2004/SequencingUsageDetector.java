@@ -14,6 +14,7 @@ package dev.jcputney.elearning.parser.input.scorm2004;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.cp.CompletionThreshold;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.navigation.NavigationInterface;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.navigation.Presentation;
+import dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing.ADLObjectives;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing.ConstrainChoiceConsiderations;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing.RollupConsiderations;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.ScormType;
@@ -565,6 +566,16 @@ public final class SequencingUsageDetector {
     }
     return objectives.getPrimaryObjective() != null
         || isNotEmpty(objectives.getObjectiveList());
+  }
+
+  /**
+   * Determines if the provided ADL objectives object has objectives defined.
+   *
+   * @param objectives the ADL objectives object to inspect; may be null
+   * @return true if the ADL objectives object contains at least one objective
+   */
+  private static boolean hasObjectives(ADLObjectives objectives) {
+    return objectives != null && isNotEmpty(objectives.getObjectiveList());
   }
 
   /**

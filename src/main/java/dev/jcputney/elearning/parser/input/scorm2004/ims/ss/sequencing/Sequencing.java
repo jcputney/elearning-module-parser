@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLSeq;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
+import dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing.ADLObjectives;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing.ConstrainChoiceConsiderations;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing.RollupConsiderations;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004Objectives;
@@ -87,8 +88,7 @@ public final class Sequencing implements Serializable {
    * The ADL objectives for this sequencing element.
    */
   @JacksonXmlProperty(localName = "objectives", namespace = ADLSeq.NAMESPACE_URI)
-  @JsonProperty("adlObjectives")
-  private Scorm2004Objectives adlObjectives;
+  private ADLObjectives adlObjectives;
 
   /**
    * Controls the randomization of child activities within a sequence.
@@ -282,22 +282,21 @@ public final class Sequencing implements Serializable {
   /**
    * Retrieves the ADL-specific objectives associated with this sequencing object.
    *
-   * @return the ADL objectives as a {@code Scorm2004Objectives} object
+   * @return the ADL objectives as an {@code ADLObjectives} object
    */
   @JsonProperty("adlObjectives")
-  public Scorm2004Objectives getAdlObjectives() {
+  public ADLObjectives getAdlObjectives() {
     return this.adlObjectives;
   }
 
   /**
    * Sets the ADL-specific objectives for the sequencing object.
    *
-   * @param adlObjectives the {@code Scorm2004Objectives} object representing the set of ADL
-   * objectives used to assess and track progress and performance within the SCORM 2004 sequencing
-   * model.
+   * @param adlObjectives the {@code ADLObjectives} object representing the set of ADL objectives
+   * used to assess and track progress and performance within the SCORM 2004 sequencing model.
    */
   @JsonProperty("adlObjectives")
-  public void setAdlObjectives(Scorm2004Objectives adlObjectives) {
+  public void setAdlObjectives(ADLObjectives adlObjectives) {
     this.adlObjectives = adlObjectives;
   }
 

@@ -20,6 +20,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import dev.jcputney.elearning.parser.input.PackageManifest;
 import dev.jcputney.elearning.parser.input.lom.LOM;
+import dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing.ADLObjective;
+import dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing.MapInfo;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.ScormType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004CourseMetadata;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
@@ -517,9 +519,9 @@ public final class Scorm2004Manifest implements PackageManifest {
         .getOrganizationList()
         .stream()
         .flatMap(org -> safeStream(org.getItems())) // Null-safe stream for items
-        .flatMap(item -> safeStream(getObjectives(item))) // Null-safe stream for objectives
-        .flatMap(obj -> safeStream(obj.getMapInfo())) // Null-safe stream for mapInfo
-        .map(Scorm2004ObjectiveMapping::getTargetObjectiveID)
+        .flatMap(item -> Stream.concat(
+            getObjectiveMappings(item).map(Scorm2004ObjectiveMapping::getTargetObjectiveID),
+            getAdlObjectiveMappings(item).map(MapInfo::getTargetObjectiveID)))
         .filter(id -> id != null && !id.isEmpty()) // Filter non-null and non-empty IDs
         .collect(Collectors.toSet());
   }
@@ -866,16 +868,38 @@ public final class Scorm2004Manifest implements PackageManifest {
    * @param item The SCORM item to retrieve objectives from.
    * @return A list of objectives, or an empty list if null.
    */
-  private List<Scorm2004Objective> getObjectives(Scorm2004Item item) {
+  private Stream<Scorm2004ObjectiveMapping> getObjectiveMappings(Scorm2004Item item) {
     if (item.getSequencing() != null && item
         .getSequencing()
         .getObjectives() != null) {
-      return item
+      var objectives = item
           .getSequencing()
-          .getObjectives()
-          .getObjectiveList();
+          .getObjectives();
+      return Stream
+          .concat(Stream.ofNullable(objectives.getPrimaryObjective()),
+              safeStream(objectives.getObjectiveList()))
+          .flatMap(objective -> safeStream(objective.getMapInfo()));
     }
-    return List.of(); // Return an empty list if objectives are null
+    return Stream.empty();
+  }
+
+  /**
+   * Retrieves ADL mapInfo entries from a given item in a null-safe manner.
+   *
+   * @param item The SCORM item to retrieve ADL objective mappings from.
+   * @return A stream of ADL mapInfo entries, or an empty stream if none exist.
+   */
+  private Stream<MapInfo> getAdlObjectiveMappings(Scorm2004Item item) {
+    if (item.getSequencing() != null && item
+        .getSequencing()
+        .getAdlObjectives() != null) {
+      return safeStream(item
+          .getSequencing()
+          .getAdlObjectives()
+          .getObjectiveList())
+          .flatMap((ADLObjective objective) -> safeStream(objective.getMapInfoList()));
+    }
+    return Stream.empty();
   }
 
   /**

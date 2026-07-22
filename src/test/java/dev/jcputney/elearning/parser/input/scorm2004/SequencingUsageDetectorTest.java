@@ -10,6 +10,8 @@
  */
 package dev.jcputney.elearning.parser.input.scorm2004;
 
+import dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing.ADLObjective;
+import dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing.ADLObjectives;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing.ConstrainChoiceConsiderations;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing.RollupConsiderations;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.ScormType;
@@ -18,8 +20,6 @@ import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organizatio
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Organizations;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resource;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resources;
-import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004Objective;
-import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective.Scorm2004Objectives;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.random.RandomizationControls;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.types.RandomizationTiming;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.ss.sequencing.ControlMode;
@@ -149,10 +149,10 @@ class SequencingUsageDetectorTest {
 
   @Test
   void detectRecognizesAdlExtensions() {
-    Scorm2004Objective objective = new Scorm2004Objective();
+    ADLObjective objective = new ADLObjective();
     objective.setObjectiveID("obj1");
-    Scorm2004Objectives adlObjectives = new Scorm2004Objectives();
-    adlObjectives.setPrimaryObjective(objective);
+    ADLObjectives adlObjectives = new ADLObjectives();
+    adlObjectives.setObjectiveList(List.of(objective));
 
     Sequencing sequencing = new Sequencing();
     sequencing.setAdlObjectives(adlObjectives);
