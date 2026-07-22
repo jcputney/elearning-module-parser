@@ -255,10 +255,11 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
     if (item.getSequencing() != null && item
         .getSequencing()
         .getAdlObjectives() != null) {
-      return item
+      List<ADLObjective> objectives = item
           .getSequencing()
           .getAdlObjectives()
           .getObjectiveList();
+      return objectives != null ? objectives : List.of();
     }
     return List.of();
   }

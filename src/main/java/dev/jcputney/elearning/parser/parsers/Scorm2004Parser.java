@@ -277,12 +277,10 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
     factory.setNamespaceAware(true);
     factory.setXIncludeAware(false);
     factory.setExpandEntityReferences(false);
-    setFeatureIfSupported(factory, XMLConstants.FEATURE_SECURE_PROCESSING, true);
-    setFeatureIfSupported(factory, "http://apache.org/xml/features/disallow-doctype-decl", true);
-    setFeatureIfSupported(factory, "http://xml.org/sax/features/external-general-entities",
-        false);
-    setFeatureIfSupported(factory, "http://xml.org/sax/features/external-parameter-entities",
-        false);
+    factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+    factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+    factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+    factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
     try {
       factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
       factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
@@ -292,15 +290,6 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
     return factory
         .newDocumentBuilder()
         .parse(new ByteArrayInputStream(bytes));
-  }
-
-  private void setFeatureIfSupported(DocumentBuilderFactory factory, String feature,
-      boolean enabled) {
-    try {
-      factory.setFeature(feature, enabled);
-    } catch (ParserConfigurationException ignored) {
-      // Keep parsing with the features this JAXP implementation supports.
-    }
   }
 
   private void restoreOrganizationSequencingObjectives(Scorm2004Manifest manifest, Element root) {
@@ -472,7 +461,11 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
           .getTextContent()
           .trim();
       if (!value.isEmpty()) {
-        objective.setMinNormalizedMeasure(Double.valueOf(value));
+        try {
+          objective.setMinNormalizedMeasure(Double.valueOf(value));
+        } catch (NumberFormatException ignored) {
+          // Minimum normalized measure remains null as default.
+        }
       }
     }
 

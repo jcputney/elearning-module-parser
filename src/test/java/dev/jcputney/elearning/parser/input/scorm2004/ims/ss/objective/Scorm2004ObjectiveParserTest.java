@@ -13,6 +13,7 @@ package dev.jcputney.elearning.parser.input.scorm2004.ims.ss.objective;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.jcputney.elearning.parser.exception.ManifestParseException;
@@ -251,6 +252,32 @@ public class Scorm2004ObjectiveParserTest {
     assertFalse(mapInfo.isWriteMaxScore());
     assertFalse(mapInfo.isWriteCompletionStatus());
     assertFalse(mapInfo.isWriteProgressMeasure());
+  }
+
+  @Test
+  void parseNonNumericMinNormalizedMeasureThrowsManifestParseException() {
+    assertThrows(ManifestParseException.class, () -> parseManifestWithSequencing("""
+        <imsss:objectives>
+          <imsss:objective objectiveID="OBJ-1">
+            <imsss:minNormalizedMeasure>not-a-number</imsss:minNormalizedMeasure>
+          </imsss:objective>
+        </imsss:objectives>
+        """));
+  }
+
+  @Test
+  void parseEmptyAdlObjectivesKeepsContainerAndSupportsMetadata() throws Exception {
+    String objectivesXml = "<adlseq:objectives/>";
+    Sequencing sequencing = parseSequencing(objectivesXml);
+
+    ADLObjectives adlObjectives = sequencing.getAdlObjectives();
+    assertNotNull(adlObjectives);
+    assertTrue(adlObjectives.getObjectiveList() == null
+        || adlObjectives.getObjectiveList().isEmpty());
+
+    Scorm2004Metadata metadata = parseMetadata(objectivesXml);
+    assertNotNull(metadata);
+    assertTrue(metadata.getGlobalObjectiveIds().isEmpty());
   }
 
   private MapInfo onlyAdlMapInfo(String objectivesXml) throws Exception {
