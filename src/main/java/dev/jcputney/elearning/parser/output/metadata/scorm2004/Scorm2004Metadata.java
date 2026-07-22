@@ -16,6 +16,8 @@ import dev.jcputney.elearning.parser.enums.ModuleType;
 import dev.jcputney.elearning.parser.input.scorm2004.Scorm2004Manifest;
 import dev.jcputney.elearning.parser.input.scorm2004.SequencingUsageDetector;
 import dev.jcputney.elearning.parser.input.scorm2004.SequencingUsageDetector.SequencingLevel;
+import dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing.ADLObjective;
+import dev.jcputney.elearning.parser.input.scorm2004.adl.sequencing.MapInfo;
 import dev.jcputney.elearning.parser.input.scorm2004.adl.types.ScormType;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Item;
 import dev.jcputney.elearning.parser.input.scorm2004.ims.cp.Scorm2004Resource;
@@ -223,7 +225,7 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
   }
 
   /**
-   * Retrieves the list of objectives from a given item in a null-safe manner.
+   * Retrieves the list of IMS objectives from a given item in a null-safe manner.
    *
    * @param item The SCORM item to retrieve objectives from.
    * @return A list of objectives, or an empty list if null.
@@ -232,12 +234,34 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
     if (item.getSequencing() != null && item
         .getSequencing()
         .getObjectives() != null) {
-      return item
+      var objectives = item
           .getSequencing()
-          .getObjectives()
-          .getObjectiveList();
+          .getObjectives();
+      return Stream
+          .concat(Stream.ofNullable(objectives.getPrimaryObjective()),
+              safeStream(objectives.getObjectiveList()))
+          .toList();
     }
     return List.of(); // Return an empty list if objectives are null
+  }
+
+  /**
+   * Retrieves the list of ADL objectives from a given item in a null-safe manner.
+   *
+   * @param item The SCORM item to retrieve ADL objectives from.
+   * @return A list of ADL objectives, or an empty list if null.
+   */
+  private static List<ADLObjective> getAdlObjectives(Scorm2004Item item) {
+    if (item.getSequencing() != null && item
+        .getSequencing()
+        .getAdlObjectives() != null) {
+      List<ADLObjective> objectives = item
+          .getSequencing()
+          .getAdlObjectives()
+          .getObjectiveList();
+      return objectives != null ? objectives : List.of();
+    }
+    return List.of();
   }
 
   /**
@@ -624,9 +648,13 @@ public class Scorm2004Metadata extends BaseModuleMetadata<Scorm2004Manifest> {
         .getOrganizationList()
         .stream()
         .flatMap(org -> safeStream(org.getItems()))
-        .flatMap(item -> safeStream(getObjectives(item)))
-        .flatMap(obj -> safeStream(obj.getMapInfo()))
-        .map(Scorm2004ObjectiveMapping::getTargetObjectiveID)
+        .flatMap(item -> Stream.concat(
+            safeStream(getObjectives(item))
+                .flatMap(obj -> safeStream(obj.getMapInfo()))
+                .map(Scorm2004ObjectiveMapping::getTargetObjectiveID),
+            safeStream(getAdlObjectives(item))
+                .flatMap(obj -> safeStream(obj.getMapInfoList()))
+                .map(MapInfo::getTargetObjectiveID)))
         .filter(id -> id != null && !id.isEmpty())
         .collect(Collectors.toCollection(LinkedHashSet::new));
   }
