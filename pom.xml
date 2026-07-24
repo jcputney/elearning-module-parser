@@ -58,7 +58,7 @@
     <version.log4j-to-slf4j>2.26.1</version.log4j-to-slf4j>
     <version.logback>1.6.0</version.logback>
     <version.mockito>5.23.0</version.mockito>
-    <version.org.json>20251224</version.org.json>
+    <version.org.json>20260719</version.org.json>
     <version.plugin.central-publishing>0.11.0</version.plugin.central-publishing>
     <version.plugin.compiler>3.15.0</version.plugin.compiler>
     <version.plugin.cyclonedx>2.9.2</version.plugin.cyclonedx>
