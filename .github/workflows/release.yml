@@ -4,23 +4,41 @@ name: Release
 permissions:
   contents: read
 
+# Two triggers with mutually-exclusive job conditions:
+#   workflow_dispatch  → `release` job: mvn release:prepare + release:perform.
+#                        release:prepare pushes the version tag using
+#                        RELEASE_TOKEN, which fires the push trigger below.
+#   push tag v*        → `attest` and `update-docs` jobs. Running on the tag
+#                        push means github.sha is the tagged release commit,
+#                        so SLSA build provenance is anchored to the exact
+#                        commit that produced the artifacts (not to the
+#                        pre-release snapshot commit that started the
+#                        workflow_dispatch run). Post-publish work also lives
+#                        outside the release job, so a transient failure in
+#                        attestation or docs update is independently
+#                        rerunnable and does NOT re-execute release:prepare
+#                        or release:perform against an already-published
+#                        version.
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   release:
+    if: github.event_name == 'workflow_dispatch'
     permissions:
       contents: write
       packages: write
     runs-on: ubuntu-latest
-    outputs:
-      tag: ${{ steps.publish.outputs.tag }}
-      version: ${{ steps.publish.outputs.version }}
     steps:
       # Checkout with RELEASE_TOKEN, a fine-grained PAT owned by a repo admin
       # with Contents and Workflows write access. actions/checkout configures
-      # git's HTTPS credential header, so release commits and the post-release
-      # docs commit can bypass the protected-branch required-check gate.
+      # git's HTTPS credential header, so the release commits and the tag
+      # push both use RELEASE_TOKEN. The tag push must use a PAT rather than
+      # GITHUB_TOKEN so that it actually triggers the push-tag workflow below
+      # (pushes made with GITHUB_TOKEN do not cascade to other workflows).
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
@@ -37,7 +55,6 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Publish package to Maven Central
-        id: publish
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -48,9 +65,6 @@ jobs:
           mvn -B -ntp -Dstyle.color=always release:prepare
           cat release.properties
           TAG=$(grep '^scm.tag=' release.properties | cut -d'=' -f2)
-          VERSION=${TAG#v}
-          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
-          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           mvn -B -ntp -Dstyle.color=always release:perform -DconnectionUrl=scm:git:https://github.com/${REPO}.git
           echo "Released ${TAG} 🚀" >> $GITHUB_STEP_SUMMARY
         env:
@@ -59,60 +73,27 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
           REPO: ${{ github.repository }}
 
-      - name: Update documentation with released version
-        env:
-          # Consume the version exported by the publish step. release.properties
-          # is unreliable here because release:perform deletes it during cleanup.
-          VERSION: ${{ steps.publish.outputs.version }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [[ -z "$VERSION" ]]; then
-            echo "::error::Empty version output from publish step; refusing to strip doc versions"
-            exit 1
-          fi
-
-          # Update Maven dependency version (only the line after the library artifactId)
-          sed -i '/<artifactId>elearning-module-parser<\/artifactId>/{n;s/<version>.*<\/version>/<version>'"${VERSION}"'<\/version>/}' README.md
-
-          # Update Gradle dependency version
-          sed -i "s/dev\.jcputney:elearning-module-parser:.*\")/dev.jcputney:elearning-module-parser:${VERSION}\")/" README.md
-
-          # Update example version in bug report template
-          sed -i "s/Library version: (e.g., .*)/Library version: (e.g., ${VERSION})/" .github/ISSUE_TEMPLATE/bug_report.md
-
-          if git diff --quiet; then
-            echo "No documentation version changes needed"
-          else
-            git add README.md .github/ISSUE_TEMPLATE/bug_report.md
-            git commit -m "docs: update version references to ${VERSION}"
-            git push
-          fi
-
-  # Attestations and the GitHub Release SBOM upload run in a separate job so
-  # the OIDC token (id-token: write) and attestations: write permission are
-  # never available to the preceding `mvn release:*` steps, which execute
-  # repository-controlled plugin code. If this job fails after Maven Central
-  # has accepted the version, the release job stays green (the publish did
-  # succeed), this job is visibly red, and "Re-run failed jobs" reruns only
-  # the attestation/Release steps without retrying the Central publish.
-  # The job checks out the release tag so that provenance is anchored to the
-  # tagged release commit (not the pre-release snapshot commit that triggered
-  # the workflow_dispatch), and rebuilds the artifacts cleanly from that commit.
+  # Rebuilds the artifacts from the tagged commit and attests them. Because
+  # this job is triggered by the tag push, github.sha is the tagged release
+  # commit — the SLSA provenance predicate anchors to the correct source.
+  #
+  # NOTE: without reproducible-build configuration in pom.xml, the digests
+  # of the JARs rebuilt here will not necessarily match the JARs that were
+  # deployed to Maven Central by release:perform. The attestations therefore
+  # cover the JARs published to the GitHub Release (attached below), not
+  # arbitrary downloads from Central. Enabling reproducible builds is a
+  # follow-up that would let the same attestations verify Central artifacts.
   attest:
-    needs: release
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:
       contents: write
       id-token: write
       attestations: write
     steps:
-      - name: Checkout release tag
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ needs.release.outputs.tag }}
+      - uses: actions/checkout@v6
 
-      - name: Set up Java
-        uses: actions/setup-java@v5
+      - uses: actions/setup-java@v5
         with:
           java-version: "17"
           distribution: "temurin"
@@ -156,8 +137,10 @@ jobs:
           sbom-path: ${{ steps.sbom.outputs.path }}
 
       - name: Upload SBOM to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
         run: |
-          TAG="${{ needs.release.outputs.tag }}"
           if gh release view "${TAG}" >/dev/null 2>&1; then
             gh release upload "${TAG}" \
               target/elearning-module-parser-*-cyclonedx.json \
@@ -170,5 +153,49 @@ jobs:
               --title "${TAG}" \
               --generate-notes
           fi
+
+  # Updates version references on main. Runs in a separate job (not inside
+  # `release`) so that a transient git push failure — protected-branch race,
+  # network hiccup, temporarily-diverged main — is independently rerunnable
+  # via "Re-run failed jobs" without re-executing release:prepare or
+  # release:perform against the already-published version.
+  update-docs:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          token: ${{ secrets.RELEASE_TOKEN }}
+
+      - name: Update documentation with released version
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          VERSION="${TAG#v}"
+          if [[ -z "$VERSION" ]]; then
+            echo "::error::Empty version derived from ref ${TAG}; refusing to strip doc versions"
+            exit 1
+          fi
+
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Update Maven dependency version (only the line after the library artifactId)
+          sed -i '/<artifactId>elearning-module-parser<\/artifactId>/{n;s/<version>.*<\/version>/<version>'"${VERSION}"'<\/version>/}' README.md
+
+          # Update Gradle dependency version
+          sed -i "s/dev\.jcputney:elearning-module-parser:.*\")/dev.jcputney:elearning-module-parser:${VERSION}\")/" README.md
+
+          # Update example version in bug report template
+          sed -i "s/Library version: (e.g., .*)/Library version: (e.g., ${VERSION})/" .github/ISSUE_TEMPLATE/bug_report.md
+
+          if git diff --quiet; then
+            echo "No documentation version changes needed"
+          else
+            git add README.md .github/ISSUE_TEMPLATE/bug_report.md
+            git commit -m "docs: update version references to ${VERSION}"
+            git push
+          fi
