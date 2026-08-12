@@ -11,6 +11,7 @@
 package dev.jcputney.elearning.parser.input.scorm2004.ims.cp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -75,7 +76,7 @@ public final class Scorm2004Organization implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "objectivesGlobalToSystem", namespace = ADLSeq.NAMESPACE_URI)
   @JsonProperty("objectivesGlobalToSystem")
-  private boolean objectivesGlobalToSystem = false;
+  private Boolean objectivesGlobalToSystem;
 
   /**
    * The default for the adlcp:sharedDataGlobalToSystem attribute for items in this organization. If
@@ -186,7 +187,17 @@ public final class Scorm2004Organization implements Serializable {
    * @return true if the objectives are global to the system, false otherwise
    */
   public boolean isObjectivesGlobalToSystem() {
-    return this.objectivesGlobalToSystem;
+    return this.objectivesGlobalToSystem == null || this.objectivesGlobalToSystem;
+  }
+
+  /**
+   * Returns whether the manifest explicitly declared objectivesGlobalToSystem.
+   *
+   * @return true when the attribute was present in the organization element
+   */
+  @JsonIgnore
+  public boolean isObjectivesGlobalToSystemSpecified() {
+    return this.objectivesGlobalToSystem != null;
   }
 
   /**

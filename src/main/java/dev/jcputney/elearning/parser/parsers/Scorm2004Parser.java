@@ -17,6 +17,7 @@ import dev.jcputney.elearning.parser.config.FileExistenceValidator;
 import dev.jcputney.elearning.parser.exception.ManifestParseException;
 import dev.jcputney.elearning.parser.exception.ModuleException;
 import dev.jcputney.elearning.parser.exception.ModuleParsingException;
+import dev.jcputney.elearning.parser.input.common.serialization.NormalizedIdDeserializer;
 import dev.jcputney.elearning.parser.input.common.serialization.Scorm2004SchemaValidator;
 import dev.jcputney.elearning.parser.input.scorm2004.ADLSeq;
 import dev.jcputney.elearning.parser.input.scorm2004.IMSSS;
@@ -482,7 +483,8 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
 
   private Scorm2004ObjectiveMapping parseImsMapInfo(Element mapInfoElement) {
     Scorm2004ObjectiveMapping mapping = new Scorm2004ObjectiveMapping();
-    mapping.setTargetObjectiveID(optionalAttribute(mapInfoElement, "targetObjectiveID"));
+    mapping.setTargetObjectiveID(normalizeTargetObjectiveId(
+        optionalAttribute(mapInfoElement, "targetObjectiveID")));
     setBooleanAttribute(mapInfoElement, "readSatisfiedStatus", mapping::setReadSatisfiedStatus);
     setBooleanAttribute(mapInfoElement, "readNormalizedMeasure",
         mapping::setReadNormalizedMeasure);
@@ -529,7 +531,8 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
 
   private MapInfo parseAdlMapInfo(Element mapInfoElement) {
     MapInfo mapInfo = new MapInfo();
-    mapInfo.setTargetObjectiveID(optionalAttribute(mapInfoElement, "targetObjectiveID"));
+    mapInfo.setTargetObjectiveID(normalizeTargetObjectiveId(
+        optionalAttribute(mapInfoElement, "targetObjectiveID")));
     setBooleanAttribute(mapInfoElement, "readRawScore", mapInfo::setReadRawScore);
     setBooleanAttribute(mapInfoElement, "readMinScore", mapInfo::setReadMinScore);
     setBooleanAttribute(mapInfoElement, "readMaxScore", mapInfo::setReadMaxScore);
@@ -545,6 +548,14 @@ public final class Scorm2004Parser extends BaseParser<Scorm2004Metadata, Scorm20
     setBooleanAttribute(mapInfoElement, "writeProgressMeasure",
         mapInfo::setWriteProgressMeasure);
     return mapInfo;
+  }
+
+  private String normalizeTargetObjectiveId(String value) {
+    if (value == null) {
+      return null;
+    }
+    String decodedWhitespace = value.replaceAll("(?i)%(?:20|09|0A|0D)", " ");
+    return NormalizedIdDeserializer.normalize(decodedWhitespace);
   }
 
   private void setBooleanAttribute(Element element, String attributeName,
