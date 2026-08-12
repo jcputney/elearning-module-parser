@@ -110,6 +110,40 @@ public class Scorm2004ManifestTest {
     assertFalse(manifest.usesSequencing(), "Empty manifest should not use sequencing");
   }
 
+  @Test
+  void objectivesGlobalToSystemDefaultsToTrueWhenOmitted()
+      throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
+    String modulePath =
+        "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition";
+    Scorm2004Manifest manifest = new Scorm2004Parser(new LocalFileAccess(modulePath))
+        .parseManifest(Scorm2004Parser.MANIFEST_FILE);
+
+    Scorm2004Organization organization = manifest
+        .getOrganizations()
+        .getOrganizationList()
+        .get(0);
+
+    assertTrue(organization.isObjectivesGlobalToSystem());
+    assertFalse(organization.isObjectivesGlobalToSystemSpecified());
+  }
+
+  @Test
+  void objectivesGlobalToSystemPreservesExplicitFalse()
+      throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
+    String modulePath =
+        "src/test/resources/modules/scorm2004/SequencingSimpleRemediation_SCORM20043rdEdition";
+    Scorm2004Manifest manifest = new Scorm2004Parser(new LocalFileAccess(modulePath))
+        .parseManifest(Scorm2004Parser.MANIFEST_FILE);
+
+    Scorm2004Organization organization = manifest
+        .getOrganizations()
+        .getOrganizationList()
+        .get(0);
+
+    assertFalse(organization.isObjectivesGlobalToSystem());
+    assertTrue(organization.isObjectivesGlobalToSystemSpecified());
+  }
+
   /**
    * Tests the getGlobalObjectiveIds method with a manifest that contains global objectives.
    */

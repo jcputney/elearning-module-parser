@@ -86,4 +86,15 @@ class Scorm2004ParserTest {
     assertThat(result.metadata()).isNotNull();
     assertThat(result.metadata().getTitle()).isNotBlank();
   }
+
+  @Test
+  void normalizesEncodedWhitespaceInGlobalObjectiveIds() throws Exception {
+    LocalFileAccess fileAccess = new LocalFileAccess(
+        "src/test/resources/modules/conformance/scorm2004/adl-cts/LMSTestPackage_OB-02b");
+    ModuleParserFactory factory = new DefaultModuleParserFactory(fileAccess);
+
+    Scorm2004Metadata metadata = (Scorm2004Metadata) factory.parseModule();
+
+    assertThat(metadata.getGlobalObjectiveIds()).containsExactly("gObj - OB 02 b");
+  }
 }

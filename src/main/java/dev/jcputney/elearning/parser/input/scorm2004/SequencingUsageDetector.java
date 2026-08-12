@@ -185,7 +185,8 @@ public final class SequencingUsageDetector {
         indicators.add(SequencingIndicator.ORGANIZATION_SEQUENCING);
         inspectSequencing(organization.getSequencing(), state, indicators, true, false);
       }
-      if (organization.isObjectivesGlobalToSystem()) {
+      if (organization.isObjectivesGlobalToSystemSpecified()
+          && organization.isObjectivesGlobalToSystem()) {
         indicators.add(SequencingIndicator.ORGANIZATION_OBJECTIVES_GLOBAL);
         state.organizationObjectivesGlobal = true;
       }
