@@ -144,6 +144,40 @@ public class Scorm2004ManifestTest {
     assertTrue(organization.isObjectivesGlobalToSystemSpecified());
   }
 
+  @Test
+  void sharedDataGlobalToSystemDefaultsToTrueWhenOmitted()
+      throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
+    String modulePath =
+        "src/test/resources/modules/scorm2004/ContentPackagingMetadata_SCORM20043rdEdition";
+    Scorm2004Manifest manifest = new Scorm2004Parser(new LocalFileAccess(modulePath))
+        .parseManifest(Scorm2004Parser.MANIFEST_FILE);
+
+    Scorm2004Organization organization = manifest
+        .getOrganizations()
+        .getOrganizationList()
+        .get(0);
+
+    assertTrue(organization.isSharedDataGlobalToSystem());
+    assertFalse(organization.isSharedDataGlobalToSystemSpecified());
+  }
+
+  @Test
+  void sharedDataGlobalToSystemPreservesExplicitFalse()
+      throws IOException, XMLStreamException, ModuleParsingException, ManifestParseException {
+    String modulePath =
+        "src/test/resources/modules/scorm2004/SequencingPostTestRollup4thEd_SCORM20044thEdition";
+    Scorm2004Manifest manifest = new Scorm2004Parser(new LocalFileAccess(modulePath))
+        .parseManifest(Scorm2004Parser.MANIFEST_FILE);
+
+    Scorm2004Organization organization = manifest
+        .getOrganizations()
+        .getOrganizationList()
+        .get(0);
+
+    assertFalse(organization.isSharedDataGlobalToSystem());
+    assertTrue(organization.isSharedDataGlobalToSystemSpecified());
+  }
+
   /**
    * Tests the getGlobalObjectiveIds method with a manifest that contains global objectives.
    */
