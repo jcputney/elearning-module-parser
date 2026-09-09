@@ -85,7 +85,7 @@ public final class Scorm2004Organization implements Serializable {
    */
   @JacksonXmlProperty(isAttribute = true, localName = "sharedDataGlobalToSystem", namespace = ADLCP.NAMESPACE_URI)
   @JsonProperty("sharedDataGlobalToSystem")
-  private boolean sharedDataGlobalToSystem = false;
+  private Boolean sharedDataGlobalToSystem;
 
   /**
    * Metadata associated with this organization, providing details such as creation date, and other
@@ -216,7 +216,17 @@ public final class Scorm2004Organization implements Serializable {
    * @return true if the shared data is global to the system, false otherwise
    */
   public boolean isSharedDataGlobalToSystem() {
-    return this.sharedDataGlobalToSystem;
+    return this.sharedDataGlobalToSystem == null || this.sharedDataGlobalToSystem;
+  }
+
+  /**
+   * Returns whether the manifest explicitly declared sharedDataGlobalToSystem.
+   *
+   * @return true when the attribute was present in the organization element
+   */
+  @JsonIgnore
+  public boolean isSharedDataGlobalToSystemSpecified() {
+    return this.sharedDataGlobalToSystem != null;
   }
 
   /**
